@@ -872,7 +872,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         //data.put("VOTES", socialPost.getVotes().toString());
         //data.put("TOTAL_VOTES", socialPost.getVoteCount());
         navigationDataObject.setParam(data);
-        EventBus.getDefault().post(new AppActions(navigationDataObject));
+        //EventBus.getDefault().post(new AppActions(navigationDataObject));
     }
 
     public class NormalPostItemHolder extends PostItemHolder {
