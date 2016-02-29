@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.getbase.floatingactionbutton.FloatingActionsMenu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floatingActionsMenu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    app:fab_addButtonColorNormal="@color/fabMenuButtonNormal"
+    app:fab_addButtonColorPressed="@color/fabMenuButtonPress"
+    app:fab_addButtonPlusIconColor="@color/fabButtonIcon"
+    app:fab_labelStyle="@style/menu_labels_style"
+    android:layout_marginBottom="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginEnd="10dp">
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_title="Post"
+        app:fab_size="mini"
+        app:fab_colorNormal="@color/fabButtonNormal"
+        app:fab_colorPressed="@color/fabButtonPressed"/>
+
+
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/poll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_title="Buy or Not Buy"
+        app:fab_size="mini"
+        app:fab_colorNormal="@color/fabButtonNormal"
+        app:fab_colorPressed="@color/fabButtonPressed"/>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/bestof"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_title="Best of Three"
+        app:fab_size="mini"
+        app:fab_colorNormal="@color/fabButtonNormal"
+        app:fab_colorPressed="@color/fabButtonPressed"/>
+
+</com.getbase.floatingactionbutton.FloatingActionsMenu>

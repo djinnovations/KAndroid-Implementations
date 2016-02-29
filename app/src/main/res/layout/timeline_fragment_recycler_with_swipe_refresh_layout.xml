@@ -1,0 +1,108 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/host"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapse_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+
+
+
+            <include layout="@layout/user_time_line_header"/>
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+
+
+    <include layout="@layout/_fragment_recycler_empty_view"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/disableApp"
+        android:visibility="gone"
+        android:background="@color/darkDisable"
+        android:layout_height="match_parent"/>
+
+
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        app:layout_anchor="@+id/swipeRefreshLayout"
+        app:layout_anchorGravity="bottom|right|end"
+        android:id="@+id/floatingActionsMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fab_addButtonColorNormal="@color/fabMenuButtonNormal"
+        app:fab_addButtonColorPressed="@color/fabMenuButtonPress"
+        app:fab_addButtonPlusIconColor="@color/fabButtonIcon"
+        app:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_title="Post"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/fabButtonNormal"
+            app:fab_colorPressed="@color/fabButtonPressed"/>
+
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/poll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_title="Buy or Not Buy"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/fabButtonNormal"
+            app:fab_colorPressed="@color/fabButtonPressed"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/bestof"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_title="Best of Three"
+            app:fab_size="mini"
+            app:fab_colorNormal="@color/fabButtonNormal"
+            app:fab_colorPressed="@color/fabButtonPressed"/>
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:textSize="10sp"
+        android:id="@+id/refreshTriger"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/appDefault3XMargin"
+        android:text="New Update Found"
+        android:visibility="gone"
+        android:layout_height="wrap_content" />
+
+</android.support.design.widget.CoordinatorLayout>

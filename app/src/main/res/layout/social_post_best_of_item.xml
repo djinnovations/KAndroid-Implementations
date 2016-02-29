@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- android:foreground="?android:attr/selectableItemBackground" -->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_gravity="center"
+    android:elevation="10dp"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/social_post_header"/>
+
+
+
+    <RelativeLayout
+        android:background="@drawable/default_thumb"
+        android:layout_width="match_parent"
+        android:id="@+id/detailsHolder"
+        android:layout_below="@+id/details"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:id="@+id/options"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+
+        <LinearLayout
+            android:id="@+id/optionBox1"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/appDefault1XMargin"
+            android:layout_marginBottom="@dimen/appDefault1XMargin"
+            android:layout_marginLeft="@dimen/appDefault1XMargin"
+            android:layout_marginRight="@dimen/appDefault1XMargin">
+
+            <ImageView
+                android:background="@drawable/image_view_background"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/option1Image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/voteLinkButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/image"
+                android:text="{hea_heart_out_line}"
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/option1Button"/>
+            <TextView
+                android:id="@+id/option1Label"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+
+
+
+
+
+        <LinearLayout
+            android:id="@+id/optionBox2"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/appDefault1XMargin"
+            android:layout_marginBottom="@dimen/appDefault1XMargin"
+            android:layout_marginRight="@dimen/appDefault1XMargin">
+
+            <ImageView
+                android:background="@drawable/image_view_background"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/option2Image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/voteLinkButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/image"
+                android:text="{hea_heart_out_line}"
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/option2Button"/>
+            <TextView
+                android:id="@+id/option2Label"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/optionBox3"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/appDefault1XMargin"
+            android:layout_marginBottom="@dimen/appDefault1XMargin"
+            android:layout_marginLeft="@dimen/appDefault1XMargin"
+            android:layout_marginRight="@dimen/appDefault1XMargin">
+
+
+            <ImageView
+                android:background="@drawable/image_view_background"
+                android:id="@+id/option3Image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/voteLinkButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/image"
+                android:text="{hea_heart_out_line}"
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/option3Button"/>
+            <TextView
+                android:id="@+id/option3Label"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/social_post_footer"/>
+
+
+</LinearLayout>
+
+</android.support.v7.widget.CardView>

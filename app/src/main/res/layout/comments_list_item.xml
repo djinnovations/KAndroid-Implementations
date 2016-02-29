@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+
+
+    <org.github.images.CircularImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_marginTop="@dimen/appDefault1XMargin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:background="#cccccc"
+        android:id="@+id/userImage"
+        android:layout_alignParentLeft="true"
+        app:border="true"
+        app:border_color="@color/colorPrimary"
+        app:border_width=".5dp"
+        app:shadow="false"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="User"
+        android:id="@+id/userName"
+        android:layout_alignTop="@+id/userImage"
+        android:layout_toRightOf="@+id/userImage"
+        android:layout_toEndOf="@+id/userImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Date"
+        android:textColor="#cccccc"
+        android:id="@+id/time"
+        android:textSize="10sp"
+        android:layout_below="@+id/userName"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_alignStart="@+id/userName" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/appDefault1XMargin"
+        android:layout_marginRight="@dimen/appDefault1XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Details"
+        android:id="@+id/details"
+        android:layout_below="@+id/time"
+        android:textSize="14sp"
+        android:layout_alignLeft="@+id/time"
+        android:layout_alignStart="@+id/time" />
+
+</RelativeLayout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:orientation="vertical"
+
+    style="@style/appackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:openDrawer="start">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Introducing to you"
+            android:id="@+id/textView2"
+            android:textSize="40sp"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:src="@drawable/intro_screen_1_image_2"
+            android:id="@+id/imageView3"/>
+        <ImageView
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/vector_image_logo_final"
+            android:id="@+id/imageView2"
+            android:layout_marginBottom="-100dp"
+            android:layout_below="@+id/imageView3"
+            android:layout_centerHorizontal="true" />
+        <ImageView
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/slide_1_image"
+            android:layout_marginBottom="70dp"
+            android:id="@+id/imageView1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

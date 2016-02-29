@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--button_pressed-->
+    <item android:state_selected="true" android:state_enabled="false" android:color="@color/votedColor"/>
+    <item android:state_selected="true" android:state_enabled="true" android:color="@color/votedColor"/>
+    <!--button_disable-->
+    <item android:state_enabled="false" android:color="@color/colorPrimaryAlpha"/>
+
+
+    <!--button_pressed-->
+    <item android:state_pressed="true" android:state_enabled="true" android:color="@color/linkButtonTextPressColor"/>
+    <!--button_focused-->
+    <item android:state_focused="true"
+        android:state_enabled="true" android:color="@color/linkButtonTextPressColor"/>
+    <!--button_enabled-->
+    <item
+        android:state_enabled="true" android:color="@color/linkButtonTextNormalColor"/>
+
+</selector>

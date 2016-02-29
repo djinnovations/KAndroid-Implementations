@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="icon_facebook">{faw-facebook}</string>
+    <string name="icon_google_plus">{faw-google_plus}</string>
+    <string name="icon_twitter">{faw-twitter}</string>
+
+
+    <string name="icon_small_arrow_down">{faw-angle_down}</string>
+    <string name="icon_minus_circle">{faw-minus_circle}</string>
+    <string name="icon_follow_user">{faw-user_plus}</string>
+    <string name="icon_un_follow_user">{faw-user_times}</string>
+    <string name="icon_add_category">{kim-addition10}</string>
+    <string name="icon_share_post">{faw-retweet}</string>
+    <string name="icon_comment_post">{faw-comment_o}</string>
+    <string name="icon_likes_post">{faw-heart_o}</string>
+    <string name="icon_liked_post">{faw-heart}</string>
+    <string name="icon_poll_post">{faw-bar_chart}</string>
+    <string name="icon_remove">{faw-minus_circle}</string>
+    <string name="icon_send">{faw-paper_plane_o}</string>
+
+</resources>

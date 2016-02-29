@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+
+
+    <org.github.images.CircularImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_marginTop="@dimen/appDefault1XMargin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:background="#cccccc"
+        android:id="@+id/userImage"
+        android:layout_alignParentLeft="true"
+        app:border="true"
+        app:border_color="@color/colorPrimary"
+        app:border_width=".5dp"
+        app:shadow="false"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/userName"
+        android:layout_alignTop="@+id/userImage"
+        android:layout_toRightOf="@+id/userImage"
+        android:layout_toEndOf="@+id/userImage" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:id="@+id/designer"
+        android:textSize="12sp"
+        android:layout_below="@+id/userName"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_alignStart="@+id/userName" />
+
+
+    <LinearLayout
+        tools:background="#cccccc"
+        android:orientation="vertical"
+        android:id="@+id/followingPort"
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginRight="@dimen/appDefault1XMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/followersPort"
+        android:layout_toStartOf="@+id/followersPort">
+        <TextView
+            android:id="@+id/countFollowing"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:text="Following"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        tools:background="#cccccc"
+        android:orientation="vertical"
+        android:id="@+id/followersPort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginRight="@dimen/appDefault1XMargin"
+        android:layout_toLeftOf="@+id/followButton"
+        android:layout_toStartOf="@+id/followButton">
+        <TextView
+            android:id="@+id/countFollowers"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_gravity="center_horizontal"
+            android:text="Followers"
+            android:textSize="11sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:layout_alignParentRight="true"
+        style="@style/circleButton"
+        android:layout_marginRight="@dimen/appDefault2XMargin"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:text="@string/icon_follow_user"
+        android:layout_centerVertical="true"
+        android:layout_height="@dimen/circle_button_small_height"
+        android:id="@+id/followButton"/>
+
+</RelativeLayout>

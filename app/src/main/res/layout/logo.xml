@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_margin="10dp"
+    android:src="@drawable/vector_image_logo_final"
+android:layout_height="120dp" android:id="@+id/logo"
+android:layout_centerVertical="true"
+android:layout_marginTop="@dimen/appDefault2XMargin"
+android:layout_marginBottom="@dimen/appDefault2XMargin"
+android:layout_centerHorizontal="true" />

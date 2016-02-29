@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#b39d47</color>
+    <color name="colorPrimary">#866c52</color>
+    <color name="colorPrimaryAlpha">#55866c52</color>
+    <color name="tabBGColor">#ffffff</color>
+
+
+    <color name="votedColor">#C41334</color>
+
+    <color name="colorPrimaryDark">#6c533e</color>
+
+    <color name="semiTransparentWindow">#556c533e</color>
+
+    <color name="bgGradientEnd">#dfd8c8</color>
+    <color name="bgGradientStart">#ffffff</color>
+
+    <color name="fabButtonNormal">@color/colorAccent</color>
+    <color name="fabButtonPressed">@color/colorPrimary</color>
+
+    <color name="fabMenuButtonNormal">@color/colorAccent</color>
+    <color name="fabMenuButtonPress">@color/colorPrimary</color>
+    <color name="fabMenuButtonSelected">@color/colorAccent</color>
+    <color name="fabButtonIcon">#ffffff</color>
+    <color name="fabItemLabel">#000000</color>
+
+
+
+
+    <color name="darkColor">#34281d</color>
+
+    <color name="buttonPressBorder">@color/colorPrimaryDark</color>
+    <color name="buttonPressStart">#34281d</color>
+    <color name="buttonPressEnd">#34281d</color>
+    <color name="buttonPressTextColor">#ffffff</color>
+
+    <color name="buttonNormalBorder">@color/colorPrimary</color>
+    <color name="buttonNormalStart">@color/colorPrimary</color>
+    <color name="buttonNormalEnd">@color/colorPrimary</color>
+    <color name="buttonNormalTextColor">#ffffff</color>
+
+    <color name="buttonDisableBorder">@color/colorPrimaryDark</color>
+    <color name="buttonDisableStart">#dd34281d</color>
+    <color name="buttonDisableEnd">#dd34281d</color>
+    <color name="buttonDisableTextColor">#ddffffff</color>
+
+
+
+
+    <color name="socialLoginButtonTextNormalColor">@color/buttonNormalTextColor</color>
+    <color name="socialLoginButtonTextPressColor">@color/buttonPressTextColor</color>
+    <color name="socialLoginButtonTextDisableColor">@color/buttonDisableTextColor</color>
+
+    <color name="socialLoginButtonPressBorder">@color/buttonPressBorder</color>
+    <color name="socialLoginButtonPressStart">@color/buttonPressStart</color>
+    <color name="socialLoginButtonPressEnd">@color/buttonPressEnd</color>
+
+    <color name="socialLoginButtonNormalBorder">@color/buttonNormalBorder</color>
+    <color name="socialLoginButtonNormalStart">@color/buttonNormalStart</color>
+    <color name="socialLoginButtonNormalEnd">@color/buttonNormalEnd</color>
+
+
+
+    <color name="linkButtonNormalBorder">#00ffffff</color>
+    <color name="linkButtonNormalStart">#00ffffff</color>
+    <color name="linkButtonNormalEnd">#00ffffff</color>
+
+    <color name="linkButtonPressBorder">#00ffffff</color>
+    <color name="linkButtonPressStart">#00ffffff</color>
+    <color name="linkButtonPressEnd">#00ffffff</color>
+
+    <color name="linkButtonDisableBorder">#00ffffff</color>
+    <color name="linkButtonDisableStart">#00ffffff</color>
+    <color name="linkButtonDisableEnd">#00ffffff</color>
+
+
+    <color name="linkButtonTextNormalColor">@color/buttonNormalStart</color>
+    <color name="linkButtonTextPressColor">@color/buttonPressStart</color>
+    <color name="linkButtonTextDisableColor">@color/buttonDisableTextColor</color>
+
+
+    <color name="linkButtonTextWhiteNormalColor">#ffffff</color>
+    <color name="whiteLight">#33ffffff</color>
+
+    <color name="darkDisable">#bb333333</color>
+
+    <array name="progressColors">
+        <item>#FF3F8AF8</item>
+        <item>#FFD8433C</item>
+        <item>#FFF2AF3A</item>
+        <item>#FF279B5E</item>
+    </array>
+</resources>

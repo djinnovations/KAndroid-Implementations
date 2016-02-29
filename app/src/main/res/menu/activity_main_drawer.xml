@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/vector_icon_home"
+            android:title="@string/home" />
+
+        <item
+            android:id="@+id/nav_feed"
+            android:icon="@drawable/vector_icon_feeds"
+            android:title="@string/socialFeeds" />
+        <item
+            android:id="@+id/nav_people"
+            android:icon="@drawable/vector_icon_people"
+            android:title="@string/findPeople" />
+        <item
+            android:id="@+id/nav_timeline"
+            android:icon="@drawable/vector_icon_time_line"
+            android:title="@string/timeline" />
+        <item
+            android:id="@+id/nav_shop_by"
+            android:icon="@drawable/vector_icon_shop_by"
+            android:visible="false"
+            android:title="@string/shopBy" />
+
+        <item
+            android:id="@+id/nav_my_collection"
+            android:icon="@drawable/vector_icon_collections"
+            android:visible="false"
+            android:title="@string/myCollections" />
+
+
+
+        <item
+            android:id="@+id/nav_wishlist"
+            android:icon="@drawable/vector_icon_wishlist"
+            android:visible="false"
+            android:title="@string/wishlist" />
+    </group>
+
+
+
+
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:title="@string/share"/>
+            <item
+                android:id="@+id/nav_share_facebook"
+                android:title="@string/inviteFacebookFriends"/>
+            <item
+                android:id="@+id/nav_rate_us"
+                android:title="@string/rateAPP"/>
+            <item
+                android:id="@+id/nav_contact_us"
+                android:title="@string/contactUs" />
+        </menu>
+    </item>
+</menu>

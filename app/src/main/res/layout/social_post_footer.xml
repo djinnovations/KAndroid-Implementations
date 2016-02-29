@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginTop="@dimen/appDefault1XMargin"
+    android:layout_marginBottom="@dimen/appDefault1XMargin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clipChildren="false"
+    android:layout_height="wrap_content">
+
+
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:id="@+id/likePostButton"
+        android:text="@string/icon_likes_post"
+        tools:background="#cccccc"
+        tools:text="L"
+        style="@style/postFotterButton"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"/>
+
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:id="@+id/sharePostButton"
+        android:text="@string/icon_share_post"
+        style="@style/postFotterButton"
+        android:layout_gravity="center_vertical"
+        tools:background="#cccc33"
+        tools:text="S"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
+        android:layout_alignTop="@+id/likePostButton"
+        android:layout_toRightOf="@+id/likePostButton"
+        android:layout_toEndOf="@+id/likePostButton" />
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:id="@+id/commentPostButton"
+        android:text="@string/icon_comment_post"
+        tools:background="#cc33dd"
+        tools:text="C"
+        style="@style/postFotterButton"
+        android:layout_gravity="center_vertical"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
+        android:layout_alignTop="@+id/sharePostButton"
+        android:layout_toRightOf="@+id/sharePostButton"
+        android:layout_toEndOf="@+id/sharePostButton" />
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:id="@+id/votePostButton"
+        android:text="@string/icon_poll_post"
+        style="@style/postFotterButton"
+        tools:background="#ee33dd"
+        tools:text="V"
+        android:layout_gravity="center_vertical"
+
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
+        android:layout_alignTop="@+id/commentPostButton"
+        android:layout_toRightOf="@+id/commentPostButton"
+        android:layout_toEndOf="@+id/commentPostButton" />
+
+    <TextView
+        style="@style/linkButton"
+        android:text="Poll"
+        tools:visibility="visible"
+        android:textStyle="italic"
+        android:id="@+id/pollLabel"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/appDefaultMargin"/>
+
+
+    <TextView
+        style="@style/linkButton"
+        android:text="Likes"
+        android:id="@+id/likesLabel"
+        android:textStyle="italic"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pollLabel"
+        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_alignParentRight="true"
+        />
+
+    <TextView
+        style="@style/linkButton"
+        android:id="@+id/commentsLabel"
+        android:text="Comments"
+        android:textStyle="italic"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/likesLabel"
+        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_alignParentRight="true"/>
+
+
+
+
+
+
+    <TextView
+        tools:visibility="visible"
+        style="@style/linkButton"
+        android:id="@+id/shareLabel"
+        android:text="Share"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/commentsLabel"
+        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_alignParentRight="true"/>
+
+
+
+    <View
+        android:layout_marginTop="@dimen/appDefault2XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_below="@+id/likePostButton"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/div"
+        android:background="#c4c0b6"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recomandationLabel"
+        android:textStyle="bold"
+        android:text="Recomandation:"
+        android:layout_below="@+id/div"
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"/>
+
+
+
+    <ImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_below="@+id/recomandationLabel"
+        android:layout_height="@dimen/recomandationThumbSize"
+        android:visibility="gone"
+        android:layout_width="@dimen/recomandationThumbSize"
+        tools:visibility="visible"
+        tools:background="#32DDEE"
+        android:background="@drawable/image_view_background"
+        android:scaleType="centerCrop"
+        android:id="@+id/reco1" />
+
+
+    <ImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_height="@dimen/recomandationThumbSize"
+        android:visibility="gone"
+        android:layout_width="@dimen/recomandationThumbSize"
+        tools:background="#3322E4"
+        tools:visibility="visible"
+        android:background="@drawable/image_view_background"
+        android:scaleType="centerCrop"
+        android:id="@+id/reco2"
+        android:layout_below="@+id/recomandationLabel"
+        android:layout_toRightOf="@+id/reco1"
+        android:layout_toEndOf="@+id/reco1"
+        android:layout_marginStart="@dimen/appDefault1XMargin" />
+
+
+    <ImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_height="@dimen/recomandationThumbSize"
+        android:visibility="gone"
+        android:layout_width="@dimen/recomandationThumbSize"
+        tools:background="#ee88dd"
+        tools:visibility="visible"
+        android:background="@drawable/image_view_background"
+        android:scaleType="centerCrop"
+        android:id="@+id/reco3"
+        android:layout_below="@+id/recomandationLabel"
+        android:layout_toRightOf="@+id/reco2"
+        android:layout_toEndOf="@+id/reco2"
+        android:layout_marginStart="@dimen/appDefault1XMargin" />
+
+
+    <ImageView
+        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_height="@dimen/recomandationThumbSize"
+        android:visibility="gone"
+        android:layout_width="@dimen/recomandationThumbSize"
+        tools:background="#dd33dd"
+        tools:visibility="visible"
+        android:background="@drawable/image_view_background"
+        android:scaleType="centerCrop"
+        android:id="@+id/reco4"
+        android:layout_below="@+id/recomandationLabel"
+        android:layout_toRightOf="@+id/reco3"
+        android:layout_toEndOf="@+id/reco3"
+        android:layout_marginStart="@dimen/appDefault1XMargin" />
+</RelativeLayout>
+

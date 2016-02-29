@@ -1,0 +1,88 @@
+DONE -> 1. LIKE A POST
+Rest verb: like
+Req: POST - 'like':'postid'
+Res: {"status":"Success","msg":"Successful"}
+
+DONE -> 2. UNLIKE A POST
+Rest verb: like
+Req: POST - 'like':'postid'
+Res: {"status":"Success","msg":"Successful"}
+
+DONE -> 2.3. HOW DO I KNOW IF this post is liked by user or not
+In post data check for 'isLiked'
+
+
+
+
+
+
+4. Share a Post
+//later: implemented but not properly tested (Expected tomorrow afternoon)
+
+
+5. VOTE FOR POST BUY OR NOT (not in _dev but on goldadorn branch)
+Rest verb: poll
+Req: POST - 'postid':"postid", 'poll':"1" (for yes) / 'poll':"2" (for No)
+Res: {"Yes":"number_yes_percent", "No":"number_no_percent", "Total":"number_poll_count"}
+
+
+6. VOTE FOR POST BEST OF THREE (not in _dev but on goldadorn branch)
+Rest verb: votebof3
+Req: POST - 'postid':"postid", 'select':"1" (for 1st) / 'select':"2" (for 2nd) / 'select':"3" (for 3rd)
+Res: {"Bof1":"number_1st_percent", "Bof2":"number_2nd_percent", "Bof3":"number_3rd_percent", "Total":"number_vote_count"}
+
+
+
+
+
+7. CHANGE VOTE FOR POST BUY OR NOT
+//not supported
+8. CHANGE VOTE FOR POST BEST OF THREE
+//not supported
+
+
+
+9. HOW DO I KNOW IF this post is voted or not and for what he/she voted.
+In post data check for 'isVoted' for type 2 and type 3 posts
+
+
+
+10. Post a Comments
+Rest verb: comment
+Req: POST - 'postid':'postid', 'text':'text of the comment'
+Res: {"status":"Success","msg":"Successful"}
+
+11. Delete a coment
+//not implemented
+
+12. get a comments for the post
+use lastCommentText and related info in post, list to be including pagination (TBD last)
+
+
+
+
+
+13. Follow people
+Rest verb: follow
+Req: POST - 'follow':'userid'
+Res: {"status":"Success","msg":"Successful"}
+
+
+14. UnFollow people
+Rest verb: follow
+Req: POST - 'follow':'userid'
+Res: {"status":"Success","msg":"Successful"}
+
+
+15. get user's timeline
+//not yet implemented (Expected tomorrow night)
+16. get My timeline
+//not yet implemented (Expected tomorrow night)
+17. list of the user who has votes for what choice 
+//implemented but will use pagination : backend design change including post (TBD last) sat / sun
+18. list of the user who has share a post 
+//Needs discussion, share doesnt need list (but available at backend)
+19. list of the user who liked post
+//implemented but will use pagination : backend design change including post (TBD last) sat / 
+20. How do I know if login user follow or not follow some user
+//will answer this later

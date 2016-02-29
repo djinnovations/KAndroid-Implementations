@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_my_notifications"
+        android:orderInCategory="100"
+        android:icon="@drawable/vector_icon_bell"
+        app:showAsAction="always|"
+        android:title="@string/notifications" />
+
+    <item
+        android:id="@+id/nav_my_search"
+        android:orderInCategory="100"
+        android:icon="@drawable/vector_icon_search"
+        app:showAsAction="always"
+        android:title="@string/search" />
+
+
+    <item android:title="@string/moreOptions" android:orderInCategory="100" app:showAsAction="always"
+        android:icon="@drawable/vector_icon_overflow">
+        <menu>
+
+    <item
+        android:id="@+id/nav_my_profile"
+        android:orderInCategory="100"
+        android:icon="@drawable/vector_icon_profile"
+        app:showAsAction="never"
+        android:title="@string/myProfile" />
+
+    <item
+        android:id="@+id/nav_order_tracking"
+        android:orderInCategory="100" app:showAsAction="never"
+        android:icon="@drawable/vector_icon_track"
+        android:visible="false"
+        android:title="@string/orderTracking" />
+
+    <item
+
+        android:id="@+id/nav_about_us"
+        android:icon="@drawable/vector_icon_logo_square"
+        android:title="@string/aboutUS" android:orderInCategory="100" app:showAsAction="never"/>
+            <item
+
+                android:id="@+id/nav_faqs"
+                android:icon="@drawable/vector_icon_faq"
+                android:title="@string/faqs" android:orderInCategory="100" app:showAsAction="never"/>
+    <item android:title="@string/policies" android:orderInCategory="100" app:showAsAction="never"
+        android:icon="@drawable/vector_icon_policies">
+        <menu>
+
+            <item
+                android:icon="@drawable/vector_icon_return"
+                android:id="@+id/nav_shipping_and_return"
+                android:title="@string/shippingAndReturnPolicy"/>
+
+            <item
+                android:icon="@drawable/vector_icon_privacy"
+                android:id="@+id/nav_privacy_policy"
+                android:title="@string/privacyPolicy"/>
+
+            <item
+                android:icon="@drawable/vector_icon_conditions"
+                android:id="@+id/nav_terms_conditions"
+                android:title="@string/termsAndConditions"/>
+        </menu>
+    </item>
+
+    <item
+        android:icon="@drawable/vector_icon_settings"
+        android:id="@+id/nav_settings" android:orderInCategory="100" app:showAsAction="never"
+        android:title="@string/settings"/>
+    <item
+        android:icon="@drawable/vector_icon_logout"
+        android:id="@+id/nav_logout" android:orderInCategory="100" app:showAsAction="never"
+        android:title="@string/logout"/>
+        </menu>
+    </item>
+</menu>

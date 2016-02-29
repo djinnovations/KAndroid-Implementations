@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!--button_disabled-->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bgGradientEnd" />
+            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+            <stroke android:width=".5dp" android:color="@color/darkColor" />
+        </shape>
+    </item>
+
+    <!--button_pressed-->
+    <item android:state_pressed="true"
+        android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bgGradientEnd" />
+            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+            <stroke android:width=".5dp" android:color="@color/darkColor" />
+        </shape>
+    </item>
+
+    <!--button_focused-->
+    <item android:state_focused="true"
+        android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bgGradientEnd" />
+            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+            <stroke android:width=".5dp" android:color="@color/colorPrimaryDark" />
+        </shape>
+    </item>
+
+    <!--button_enabled-->
+    <item
+        android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/bgGradientEnd" />
+            <padding android:bottom="1dp" android:left="1dp" android:right="1dp" android:top="1dp" />
+            <stroke android:width=".5dp" android:color="@color/colorPrimary" />
+        </shape>
+    </item>
+
+
+</selector>
+
+
+

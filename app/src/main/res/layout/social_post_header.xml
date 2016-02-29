@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/appDefault1XMargin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="wrap_content">
+
+        <org.github.images.CircularImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            tools:background="#cccccc"
+            android:id="@+id/userImage"
+            android:layout_alignParentLeft="true"
+            app:border="true"
+            app:border_color="@color/colorPrimary"
+            app:border_width=".5dp"
+            app:shadow="false"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_marginLeft="@dimen/appDefault1XMargin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            style="@style/linkBlackButton"
+            android:id="@+id/userName"
+            android:layout_alignTop="@+id/userImage"
+            android:layout_toRightOf="@+id/userImage"
+            android:layout_toEndOf="@+id/userImage" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Small Text"
+            android:id="@+id/age"
+            android:textSize="12sp"
+            android:layout_below="@+id/userName"
+            android:layout_alignLeft="@+id/userName"
+            android:layout_alignStart="@+id/userName" />
+
+
+        <com.mikepenz.iconics.view.IconicsButton
+            style="@style/circleButton"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:text="@string/icon_follow_user"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:id="@+id/followButton"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="@dimen/appDefault1XMargin"
+            android:layout_alignTop="@+id/userName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true" />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="10"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="details"
+            android:id="@+id/details"
+            android:layout_below="@+id/userImage"
+            android:layout_alignLeft="@+id/userImage"
+            android:layout_alignStart="@+id/userImage" />
+
+
+</RelativeLayout>

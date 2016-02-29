@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">Goldadorn</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_app_start">AppStart</string>
+    <string name="loadinApp">Loading...</string>
+    <string name="createAccountButton">Create an Account</string>
+    <string name="loginButton">Login</string>
+    <string name="orLabel">OR</string>
+    <string name="orSocialLogin">login with</string>
+    <string name="orRegisterWithSocial">Register With</string>
+    <string name="title_activity_register_user">RegisterUserActivity</string>
+    <string name="hint_email">Enter your email ID</string>
+    <string name="hint_passord">Enter your password</string>
+
+    <string name="err_msg_email">Enter valid email address</string>
+    <string name="err_msg_password">Enter valid password</string>
+    <string name="err_msg_name">Enter valid name</string>
+    <string name="forgotPassword">Forgot Password</string>
+    <string name="hint_name">Enter Your Name</string>
+    <string name="labelMale">Male</string>
+    <string name="labelFemale">Female</string>
+    <string name="labelGender">Gender</string>
+    <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>terms and conditions</u></font></a></string>
+    <string name="registerSuccssMsg">Registration done successfully</string>
+    <string name="socialFeeds">Social Feed</string>
+    <string name="findPeople">Find People</string>
+    <string name="timeline">Timeline</string>
+    <string name="shopBy">Shop By</string>
+    <string name="myCollections">My Collections</string>
+    <string name="wishlist">Wishlist</string>
+    <string name="share">Share</string>
+    <string name="inviteFacebookFriends">Invite Facebook Friends</string>
+    <string name="rateAPP">Rate Our App</string>
+    <string name="contactUs">Contact Us</string>
+    <string name="notifications">Notifications</string>
+    <string name="search">Search</string>
+    <string name="moreOptions">More Options</string>
+    <string name="myProfile">My Profile</string>
+    <string name="orderTracking">Order Tracking</string>
+    <string name="aboutUS">About US</string>
+    <string name="policies">Policies</string>
+    <string name="shippingAndReturnPolicy"><![CDATA[Shipping & Return Policy]]></string>
+    <string name="privacyPolicy">Privacy Policy</string>
+    <string name="termsAndConditions"><![CDATA[Terms & Conditions]]></string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="appShareTitle">Share The App In Your Network</string>
+    <string name="appShareBody">"Hey Check out this app. it has interesting jewellery options :  "</string>
+
+
+    <string name="contactUsURL">contact-us.html</string>
+    <string name="aboutUsURL">about-us.html</string>
+    <string name="shippingAndReturnPolicyURL">return-policy.html</string>
+    <string name="privacyPolicyUTRL">privacy-policy.html</string>
+    <string name="termsAndConditionsURL">terms.html</string>
+    <string name="faqsURL">faqs.html</string>
+
+
+
+
+    <string name="palyStoreBasicURL">https://play.google.com/store/apps/details?id=</string>
+    <string name="commentCountLabel">"Comments: "</string>
+    <string name="likesCountLabel">"Likes: "</string>
+    <string name="shareCOuntLabel">"Share: "</string>
+    <string name="voteCountLabel">"Votes: "</string>
+    <string name="home">Home</string>
+    <string name="faqs">FAQs</string>
+
+
+</resources>

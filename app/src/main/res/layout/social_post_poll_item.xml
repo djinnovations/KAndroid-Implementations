@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_gravity="center"
+    android:elevation="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <include layout="@layout/social_post_header"/>
+
+
+
+    <RelativeLayout
+        android:layout_below="@+id/details"
+        android:layout_width="match_parent"
+        android:background="@drawable/default_thumb"
+        android:id="@+id/detailsHolder"
+        android:layout_height="wrap_content">
+        <org.github.images.ScaleImageView
+            android:layout_width="match_parent"
+            android:id="@+id/image"
+            android:minHeight="100dp"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="@dimen/appDefault1XMargin"
+            android:layout_marginBottom="@dimen/appDefault1XMargin"
+
+            android:layout_marginLeft="@dimen/appDefault3XMargin"
+            android:layout_marginRight="@dimen/appDefault3XMargin"
+            android:id="@+id/linearLayout">
+
+        <com.mikepenz.iconics.view.IconicsButton
+            style="@style/voteLinkButton"
+            android:layout_gravity="center_horizontal"
+            android:layout_below="@+id/image"
+            android:text="{hea_heart_out_line}"
+            android:layout_width="60dp"
+            android:textSize="40sp"
+            android:layout_height="60dp"
+            android:id="@+id/buy"/>
+        <TextView
+            android:id="@+id/buyLabel"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:text="Buy"/>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="@dimen/appDefault1XMargin"
+            android:layout_marginBottom="@dimen/appDefault1XMargin"
+            android:layout_marginLeft="@dimen/appDefault3XMargin"
+            android:layout_marginRight="@dimen/appDefault3XMargin">
+
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/voteLinkButton"
+                android:layout_gravity="center_horizontal"
+                android:layout_below="@+id/image"
+                android:text="{hea_broken_heart_out_line}"
+                android:textSize="40sp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:id="@+id/notBuy"/>
+            <TextView
+                android:id="@+id/notBuyLabel"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="Not Buy"/>
+        </LinearLayout>
+
+
+
+
+    </RelativeLayout>
+
+    <include layout="@layout/social_post_footer"/>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

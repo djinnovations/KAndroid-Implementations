@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/like_user_back"
+    android:layout_height="wrap_content">
+
+
+
+    <org.github.images.CircularImageView
+        android:layout_margin="2dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        tools:background="#cccccc"
+        android:id="@+id/userImage"
+        android:layout_alignParentLeft="true"
+        app:border="true"
+        app:border_color="@color/colorPrimary"
+        app:border_width=".5dp"
+        app:shadow="false"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_marginLeft="@dimen/appDefaultMargin"
+        android:layout_marginStart="@dimen/appDefaultMargin"
+
+        android:layout_marginRight="@dimen/appDefault1XMargin"
+        android:layout_marginEnd="@dimen/appDefault1XMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="User"
+        android:textSize="12sp"
+        android:id="@+id/userName"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/userImage"
+        android:layout_toEndOf="@+id/userImage"
+        />
+
+</RelativeLayout>

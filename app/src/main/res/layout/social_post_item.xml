@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    android:foreground="?android:attr/selectableItemBackground"
+    -->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
+    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_gravity="center"
+
+    android:elevation="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/social_post_header"/>
+
+
+    <org.github.images.ScaleImageView
+        android:layout_width="match_parent"
+        android:background="@drawable/default_thumb"
+        android:id="@+id/image"
+        android:scaleType="centerCrop"
+        android:minHeight="100dp"
+        android:layout_height="wrap_content" />
+
+    <include layout="@layout/social_post_footer"/>
+
+
+</LinearLayout>
+
+</android.support.v7.widget.CardView>
