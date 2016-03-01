@@ -48,7 +48,7 @@ public class NotificationsActivity extends BaseActivity {
 
     private void refresh(){
         Map<String, Object> params = new HashMap<>();
-        params.put("notification", 0);
+        params.put("notification", "0");
 
         String url = getUrlHelper().getNotificationsUrl();
         ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
