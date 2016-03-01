@@ -34,6 +34,7 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.IQueryListener;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
@@ -69,9 +70,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private boolean uploadInProgress;
     private WeakReference<SocialFeedFragment> socialPostHost;
     private boolean backEntry;
+    private List<IQueryListener> queryListeners = new ArrayList<>();
 
-    public View getDisableApp()
-    {
+    public View getDisableApp() {
         //return null;
         return disableApp;
     }
@@ -106,14 +107,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         View headerLayout = navigationView.getHeaderView(0);
 
-        TextView userName= (TextView)headerLayout.findViewById(R.id.userName);
-        Button editProfile= (Button)headerLayout.findViewById(R.id.editProfile);
+        TextView userName = (TextView) headerLayout.findViewById(R.id.userName);
+        Button editProfile = (Button) headerLayout.findViewById(R.id.editProfile);
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_settings);
-                if(navigationDataObject !=null) {
+                NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_settings);
+                if (navigationDataObject != null) {
                     action(navigationDataObject);
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                     drawer.closeDrawer(GravityCompat.START);
@@ -121,12 +122,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
         userName.setText(getApp().getUser().getUsername());
-        ImageView userImage = (ImageView)headerLayout.findViewById(R.id.userImage);
+        ImageView userImage = (ImageView) headerLayout.findViewById(R.id.userImage);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_settings);
-                if(navigationDataObject !=null) {
+                NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_settings);
+                if (navigationDataObject != null) {
                     action(navigationDataObject);
                     DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                     drawer.closeDrawer(GravityCompat.START);
@@ -139,23 +140,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 .into(userImage);
 
 
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
-        if(navigationDataObject !=null)
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_home);
+        if (navigationDataObject != null)
             action(navigationDataObject);
 
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if (activePage!= null && activePage.allowedBack()==false)
-        {
+        } else if (activePage != null && activePage.allowedBack() == false) {
 
-        }
-        else if (activePage!= null && activePage.allowedBack())
-        {
+        } else if (activePage != null && activePage.allowedBack()) {
             final Snackbar snackbar = Snackbar.make(layoutParent, "Are you sure you want to exit", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Yes", new View.OnClickListener() {
                 public void onClick(View v) {
@@ -164,11 +162,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             });
             ColoredSnackbar.alert(snackbar).show();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -177,7 +175,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         try {
             MenuItem menuItem = menu.findItem(R.id.nav_my_search);
             final MenuItem overflow = menu.findItem(R.id.nav_my_overflow);
-            final SearchView view  = (SearchView) menuItem.getActionView();
+            final SearchView view = (SearchView) menuItem.getActionView();
             view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -190,13 +188,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     return false;
                 }
             });
-            MenuItemCompat.setOnActionExpandListener(menuItem,new MenuItemCompat.OnActionExpandListener() {
+            MenuItemCompat.setOnActionExpandListener(menuItem, new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
                     view.setBackgroundResource(R.drawable.bg_search);
                     overflow.setVisible(false);
-                    NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_my_search);
-                    if(navigationDataObject !=null)
+                    NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_my_search);
+                    if (navigationDataObject != null)
                         action(navigationDataObject);
                     return true;
                 }
@@ -205,7 +203,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                         view.setBackground(null);
-                    }else
+                    } else
                         view.setBackgroundDrawable(null);
                     overflow.setVisible(true);
                     return true;
@@ -218,50 +216,57 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        boolean returnVal=false;
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(id);
-        if(navigationDataObject !=null)
+        boolean returnVal = false;
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
+        if (navigationDataObject != null)
             returnVal = action(navigationDataObject);
 
-        if(returnVal)
+        if (returnVal)
             return returnVal;
         return super.onOptionsItemSelected(item);
     }
 
+    public void registerQueryListener(IQueryListener listener) {
+        if (!queryListeners.contains(listener))
+            queryListeners.add(listener);
+    }
 
+    public void unRegisterQueryListener(IQueryListener listener) {
+        queryListeners.remove(listener);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        boolean returnVal=false;
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(id);
-        if(navigationDataObject !=null)
+        boolean returnVal = false;
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
+        if (navigationDataObject != null)
             returnVal = action(navigationDataObject);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return returnVal;
     }
 
-    final public static int POST_FEED=1;
+    final public static int POST_FEED = 1;
+
     @Subscribe
     public void onEvent(SocialPost data) {
 
-        if(!uploadInProgress)
-        {
-            Intent intent=null;
-            if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST)
-                intent= new Intent(MainActivity.this, PostNormalActivity.class);
-            else if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_POLL)
-                intent= new Intent(MainActivity.this, PostPollActivity.class);
-            else if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_BEST_OF)
-                intent= new Intent(MainActivity.this, PostBestOfActivity.class);
-            if(intent!=null)
-            {
+        if (!uploadInProgress) {
+            Intent intent = null;
+            if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST)
+                intent = new Intent(MainActivity.this, PostNormalActivity.class);
+            else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_POLL)
+                intent = new Intent(MainActivity.this, PostPollActivity.class);
+            else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_BEST_OF)
+                intent = new Intent(MainActivity.this, PostBestOfActivity.class);
+            if (intent != null) {
                 socialPostHost = new WeakReference<>(data.host);
                 People people = getApp().getPeople();
                 intent.putExtra("NAME", people.getUserName());
@@ -270,99 +275,92 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 intent.putExtra("PROFILE_PIC", people.getProfilePic());
                 intent.putExtra("IS_DESIGNER", people.getIsDesigner());
                 intent.putExtra("ID", people.getUserId());
-                intent.putExtra("IS_SELF",people.isSelf());
-                intent.putExtra("backEnabled",true);
+                intent.putExtra("IS_SELF", people.isSelf());
+                intent.putExtra("backEnabled", true);
                 startActivityForResult(intent, POST_FEED);
             }
-        }
-        else
-        {
+        } else {
             final Snackbar snackbar = Snackbar.make(layoutParent, "Upload is in progress", Snackbar.LENGTH_SHORT);
             ColoredSnackbar.info(snackbar).show();
         }
 
     }
+
     final private int postCallToken = IDUtils.generateViewId();
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
-                try {
-                    //String fileData=data.getStringExtra("fileData");
-                    int type=data.getIntExtra("type", -1);
-                    if(type!=-1)
-                    {
-                        String msg=data.getStringExtra("msg");
-                        MultipartEntity reqEntity = new MultipartEntity();
+            try {
+                //String fileData=data.getStringExtra("fileData");
+                int type = data.getIntExtra("type", -1);
+                if (type != -1) {
+                    String msg = data.getStringExtra("msg");
+                    MultipartEntity reqEntity = new MultipartEntity();
 
 
-                        try
-                        {
-                            if(data.getExtras().get("files")!=null) {
-                                File[] files = (File[]) data.getExtras().get("files");
+                    try {
+                        if (data.getExtras().get("files") != null) {
+                            File[] files = (File[]) data.getExtras().get("files");
 
-                                File file;
-                                int count = 1;
-                                for (int i = 0; i < files.length; i++) {
-                                    file = files[i];
-                                    if (file!=null && file.exists() && file.canRead()) {
-                                        reqEntity.addPart("file" + count, new FileBody(file));
-                                        count++;
-                                    }
-                                }
-                            }
-                        }catch (Exception e)
-                        {
-                            if(data.getExtras().get("filesURIs")!=null) {
-                                String[] uris = (String[]) data.getExtras().get("filesURIs");
-
-                                File file;
-                                int count = 1;
-                                for (int i = 0; i < uris.length; i++) {
-                                    file = new File(uris[i]);;
-                                    if (file!=null && file.exists() && file.canRead()) {
-                                        reqEntity.addPart("file" + count, new FileBody(file));
-                                        count++;
-                                    }
+                            File file;
+                            int count = 1;
+                            for (int i = 0; i < files.length; i++) {
+                                file = files[i];
+                                if (file != null && file.exists() && file.canRead()) {
+                                    reqEntity.addPart("file" + count, new FileBody(file));
+                                    count++;
                                 }
                             }
                         }
+                    } catch (Exception e) {
+                        if (data.getExtras().get("filesURIs") != null) {
+                            String[] uris = (String[]) data.getExtras().get("filesURIs");
 
-
-
-
-                        if(msg!=null && msg.equals("")==false)
-                            reqEntity.addPart("createpost_message", new StringBody(msg));
-                        reqEntity.addPart("createpost_type", new StringBody(type+""));
-                        Map<String, Object> params = new HashMap<>();
-                        params.put(AQuery.POST_ENTITY, reqEntity);
-
-
-                        String url = getUrlHelper().getCreatePostServiceURL();
-                        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
-                        ajaxCallback.setClazz(String.class);
-                        ajaxCallback.setParams(params);
-                        ajaxCallback.method(AQuery.METHOD_POST);
-                        getAQuery().ajax(url, params, String.class, ajaxCallback);
-                        uploadInProgress=true;
-                        startUploadProgress();
+                            File file;
+                            int count = 1;
+                            for (int i = 0; i < uris.length; i++) {
+                                file = new File(uris[i]);
+                                ;
+                                if (file != null && file.exists() && file.canRead()) {
+                                    reqEntity.addPart("file" + count, new FileBody(file));
+                                    count++;
+                                }
+                            }
+                        }
                     }
 
 
+                    if (msg != null && msg.equals("") == false)
+                        reqEntity.addPart("createpost_message", new StringBody(msg));
+                    reqEntity.addPart("createpost_type", new StringBody(type + ""));
+                    Map<String, Object> params = new HashMap<>();
+                    params.put(AQuery.POST_ENTITY, reqEntity);
 
-                }catch (Exception e)
-                {
-                    System.out.println(e);
+
+                    String url = getUrlHelper().getCreatePostServiceURL();
+                    ExtendedAjaxCallback ajaxCallback = getAjaxCallback(postCallToken);
+                    ajaxCallback.setClazz(String.class);
+                    ajaxCallback.setParams(params);
+                    ajaxCallback.method(AQuery.METHOD_POST);
+                    getAQuery().ajax(url, params, String.class, ajaxCallback);
+                    uploadInProgress = true;
+                    startUploadProgress();
                 }
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
-    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-        if(id== postCallToken)
-        {
-            uploadInProgress=false;
+
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == postCallToken) {
+            uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
-            if(success)
-            {
-                if(socialPostHost!=null && socialPostHost.get()!=null)
+            if (success) {
+                if (socialPostHost != null && socialPostHost.get() != null)
                     socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
 
                 socialPostHost = null;
@@ -370,44 +368,44 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 stopUploadProgress(true);
 
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 stopUploadProgress(success);
             }
 
-        }
-        else
-            super.serverCallEnds(id,url, json, status);
+        } else
+            super.serverCallEnds(id, url, json, status);
     }
+
     private void startUploadProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
+
     private void stopUploadProgress(boolean success) {
         progressBar.setVisibility(View.GONE);
     }
-    public boolean action(NavigationDataObject navigationDataObject) {
-        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW))
-        {
-            Action action =new Action(this);
-            Boolean isAdded=false;
 
-            if(activePageData!=null && activePageData.getIdInt()== navigationDataObject.getIdInt()) {
+    public boolean action(NavigationDataObject navigationDataObject) {
+        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW)) {
+            Action action = new Action(this);
+            Boolean isAdded = false;
+
+            if (activePageData != null && activePageData.getIdInt() == navigationDataObject.getIdInt()) {
                 isAdded = true;
 
             }
 
-            if(!isAdded) {
+            if (!isAdded) {
                 BaseFragment view = BaseFragment.newInstance(navigationDataObject);
                 if (view != null) {
                     setTitle(navigationDataObject.getTitle());
-                    FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.container, view);
                     ft.commit();
                     activePage = view;
                     activePageData = navigationDataObject;
-                    if(backEntry==false)
+                    if (backEntry == false)
                         history.add(activePageData);
-                    backEntry=false;
+                    backEntry = false;
                     return true;
                 }
             }
