@@ -92,7 +92,7 @@ public class NotificationsActivity extends BaseActivity {
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.layout_notification_item, null);
                 holder = new NotificationHolder();
-                holder.person = (CircularImageView) convertView.findViewById(R.id.personImage);
+                holder.person = (CircularImageView) convertView.findViewById(R.id.userImage);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
                 holder.content = (ImageView) convertView.findViewById(R.id.contentImage);
