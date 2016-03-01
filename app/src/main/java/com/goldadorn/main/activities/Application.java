@@ -1,19 +1,18 @@
 package com.goldadorn.main.activities;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.sample.UnderDevelopment;
+import com.goldadorn.main.modules.search.HashTagFragment;
+import com.goldadorn.main.modules.search.SearchFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
-import com.goldadorn.main.modules.timeLine.MyTimeLineFragment;
-import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
-import com.goldadorn.main.model.User;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.model.BaseApplication;
@@ -22,7 +21,6 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
 
 import org.apache.http.cookie.Cookie;
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +93,8 @@ public class Application extends BaseApplication {
 
 
         addItem(menu, R.id.nav_my_notifications,R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);
-//        addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
+        addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, SearchFragment.class);
+        addItem(menu, R.id.nav_id_hashtag, R.string.hashtag, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, HashTagFragment.class);
 
 
         String appPlayStoreURL=getString(R.string.palyStoreBasicURL)+ getPackageName();

@@ -46,8 +46,6 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:palette-v7:$SUPPORT_LIBRARY_VERSION"
     compile 'com.google.android.gms:play-services:3.1.36'
-    compile files('libs/android-query-full.0.26.8.jar')
-    compile files('libs/nineoldandroids-2.4.0.jar')
 
     compile files('libs/apache-mime4j-0.6.jar')
     compile files('libs/httpmime-4.0.1.jar')

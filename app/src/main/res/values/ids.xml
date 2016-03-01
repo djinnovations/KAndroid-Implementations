@@ -6,4 +6,6 @@
 
     <item name="kimeeo_adapter_layout_list_holder" type="id" />
     <item name="kimeeo_adapter_layout_list_view_type" type="id"/>
+
+    <item name="nav_id_hashtag" type="id" />
 </resources>
