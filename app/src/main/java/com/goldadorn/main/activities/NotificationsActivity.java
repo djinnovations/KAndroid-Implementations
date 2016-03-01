@@ -9,7 +9,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.goldadorn.main.R;
+import com.goldadorn.main.utils.IDUtils;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
 import org.github.images.CircularImageView;
 
@@ -26,6 +29,7 @@ public class NotificationsActivity extends BaseActivity {
 
     @Bind(R.id.notificationsList)
     ListView notificationsList;
+    final private int postCallToken = IDUtils.generateViewId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,16 @@ public class NotificationsActivity extends BaseActivity {
         NotificationsAdapter adapter = new NotificationsAdapter(this);
         notificationsList.setAdapter(adapter);
 
+        refresh();
+    }
+
+    private void refresh(){
+        String url = getUrlHelper().getNotificationsUrl();
+        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
+        ajaxCallback.setClazz(String.class);
+//        ajaxCallback.setParams(params);
+        ajaxCallback.method(AQuery.METHOD_POST);
+//        getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
 
     private class NotificationsAdapter extends BaseAdapter {

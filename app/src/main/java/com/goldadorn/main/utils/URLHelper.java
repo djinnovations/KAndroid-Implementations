@@ -2,7 +2,6 @@ package com.goldadorn.main.utils;
 
 
 import com.goldadorn.main.BuildConfig;
-import com.goldadorn.main.model.People;
 
 import org.apache.http.cookie.Cookie;
 
@@ -137,6 +136,11 @@ public class URLHelper {
         return endPoint+VERB.FETCH_VOTERS;
     }
 
+    public String getNotificationsUrl()
+    {
+        return endPoint+VERB.FETCH_NOTIFICATIONS;
+    }
+
     public static class VERB
     {
         public static final String REGISTER="register";
@@ -154,6 +158,7 @@ public class URLHelper {
         public static final String FETCH_TIME_LINE="fetchtimeline";
         public static final String FETCH_LIKES="fetchlikes";
         public static final String FETCH_VOTERS="fetchvoters";
+        public static final String FETCH_NOTIFICATIONS="notifications";
 
 
     }
