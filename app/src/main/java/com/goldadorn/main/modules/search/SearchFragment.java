@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,9 @@ import android.view.ViewGroup;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.utils.IQueryListener;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.StaticDataManger;
@@ -30,25 +33,23 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
     }
 
     protected Application getApp() {
-        BaseActivity baseActivity =(BaseActivity)getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
         return baseActivity.getApp();
     }
 
-    protected DataManager createDataManager()
-    {
-        DataManager dataManger =new StaticDataManger(getActivity());
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(
+    protected DataManager createDataManager() {
+        DataManager dataManger = new StaticDataManger(getActivity());
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(
                 R.id.nav_id_hashtag);
         dataManger.add(navigationDataObject);
-        navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_people);
+        navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_people);
         dataManger.add(navigationDataObject);
         return dataManger;
     }
-    public Fragment getItemFragment(int position,Object navigationObject)
-    {
-        if(navigationObject instanceof IFragmentData)
-        {
-            BaseFragment activePage = BaseFragment.newInstance((IFragmentData)navigationObject);
+
+    public Fragment getItemFragment(int position, Object navigationObject) {
+        if (navigationObject instanceof IFragmentData) {
+            BaseFragment activePage = BaseFragment.newInstance((IFragmentData) navigationObject);
             return activePage;
         }
         return
@@ -56,12 +57,34 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
     }
 
     @Override
-    public String getItemTitle(int position,Object navigationObject)
-    {
-        if(navigationObject instanceof IFragmentData)
-        {
-            return ((IFragmentData)navigationObject).getName();
+    public String getItemTitle(int position, Object navigationObject) {
+        if (navigationObject instanceof IFragmentData) {
+            return ((IFragmentData) navigationObject).getName();
         }
-        return super.getItemTitle(position,navigationObject);
+        return super.getItemTitle(position, navigationObject);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((MainActivity) getActivity()).registerQueryListener(mQueryListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((MainActivity) getActivity()).unRegisterQueryListener(mQueryListener);
+    }
+
+    private IQueryListener mQueryListener = new IQueryListener() {
+        @Override
+        public void onQueryChange(String newQuery) {
+            Log.d("IQueryListener", newQuery);
+        }
+
+        @Override
+        public void onQuerySubmit(String query) {
+
+        }
+    };
 }

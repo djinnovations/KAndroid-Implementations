@@ -179,12 +179,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+                    for (IQueryListener l : queryListeners)
+                        l.onQuerySubmit(query);
                     return false;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
                     //// TODO: 1/3/16 implement on search
+                    for (IQueryListener l : queryListeners)
+                        l.onQueryChange(newText);
                     return false;
                 }
             });
