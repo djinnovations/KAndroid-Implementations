@@ -2,7 +2,6 @@ package com.goldadorn.main.modules.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,12 +78,11 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
     private IQueryListener mQueryListener = new IQueryListener() {
         @Override
         public void onQueryChange(String newQuery) {
-            Log.d("IQueryListener", newQuery);
         }
 
         @Override
         public void onQuerySubmit(String query) {
-
+        // TODO search implementation
         }
     };
 }
