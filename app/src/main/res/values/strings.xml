@@ -69,6 +69,7 @@
     <string name="voteCountLabel">"Votes: "</string>
     <string name="home">Home</string>
     <string name="faqs">FAQs</string>
+    <string name="hashtag">Hashtags</string>
 
 
 </resources>
