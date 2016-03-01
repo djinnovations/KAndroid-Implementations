@@ -111,7 +111,10 @@ public class HeartIconFont implements ITypeface {
         hea_heart_out_line('\ue901'),
         hea_heart_fill('\ue902'),
         hea_broken_heart_fill('\ue900'),
-        hea_broken_heart_out_line('\ue903');
+        hea_broken_heart_out_line('\ue903'),
+        hea_following('\ue904'),
+        hea_follow('\ue905'),
+        hea_buy_or_not('\ue906');
 
 
 

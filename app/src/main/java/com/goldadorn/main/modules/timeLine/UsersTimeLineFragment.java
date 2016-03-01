@@ -225,11 +225,13 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
         isRefreshingData= true;
         return getApp().getUrlHelper().getUsersSocialFeedServiceURL();
     }
+    /*
     @Override
     public void gotoUser(People people)
     {
 
     }
+    */
 
     public static class TimelineFeedResult extends SocilFeedResult
     {

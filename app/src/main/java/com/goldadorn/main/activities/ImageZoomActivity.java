@@ -20,7 +20,7 @@ public class ImageZoomActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_open_web);
+        setContentView(R.layout.activity_fragment_holder);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -34,6 +34,7 @@ public class ImageZoomActivity extends BaseActivity{
 
         String postId = getIntent().getExtras().getString("POST_ID");
         int postType = getIntent().getExtras().getInt("TYPE", -1);
+        int index = getIntent().getExtras().getInt("INDEX", -1);
         String details = getIntent().getExtras().getString("DETAILS");
         int totalVotes = getIntent().getExtras().getInt("TOTAL_VOTES",-1);
         setTitle(details + "");
@@ -42,6 +43,7 @@ public class ImageZoomActivity extends BaseActivity{
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, SimpleImageArray.class);
         navigationObject.setParam(images);
         BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
+        ((SimpleImageArray)mActivePage).setIndex(index);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
     }
 

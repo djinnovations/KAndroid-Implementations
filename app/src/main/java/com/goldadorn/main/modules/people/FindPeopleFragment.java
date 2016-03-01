@@ -145,12 +145,12 @@ public class FindPeopleFragment extends DefaultVerticalListView
                     isFollowing = isFollowing==0?1:0;
                     people.setIsFollowing(isFollowing);
                     if(people.getIsFollowing()==1) {
-                        followButton.setText("{faw-user_times}");
-                        followButton.setSelected(true);
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                        //followButton.setSelected(true);
                     }
                     else {
-                        followButton.setText("{faw-user_plus}");
-                        followButton.setSelected(false);
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                        //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
                     followPeope(people, position);
@@ -191,12 +191,12 @@ public class FindPeopleFragment extends DefaultVerticalListView
                 followButton.setVisibility(View.VISIBLE);
 
                 if(people.getIsFollowing()==1) {
-                    followButton.setText("{faw-user_times}");
-                    followButton.setSelected(true);
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                    //followButton.setSelected(true);
                 }
                 else {
-                    followButton.setText("{faw-user_plus}");
-                    followButton.setSelected(false);
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                    //followButton.setSelected(false);
                 }
             }
         }

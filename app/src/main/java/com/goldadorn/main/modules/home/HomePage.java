@@ -23,11 +23,21 @@ public class HomePage extends BaseHorizontalFragmentViewPager
     protected void garbageCollectorCall() {
         super.garbageCollectorCall();
         disableApp=null;
+        socialFeedFragmentpage=null;
     }
 
+    public boolean allowedBack() {
+        if(socialFeedFragmentpage!=null) {
+            return socialFeedFragmentpage.allowedBack();
+        }
+        else
+            return super.allowedBack();
+    }
+    SocialFeedFragment socialFeedFragmentpage;
     public void onItemCreated(Fragment page) {
         if(page instanceof SocialFeedFragment)
         {
+            socialFeedFragmentpage = ((SocialFeedFragment) page);
             ((SocialFeedFragment)page).addDisableColver(disableApp);
         }
     }

@@ -27,6 +27,7 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
+import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -145,9 +146,13 @@ public class SocialFeedFragment extends DefaultVerticalListView
         followHelper.update(post, pos);
     }
 
-    public void onBackPressed() {
-       if(mFloatingActionsMenu.isExpanded())
-           closeMenu();
+    public boolean allowedBack() {
+        if(mFloatingActionsMenu.isExpanded()) {
+            closeMenu();
+            return false;
+        }
+        else
+            return super.allowedBack();
     }
     protected DataManager createDataManager()
     {
@@ -330,7 +335,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         post.setIconDrawable(icon);
 
 
-        icon = IconsUtils.getFontIconDrawable(getActivity(), GoldadornIconFont.Icon.gol_poll, R.color.white, iconSize);
+        icon = IconsUtils.getFontIconDrawable(getActivity(), HeartIconFont.Icon.hea_buy_or_not, R.color.white, iconSize);
         poll.setIconDrawable(icon);
 
         icon = IconsUtils.getFontIconDrawable(getActivity(), GoldadornIconFont.Icon.gol_best_of, R.color.white, iconSize);
@@ -630,7 +635,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
                 }
                 else if (v == image) {
-                    zoomImages(socialPost);
+                    zoomImages(socialPost,0);
                 }
             }
         };
@@ -756,8 +761,14 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 else if (v == pollLabel) {
 
                 }
-                else if (v == option1Image || v == option2Image ||v == option3Image) {
-                    zoomImages(socialPost);
+                else if (v == option1Image) {
+                    zoomImages(socialPost,0);
+                }
+                else if (v == option2Image) {
+                    zoomImages(socialPost,1);
+                }
+                else if (v == option3Image) {
+                    zoomImages(socialPost,2);
                 }
             }
         };
@@ -862,17 +873,19 @@ public class SocialFeedFragment extends DefaultVerticalListView
         }
     }
 
-    private void zoomImages(SocialPost socialPost) {
+    private void zoomImages(SocialPost socialPost,int index) {
         NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Best of", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ImageZoomActivity.class);
         Map<String, Object> data= new HashMap<>();
         data.put("IMAGES", socialPost.getImages());
         data.put("POST_ID", socialPost.getPostId());
         data.put("DETAILS", socialPost.getDescription());
         data.put("TYPE", socialPost.getPostType());
+        data.put("INDEX", index);
+
         //data.put("VOTES", socialPost.getVotes().toString());
         //data.put("TOTAL_VOTES", socialPost.getVoteCount());
         navigationDataObject.setParam(data);
-        //EventBus.getDefault().post(new AppActions(navigationDataObject));
+        EventBus.getDefault().post(new AppActions(navigationDataObject));
     }
 
     public class NormalPostItemHolder extends PostItemHolder {
@@ -886,7 +899,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
             public void onClick(View v) {
                 if (v == image && socialPost.getImg1()!=null && socialPost.getImg1().url.trim().equals("")==false){
 
-                    zoomImages(socialPost);
+                    zoomImages(socialPost,0);
                 }
             }
         };
@@ -1005,12 +1018,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     isFollowing = isFollowing==0?1:0;
                     socialPost.setIsFollowing(isFollowing);
                     if(socialPost.getIsFollowing()==1) {
-                        followButton.setText("{faw-user_times}");
-                        followButton.setSelected(true);
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                        //followButton.setSelected(true);
                     }
                     else {
-                        followButton.setText("{faw-user_plus}");
-                        followButton.setSelected(false);
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                        //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
                     followPeope(socialPost, position);
@@ -1134,12 +1147,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 followButton.setVisibility(View.VISIBLE);
 
                 if(socialPost.getIsFollowing()==1) {
-                    followButton.setText("{faw-user_times}");
-                    followButton.setSelected(true);
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                    //followButton.setSelected(true);
                 }
                 else {
-                    followButton.setText("{faw-user_plus}");
-                    followButton.setSelected(false);
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                    //followButton.setSelected(false);
                 }
             }
 

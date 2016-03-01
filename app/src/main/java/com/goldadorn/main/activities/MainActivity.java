@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -143,7 +145,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+        }
+        else if (activePage!= null && activePage.allowedBack()==false)
+        {
+
+        }
+        else if (activePage!= null && activePage.allowedBack())
+        {
+
+            final Snackbar snackbar = Snackbar.make(layoutParent, "Are you sure you want to exit", Snackbar.LENGTH_SHORT);
+            snackbar.setAction("Yes", new View.OnClickListener() {
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                    finish();
+                }
+            });
+            ColoredSnackbar.alert(snackbar).show();
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -167,6 +186,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             return returnVal;
         return super.onOptionsItemSelected(item);
     }
+
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -387,7 +409,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 BaseFragment view = BaseFragment.newInstance(navigationDataObject);
                 if (view != null) {
                     setTitle(navigationDataObject.getTitle());
-                    getSupportFragmentManager().beginTransaction().replace(R.id.container, view).commit();
+                    FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, view);
+                    ft.commit();
                     activePage = view;
                     activePageData = navigationDataObject;
                     return true;

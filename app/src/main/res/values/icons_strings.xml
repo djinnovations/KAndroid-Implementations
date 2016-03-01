@@ -7,8 +7,8 @@
 
     <string name="icon_small_arrow_down">{faw-angle_down}</string>
     <string name="icon_minus_circle">{faw-minus_circle}</string>
-    <string name="icon_follow_user">{faw-user_plus}</string>
-    <string name="icon_un_follow_user">{faw-user_times}</string>
+    <string name="icon_follow_user">{hea-follow}</string>
+    <string name="icon_un_follow_user">{hea-following}</string>
     <string name="icon_add_category">{kim-addition10}</string>
     <string name="icon_share_post">{faw-retweet}</string>
     <string name="icon_comment_post">{faw-comment_o}</string>
