@@ -85,4 +85,10 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
         // TODO search implementation
         }
     };
+
+    @Override
+    public boolean allowedBack() {
+        ((MainActivity)getActivity()).goBack();
+        return false;
+    }
 }

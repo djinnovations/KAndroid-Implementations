@@ -145,7 +145,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             action(navigationDataObject);
 
     }
-
+    public void goBack(){
+        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
+        if(navigationDataObject !=null)
+            action(navigationDataObject);
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
