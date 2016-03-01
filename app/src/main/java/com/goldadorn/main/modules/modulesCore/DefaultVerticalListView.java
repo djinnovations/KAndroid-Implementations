@@ -81,6 +81,5 @@ abstract public class DefaultVerticalListView extends ResponsiveView implements 
             navigationDataObject.setParam(data);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
         }
-
     }
 }

@@ -56,12 +56,16 @@ public class SimpleImageArray extends HorizontalViewPager
         final Runnable runnablelocal = new Runnable() {
             @Override
             public void run() {
-                gotoItem(index,true);
-                progressBar.setVisibility(View.GONE);
-                getViewPager().setVisibility(View.VISIBLE);
+
+                try {
+                    gotoItem(index,true);
+                    progressBar.setVisibility(View.GONE);
+                    getViewPager().setVisibility(View.VISIBLE);
+                }catch(Exception e){}
+
             }
         };
-        handler.postDelayed(runnablelocal,1500 );
+        handler.postDelayed(runnablelocal,1000 );
         return dataManger;
     }
     public String getPageTitle(int position, Object o) {

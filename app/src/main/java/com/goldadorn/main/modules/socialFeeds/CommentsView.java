@@ -15,7 +15,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.UserActivity;
+import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.Comment;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
@@ -23,6 +26,7 @@ import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
+import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -31,6 +35,7 @@ import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -178,6 +183,9 @@ public class CommentsView extends DefaultVerticalListView
             return getApp().getUrlHelper().getFetchCommentsServiceURL();
         return null;
     }
+
+
+
     public class CommentItemHolder extends BaseItemHolder {
 
         @Bind(R.id.userImage)
@@ -199,7 +207,19 @@ public class CommentsView extends DefaultVerticalListView
         {
             public void onClick(View v)
             {
-
+                People p = new People();
+                p.setUserId(comment.getUserId());
+                p.setUserName(comment.getUserName());
+                p.setProfilePic(comment.getProfilePic());
+                p.setIsSelf(comment.isSelf());
+                if(v==userImage)
+                {
+                    gotoUser(p);
+                }
+                else if(v==userName)
+                {
+                    gotoUser(p);
+                }
             }
         };
         private Comment comment;

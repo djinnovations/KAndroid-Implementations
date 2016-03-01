@@ -25,6 +25,7 @@ import com.goldadorn.main.activities.CommentsActivity;
 import com.goldadorn.main.activities.ImageZoomActivity;
 import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
+import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -142,6 +143,14 @@ public class SocialFeedFragment extends DefaultVerticalListView
     private void selectAPost(SocialPost post,int pos) {
         selectHelper.update(post, pos);
     }
+    private void gotoVotes(SocialPost socialPost,int pos) {
+        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Votes by", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, VotersActivity.class);
+        Map<String, Object> data= new HashMap<>();
+        data.put("POST_ID",socialPost.getPostId());
+        navigationDataObject.setParam(data);
+        EventBus.getDefault().post(new AppActions(navigationDataObject));
+    }
+
     private void followPeope(SocialPost post,int pos) {
         followHelper.update(post, pos);
     }
@@ -631,12 +640,16 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     }
 
                 }
-                else if (v == pollLabel) {
-
-                }
                 else if (v == image) {
                     zoomImages(socialPost,0);
                 }
+                else if (v == votePostButton) {
+                    gotoVotes(socialPost, position);
+                }
+                else if (v == pollLabel) {
+                    gotoVotes(socialPost, position);
+                }
+
             }
         };
         public PollPostItemHolder(View itemView)
@@ -645,12 +658,13 @@ public class SocialFeedFragment extends DefaultVerticalListView
             buy.setOnClickListener(itemClick);
             notBuy.setOnClickListener(itemClick);
             pollLabel.setOnClickListener(itemClick);
+            votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
             pollLabel.setVisibility(View.VISIBLE);
-            //votePostButton.setVisibility(View.VISIBLE);
+            votePostButton.setVisibility(View.VISIBLE);
             pollLabel.setText(getActivity().getString(R.string.voteCountLabel) + item.getVoteCount() + "");
 
             if(item.getImg1()!=null && item.getImg1().url.trim().equals("")==false)
@@ -758,9 +772,6 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         selectAPost(socialPost, position);
                     }
                 }
-                else if (v == pollLabel) {
-
-                }
                 else if (v == option1Image) {
                     zoomImages(socialPost,0);
                 }
@@ -769,6 +780,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 }
                 else if (v == option3Image) {
                     zoomImages(socialPost,2);
+                }
+                else if (v == votePostButton) {
+                    gotoVotes(socialPost, position);
+                }
+                else if (v == pollLabel) {
+                    gotoVotes(socialPost, position);
                 }
             }
         };
@@ -793,12 +810,13 @@ public class SocialFeedFragment extends DefaultVerticalListView
             option2Image.setOnClickListener(itemClick);
             option3Image.setOnClickListener(itemClick);
             pollLabel.setOnClickListener(itemClick);
+            votePostButton.setOnClickListener(itemClick);
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
 
             pollLabel.setVisibility(View.VISIBLE);
-            //votePostButton.setVisibility(View.VISIBLE);
+            votePostButton.setVisibility(View.VISIBLE);
             pollLabel.setText(getActivity().getString(R.string.voteCountLabel) + item.getVoteCount() + "");
 
             detailsHolder.setVisibility(View.VISIBLE);
@@ -1204,7 +1222,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
     }
 
     private void gotoComments(SocialPost socialPost, boolean b) {
-        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),socialPost.getDescription()+"'s Comments", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CommentsActivity.class);
+        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Comments", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CommentsActivity.class);
         Map<String, Object> data= new HashMap<>();
         data.put("POST_ID",socialPost.getPostId());
         data.put("POST",b);
@@ -1212,7 +1230,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         EventBus.getDefault().post(new AppActions(navigationDataObject));
     }
     private void gotoLikes(SocialPost socialPost, boolean b) {
-        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),socialPost.getDescription()+" Likes by", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, LikesActivity.class);
+        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Likes by", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, LikesActivity.class);
         Map<String, Object> data= new HashMap<>();
         data.put("POST_ID",socialPost.getPostId());
         data.put("POST",b);

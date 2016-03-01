@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
+    android:background="@color/white"
+    android:padding="@dimen/appDefault1XMargin"
     android:layout_height="wrap_content">
 
-    <RelativeLayout android:layout_weight="1"
+    <EditText
+        android:layout_weight="1"
         android:layout_width="0dp"
-        android:background="@drawable/chat_bg_2"
-        android:layout_height="wrap_content" >
-        <EditText
-            android:layout_width="match_parent"
-            android:id="@+id/details"
+        android:layout_height="wrap_content"
+        android:id="@+id/details"
+        android:maxHeight="150dp"
+        android:hint="Enter your comments"/>
 
-            android:hint="Enter your comments"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
     <com.mikepenz.iconics.view.IconicsButton
-        style="@style/socialLoginButton"
-        android:layout_gravity="top"
-        android:layout_marginTop="@dimen/appDefault2XMargin"
-        android:layout_marginRight="@dimen/appDefault2XMargin"
+        style="@style/linkButton"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/appDefault2XMargin"
         android:layout_width="@dimen/circle_button_height"
         android:text="@string/icon_send"
+        android:textSize="30sp"
+        android:hint="Send"
         android:layout_height="@dimen/circle_button_height"
         android:id="@+id/send"/>
 

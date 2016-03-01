@@ -48,7 +48,7 @@ public class Comment implements IParseableObject {
     }
 
     private boolean isSelf;
-    DateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, hh:mm");
+    DateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, hh:mm a");
     public void dataLoaded(BaseDataParser entireData)
     {
         if(userId== Application.getLoginUser().getUserid())

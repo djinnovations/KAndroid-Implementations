@@ -158,7 +158,7 @@ public class SocialPost extends ServerError implements IParseableObject {
     }
 
 
-    DateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, hh:mm");
+    DateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, hh:mm a");
     public void setIsDesigner(Integer isDesigner) {
         this.isDesigner = isDesigner;
     }

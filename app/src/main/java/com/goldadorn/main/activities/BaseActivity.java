@@ -4,21 +4,27 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.goldadorn.main.R;
+import com.goldadorn.main.eventBusEvents.AppActions;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.model.BaseApplication;
 
 import org.apache.http.cookie.Cookie;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.EventBusException;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.List;
@@ -137,6 +143,70 @@ public class BaseActivity extends AppCompatActivity {
             pd=null;
         }
     }
+    @Subscribe
+    public void onEvent(AppActions data) {
+        action(data.navigationDataObject);
+    }
+    public boolean action(NavigationDataObject navigationDataObject) {
+        Action action =new Action(this);
+        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_LOGOUT)) {
+            logout();
+            return true;
+        }
+        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY))
+        {
+            String url =(String) navigationDataObject.getActionValue();
+            if(url!=null && url.equals("")==false)
+            {
+                Class target = navigationDataObject.getView();
+                if(target==null)
+                    target = WebActivity.class;
+                Map<String, Object> data=new HashMap<>();
+                data.put("URL",url);
+                data.put("TITLE", navigationDataObject.getName());
+                action.launchActivity(target, null, data, false);
+                return true;
+            }
 
+        }
+        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY))
+        {
 
+            Class target = navigationDataObject.getView();
+            if(target!=null)
+            {
+                Map<String, Object> data=null;
+                if(navigationDataObject.getParam()!=null)
+                    data =(Map<String,Object>) navigationDataObject.getParam();
+                if(data==null)
+                    data = new HashMap<>();
+                data.put("TITLE", navigationDataObject.getName());
+                action.launchActivity(target, null, data, false);
+                //overridePendingTransition  (R.anim.right_slide_in, R.anim.right_slide_out);
+                return true;
+            }
+
+        }
+        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE))
+        {
+
+            Map<String,String> map =(Map<String,String>) navigationDataObject.getParam();
+            action.textShare(map.get(Action.ATTRIBUTE_DATA),map.get(Action.ATTRIBUTE_TITLE));
+            return true;
+        }
+        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL))
+        {
+            String url =(String) navigationDataObject.getActionValue();
+            if(url!=null && url.equals("")==false)
+            {
+                action.openURL(url);
+                return true;
+            }
+        }
+        return false;
+    }
+    public void finish() {
+        super.finish();
+        //overridePendingTransition  (R.anim.right_slide_in, R.anim.right_slide_out);
+    }
 }

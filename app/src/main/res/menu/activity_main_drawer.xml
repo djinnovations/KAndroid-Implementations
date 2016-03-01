@@ -10,16 +10,15 @@
 
         <item
             android:id="@+id/nav_feed"
+            android:visible="false"
             android:icon="@drawable/vector_icon_feeds"
             android:title="@string/socialFeeds" />
         <item
             android:id="@+id/nav_people"
+            android:visible="false"
             android:icon="@drawable/vector_icon_people"
             android:title="@string/findPeople" />
-        <item
-            android:id="@+id/nav_timeline"
-            android:icon="@drawable/vector_icon_time_line"
-            android:title="@string/timeline" />
+
         <item
             android:id="@+id/nav_shop_by"
             android:icon="@drawable/vector_icon_shop_by"
@@ -40,7 +39,10 @@
             android:visible="false"
             android:title="@string/wishlist" />
     </group>
-
+    <item
+        android:id="@+id/nav_timeline"
+        android:icon="@drawable/vector_icon_time_line"
+        android:title="@string/timeline" />
 
 
 

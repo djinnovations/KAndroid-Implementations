@@ -132,6 +132,11 @@ public class URLHelper {
     {
         return endPoint+VERB.VOTE_BOF_3;
     }
+    public String getFetchVotersServiceURL()
+    {
+        return endPoint+VERB.FETCH_VOTERS;
+    }
+
     public static class VERB
     {
         public static final String REGISTER="register";
@@ -148,6 +153,8 @@ public class URLHelper {
         public static final String FETCH_COMMENTS="fetchcomments";
         public static final String FETCH_TIME_LINE="fetchtimeline";
         public static final String FETCH_LIKES="fetchlikes";
+        public static final String FETCH_VOTERS="fetchvoters";
+
 
     }
     public static class LOGIN_PARAM

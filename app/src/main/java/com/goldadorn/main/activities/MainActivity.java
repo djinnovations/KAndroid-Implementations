@@ -48,7 +48,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -57,6 +59,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     private BaseFragment activePage;
     private NavigationDataObject activePageData;
+    private List<NavigationDataObject> history = new ArrayList<>();
     @Bind(R.id.disableApp)
     View disableApp;
     @Bind(R.id.progressBar)
@@ -65,6 +68,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     ViewGroup layoutParent;
     private boolean uploadInProgress;
     private WeakReference<SocialFeedFragment> socialPostHost;
+    private boolean backEntry;
 
     public View getDisableApp()
     {
@@ -152,7 +156,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
         else if (activePage!= null && activePage.allowedBack())
         {
-
             final Snackbar snackbar = Snackbar.make(layoutParent, "Are you sure you want to exit", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Yes", new View.OnClickListener() {
                 public void onClick(View v) {
@@ -202,10 +205,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         drawer.closeDrawer(GravityCompat.START);
         return returnVal;
     }
-    @Subscribe
-    public void onEvent(AppActions data) {
-        action(data.navigationDataObject);
-    }
+
     final public static int POST_FEED=1;
     @Subscribe
     public void onEvent(SocialPost data) {
@@ -345,65 +345,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         progressBar.setVisibility(View.GONE);
     }
     public boolean action(NavigationDataObject navigationDataObject) {
-        Action action =new Action(this);
-        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_LOGOUT)) {
-            logout();
-            return true;
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY))
+        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW))
         {
-            String url =(String) navigationDataObject.getActionValue();
-            if(url!=null && url.equals("")==false)
-            {
-                Class target = navigationDataObject.getView();
-                if(target==null)
-                    target = WebActivity.class;
-                Map<String, Object> data=new HashMap<>();
-                data.put("URL",url);
-                data.put("TITLE", navigationDataObject.getName());
-                action.launchActivity(target, null, data, false);
-                return true;
-            }
-
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY))
-        {
-            Class target = navigationDataObject.getView();
-            if(target!=null)
-            {
-                Map<String, Object> data=null;
-                if(navigationDataObject.getParam()!=null)
-                    data =(Map<String,Object>) navigationDataObject.getParam();
-                if(data==null)
-                    data = new HashMap<>();
-                data.put("TITLE", navigationDataObject.getName());
-                action.launchActivity(target, null, data, false);
-                return true;
-            }
-
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE))
-        {
-
-            Map<String,String> map =(Map<String,String>) navigationDataObject.getParam();
-            action.textShare(map.get(Action.ATTRIBUTE_DATA),map.get(Action.ATTRIBUTE_TITLE));
-            return true;
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL))
-        {
-            String url =(String) navigationDataObject.getActionValue();
-            if(url!=null && url.equals("")==false)
-            {
-               action.openURL(url);
-               return true;
-            }
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW))
-        {
+            Action action =new Action(this);
             Boolean isAdded=false;
 
-            if(activePageData!=null && activePageData.getIdInt()== navigationDataObject.getIdInt())
-                isAdded=true;
+            if(activePageData!=null && activePageData.getIdInt()== navigationDataObject.getIdInt()) {
+                isAdded = true;
+
+            }
 
             if(!isAdded) {
                 BaseFragment view = BaseFragment.newInstance(navigationDataObject);
@@ -414,10 +364,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     ft.commit();
                     activePage = view;
                     activePageData = navigationDataObject;
+                    if(backEntry==false)
+                        history.add(activePageData);
+                    backEntry=false;
                     return true;
                 }
             }
         }
-        return false;
+        return super.action(navigationDataObject);
     }
 }

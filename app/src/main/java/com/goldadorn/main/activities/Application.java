@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -10,6 +11,7 @@ import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.sample.UnderDevelopment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.modules.timeLine.MyTimeLineFragment;
+import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.model.User;
 import com.kimeeo.library.actions.Action;
@@ -20,6 +22,7 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
 
 import org.apache.http.cookie.Cookie;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +81,7 @@ public class Application extends BaseApplication {
 
 
         //UsersTimeLineFragment
-        addItem(menu, R.id.nav_timeline, R.string.timeline, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, MyTimeLineFragment.class);
+        addItem(menu, R.id.nav_timeline, R.string.timeline, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UserActivity.class);
 
         //addItem(menu, R.id.nav_timeline, R.string.timeline, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, UnderDevelopment.class);
 
@@ -157,7 +160,20 @@ public class Application extends BaseApplication {
         people.setUserId(getUser().getUserid());
         people.setIsSelf(true);
         people.setIsFollowing(0);
+
+        Map<String, Object> data= new HashMap<>();
+        data.put("NAME",people.getUserName());
+        data.put("ID",people.getUserId());
+        data.put("FOLLOWER_COUNT",people.getFollowerCount());
+        data.put("FOLLOWING_COUNT",people.getFollowingCount());
+        data.put("PROFILE_PIC",people.getProfilePic());
+        data.put("IS_DESIGNER",people.getIsDesigner());
+        data.put("IS_SELF", people.isSelf());
+        data.put("IS_FOLLOWING", people.getIsFollowing());
+
         LOGIN_USER = user;
-        menu.get(R.id.nav_timeline).setParam(people);
+        ((NavigationDataObject)menu.get(R.id.nav_timeline)).name = people.getUserName()+" 's Timeline";
+        menu.get(R.id.nav_timeline).setParam(data);
+
     }
 }

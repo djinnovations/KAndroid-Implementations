@@ -9,6 +9,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.modules.timeLine.MyTimeLineFragment;
 import com.goldadorn.main.modules.timeLine.UsersTimeLineFragment;
 import com.goldadorn.main.utils.IDUtils;
 import com.kimeeo.library.actions.Action;
@@ -61,7 +62,11 @@ public class UserActivity extends BaseActivity{
 
 
 
-        NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, UsersTimeLineFragment.class);
+        NavigationDataObject navigationObject;
+        if(isSelf)
+            navigationObject= new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, MyTimeLineFragment.class);
+        else
+            navigationObject= new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, UsersTimeLineFragment.class);
         navigationObject.setParam(people);
 
         BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
@@ -80,63 +85,5 @@ public class UserActivity extends BaseActivity{
     @Subscribe
     public void onEvent(AppActions data) {
         action(data.navigationDataObject);
-    }
-
-
-    public boolean action(NavigationDataObject navigationDataObject) {
-        Action action =new Action(this);
-        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_LOGOUT)) {
-            logout();
-            return true;
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY))
-        {
-            String url =(String) navigationDataObject.getActionValue();
-            if(url!=null && url.equals("")==false)
-            {
-                Class target = navigationDataObject.getView();
-                if(target==null)
-                    target = WebActivity.class;
-                Map<String, Object> data=new HashMap<>();
-                data.put("URL",url);
-                data.put("TITLE", navigationDataObject.getName());
-                action.launchActivity(target, null, data, false);
-                return true;
-            }
-
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY))
-        {
-            Class target = navigationDataObject.getView();
-            if(target!=null)
-            {
-                Map<String, Object> data=null;
-                if(navigationDataObject.getParam()!=null)
-                    data =(Map<String,Object>) navigationDataObject.getParam();
-                if(data==null)
-                    data = new HashMap<>();
-                data.put("TITLE", navigationDataObject.getName());
-                action.launchActivity(target, null, data, false);
-                return true;
-            }
-
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE))
-        {
-
-            Map<String,String> map =(Map<String,String>) navigationDataObject.getParam();
-            action.textShare(map.get(Action.ATTRIBUTE_DATA),map.get(Action.ATTRIBUTE_TITLE));
-            return true;
-        }
-        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL))
-        {
-            String url =(String) navigationDataObject.getActionValue();
-            if(url!=null && url.equals("")==false)
-            {
-                action.openURL(url);
-                return true;
-            }
-        }
-        return false;
     }
 }
