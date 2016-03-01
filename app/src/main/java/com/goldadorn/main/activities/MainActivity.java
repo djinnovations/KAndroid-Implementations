@@ -2,18 +2,23 @@ package com.goldadorn.main.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -43,7 +48,6 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
@@ -173,6 +177,44 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        try {
+            MenuItem menuItem = menu.findItem(R.id.nav_my_search);
+            final MenuItem overflow = menu.findItem(R.id.nav_my_overflow);
+            final SearchView view  = (SearchView) menuItem.getActionView();
+            view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    //// TODO: 1/3/16 implement on search
+                    return false;
+                }
+            });
+            MenuItemCompat.setOnActionExpandListener(menuItem,new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    view.setBackgroundResource(R.drawable.bg_search);
+                    overflow.setVisible(false);
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        view.setBackground(null);
+                    }else
+                        view.setBackgroundDrawable(null);
+                    overflow.setVisible(true);
+                    return true;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         return true;
