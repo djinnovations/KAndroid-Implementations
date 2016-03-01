@@ -10,11 +10,15 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.utils.IDUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
 import org.github.images.CircularImageView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,12 +47,20 @@ public class NotificationsActivity extends BaseActivity {
     }
 
     private void refresh(){
+        Map<String, Object> params = new HashMap<>();
+        params.put("notification", 0);
+
         String url = getUrlHelper().getNotificationsUrl();
         ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
         ajaxCallback.setClazz(String.class);
-//        ajaxCallback.setParams(params);
+        ajaxCallback.setParams(params);
         ajaxCallback.method(AQuery.METHOD_POST);
-//        getAQuery().ajax(url, params, String.class, ajaxCallback);
+        getAQuery().ajax(url, params, String.class, ajaxCallback);
+    }
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        super.serverCallEnds(id, url, json, status);
     }
 
     private class NotificationsAdapter extends BaseAdapter {
