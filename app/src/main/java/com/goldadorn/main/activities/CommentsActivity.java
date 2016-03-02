@@ -7,9 +7,12 @@ import android.view.MenuItem;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.socialFeeds.CommentsView;
 import com.goldadorn.main.utils.IDUtils;
 import com.kimeeo.library.fragments.BaseFragment;
+
+import java.lang.ref.WeakReference;
 
 import butterknife.ButterKnife;
 
@@ -17,6 +20,15 @@ import butterknife.ButterKnife;
  * Created by bhavinpadhiyar on 2/22/16.
  */
 public class CommentsActivity extends BaseActivity{
+
+    public static int commentCount;
+    private CommentsView mActivePage;
+
+    public void finish() {
+        if(mActivePage!=null && mActivePage.getCommentCount()!=-1)
+            commentCount = mActivePage.getCommentCount();
+        super.finish();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +49,7 @@ public class CommentsActivity extends BaseActivity{
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, CommentsView.class);
         navigationObject.setParam(id);
-        BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
+        mActivePage = (CommentsView)BaseFragment.newWebViewInstance(navigationObject);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
     }
 

@@ -74,7 +74,8 @@ abstract public class DefaultVerticalListView extends ResponsiveView implements 
             data.put("ID",people.getUserId());
             data.put("FOLLOWER_COUNT",people.getFollowerCount());
             data.put("FOLLOWING_COUNT",people.getFollowingCount());
-            data.put("PROFILE_PIC",people.getProfilePic());
+            if(people.getProfilePic()!=null)
+                data.put("PROFILE_PIC",people.getProfilePic());
             data.put("IS_DESIGNER",people.getIsDesigner());
             data.put("IS_SELF",people.isSelf());
             data.put("IS_FOLLOWING",people.getIsFollowing());

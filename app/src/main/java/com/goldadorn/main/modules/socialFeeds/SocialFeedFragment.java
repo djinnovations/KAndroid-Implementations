@@ -74,6 +74,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
     protected boolean isRefreshingData=false;
     protected int offset=0;
     protected int refreshOffset=0;
+    private SocialPost commentSocialPost;
+    private int commentPosition;
 
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new DividerDecoration(this.getActivity());
@@ -192,6 +194,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
         isRefreshingData= true;
         return getApp().getUrlHelper().getSocialFeedServiceURL();
     }
+
+
 
     public class SocialFeedProjectDataManager extends DefaultProjectDataManager
     {
@@ -1058,11 +1062,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 }
                 else if(v==commentsLabel)
                 {
-                    gotoComments(socialPost,false);
+                    gotoComments(socialPost,false,position);
                 }
                 else if(v==commentPostButton)
                 {
-                    gotoComments(socialPost,true);
+                    gotoComments(socialPost,true,position);
                 }
                 else if(v==votePostButton)
                 {
@@ -1221,12 +1225,27 @@ public class SocialFeedFragment extends DefaultVerticalListView
         abstract public void updatePostView(SocialPost item,View view,int position);
     }
 
-    private void gotoComments(SocialPost socialPost, boolean b) {
+    public void updateComments()
+    {
+        if(commentSocialPost!=null && commentPosition!=-1 && CommentsActivity.commentCount!=-1)
+        {
+            commentSocialPost.setCommentCount(CommentsActivity.commentCount);
+            getAdapter().notifyItemChanged(commentPosition);
+            commentSocialPost =null;
+            commentPosition=-1;
+            CommentsActivity.commentCount=-1;
+        }
+    }
+    private void gotoComments(SocialPost socialPost, boolean b,int position) {
+        CommentsActivity.commentCount=-1;
         NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Comments", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CommentsActivity.class);
         Map<String, Object> data= new HashMap<>();
         data.put("POST_ID",socialPost.getPostId());
-        data.put("POST",b);
+        data.put("COMMENT",true);
+        data.put("POST", b);
         navigationDataObject.setParam(data);
+        commentSocialPost=socialPost;
+        commentPosition =position;
         EventBus.getDefault().post(new AppActions(navigationDataObject));
     }
     private void gotoLikes(SocialPost socialPost, boolean b) {

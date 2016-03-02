@@ -92,8 +92,8 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_order_tracking,R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
 
 
-        addItem(menu, R.id.nav_my_notifications,R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);
-        addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, SearchFragment.class);
+        addItem(menu, R.id.nav_my_notifications,R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
+        addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
         addItem(menu, R.id.nav_id_hashtag, R.string.hashtag, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, HashTagFragment.class);
 
 

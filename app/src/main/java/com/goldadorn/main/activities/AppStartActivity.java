@@ -54,6 +54,7 @@ public class AppStartActivity extends BaseActivity {
         sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
 
         boolean isIntroSeen=sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_INTRO_SEEN, false);
+        isIntroSeen =true;
         if(isIntroSeen)
         {
             boolean isLoginDone=sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false);

@@ -180,7 +180,8 @@ public class BaseActivity extends AppCompatActivity {
                     data =(Map<String,Object>) navigationDataObject.getParam();
                 if(data==null)
                     data = new HashMap<>();
-                data.put("TITLE", navigationDataObject.getName());
+                if(data.get("TITLE")==null)
+                    data.put("TITLE", navigationDataObject.getName());
                 action.launchActivity(target, null, data, false);
                 //overridePendingTransition  (R.anim.right_slide_in, R.anim.right_slide_out);
                 return true;

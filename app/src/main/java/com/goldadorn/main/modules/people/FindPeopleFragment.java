@@ -173,6 +173,8 @@ public class FindPeopleFragment extends DefaultVerticalListView
             userName.setText(people.getUserName());
             if(people.getIsDesigner()==1)
                 designer.setText("Designer");
+            else
+                designer.setText("");
 
             countFollowing.setText(people.getFollowingCount()+"");
             countFollowers.setText(people.getFollowerCount()+"");

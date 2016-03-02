@@ -25,7 +25,10 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         disableApp=null;
         socialFeedFragmentpage=null;
     }
-
+    public void updateComments() {
+        if(socialFeedFragmentpage!=null)
+            socialFeedFragmentpage.updateComments();
+    }
     public boolean allowedBack() {
         if(socialFeedFragmentpage!=null) {
             return socialFeedFragmentpage.allowedBack();
@@ -79,4 +82,6 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         }
         return super.getItemTitle(position,navigationObject);
     }
+
+
 }

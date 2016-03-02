@@ -37,6 +37,7 @@ import com.squareup.picasso.Picasso;
 import org.apache.http.cookie.Cookie;
 import org.greenrobot.eventbus.EventBus;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -53,6 +54,7 @@ import butterknife.OnClick;
  */
 public class CommentsView extends DefaultVerticalListView
 {
+
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
         params.put(URLHelper.LIKE_A_POST.POST_ID, getPostID());
@@ -65,6 +67,12 @@ public class CommentsView extends DefaultVerticalListView
 
     public String getPostID() {
         return (String)getPramas();
+    }
+
+    public Integer getCommentCount() {
+        if(getDataManager()!=null)
+            return getDataManager().size();
+        return -1;
     }
 
     public class CommentDataManager extends DefaultProjectDataManager
