@@ -76,7 +76,7 @@ public class NotificationsActivity extends BaseActivity {
                             }
                             Log.i("session", phpSession);
                         }
-                        httppost.addHeader("auths", phpSession);
+                        httppost.addHeader("Cookie", phpSession);
                         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                         // Execute HTTP Post Request
