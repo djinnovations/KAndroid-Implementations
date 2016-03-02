@@ -58,40 +58,25 @@ public class NotificationsActivity extends BaseActivity {
             public void run() {
                 List<Cookie> cookies = getApp().getCookies();
                 try {
-//                   OkHttpClient client = new OkHttpClient();
-//                   RequestBody formBody = new FormEncodingBuilder()
-//                           .add("notification", "0")
-//                           .build();
-//                   Request request = new Request.Builder()
-//                           .url("http://goldadorn.cloudapp.net/goldadorn_dev/rest/notifications")
-//                           .post(formBody)
-//                           .build();
-//
-//                   Response response = client.newCall(request).execute();
-//                   Log.d("Response",response.toString());
-
 
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost("http://goldadorn.cloudapp.net/goldadorn_dev/rest/notifications/");
 
                     try {
 
-                        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
                         String phpSession = "";
 
                         if (cookies.isEmpty()) {
                             Log.i("TAG", "None");
                         } else {
                             for (int i = 0; i < cookies.size(); i++) {
-                                phpSession += "auths"+"="+cookies.get(i).getValue()+";";
+                                phpSession += cookies.get(i).getName()+"="+cookies.get(i).getValue()+";";
 
                             }
                             Log.i("session", phpSession);
                         }
-                        httppost.addHeader("Cookie", phpSession);
-//                        nameValuePairs.add(new BasicNameValuePair("Cookie", phpSession));
-//                       nameValuePairs.add(new BasicNameValuePair("id", "123"));
-//                       nameValuePairs.add(new BasicNameValuePair("string", "Hey"));
+                        httppost.addHeader("auths", phpSession);
                         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                         // Execute HTTP Post Request
