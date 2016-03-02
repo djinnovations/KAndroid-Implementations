@@ -71,16 +71,27 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             if(fileData!=null && fileData.equals("")==false)
                 intent.putExtra("fileData", fileData);
 
-            if(getFiles()!=null && getFiles().size()!=0)
+            List<File> fileList=getFiles();
+            if(fileList!=null && fileList.size()!=0)
             {
-                File[] files = new File[getFiles().size()];
-                String[] uris = new String[getFiles().size()];
-                for (int i = 0; i < getFiles().size(); i++) {
-                    files[i]= getFiles().get(i);
-                    uris[i]= Uri.fromFile(getFiles().get(i)).getPath();
+                File[] files = new File[fileList.size()];
+                String[] uris = new String[fileList.size()];
+                for (int i = 0; i < fileList.size(); i++) {
+                    files[i]= fileList.get(i);
+                    uris[i]= Uri.fromFile(fileList.get(i)).getPath();
                 }
                 intent.putExtra("files",files);
                 intent.putExtra("filesURIs",uris);
+            }
+
+            List<String> linksList=getLinks();
+            if(linksList!=null && linksList.size()!=0)
+            {
+                String[] links = new String[linksList.size()];
+                for (int i = 0; i < linksList.size(); i++) {
+                    links[i]= linksList.get(i);
+                }
+                intent.putExtra("links",links);
             }
 
             intent.putExtra("type", type);
@@ -95,7 +106,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
     }
     protected abstract List<File> getFiles();
     protected abstract List<String> getFilesPath();
-
+    protected abstract List<String> getLinks();
     @Bind(R.id.details)
     EditText details;
 
@@ -140,7 +151,6 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     @Override
     public void onBackPressed() {
-
         final Snackbar snackbar = Snackbar.make(layoutParent, "Are you sure you want to exit without posting", Snackbar.LENGTH_LONG);
         snackbar.setAction("Yes", new View.OnClickListener() {
             public void onClick(View v) {

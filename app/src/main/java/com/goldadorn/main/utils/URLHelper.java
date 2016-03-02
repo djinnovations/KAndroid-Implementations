@@ -85,6 +85,10 @@ public class URLHelper {
     {
         return endPoint+VERB.SOCIAL_FEED;
     }
+    public String getFolderServiceURL()
+    {
+        return endPoint+VERB.FETCH_GALLERY;
+    }
     public String getSocialFeedRefreshServiceURL()
     {
         return endPoint+VERB.SOCIAL_FEED;
@@ -159,6 +163,7 @@ public class URLHelper {
         public static final String FETCH_LIKES="fetchlikes";
         public static final String FETCH_VOTERS="fetchvoters";
         public static final String FETCH_NOTIFICATIONS="notifications";
+        public static final String FETCH_GALLERY="fetchgallery";
 
 
     }
@@ -178,6 +183,8 @@ public class URLHelper {
         public static final String POST_ID="postid";
         public static final String OFFSET="offset";
         public static final String FOLLOW="follow";
+        public static final String PATH="path";
+        public static final String GALLERY="gallery";
 
 
     }

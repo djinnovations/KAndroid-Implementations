@@ -277,6 +277,21 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                             }
                         }
 
+                        if(data.getExtras().get("links")!=null) {
+                            String[] links = (String[]) data.getExtras().get("links");
+
+                            String link;
+                            int count = 1;
+                            for (int i = 0; i < links.length; i++) {
+                                link = links[i];
+                                if (link!=null && link.equals("")==false) {
+                                    reqEntity.addPart("link" + count, new StringBody(link+""));
+                                    count++;
+                                }
+                            }
+                        }
+
+
 
 
 

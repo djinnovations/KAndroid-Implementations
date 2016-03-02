@@ -11,15 +11,23 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.TextView;
 
+import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.AbstractPostActivity;
+import com.goldadorn.main.icons.IconsUtils;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
@@ -34,15 +42,17 @@ public class ImageSelector
 {
     public static final int PICK_IMAGE = 1;
     public static final int PICK_CAMERA_IMAGE = 2;
-    private RegisterImageUploadCallBack registerImageUploadCallBack;
 
-    private Activity activity;
-    private ImageView holder;
-    private View triger;
-    private File file;
-    private Uri imageUri;
-    private int maxSize=-1;
-    private boolean isCameraActive;
+    protected RegisterImageUploadCallBack registerImageUploadCallBack;
+
+    protected Activity activity;
+    protected ImageView holder;
+    protected View triger;
+    protected File file;
+    protected Uri imageUri;
+    protected int maxSize=-1;
+    protected boolean isCameraActive;
+    protected int selectedMethod;
 
     public int getMaxSize() {
         return maxSize;
@@ -56,7 +66,7 @@ public class ImageSelector
     public String getFilePath() {
         if(getFile()!=null)
             return getFile().getAbsolutePath();
-        return "";
+        return null;
     }
     public File getFile() {
         return file;
@@ -93,21 +103,70 @@ public class ImageSelector
         }
     };
 
+    public static class Item{
+        public final String text;
+        public final int icon;
+        public Item(String text, int icon) {
+            this.text = text;
+            this.icon = icon;
+        }
+        @Override
+        public String toString() {
+            return text;
+        }
+    }
+
+
     public void trigerUpload()
     {
-        CharSequence colors[] = new CharSequence[] {"Take a picture", "Select from Gallery"};
+        final Item[] items = getOptions();
+
+        ListAdapter adapter = new ArrayAdapter<Item>(
+                activity,
+                android.R.layout.select_dialog_item,
+                android.R.id.text1,
+                items){
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                TextView tv = (TextView)v.findViewById(android.R.id.text1);
+
+                //tv.setCompoundDrawables(items[position].icon, null, null, null);
+                //tv.setTextColor(activity.getResources().getColor(R.color.colorPrimaryDark));
+                //Add margin between image and text (support various screen densities)
+                int dp5 = (int) (5 * activity.getResources().getDisplayMetrics().density + 0.5f);
+                tv.setCompoundDrawablePadding(dp5);
+                return v;
+            }
+        };
+        String[] list= new String[items.length];
+        for (int i = 0; i < items.length; i++) {
+            list[i] = items[i].text;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Uploading Method");
-        builder.setItems(colors, new DialogInterface.OnClickListener() {
+        builder.setItems(list, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                if (which == 0)
-                    takeAPicture();
-                else
-                    selectAPicture();
+                onOptionSelect(which);
+
             }
         });
+        /*
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                onOptionSelect(which);
+
+            }
+        });
+        */
         builder.show();
+    }
+
+    public void onOptionSelect(int which) {
+        if (which == 0)
+            takeAPicture();
+        else
+            selectAPicture();
     }
 
     public void selectAPicture() {
@@ -143,7 +202,7 @@ public class ImageSelector
     {
         return file!=null;
     }
-    public void imageLoaded(Bitmap bitmap,File file) {
+    public void imageLoaded(Bitmap bitmap,File file,int method) {
         if(getMaxSize()!=-1)
         {
             if((bitmap.getHeight()>getMaxSize() || bitmap.getWidth()>getMaxSize()))
@@ -164,6 +223,8 @@ public class ImageSelector
 
             if(holder!=null)
                 holder.setVisibility(View.VISIBLE);
+
+            selectedMethod = method;
         }
 
     }
@@ -203,7 +264,7 @@ public class ImageSelector
                     {
                         if (bitmap == null)
                             bitmap = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), selectedImageUri);
-                        imageLoaded(bitmap, file);
+                        imageLoaded(bitmap, file,requestCode);
                     }
                 }
 
@@ -276,6 +337,14 @@ public class ImageSelector
         out.recycle();
         bMap.recycle();
         return resizedFile;
+    }
+
+    public Item[] getOptions() {
+        Item[] items = {
+                new Item("Take a picture", android.R.drawable.ic_menu_camera),
+                new Item("Select from gallery", android.R.drawable.ic_menu_gallery)
+        };
+        return items;
     }
 
     public static interface RegisterImageUploadCallBack
