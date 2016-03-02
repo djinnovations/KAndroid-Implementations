@@ -23,6 +23,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.github.images.CircularImageView;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,14 +48,16 @@ public class NotificationsActivity extends BaseActivity {
     @Bind(R.id.notificationsList)
     ListView notificationsList;
     final private int postCallToken = IDUtils.generateViewId();
+    private JSONArray notificationJsons;
+    private NotificationsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
         ButterKnife.bind(this);
-        NotificationsAdapter adapter = new NotificationsAdapter(this);
-        notificationsList.setAdapter(adapter);
+        mAdapter = new NotificationsAdapter(this);
+        notificationsList.setAdapter(mAdapter);
 
         refresh();
     }
@@ -76,7 +81,7 @@ public class NotificationsActivity extends BaseActivity {
                             Log.i("TAG", "None");
                         } else {
                             for (int i = 0; i < cookies.size(); i++) {
-                                phpSession += cookies.get(i).getName()+"="+cookies.get(i).getValue()+";";
+                                phpSession += cookies.get(i).getName() + "=" + cookies.get(i).getValue() + ";";
 
                             }
                             Log.i("session", phpSession);
@@ -88,10 +93,17 @@ public class NotificationsActivity extends BaseActivity {
                         HttpResponse response = httpclient.execute(httppost);
                         HttpEntity entity = response.getEntity();
                         if (entity != null) {
-                            SoftReference<InputStream> instream = new SoftReference<InputStream>(
+                            SoftReference<InputStream> instream = new SoftReference<>(
                                     entity.getContent());
                             String content = convertStreamToString(instream);
                             Log.d("Response", content);
+                            notificationJsons = new JSONArray(content);
+                            notificationsList.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            });
                             instream.get().close();
                         }
                     } catch (Exception e) {
@@ -149,21 +161,26 @@ public class NotificationsActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 23;
+            return notificationJsons != null ? notificationJsons.length() : 0;
         }
 
         @Override
-        public Object getItem(int position) {
-            return null;
+        public JSONObject getItem(int position) {
+            try {
+                return notificationJsons.getJSONObject(position);
+            } catch (JSONException e) {
+                return null;
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return 0;
+            return position;
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            JSONObject object=getItem(position);
             NotificationHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.layout_notification_item, null);
