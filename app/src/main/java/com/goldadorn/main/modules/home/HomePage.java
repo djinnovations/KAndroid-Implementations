@@ -83,5 +83,4 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         return super.getItemTitle(position,navigationObject);
     }
 
-
 }
