@@ -181,6 +181,10 @@ public class NotificationsActivity extends BaseActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             JSONObject object=getItem(position);
+//                    "postid":6,
+//                    "type":1,
+//                    "liked":"Ritu, Raj",
+//                    "likecount":34
             NotificationHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.layout_notification_item, null);
