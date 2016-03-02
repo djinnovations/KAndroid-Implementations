@@ -2,6 +2,7 @@ package com.goldadorn.main.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,11 +181,7 @@ public class NotificationsActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            JSONObject object=getItem(position);
-//                    "postid":6,
-//                    "type":1,
-//                    "liked":"Ritu, Raj",
-//                    "likecount":34
+
             NotificationHolder holder;
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.layout_notification_item, null);
@@ -197,11 +194,46 @@ public class NotificationsActivity extends BaseActivity {
             } else {
                 holder = (NotificationHolder) convertView.getTag();
             }
+            JSONObject object=getItem(position);
+            int likeCount = object.optInt("likecount");
+            String liked = object.optString("liked");
+            int type = object.optInt("type",-1);
+            int postid = object.optInt("postid");
+            //                    "postid":6,
+            //                    "type":1,
+            //                    "liked":"Ritu, Raj",
+            //                    "likecount":34
+
+            // todo get person image
             holder.person.setImageResource(R.drawable.intro_screen_3_image_1);
-            holder.time.setText(Integer.toString(position));
-            holder.data.setText("name dhcfdsh klsdhfh dsofhcidsf");
-            holder.content.setImageResource(R.drawable.slide_1_image);
+            // todo get timestamp
+            holder.time.setText("");
+            holder.data.setText(createString(liked,likeCount,type));
+//            holder.content.setImageResource(R.drawable.slide_1_image);
             return convertView;
+        }
+
+        private String createString(String liked, int likeCount, int type) {
+            StringBuilder builder = new StringBuilder();
+            switch (type){
+                case 1:
+                    if(!TextUtils.isEmpty(liked)){
+                        builder.append(liked);
+                        if(likeCount>0){
+                            if(likeCount==1){
+                                builder.append(" and 1 person");
+                            }else{
+                                builder.append(" and ");
+                                builder.append(Integer.toString(likeCount));
+                                builder.append(" people");
+                            }
+                        }
+                        builder.append(" like your post");
+                    }
+
+                    return builder.toString();
+            }
+            return null;
         }
     }
 
