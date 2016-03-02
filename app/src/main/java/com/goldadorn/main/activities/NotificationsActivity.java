@@ -14,6 +14,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.utils.IDUtils;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -23,6 +24,10 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.github.images.CircularImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +65,7 @@ public class NotificationsActivity extends BaseActivity {
                 try {
 
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://goldadorn.cloudapp.net/goldadorn_dev/rest/notifications/");
+                    HttpPost httppost = new HttpPost("http://goldadorn.cloudapp.net/goldadorn_dev/rest/notifications");
 
                     try {
 
@@ -81,7 +86,14 @@ public class NotificationsActivity extends BaseActivity {
 
                         // Execute HTTP Post Request
                         HttpResponse response = httpclient.execute(httppost);
-                        Log.d("Response", response.toString());
+                        HttpEntity entity = response.getEntity();
+                        if (entity != null) {
+                            SoftReference<InputStream> instream = new SoftReference<InputStream>(
+                                    entity.getContent());
+                            String content = convertStreamToString(instream);
+                            Log.d("Response", content);
+                            instream.get().close();
+                        }
                     } catch (Exception e) {
                         // Catch Protocol Exception
                     }
@@ -102,6 +114,24 @@ public class NotificationsActivity extends BaseActivity {
 //        ajaxCallback.setParams(params);
 //        ajaxCallback.method(AQuery.METHOD_POST);
 //        getAQuery().ajax(url, params, String.class, ajaxCallback);
+    }
+
+    public static String convertStreamToString(SoftReference<InputStream> is)
+            throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        // this is storage overwritten on each iteration with bytes
+        int bufferSize = 32678;
+        byte[] buffer = new byte[bufferSize];
+
+        // we need to know how may bytes were read to write them to the
+        // byteBuffer
+        int len = 0;
+        while ((len = is.get().read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+
+        // and then we can return your byte array.
+        return byteBuffer.toString();
     }
 
     @Override
