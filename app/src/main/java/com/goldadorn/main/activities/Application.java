@@ -10,7 +10,6 @@ import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.sample.UnderDevelopment;
 import com.goldadorn.main.modules.search.HashTagFragment;
-import com.goldadorn.main.modules.search.SearchFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.actions.Action;
@@ -92,7 +91,7 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_order_tracking,R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
 
 
-        addItem(menu, R.id.nav_my_notifications,R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
+        addItem(menu, R.id.nav_my_notifications,R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);
         addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
         addItem(menu, R.id.nav_id_hashtag, R.string.hashtag, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, HashTagFragment.class);
 
