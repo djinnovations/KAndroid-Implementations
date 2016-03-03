@@ -10,6 +10,7 @@ android {
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
+            buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
         }
 
         live{
@@ -17,6 +18,7 @@ android {
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
+            buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
         }
     }
 

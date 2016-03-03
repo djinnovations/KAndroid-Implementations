@@ -1,10 +1,15 @@
 package com.goldadorn.main.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
@@ -30,6 +35,7 @@ import butterknife.Bind;
 
 public class AppStartActivity extends BaseActivity {
 
+    private static final int INTERNET_PERMISSION_REQUEST_CODE = 1;
     private SharedPreferences sharedPreferences;
 
     @Bind(R.id.layoutParent)
@@ -51,8 +57,22 @@ public class AppStartActivity extends BaseActivity {
         progressBar.setProgress(0f);
         progressBar.start();
 
-        sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
 
+        if(checkPermission())
+        {
+            kickStart();
+        }
+        else
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET))
+                Toast.makeText(AppStartActivity.this, "This app must have internet permision.", Toast.LENGTH_SHORT).show();
+            else
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},INTERNET_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void kickStart() {
+        sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
         boolean isIntroSeen=sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_INTRO_SEEN, false);
         isIntroSeen =true;
         if(isIntroSeen)
@@ -69,6 +89,34 @@ public class AppStartActivity extends BaseActivity {
         }
         else
             gotoIntro();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case INTERNET_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    kickStart();
+                }
+                else
+                {
+                    finish();
+                }
+
+                break;
+        }
+    }
+    private boolean checkPermission()
+    {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
+        if (result == PackageManager.PERMISSION_GRANTED){
+
+            return true;
+
+        } else {
+
+            return false;
+
+        }
     }
 
     private void gotoIntro() {

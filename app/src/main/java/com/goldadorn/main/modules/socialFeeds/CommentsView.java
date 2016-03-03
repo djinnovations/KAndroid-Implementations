@@ -26,6 +26,7 @@ import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
+import com.goldadorn.main.utils.EmoHelper;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
@@ -157,11 +158,14 @@ public class CommentsView extends DefaultVerticalListView
             String id = getPostID();
             SocialPost socialPost = new SocialPost();
             socialPost.setPostId(id);
-            socialPost.setDescription(details.getText().toString().trim());
+
+            socialPost.setDescription(details.getText().toString());
             postCommentHelper.update(socialPost, 10);
             details.setText("");
         }
     }
+
+
     public void onViewCreated(View view) {
         ButterKnife.bind(this, view);
         postCommentHelper = new PostCommentHelper(getActivity(), getApp().getCookies(),postUpdateResult);

@@ -2,19 +2,32 @@ package com.goldadorn.main.modules.slideShow;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.WebActivity;
+import com.goldadorn.main.eventBusEvents.AppActions;
+import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.StaticDataManger;
 import com.kimeeo.library.listDataView.viewPager.BaseItemHolder;
 import com.kimeeo.library.listDataView.viewPager.viewPager.HorizontalViewPager;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 
@@ -33,6 +46,7 @@ public class SimpleImageArray extends HorizontalViewPager
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(0f);
         progressBar.start();
+        setHasOptionsMenu(true);
         return rootView;
     }
 
@@ -52,22 +66,80 @@ public class SimpleImageArray extends HorizontalViewPager
             if(images[i]!=null && images[i].equals("")==false)
                 dataManger.add(images[i]);
         }
+
         final Handler handler = new Handler();
         final Runnable runnablelocal = new Runnable() {
             @Override
             public void run() {
 
                 try {
-                    gotoItem(index,true);
+                    gotoItem(index, true);
                     progressBar.setVisibility(View.GONE);
                     getViewPager().setVisibility(View.VISIBLE);
-                }catch(Exception e){}
 
+                    YoYo.with(Techniques.FadeIn).duration(500).playOn(getViewPager());
+                } catch (Exception e) {
+                }
             }
         };
-        handler.postDelayed(runnablelocal,1000 );
+        handler.postDelayed(runnablelocal, 2000);
+
         return dataManger;
     }
+    String imageURL;
+    boolean hasLink=false;
+    protected void onPageChange(Object itemPosition, int position) {
+        imageURL =(String)itemPosition;
+
+        if(imageURL!=null && isProductLink(imageURL)!=null)
+            hasLink = true;
+        else
+            hasLink = false;
+        ActivityCompat.invalidateOptionsMenu(getActivity());
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.buy_menu, menu);
+        menu.findItem(R.id.nav_buy).setVisible(hasLink);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id==R.id.nav_buy)
+        {
+            String profuctLink= URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
+            NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY,profuctLink,WebActivity.class);
+            EventBus.getDefault().post(new AppActions(navigationDataObject));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    protected String isProductLink(String path)
+    {
+        if(path!=null && path.equals("")==false && path.indexOf("galink_")!=-1)
+        {
+            String link = path.substring(path.indexOf("galink_") + "galink_".length());
+            link = link.substring(0,link.indexOf("."));
+            try{
+                String firstChar = link.substring(0,link.indexOf("_"));
+                int val=Integer.parseInt(firstChar);
+                link = link.substring(link.indexOf("_")+1);
+            }
+            catch (Exception e)
+            {
+
+            }
+            if(link.indexOf("_")!=-1)
+                link = link.replaceAll("_","-");
+            return link;
+
+        }
+        return null;
+    }
+
     public String getPageTitle(int position, Object o) {
         return position+"";
     }

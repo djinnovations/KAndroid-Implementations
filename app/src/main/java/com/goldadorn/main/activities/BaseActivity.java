@@ -169,6 +169,23 @@ public class BaseActivity extends AppCompatActivity {
             }
 
         }
+        else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME))
+        {
+            String url =(String) navigationDataObject.getActionValue();
+            if(url!=null && url.equals("")==false)
+            {
+                Class target = navigationDataObject.getView();
+                if(target==null)
+                    target = WebActivity.class;
+                Map<String, Object> data=new HashMap<>();
+                data.put("URL",url);
+                data.put("TITLE", navigationDataObject.getName());
+                //action.launchActivity(target, null, data, false);
+                action.openChromeTab(url);
+                return true;
+            }
+
+        }
         else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY))
         {
 

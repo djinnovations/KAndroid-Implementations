@@ -100,6 +100,7 @@ public class NavigationDataObject implements IFragmentData {
         public static final String ACTION_TYPE_ACTIVITY="activity";
         public static final String ACTION_TYPE_WEB_EXTERNAL ="webExternal";
         public static final String ACTION_TYPE_WEB_ACTIVITY ="webActivity";
+        public static final String ACTION_TYPE_WEB_CHROME="webCharome";
         public static final String ACTION_TYPE_TEXT_SHARE ="shareText";
     }
 

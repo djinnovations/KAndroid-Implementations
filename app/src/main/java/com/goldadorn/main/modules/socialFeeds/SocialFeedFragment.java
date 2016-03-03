@@ -26,6 +26,7 @@ import com.goldadorn.main.activities.ImageZoomActivity;
 import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
+import com.goldadorn.main.activities.WebActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -895,19 +896,58 @@ public class SocialFeedFragment extends DefaultVerticalListView
         }
     }
 
-    private void zoomImages(SocialPost socialPost,int index) {
-        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),"Best of", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ImageZoomActivity.class);
-        Map<String, Object> data= new HashMap<>();
-        data.put("IMAGES", socialPost.getImages());
-        data.put("POST_ID", socialPost.getPostId());
-        data.put("DETAILS", socialPost.getDescription());
-        data.put("TYPE", socialPost.getPostType());
-        data.put("INDEX", index);
+    protected String isProductLink(String path)
+    {
+        //path = "http://goldadorn.cloudapp.net/goldadorn_dev/gallery/earrings/GALINK_1_the_an_anshar_ring.jpg";
 
-        //data.put("VOTES", socialPost.getVotes().toString());
-        //data.put("TOTAL_VOTES", socialPost.getVoteCount());
-        navigationDataObject.setParam(data);
-        EventBus.getDefault().post(new AppActions(navigationDataObject));
+        if(path!=null && path.equals("")==false && path.indexOf("galink_")!=-1)
+        {
+            String link = path.substring(path.indexOf("galink_") + "galink_".length());
+            link = link.substring(0,link.indexOf("."));
+            try{
+                String firstChar = link.substring(0,link.indexOf("_"));
+                int val=Integer.parseInt(firstChar);
+                link = link.substring(link.indexOf("_")+1);
+            }
+            catch (Exception e)
+            {
+
+            }
+            if(link.indexOf("_")!=-1)
+                link = link.replaceAll("_","-");
+            return link;
+
+        }
+        return null;
+    }
+
+    private void zoomImages(SocialPost socialPost,int index)
+    {
+        String imageURL=null;
+        if(index==0 && socialPost.getImage1()!=null && socialPost.getImage1().equals("")==false)
+            imageURL =socialPost.getImage1();
+        else if(index==1 && socialPost.getImage2()!=null && socialPost.getImage2().equals("")==false)
+            imageURL =socialPost.getImage2();
+        else if(index==2 && socialPost.getImage3()!=null && socialPost.getImage3().equals("")==false)
+            imageURL =socialPost.getImage3();
+
+        if(imageURL!=null && isProductLink(imageURL)!=null)
+        {
+            String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
+            NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY,profuctLink,WebActivity.class);
+            EventBus.getDefault().post(new AppActions(navigationDataObject));
+        }
+        else {
+            NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(), "Best of", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ImageZoomActivity.class);
+            Map<String, Object> data = new HashMap<>();
+            data.put("IMAGES", socialPost.getImages());
+            data.put("POST_ID", socialPost.getPostId());
+            data.put("DETAILS", socialPost.getDescription());
+            data.put("TYPE", socialPost.getPostType());
+            data.put("INDEX", index);
+            navigationDataObject.setParam(data);
+            EventBus.getDefault().post(new AppActions(navigationDataObject));
+        }
     }
 
     public class NormalPostItemHolder extends PostItemHolder {
@@ -943,6 +983,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 image.setVisibility(View.VISIBLE);
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
             }
+
+
         }
 
     }
@@ -1008,29 +1050,21 @@ public class SocialFeedFragment extends DefaultVerticalListView
         @Bind(R.id.div)
         View recoDiv;
 
+
         private View.OnClickListener itemClick = new View.OnClickListener()
         {
             public void onClick(View v)
             {
-                if(v==userImage)
+                if(v==userImage || v==userName)
                 {
                     People people = new People();
                     people.setUserName(socialPost.getUserName());
-                    people.setProfilePic(socialPost.getUserPic());
+                    if(socialPost.getUserPic()!=null)
+                        people.setProfilePic(socialPost.getUserPic());
                     people.setFollowingCount(0);
                     people.setFollowerCount(0);
                     people.setIsSelf(socialPost.isSelf());
-                    people.setIsDesigner(socialPost.getIsDesigner());
-                    gotoUser(people);
-                }
-                else if(v==userName)
-                {
-                    People people = new People();
-                    people.setUserName(socialPost.getUserName());
-                    people.setProfilePic(socialPost.getUserPic());
-                    people.setFollowingCount(0);
-                    people.setFollowerCount(0);
-                    people.setIsSelf(socialPost.isSelf());
+                    people.setUserId(socialPost.getUserId());
                     people.setIsDesigner(socialPost.getIsDesigner());
                     gotoUser(people);
                 }
@@ -1100,7 +1134,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 {
                     String appPlayStoreURL=getString(R.string.palyStoreBasicURL)+ getActivity().getPackageName();
                     Map<String,String> map = new HashMap<>();
-                    map.put(Action.ATTRIBUTE_TITLE,getString(R.string.appShareTitle));
+                    map.put(Action.ATTRIBUTE_TITLE, getString(R.string.appShareTitle));
                     map.put(Action.ATTRIBUTE_DATA, getString(R.string.appShareBody) + appPlayStoreURL);
                     shareActionData.setParam(map);
                     getAppMainActivity().action(shareActionData);

@@ -14,6 +14,8 @@ public class URLHelper {
     // Private constructor prevents instantiation from other classes
     public final String  endPoint;
     public final String  iamgeEndPoint;
+    public final String  websiteEndPoint;
+
     public final String  htmlEndPoint;
 
     public List<Cookie> getCookies() {
@@ -26,6 +28,7 @@ public class URLHelper {
         endPoint= BuildConfig.END_POINT;
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
+        websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
     }
 
     public void setCookies(List<Cookie> cookies) {
@@ -34,6 +37,10 @@ public class URLHelper {
 
     public String getHTMLEndPoint() {
             return htmlEndPoint;
+    }
+
+    public String getWebSiteProductEndPoint() {
+        return websiteEndPoint;
     }
 
     /**
