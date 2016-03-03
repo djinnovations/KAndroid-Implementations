@@ -934,7 +934,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         if(imageURL!=null && isProductLink(imageURL)!=null)
         {
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
-            NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY,profuctLink,WebActivity.class);
+            NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME,profuctLink,WebActivity.class);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
         }
         else {

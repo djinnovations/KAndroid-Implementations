@@ -1,8 +1,11 @@
 package com.goldadorn.main.activities;
 
+import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -125,7 +128,7 @@ public class BaseActivity extends AppCompatActivity {
 
     }
     private void showProgress(String title) {
-        showProgress(title,null);
+        showProgress(title, null);
     }
     protected void showProgress(String title,String msg) {
         stopProgress();
@@ -181,7 +184,9 @@ public class BaseActivity extends AppCompatActivity {
                 data.put("URL",url);
                 data.put("TITLE", navigationDataObject.getName());
                 //action.launchActivity(target, null, data, false);
-                action.openChromeTab(url);
+
+                Action action1 =new Action(this,true, new String[]{url},null,null,true);
+                action1.openChromeTab(url);
                 return true;
             }
 
