@@ -3,6 +3,7 @@ package com.goldadorn.main.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -27,7 +28,6 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
-import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -133,7 +133,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)
             action(navigationDataObject);
-
     }
     @Override
     public void onBackPressed() {
@@ -235,6 +234,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     final private int postCallToken = IDUtils.generateViewId();
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+
+
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
                 try {
                     //String fileData=data.getStringExtra("fileData");

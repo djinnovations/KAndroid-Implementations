@@ -24,7 +24,6 @@ import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.rey.material.widget.ProgressView;
-
 import org.apache.http.cookie.Cookie;
 
 import java.util.HashMap;

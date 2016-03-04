@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities;
 
+import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.R;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -18,12 +19,14 @@ import com.kimeeo.library.model.BaseApplication;
 import com.kimeeo.library.model.IFragmentData;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
+import com.splunk.mint.Mint;
 
 import org.apache.http.cookie.Cookie;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by bhavinpadhiyar on 1/11/16.
@@ -138,16 +141,25 @@ public class Application extends BaseApplication {
     }
     public void configApplication()
     {
+        Mint.initAndStartSession(this, "9bccadcc");
         ExtendedAjaxCallback.setReuseHttpClient(true);
         Iconics.registerFont(new FontAwesome());
         Iconics.registerFont(new GoldadornIconFont());
         Iconics.registerFont(new HeartIconFont());
-
         configMainMenu();
+    }
+
+    private void logUser(User user) {
+        Mint.clearExtraData();
+        Mint.addExtraData("User ID", user.getUserid() + "");
+        Mint.addExtraData("User Photo", user.getUserpic());
+       Mint.addExtraData("User Name", user.getUsername());
+
     }
 
     public void setUser(User user) {
         this.user = user;
+        logUser(user);
 
 
         people = new People();

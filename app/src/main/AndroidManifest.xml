@@ -126,6 +126,9 @@
             android:screenOrientation="portrait"
             android:name=".activities.NotificationsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2d0816b755371517bad5e7ac4a9e2291e5671804" />
     </application>
 
 </manifest>
