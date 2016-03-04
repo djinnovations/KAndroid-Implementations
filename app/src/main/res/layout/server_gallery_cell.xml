@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/image_view_background_thin_line"
     android:layout_height="match_parent">
 
 
     <ImageView
-        android:background="@drawable/image_view_background"
-        android:layout_margin="@dimen/appDefaultMargin"
+        tools:src="@drawable/intro_screen_3_image_1"
         android:layout_width="match_parent"
+        android:layout_margin="1dp"
         android:layout_height="100dp"
         android:scaleType="centerCrop"
         android:id="@+id/image"/>

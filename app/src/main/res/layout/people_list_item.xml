@@ -27,20 +27,24 @@
         android:layout_marginLeft="@dimen/appDefault1XMargin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
+        android:textSize="14sp"
+        android:text="User Name"
         android:id="@+id/userName"
+        android:maxLines="2"
         android:layout_alignTop="@+id/userImage"
         android:layout_toRightOf="@+id/userImage"
-        android:layout_toEndOf="@+id/userImage" />
+        android:layout_toEndOf="@+id/userImage"
+        android:layout_toLeftOf="@+id/followingPort"
+        android:layout_toStartOf="@+id/followingPort" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Small Text"
+        android:text=""
+        tools:text="Desginer"
         android:id="@+id/designer"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:layout_below="@+id/userName"
         android:layout_alignLeft="@+id/userName"
         android:layout_alignStart="@+id/userName" />
@@ -71,7 +75,7 @@
     </LinearLayout>
 
     <LinearLayout
-        tools:background="#cccccc"
+        tools:background="#ddcccc"
         android:orientation="vertical"
         android:id="@+id/followersPort"
         android:layout_width="wrap_content"

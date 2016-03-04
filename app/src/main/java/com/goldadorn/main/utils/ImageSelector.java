@@ -119,30 +119,16 @@ public class ImageSelector
 
     public void trigerUpload()
     {
+        openStandardPopup();
+    }
+
+    public void openStandardPopup()
+    {
         final Item[] items = getOptions();
-
-        ListAdapter adapter = new ArrayAdapter<Item>(
-                activity,
-                android.R.layout.select_dialog_item,
-                android.R.id.text1,
-                items){
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                TextView tv = (TextView)v.findViewById(android.R.id.text1);
-
-                //tv.setCompoundDrawables(items[position].icon, null, null, null);
-                //tv.setTextColor(activity.getResources().getColor(R.color.colorPrimaryDark));
-                //Add margin between image and text (support various screen densities)
-                int dp5 = (int) (5 * activity.getResources().getDisplayMetrics().density + 0.5f);
-                tv.setCompoundDrawablePadding(dp5);
-                return v;
-            }
-        };
         String[] list= new String[items.length];
         for (int i = 0; i < items.length; i++) {
             list[i] = items[i].text;
         }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle("Select Uploading Method");
         builder.setItems(list, new DialogInterface.OnClickListener() {
@@ -151,14 +137,6 @@ public class ImageSelector
 
             }
         });
-        /*
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                onOptionSelect(which);
-
-            }
-        });
-        */
         builder.show();
     }
 

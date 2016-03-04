@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -621,7 +622,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
 
 
-
+        @Bind(R.id.buyNow)
+        View buyNow;
 
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
@@ -677,6 +679,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
             {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
                 detailsHolder.setVisibility(View.VISIBLE);
+                if(isProductLink(item.getImage1())!=null)
+                    buyNow.setVisibility(View.VISIBLE);
+                else
+                    buyNow.setVisibility(View.GONE);
+
             }
             else {
                 detailsHolder.setVisibility(View.GONE);
@@ -749,6 +756,14 @@ public class SocialFeedFragment extends DefaultVerticalListView
         TextView option3Label;
         @Bind(R.id.detailsHolder)
         ViewGroup detailsHolder;
+
+
+        @Bind(R.id.buyNow1)
+        View buyNow1;
+        @Bind(R.id.buyNow2)
+        View buyNow2;
+        @Bind(R.id.buyNow3)
+        View buyNow3;
 
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
@@ -836,6 +851,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     option1Label.setText(item.getBof3Percent1()+"%");
                 else
                     option1Label.setText("");
+
+                if(isProductLink(item.getImage1())!=null)
+                    buyNow1.setVisibility(View.VISIBLE);
+                else
+                    buyNow1.setVisibility(View.GONE);
+
             }
             else
                 optionBox1.setVisibility(View.GONE);
@@ -848,6 +869,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     option2Label.setText(item.getBof3Percent2()+"%");
                 else
                     option2Label.setText("");
+
+                if(isProductLink(item.getImage2())!=null)
+                    buyNow2.setVisibility(View.VISIBLE);
+                else
+                    buyNow2.setVisibility(View.GONE);
             }
             else
                 optionBox2.setVisibility(View.GONE);
@@ -860,6 +886,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     option3Label.setText(item.getBof3Percent3()+"%");
                 else
                     option3Label.setText("");
+
+                if(isProductLink(item.getImage3())!=null)
+                    buyNow3.setVisibility(View.VISIBLE);
+                else
+                    buyNow3.setVisibility(View.GONE);
             }
             else
                 optionBox3.setVisibility(View.GONE);
@@ -971,6 +1002,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
         int widthPixels;
 
+        @Bind(R.id.detailsHolder)
+        RelativeLayout detailsHolder;
+
+        @Bind(R.id.buyNow)
+        View buyNow;
+
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == image && socialPost.getImg1()!=null && socialPost.getImg1().url.trim().equals("")==false){
@@ -991,11 +1028,17 @@ public class SocialFeedFragment extends DefaultVerticalListView
         }
         public void updatePostView(final SocialPost item,View view,int position)
         {
-            if(item.getImg1()==null || item.getImg1().url.trim().equals(""))
-                image.setVisibility(View.GONE);
-            else {
-                image.setVisibility(View.VISIBLE);
+            if(item.getImg1()!=null && item.getImg1().url.trim().equals("")==false)
+            {
+                detailsHolder.setVisibility(View.VISIBLE);
+                if(isProductLink(item.getImage1())!=null)
+                    buyNow.setVisibility(View.VISIBLE);
+                else
+                    buyNow.setVisibility(View.GONE);
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
+            }
+            else {
+                detailsHolder.setVisibility(View.GONE);
             }
 
 
