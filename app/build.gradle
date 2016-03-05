@@ -7,6 +7,7 @@ android {
     productFlavors {
         devVersion {
             applicationId "com.goldadorn.main_dev"
+            //goldadorn.cloudapp.net
             buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
             buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
