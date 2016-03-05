@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.URLHelper;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -68,7 +69,7 @@ public class NotificationsActivity extends BaseActivity {
                 try {
 
                     HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost("http://demo.eremotus-portal.com/goldadorn_dev/rest/notifications");
+                    HttpPost httppost = new HttpPost(URLHelper.getInstance().getNotificationsUrl());
 
                     try {
 
