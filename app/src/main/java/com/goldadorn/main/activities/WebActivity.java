@@ -33,6 +33,9 @@ public class WebActivity extends BaseActivity{
 
 
         String url = getIntent().getExtras().getString("URL");
+        if(url==null)
+            url = getIntent().getExtras().getString("url");
+
         String title = getIntent().getExtras().getString("TITLE");
 
         if(title==null)

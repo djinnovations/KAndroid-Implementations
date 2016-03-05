@@ -55,7 +55,7 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
 
 
     public static class ViewTypes {
-        public static final int VIEW_ITEM1 = 5;
+        public static final int VIEW_ITEM = 5;
     }
 
     List<BaseViewProfile> viewProfileList =null;
@@ -150,6 +150,9 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
 
     public  class ListViewProfile extends VerticalList
     {
+        public RecyclerView.ItemDecoration createItemDecoration(Activity context) {
+            return new DividerDecoration(getActivity());
+        }
 
         public ListViewProfile(String name, BaseProfileRecyclerView host)
         {
@@ -167,7 +170,7 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
 
         public int getListItemViewType(int position,Object item)
         {
-            return ViewTypes.VIEW_ITEM1;
+            return ViewTypes.VIEW_ITEM;
         }
 
 
@@ -225,7 +228,7 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
 
         public int getListItemViewType(int position,Object item)
         {
-            return ViewTypes.VIEW_ITEM1;
+            return ViewTypes.VIEW_ITEM;
         }
 
 

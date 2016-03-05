@@ -22,6 +22,7 @@ import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.viewPager.fragmentPager.BaseHorizontalFragmentViewPager;
 import com.kimeeo.library.listDataView.viewPager.viewPager.HorizontalViewPager;
 import com.kimeeo.library.model.IFragmentData;
+import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
 
@@ -34,11 +35,42 @@ import java.util.Map;
  */
 public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager implements DefaultProjectDataManager.IDataManagerDelegate
 {
+    ProgressView progressBar;
     protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.collection_fragment_page_view, container, false);
         View disableApp = rootView.findViewById(R.id.disableApp);
         disableApp.setVisibility(View.GONE);
+
+        progressBar= (ProgressView)rootView.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setProgress(0f);
+        progressBar.start();
+
+        View indicator =rootView.findViewById(R.id.indicator);
+        View viewPager=rootView.findViewById(R.id.viewPager);
+        indicator.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
         return rootView;
+    }
+
+    public void onCallEnd(List<?> dataList, final boolean isRefreshData) {
+        super.onCallEnd(dataList,isRefreshData);
+        android.os.Handler handler = new android.os.Handler();
+        final Runnable runnablelocal = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getRootView().findViewById(R.id.indicator).setVisibility(View.VISIBLE);
+                    getRootView().findViewById(R.id.viewPager).setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                }catch(Exception e)
+                {
+
+                }
+
+            }
+        };
+        handler.postDelayed(runnablelocal, 1000);
     }
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();

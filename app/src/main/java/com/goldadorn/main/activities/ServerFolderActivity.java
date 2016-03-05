@@ -55,7 +55,7 @@ public class ServerFolderActivity extends BaseActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String title = "Select from our collections";
+        String title = getPageTitle();
         setTitle(title + "");
 
         int iconSize = 4;
@@ -68,25 +68,19 @@ public class ServerFolderActivity extends BaseActivity{
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
 
 
-        final View mainHolder = findViewById(R.id.mainHolder);
-        final ProgressView progressBar = (ProgressView)findViewById(R.id.progressBar);
+        //final View mainHolder = findViewById(R.id.mainHolder);
+
+        //final ProgressView progressBar = (ProgressView)findViewById(R.id.progressBar);
 
 
-        mainHolder.setVisibility(View.INVISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
-        progressBar.setProgress(0f);
-        progressBar.start();
 
-        android.os.Handler handler = new android.os.Handler();
-        final Runnable runnablelocal = new Runnable() {
-            @Override
-            public void run() {
-                mainHolder.setVisibility(View.VISIBLE);
-                progressBar.setVisibility(View.GONE);
-            }
-        };
-        handler.postDelayed(runnablelocal, 2000);
+
     }
+
+    protected String getPageTitle() {
+        return "Select from our collections";
+    }
+
     @OnClick(R.id.select)
     void onPostNow() {
 

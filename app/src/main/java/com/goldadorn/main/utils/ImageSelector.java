@@ -41,7 +41,7 @@ import java.io.OutputStream;
 public class ImageSelector
 {
     public static final int PICK_IMAGE = 1;
-    public static final int PICK_CAMERA_IMAGE = 2;
+    public static final int PICK_CAMERA_IMAGE = 0;
 
     protected RegisterImageUploadCallBack registerImageUploadCallBack;
 
@@ -141,9 +141,9 @@ public class ImageSelector
     }
 
     public void onOptionSelect(int which) {
-        if (which == 0)
+        if (which == PICK_CAMERA_IMAGE)
             takeAPicture();
-        else
+        else if (which == PICK_IMAGE)
             selectAPicture();
     }
 

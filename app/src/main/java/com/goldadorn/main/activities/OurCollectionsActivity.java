@@ -37,6 +37,9 @@ import butterknife.OnClick;
  */
 public class OurCollectionsActivity extends ServerFolderActivity{
 
+    protected String getPageTitle() {
+        return "Our Collections";
+    }
     public void processItem(ServerFolderObject data) {
         String preview = data.getPreview();
         if(isProductLink(preview)!=null)

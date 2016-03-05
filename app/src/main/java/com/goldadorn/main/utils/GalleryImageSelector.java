@@ -16,6 +16,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -39,7 +41,7 @@ import java.lang.ref.WeakReference;
  */
 public class GalleryImageSelector extends ImageSelector
 {
-    public static final int PICK_SERVER_GALLERY = 3;
+    public static final int PICK_SERVER_GALLERY = 2;
     private String path;
 
 
@@ -58,9 +60,50 @@ public class GalleryImageSelector extends ImageSelector
         };
         return items;
     }
-    final
+
+    public void openStandardPopup()
+    {
+        final Item[] items = getOptions();
+        String[] list= new String[items.length];
+        for (int i = 0; i < items.length; i++) {
+            list[i] = items[i].text;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        //builder.setTitle("Select Uploading Method");
+
+        View view = activity.getLayoutInflater().inflate(R.layout.image_upload_method,null);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.show();
+
+        final View ourCollections =view.findViewById(R.id.ourCollections);
+        final View camera =view.findViewById(R.id.camera);
+        final View gallery =view.findViewById(R.id.gallery);
+
+        View.OnClickListener onClick = new View.OnClickListener(){
+
+            public void onClick(View v) {
+                if(v==ourCollections)
+                    onOptionSelect(PICK_SERVER_GALLERY);
+                else if(v==camera)
+                    onOptionSelect(PICK_CAMERA_IMAGE);
+                else if(v==gallery)
+                    onOptionSelect(PICK_IMAGE);
+
+                alertDialog.dismiss();
+            }
+        };
+
+
+        ourCollections.setOnClickListener(onClick);
+        camera.setOnClickListener(onClick);
+        gallery.setOnClickListener(onClick);
+
+        //float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, activity.getResources().getDisplayMetrics());
+        //alertDialog.getWindow().setLayout(Math.round(px),Math.round(px));
+    }
+
     public void onOptionSelect(int which) {
-        if (which == 2) {
+        if (which == PICK_SERVER_GALLERY) {
             registerImageUploadCallBack.registerImageUploadCallBack(this);
             openServerSelecton();
         }

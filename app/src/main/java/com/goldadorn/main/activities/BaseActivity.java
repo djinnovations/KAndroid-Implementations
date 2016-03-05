@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -19,6 +21,8 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
+import com.hitherejoe.tabby.CustomTabActivityHelper;
+import com.hitherejoe.tabby.WebViewActivity;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.fragments.BaseFragment;
@@ -186,6 +190,21 @@ public class BaseActivity extends AppCompatActivity {
                 //action.launchActivity(target, null, data, false);
 
                 Action action1 =new Action(this,true, new String[]{url},null,null,true);
+                action1.setWebActivity(target);
+
+
+
+                final Class targetWeb=target;
+                CustomTabActivityHelper.CustomTabFallback customTabFallback = new CustomTabActivityHelper.CustomTabFallback()
+                {
+                    public void openUri(Activity activity, Uri uri) {
+                        Intent intent = new Intent(activity, targetWeb);
+                        intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+                        intent.putExtra("URL", uri.toString());
+                        activity.startActivity(intent);
+                    }
+                };
+                action1.setCustomTabFallback(customTabFallback);
                 action1.openChromeTab(url);
                 return true;
             }
