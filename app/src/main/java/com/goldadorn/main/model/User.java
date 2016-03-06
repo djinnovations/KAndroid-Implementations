@@ -10,7 +10,7 @@ public class User {
 
     public final int id;
     private String name;
-    private String image;
+    private String imageUrl;
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
 
@@ -21,19 +21,19 @@ public class User {
     }
 
 
-    public void setUsername(String username) {
+    public void setName(String username) {
         this.name = username;
     }
 
-    public void setUserpic(String userpic) {
-        this.image = userpic;
+    public void setImageUrl(String userpic) {
+        this.imageUrl = userpic;
     }
 
-    public String getUsername() {
+    public String getName() {
         return name;
     }
 
-    public String getUserpic() {
-        return image;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

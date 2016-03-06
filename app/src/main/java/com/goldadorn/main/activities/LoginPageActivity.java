@@ -108,8 +108,8 @@ public class LoginPageActivity extends BaseActivity {
 
                 if (loginResult.getSuccess()) {
                     User user = new User(loginResult.getUserid(),User.TYPE_INDIVIDUAL);
-                    user.setUsername(loginResult.getUsername());
-                    user.setUserpic(loginResult.getUserpic());
+                    user.setName(loginResult.getUsername());
+                    user.setImageUrl(loginResult.getUserpic());
                     getApp().setUser(user);
 
                     getApp().setCookies(cookies);

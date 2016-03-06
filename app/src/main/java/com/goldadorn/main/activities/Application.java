@@ -151,8 +151,8 @@ public class Application extends BaseApplication {
     private void logUser(User user) {
         Mint.clearExtraData();
         Mint.addExtraData("User ID", user.id + "");
-        Mint.addExtraData("User Photo", user.getUserpic());
-       Mint.addExtraData("User Name", user.getUsername());
+        Mint.addExtraData("User Photo", user.getImageUrl());
+       Mint.addExtraData("User Name", user.getName());
 
     }
 
@@ -164,8 +164,8 @@ public class Application extends BaseApplication {
         people = new People();
         people.setFollowerCount(0);
         people.setFollowingCount(0);
-        people.setUserName(getUser().getUsername());
-        people.setProfilePic(getUser().getUserpic());
+        people.setUserName(getUser().getName());
+        people.setProfilePic(getUser().getImageUrl());
         people.setUserId(getUser().id);
         people.setIsSelf(true);
         people.setIsFollowing(0);

@@ -131,8 +131,8 @@ public class CommentsView extends DefaultVerticalListView
         public void onSuccess(PostUpdateHelper host,SocialPost post, int pos) {
             Comment comment = new Comment();
             comment.setUserId(getApp().getUser().id);
-            comment.setUserName(getApp().getUser().getUsername());
-            comment.setProfilePic(getApp().getUser().getUserpic());
+            comment.setUserName(getApp().getUser().getName());
+            comment.setProfilePic(getApp().getUser().getImageUrl());
             comment.setCommentText(post.getDescription());
             comment.setTimestamp(new Date().getTime() - 1000);
             comment.updateRedableDate(comment.getTimestamp());

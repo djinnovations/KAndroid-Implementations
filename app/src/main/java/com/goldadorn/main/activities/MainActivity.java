@@ -3,9 +3,7 @@ package com.goldadorn.main.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -111,7 +109,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
             }
         });
-        userName.setText(getApp().getUser().getUsername());
+        userName.setText(getApp().getUser().getName());
         ImageView userImage = (ImageView)headerLayout.findViewById(R.id.userImage);
         userImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,7 +123,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         });
         Picasso.with(this)
-                .load(getApp().getUser().getUserpic())
+                .load(getApp().getUser().getImageUrl())
                 .placeholder(R.drawable.vector_image_place_holder_profile)
                 .into(userImage);
 
