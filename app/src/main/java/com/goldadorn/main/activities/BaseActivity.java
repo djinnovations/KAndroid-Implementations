@@ -1,21 +1,16 @@
 package com.goldadorn.main.activities;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
-import com.goldadorn.main.R;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -25,7 +20,6 @@ import com.hitherejoe.tabby.CustomTabActivityHelper;
 import com.hitherejoe.tabby.WebViewActivity;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
-import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.model.BaseApplication;
 
 import org.apache.http.cookie.Cookie;
@@ -40,7 +34,11 @@ import java.util.Map;
 /**
  * Created by bhavinpadhiyar on 7/17/15.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
+
+    protected void setupToolbar(){
+
+    }
 
     public URLHelper getUrlHelper() {
         return getApp().getUrlHelper();

@@ -83,6 +83,7 @@
     <color name="whiteLight">#33ffffff</color>
 
     <color name="darkDisable">#bb333333</color>
+    <color name="overlay">#9f444444</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

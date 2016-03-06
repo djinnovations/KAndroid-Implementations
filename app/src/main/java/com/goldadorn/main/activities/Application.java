@@ -94,6 +94,7 @@ public class Application extends BaseApplication {
 
         addItem(menu, R.id.nav_feed, R.string.socialFeeds, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, SocialFeedFragment.class);
         addItem(menu, R.id.nav_people, R.string.findPeople, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FindPeopleFragment.class);
+        addItem(menu, R.id.nav_showcase, R.string.showcase, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ShowcaseActivity.class);
 
 
         //UsersTimeLineFragment

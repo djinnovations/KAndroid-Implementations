@@ -124,4 +124,10 @@
         <item name="android:textColor">@color/darkColor</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
+
+    <style name="ShowcaseButton" parent="@android:style/Widget.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@drawable/social_login_button_text_color</item>
+        <item name="android:background">@drawable/social_button_bg</item>
+    </style>
 </resources>

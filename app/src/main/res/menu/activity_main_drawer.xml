@@ -13,6 +13,11 @@
             android:visible="false"
             android:icon="@drawable/vector_icon_feeds"
             android:title="@string/socialFeeds" />
+
+        <item
+            android:id="@+id/nav_showcase"
+            android:icon="@drawable/vector_icon_people"
+            android:title="@string/showcase" />
         <item
             android:id="@+id/nav_people"
             android:visible="false"
