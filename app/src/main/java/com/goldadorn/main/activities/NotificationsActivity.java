@@ -193,43 +193,53 @@ public class NotificationsActivity extends BaseActivity {
                 holder = (NotificationHolder) convertView.getTag();
             }
             JSONObject object=getItem(position);
-            int likeCount = object.optInt("likecount");
-            String liked = object.optString("liked");
-            int type = object.optInt("type",-1);
-            int postid = object.optInt("postid");
-
-//            {"postid":6,"type":1,"liked":"Ritu, Raj","likecount":34}
 
             // todo get person image
             holder.person.setImageResource(R.drawable.intro_screen_3_image_1);
             // todo get timestamp
             holder.time.setText("");
-            holder.data.setText(createString(liked,likeCount,type));
+            holder.data.setText(createString(object));
 //            holder.content.setImageResource(R.drawable.slide_1_image);
             return convertView;
         }
 
-        private String createString(String liked, int likeCount, int type) {
+        private String createString(JSONObject object) {
             StringBuilder builder = new StringBuilder();
-            switch (type){
-                case 1:
-                    if(!TextUtils.isEmpty(liked)){
-                        builder.append(liked);
-                        if(likeCount>0){
-                            if(likeCount==1){
-                                builder.append(" and 1 person");
-                            }else{
-                                builder.append(" and ");
-                                builder.append(Integer.toString(likeCount));
-                                builder.append(" people");
-                            }
-                        }
-                        builder.append(" like your post");
-                    }
-
-                    return builder.toString();
+            String typeLabel=null;
+            String type = "";
+            int typeCount=0;
+            if(object.has("liked")){
+                type = "liked";
+                typeLabel = object.optString("liked");
+                typeCount = object.optInt("likecount");
+            }else if(object.has("commented")){
+                type = "commented on";
+                typeLabel = object.optString("commented");
+                typeCount = object.optInt("commentcount");
+            }else  if(object.has("polled")){
+                type = "voted on";
+                typeLabel = object.optString("polled");
+                typeCount = object.optInt("pollcount");
+            }else if(object.has("bof3polled")){
+                type = "voted on";
+                typeLabel = object.optString("bof3polled");
+                typeCount = object.optInt("bof3polledcount");
             }
-            return null;
+            if(!TextUtils.isEmpty(typeLabel)){
+                builder.append(typeLabel);
+                if(typeCount>0){
+                    if(typeCount==1){
+                        builder.append(" and 1 person");
+                    }else{
+                        builder.append(" and ");
+                        builder.append(Integer.toString(typeCount));
+                        builder.append(" people");
+                    }
+                }
+                builder.append(type);
+                builder.append(" your post");
+            }
+            return builder.toString();
         }
     }
 
