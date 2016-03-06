@@ -78,6 +78,7 @@ public class Tables {
 
         public static final String DESCRIPTION = "description";
         public static final String IMAGEURL = "imageurl";
+        public static final String BADGES = "badges";
 
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_FOLLOWERS = "followers";
@@ -124,6 +125,7 @@ public class Tables {
                 Users.NAME + " TEXT," +
                 Users.DESCRIPTION + " TEXT," +
                 Users.IMAGEURL + " TEXT," +
+                Users.BADGES + " TEXT," +
                 Users.TYPE + " INTEGER DEFAULT 0," +
                 Users.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWERS + " INTEGER DEFAULT 0," +

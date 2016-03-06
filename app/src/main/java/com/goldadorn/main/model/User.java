@@ -1,5 +1,9 @@
 package com.goldadorn.main.model;
 
+import com.goldadorn.main.assist.BadgeHelper;
+
+import java.util.List;
+
 /**
  * Created by bhavinpadhiyar on 11/6/15.
  */
@@ -10,7 +14,7 @@ public class User {
 
     public final int id;
     private String name;
-    private String imageUrl;
+    private String imageUrl,badgesJson;
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
 
@@ -20,6 +24,9 @@ public class User {
         this.type = type;
     }
 
+    public List<Badge> getBadges() {
+        return BadgeHelper.extractBadges(badgesJson);
+    }
 
     public void setName(String username) {
         this.name = username;
@@ -36,4 +43,5 @@ public class User {
     public String getImageUrl() {
         return imageUrl;
     }
+
 }
