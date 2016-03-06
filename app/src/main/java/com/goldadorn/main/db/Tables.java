@@ -59,15 +59,35 @@ public class Tables {
                 "=false");
     }
 
+    public static final class Products {
+        public static final String TABLENAME = "products";
+        public static final String _ID = "_id";
+        public static final String NAME = "name";
+        public static final String IMAGEURL = "imageurl";
+        public static final String PRICE = "price";
+        public static final String DESCRIPTION = "description";
+        public static final String COUNT_LIKES = "likes";
+        public static final String COUNT_UNLIKES = "unlikes";
+        public static final String CART_ADDED_TSP = "carttsp";
 
-    /**
-     * Favorites.
-     */
-    public static final class Users {
+        public static final Uri CONTENT_URI = Uri.parse("content://" +
+                AUTHORITY + "/" +
+                TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=true");
+
         /**
-         * The dbtable for favorite
-         * <P>Type: STRING</P>
+         * The content:// style URL for this table. When this Uri is used, no notification is
+         * sent if the content changes.
          */
+        public static final Uri CONTENT_URI_NO_NOTIFICATION = Uri.parse("content://" +
+                AUTHORITY +
+                "/" + TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=false");
+    }
+
+    public static final class Users {
         public static final String TABLENAME = "users";
 
         public static final String _ID = "_id";
@@ -120,7 +140,7 @@ public class Tables {
 
     public static final class CREATE_TABLE {
 
-        static final String USERS_TABLE = "CREATE TABLE IF NOT EXISTS " + Users.TABLENAME + " (" +
+        static final String USERS = "CREATE TABLE IF NOT EXISTS " + Users.TABLENAME + " (" +
                 Users._ID + " INTEGER PRIMARY KEY ," +
                 Users.NAME + " TEXT," +
                 Users.DESCRIPTION + " TEXT," +
@@ -132,6 +152,15 @@ public class Tables {
                 Users.COUNT_FOLLOWING + " INTEGER DEFAULT 0," +
                 Users.COUNT_COLLECTIONS + " INTEGER DEFAULT 0," +
                 Users.COUNT_PRODUCTS + " INTEGER DEFAULT 0)";
+        static final String PRODUCTS = "CREATE TABLE IF NOT EXISTS " + Products.TABLENAME + " (" +
+                Products._ID + " INTEGER PRIMARY KEY ," +
+                Products.NAME + " TEXT," +
+                Products.DESCRIPTION + " TEXT," +
+                Products.IMAGEURL + " TEXT," +
+                Products.PRICE + " TEXT," +
+                Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
+                Products.CART_ADDED_TSP + " INTEGER DEFAULT 0)";
     }
 
 

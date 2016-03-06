@@ -123,7 +123,8 @@ public class GoldProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(Tables.CREATE_TABLE.USERS_TABLE);
+            db.execSQL(Tables.CREATE_TABLE.USERS);
+            db.execSQL(Tables.CREATE_TABLE.PRODUCTS);
         }
 
         @Override
