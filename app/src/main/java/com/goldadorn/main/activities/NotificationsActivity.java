@@ -209,19 +209,24 @@ public class NotificationsActivity extends BaseActivity {
             String type = "";
             int typeCount=0;
             if(object.has("liked")){
-                type = "liked";
+                type = "liked your post";
                 typeLabel = object.optString("liked");
                 typeCount = object.optInt("likecount");
-            }else if(object.has("commented")){
-                type = "commented on";
+            }else if(object.has("followers")){
+                type = "followed you";
+                typeLabel = object.optString("followers");
+                typeCount = object.optInt("followerscount");
+            }
+            else if(object.has("commented")){
+                type = "commented on your post";
                 typeLabel = object.optString("commented");
                 typeCount = object.optInt("commentcount");
             }else  if(object.has("polled")){
-                type = "voted on";
+                type = "voted on your post";
                 typeLabel = object.optString("polled");
                 typeCount = object.optInt("pollcount");
             }else if(object.has("bof3polled")){
-                type = "voted on";
+                type = "voted on your post";
                 typeLabel = object.optString("bof3polled");
                 typeCount = object.optInt("bof3polledcount");
             }
@@ -237,7 +242,6 @@ public class NotificationsActivity extends BaseActivity {
                     }
                 }
                 builder.append(type);
-                builder.append(" your post");
             }
             return builder.toString();
         }
