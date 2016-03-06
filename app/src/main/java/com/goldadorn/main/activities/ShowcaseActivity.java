@@ -1,16 +1,21 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 
 import butterknife.Bind;
@@ -29,7 +34,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     AppBarLayout mAppBarLayout;
 
     private Context mContext;
-
+    private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +48,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(TAG,"offset : "+verticalOffset);
+                Log.d(TAG, "offset : " + verticalOffset);
             }
         });
 
         mPager.getLayoutParams().height =
-                (int) (.7f*getResources().getDisplayMetrics().heightPixels);
+                (int) (.7f * getResources().getDisplayMetrics().heightPixels);
+        getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+    }
 
+    @Override
+    protected void onDestroy() {
+        getSupportLoaderManager().destroyLoader(mShowCaseCallback.hashCode());
+        super.onDestroy();
     }
 
     @Override
@@ -77,6 +88,24 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
             f.setArguments(b);
             return f;
+        }
+    }
+
+    private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(mContext, Tables.Users.CONTENT_URI, null, null, null, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+
         }
     }
 }

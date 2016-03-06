@@ -57,7 +57,6 @@ public class NotificationsActivity extends BaseActivity {
         ButterKnife.bind(this);
         mAdapter = new NotificationsAdapter(this);
         notificationsList.setAdapter(mAdapter);
-
         refresh();
     }
 
@@ -115,16 +114,6 @@ public class NotificationsActivity extends BaseActivity {
                 }
             }
         }).start();
-
-
-//        Map<String, Object> params = new HashMap<>();
-//        params.put("notification", "0");
-//        String url = getUrlHelper().getNotificationsUrl();
-//        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
-//        ajaxCallback.setClazz(String.class);
-//        ajaxCallback.setParams(params);
-//        ajaxCallback.method(AQuery.METHOD_POST);
-//        getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
 
     public static String convertStreamToString(SoftReference<InputStream> is)
