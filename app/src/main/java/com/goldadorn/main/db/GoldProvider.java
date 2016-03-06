@@ -125,6 +125,7 @@ public class GoldProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(Tables.CREATE_TABLE.USERS);
             db.execSQL(Tables.CREATE_TABLE.PRODUCTS);
+            db.execSQL(Tables.CREATE_TABLE.COLLECTIONS);
         }
 
         @Override

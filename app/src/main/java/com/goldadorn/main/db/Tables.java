@@ -25,43 +25,15 @@ public class Tables {
     }
 
 
-    /**
-     * Workspace Screens.
-     * <p/>
-     * Tracks the order of workspace screens.
-     */
-    public static final class WorkspaceScreens {
-        public static final String TABLENAME = "workspaceScreens";
-
-        /**
-         * The rank of this screen -- ie. how it is ordered relative to the other screens.
-         * <P>Type: INTEGER</P>
-         */
-        public static final String SCREEN_RANK = "screenRank";
-
-        /**
-         * The content:// style URL for this table
-         */
-        public static final Uri CONTENT_URI = Uri.parse("content://" +
-                AUTHORITY + "/" +
-                TABLENAME +
-                "?" +
-                PARAMETER_NOTIFY +
-                "=true");
-        /**
-         * The content:// style URL for this table. When this Uri is used, no notification is
-         * sent if the content changes.
-         */
-        public static final Uri CONTENT_URI_NO_NOTIFICATION = Uri.parse("content://" +
-                AUTHORITY +
-                "/" + TABLENAME +
-                "?" + PARAMETER_NOTIFY +
-                "=false");
+    public interface IDataVersion {
+        String DATAVERSION = "dataversion";
     }
 
-    public static final class Products {
+    public static final class Products implements IDataVersion {
         public static final String TABLENAME = "products";
         public static final String _ID = "_id";
+        public static final String COLLECTION_ID = "collectionids";
+        public static final String USER_ID = "userid";
         public static final String NAME = "name";
         public static final String IMAGEURL = "imageurl";
         public static final String PRICE = "price";
@@ -87,7 +59,34 @@ public class Tables {
                 "=false");
     }
 
-    public static final class Users {
+    public static final class Collections implements IDataVersion {
+        public static final String TABLENAME = "collections";
+        public static final String _ID = "_id";
+        public static final String USER_ID = "userid";
+        public static final String NAME = "name";
+        public static final String DESCRIPTION = "description";
+        public static final String IMAGEURL = "imageurl";
+        public static final String COUNT_LIKES = "likes";
+        public static final String COUNT_PRODUCTS = "products";
+
+        public static final Uri CONTENT_URI = Uri.parse("content://" +
+                AUTHORITY + "/" +
+                TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=true");
+
+        /**
+         * The content:// style URL for this table. When this Uri is used, no notification is
+         * sent if the content changes.
+         */
+        public static final Uri CONTENT_URI_NO_NOTIFICATION = Uri.parse("content://" +
+                AUTHORITY +
+                "/" + TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=false");
+    }
+
+    public static final class Users implements IDataVersion {
         public static final String TABLENAME = "users";
 
         public static final String _ID = "_id";
@@ -151,16 +150,31 @@ public class Tables {
                 Users.COUNT_FOLLOWERS + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWING + " INTEGER DEFAULT 0," +
                 Users.COUNT_COLLECTIONS + " INTEGER DEFAULT 0," +
-                Users.COUNT_PRODUCTS + " INTEGER DEFAULT 0)";
+                Users.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
+                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
+
         static final String PRODUCTS = "CREATE TABLE IF NOT EXISTS " + Products.TABLENAME + " (" +
                 Products._ID + " INTEGER PRIMARY KEY ," +
+                Products.USER_ID + " INTEGER DEFAULT -1," +
+                Products.COLLECTION_ID + " INTEGER DEFAULT -1," +
                 Products.NAME + " TEXT," +
                 Products.DESCRIPTION + " TEXT," +
                 Products.IMAGEURL + " TEXT," +
                 Products.PRICE + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
-                Products.CART_ADDED_TSP + " INTEGER DEFAULT 0)";
+                Products.CART_ADDED_TSP + " INTEGER DEFAULT 0," +
+                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
+
+        static final String COLLECTIONS = "CREATE TABLE IF NOT EXISTS " + Collections.TABLENAME + " (" +
+                Collections._ID + " INTEGER PRIMARY KEY ," +
+                Collections.USER_ID + " INTEGER DEFAULT -1," +
+                Collections.NAME + " TEXT," +
+                Collections.DESCRIPTION + " TEXT," +
+                Collections.IMAGEURL + " TEXT," +
+                Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Collections.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
+                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
     }
 
 
