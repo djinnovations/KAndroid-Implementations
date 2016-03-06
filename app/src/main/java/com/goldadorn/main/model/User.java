@@ -5,32 +5,35 @@ package com.goldadorn.main.model;
  */
 public class User {
 
-    private int userid;
-    private String username;
-    private String userpic;
+    public static final int TYPE_INDIVIDUAL=0;
+    public static final int TYPE_BRAND=1;
+
+    public final int id;
+    private String name;
+    private String image;
+    public final int type;
+    public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
 
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public User(int userid,int type) {
+        this.id = userid;
+        this.type=type;
     }
 
+
     public void setUsername(String username) {
-        this.username = username;
+        this.name = username;
     }
 
     public void setUserpic(String userpic) {
-        this.userpic = userpic;
-    }
-
-    public int getUserid() {
-        return userid;
+        this.image = userpic;
     }
 
     public String getUsername() {
-        return username;
+        return name;
     }
 
     public String getUserpic() {
-        return userpic;
+        return image;
     }
 }

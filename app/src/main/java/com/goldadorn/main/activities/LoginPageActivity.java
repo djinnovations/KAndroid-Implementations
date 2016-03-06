@@ -82,37 +82,32 @@ public class LoginPageActivity extends BaseActivity {
     ProgressView progressBar;
 
 
-
-    @OnClick(R.id.createAccount) void onClickCreateAccount()
-    {
+    @OnClick(R.id.createAccount)
+    void onClickCreateAccount() {
         new Action(this).launchActivity(RegisterUserActivity.class, true);
     }
 
-    @OnClick(R.id.loginAccount) void onClickLogin()
-    {
+    @OnClick(R.id.loginAccount)
+    void onClickLogin() {
 
-        if(!validateEmail())
+        if (!validateEmail())
             return;
-        if(!validatePassword())
+        if (!validatePassword())
             return;
 
-        login(userName.getText().toString().trim(),password.getText().toString().trim());
+        login(userName.getText().toString().trim(), password.getText().toString().trim());
     }
 
-    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-        if(id==loginServiceCall)
-        {
-            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String)json, status,null, layoutParent, this);
-            List<Cookie>cookies =status.getCookies();
-            if(success)
-            {
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == loginServiceCall) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+            List<Cookie> cookies = status.getCookies();
+            if (success) {
                 Gson gson = new Gson();
-                LoginResult loginResult = gson.fromJson((String)json, LoginResult.class);
+                LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
-                if(loginResult.getSuccess())
-                {
-                    User user=new User();
-                    user.setUserid(loginResult.getUserid());
+                if (loginResult.getSuccess()) {
+                    User user = new User(loginResult.getUserid(),User.TYPE_INDIVIDUAL);
                     user.setUsername(loginResult.getUsername());
                     user.setUserpic(loginResult.getUserpic());
                     getApp().setUser(user);
@@ -124,24 +119,19 @@ public class LoginPageActivity extends BaseActivity {
                             .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
 
                     gotoApp();
-                }
-                else
-                {
+                } else {
                     final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);
                     ColoredSnackbar.alert(snackbar).show();
                 }
                 stopProgress(loginResult.getSuccess());
-            }
-            else {
+            } else {
                 stopProgress(success);
             }
-        }
-        else
-            super.serverCallEnds(id,url, json, status);
+        } else
+            super.serverCallEnds(id, url, json, status);
     }
 
-    protected void startProgress()
-    {
+    protected void startProgress() {
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setProgress(0f);
         progressBar.start();
@@ -155,8 +145,8 @@ public class LoginPageActivity extends BaseActivity {
         createAccount.setEnabled(false);
         forgotPasswordButton.setEnabled(false);
     }
-    protected void stopProgress(Boolean success)
-    {
+
+    protected void stopProgress(Boolean success) {
         progressBar.setVisibility(View.GONE);
         progressBar.setProgress(0f);
         progressBar.stop();
@@ -172,14 +162,14 @@ public class LoginPageActivity extends BaseActivity {
     }
 
 
-    final private int loginServiceCall= IDUtils.generateViewId();
-    protected void login(String userName,String password)
-    {
+    final private int loginServiceCall = IDUtils.generateViewId();
+
+    protected void login(String userName, String password) {
         startProgress();
         String url = getUrlHelper().getLoginServiceURL();
-        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(loginServiceCall);
-        Map<String,String> params= new HashMap<>();
-        params.put(URLHelper.LOGIN_PARAM.USER_NAME,userName);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(loginServiceCall);
+        Map<String, String> params = new HashMap<>();
+        params.put(URLHelper.LOGIN_PARAM.USER_NAME, userName);
         params.put(URLHelper.LOGIN_PARAM.PASSWORD, password);
         ajaxCallback.setClazz(String.class);
 
@@ -187,6 +177,7 @@ public class LoginPageActivity extends BaseActivity {
         ajaxCallback.setClazz(String.class);
         getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
+
     private boolean validateEmail() {
         String email = userName.getText().toString().trim();
         if (email.isEmpty() || !isValidEmail(email)) {
@@ -212,6 +203,7 @@ public class LoginPageActivity extends BaseActivity {
 
         return true;
     }
+
     private void requestFocus(View view) {
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -221,18 +213,19 @@ public class LoginPageActivity extends BaseActivity {
     private static boolean isValidEmail(String email) {
         return !TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
-    @OnClick(R.id.loginWithFacebookButton) void onClickLoginWithFacebookButton()
-    {
+
+    @OnClick(R.id.loginWithFacebookButton)
+    void onClickLoginWithFacebookButton() {
 
     }
 
-    @OnClick(R.id.loginWithGoogleButton) void onClickLoginWithGoogleButton()
-    {
+    @OnClick(R.id.loginWithGoogleButton)
+    void onClickLoginWithGoogleButton() {
 
     }
 
-    @OnClick(R.id.loginWithTwitterButton) void onClickLoginWithTwitterButton()
-    {
+    @OnClick(R.id.loginWithTwitterButton)
+    void onClickLoginWithTwitterButton() {
 
     }
 
@@ -252,7 +245,7 @@ public class LoginPageActivity extends BaseActivity {
         userName.setCompoundDrawablePadding(iconSize);
 
 
-        icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock,R.color.colorPrimary,iconSize);
+        icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock, R.color.colorPrimary, iconSize);
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
     }
@@ -274,11 +267,11 @@ public class LoginPageActivity extends BaseActivity {
         public void afterTextChanged(Editable editable) {
             switch (view.getId()) {
                 case R.id.userName:
-                    if(!userName.getText().toString().trim().equals(""))
+                    if (!userName.getText().toString().trim().equals(""))
                         inputLayoutUserName.setErrorEnabled(false);
                     break;
                 case R.id.password:
-                    if(!password.getText().toString().trim().equals(""))
+                    if (!password.getText().toString().trim().equals(""))
                         inputLayoutPassword.setErrorEnabled(false);
                     break;
             }

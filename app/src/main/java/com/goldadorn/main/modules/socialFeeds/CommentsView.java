@@ -15,10 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.UserActivity;
-import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.Comment;
-import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
@@ -26,20 +23,14 @@ import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
-import com.goldadorn.main.utils.EmoHelper;
-import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
-import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
-import org.greenrobot.eventbus.EventBus;
 
-import java.lang.ref.WeakReference;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -139,7 +130,7 @@ public class CommentsView extends DefaultVerticalListView
         @Override
         public void onSuccess(PostUpdateHelper host,SocialPost post, int pos) {
             Comment comment = new Comment();
-            comment.setUserId(getApp().getUser().getUserid());
+            comment.setUserId(getApp().getUser().id);
             comment.setUserName(getApp().getUser().getUsername());
             comment.setProfilePic(getApp().getUser().getUserpic());
             comment.setCommentText(post.getDescription());

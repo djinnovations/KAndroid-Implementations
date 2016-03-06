@@ -26,7 +26,7 @@ public class Liked implements IParseableObject {
 
     public void dataLoaded(BaseDataParser entireData)
     {
-        if(userId== Application.getLoginUser().getUserid())
+        if(userId== Application.getLoginUser().id)
             isSelf=true;
 
         profilePic = URLHelper.parseImageURL(profilePic);

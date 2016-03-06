@@ -174,7 +174,7 @@ public class SocialPost extends ServerError implements IParseableObject {
         else
             setPostType(POST_TYPE_NORMAL_POST);
 
-        if(userId== Application.getLoginUser().getUserid())
+        if(userId== Application.getLoginUser().id)
             isSelf=true;
 
         userPic = URLHelper.parseImageURL(userPic);

@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.rey.material.widget.ProgressView;
+
 import org.apache.http.cookie.Cookie;
 
 import java.util.HashMap;
@@ -52,62 +53,56 @@ public class AppStartActivity extends BaseActivity {
         logo.setImageResource(res);
         */
 
-        ProgressView progressBar =(ProgressView)findViewById(R.id.progressBar);
+        ProgressView progressBar = (ProgressView) findViewById(R.id.progressBar);
         progressBar.setProgress(0f);
         progressBar.start();
 
 
-        if(checkPermission())
-        {
+        if (checkPermission()) {
             kickStart();
-        }
-        else
-        {
+        } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.INTERNET))
                 Toast.makeText(AppStartActivity.this, "This app must have internet permision.", Toast.LENGTH_SHORT).show();
             else
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},INTERNET_PERMISSION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
     }
 
     private void kickStart() {
         sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
-        boolean isIntroSeen=sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_INTRO_SEEN, false);
-        isIntroSeen =true;
-        if(isIntroSeen)
-        {
-            boolean isLoginDone=sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false);
+        boolean isIntroSeen = sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_INTRO_SEEN, false);
+        isIntroSeen = true;
+        if (isIntroSeen) {
+            boolean isLoginDone = sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false);
 
-            String userName=sharedPreferences.getString(AppSharedPreferences.LoginInfo.USER_NAME, "");
-            String password=sharedPreferences.getString(AppSharedPreferences.LoginInfo.PASSWORD, "");
+            String userName = sharedPreferences.getString(AppSharedPreferences.LoginInfo.USER_NAME, "");
+            String password = sharedPreferences.getString(AppSharedPreferences.LoginInfo.PASSWORD, "");
 
-            if(isLoginDone && userName.equals("")==false && password.equals("")==false)
+            if (isLoginDone && userName.equals("") == false && password.equals("") == false)
                 login(userName, password);
             else
                 gotoLandingPage();
-        }
-        else
+        } else
             gotoIntro();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case INTERNET_PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     kickStart();
-                }
-                else
-                {
+                } else {
                     finish();
                 }
 
                 break;
         }
     }
-    private boolean checkPermission()
-    {
+
+    private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET);
-        if (result == PackageManager.PERMISSION_GRANTED){
+        if (result == PackageManager.PERMISSION_GRANTED) {
 
             return true;
 
@@ -119,50 +114,43 @@ public class AppStartActivity extends BaseActivity {
     }
 
     private void gotoIntro() {
-        new Action(this).launchActivity(Intro.class,true);
+        new Action(this).launchActivity(Intro.class, true);
     }
 
 
-    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-        if(id==loginServiceCall)
-        {
-            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String)json, status,null, layoutParent, this);
-            List<Cookie>cookies =status.getCookies();
-            if(success)
-            {
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == loginServiceCall) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+            List<Cookie> cookies = status.getCookies();
+            if (success) {
                 Gson gson = new Gson();
-                LoginResult loginResult = gson.fromJson((String)json, LoginResult.class);
+                LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
-                if(loginResult.getSuccess())
-                {
-                    User user=new User();
-                    user.setUserid(loginResult.getUserid());
+                if (loginResult.getSuccess()) {
+                    User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
                     user.setUsername(loginResult.getUsername());
                     user.setUserpic(loginResult.getUserpic());
                     getApp().setUser(user);
                     getApp().setCookies(cookies);
 
                     gotoApp();
-                }
-                else
-                {
+                } else {
                     final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);
                     ColoredSnackbar.alert(snackbar).show();
                 }
-            }
-            else {
+            } else {
                 gotoLandingPage();
             }
-        }else
-            super.serverCallEnds(id,url, json, status);
+        } else
+            super.serverCallEnds(id, url, json, status);
     }
 
-    final private int loginServiceCall=IDUtils.generateViewId();
-    protected void login(String userName,String password)
-    {
+    final private int loginServiceCall = IDUtils.generateViewId();
+
+    protected void login(String userName, String password) {
         String url = getUrlHelper().getLoginServiceURL();
-        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(loginServiceCall);
-        Map<String,String> params= new HashMap<>();
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(loginServiceCall);
+        Map<String, String> params = new HashMap<>();
         params.put(URLHelper.LOGIN_PARAM.USER_NAME, userName);
         params.put(URLHelper.LOGIN_PARAM.PASSWORD, password);
 
@@ -172,7 +160,8 @@ public class AppStartActivity extends BaseActivity {
 
 
     }
+
     private void gotoLandingPage() {
-       new Action(this).launchActivity(LandingPageActivity.class,true);
+        new Action(this).launchActivity(LandingPageActivity.class, true);
     }
 }

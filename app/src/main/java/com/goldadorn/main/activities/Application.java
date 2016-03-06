@@ -1,6 +1,5 @@
 package com.goldadorn.main.activities;
 
-import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.R;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -151,7 +150,7 @@ public class Application extends BaseApplication {
 
     private void logUser(User user) {
         Mint.clearExtraData();
-        Mint.addExtraData("User ID", user.getUserid() + "");
+        Mint.addExtraData("User ID", user.id + "");
         Mint.addExtraData("User Photo", user.getUserpic());
        Mint.addExtraData("User Name", user.getUsername());
 
@@ -167,7 +166,7 @@ public class Application extends BaseApplication {
         people.setFollowingCount(0);
         people.setUserName(getUser().getUsername());
         people.setProfilePic(getUser().getUserpic());
-        people.setUserId(getUser().getUserid());
+        people.setUserId(getUser().id);
         people.setIsSelf(true);
         people.setIsFollowing(0);
 

@@ -37,7 +37,7 @@ public class People extends ServerError implements IParseableObject {
         profilePic= URLHelper.parseImageURL(profilePic);
         backgroundPic= URLHelper.parseImageURL(backgroundPic);
         //backgroundPic  = "http://store.messness.com/wp-content/uploads/sites/2/2013/04/pocket-square-floral-pattern2-1.jpg";
-        if(userId== Application.getLoginUser().getUserid())
+        if(userId== Application.getLoginUser().id)
             isSelf=true;
     }
 

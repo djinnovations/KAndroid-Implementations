@@ -51,7 +51,7 @@ public class Comment implements IParseableObject {
     DateFormat sdf = new SimpleDateFormat("dd MMMM yyyy, hh:mm a");
     public void dataLoaded(BaseDataParser entireData)
     {
-        if(userId== Application.getLoginUser().getUserid())
+        if(userId== Application.getLoginUser().id)
             isSelf=true;
 
         profilePic = URLHelper.parseImageURL(profilePic);
