@@ -5,8 +5,8 @@ package com.goldadorn.main.model;
  */
 public class User {
 
-    public static final int TYPE_INDIVIDUAL=0;
-    public static final int TYPE_BRAND=1;
+    public static final int TYPE_INDIVIDUAL = 0;
+    public static final int TYPE_BRAND = 1;
 
     public final int id;
     private String name;
@@ -15,9 +15,9 @@ public class User {
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
 
 
-    public User(int userid,int type) {
+    public User(int userid, int type) {
         this.id = userid;
-        this.type=type;
+        this.type = type;
     }
 
 

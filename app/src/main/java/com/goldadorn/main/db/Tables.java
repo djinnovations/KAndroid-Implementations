@@ -2,13 +2,15 @@ package com.goldadorn.main.db;
 
 import android.net.Uri;
 
+import com.goldadorn.main.BuildConfig;
+
 /**
  * Created by Kiran BH on 07/09/15.
  */
 public class Tables {
     static final String DATABASE_NAME = "goldorn.db";
-    static final int DATABASE_VERSION = 0;
-    public static final String AUTHORITY = "com.goldadorn.main.provider";
+    static final int DATABASE_VERSION = 1;
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID;
     public static final String PARAMETER_NOTIFY = "notify";
     public static final String PARAMETER_CUSTOMQUERY = "customquery";
     public static final String SQL_DESC = " DESC";
