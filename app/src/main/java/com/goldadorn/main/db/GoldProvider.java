@@ -69,7 +69,6 @@ public class GoldProvider extends ContentProvider {
     }
 
 
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SqlArguments args = new SqlArguments(uri, selection, selectionArgs);

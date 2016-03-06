@@ -13,10 +13,10 @@ public class User {
     public static final int TYPE_BRAND = 1;
 
     public final int id;
-    private String name;
-    private String imageUrl,badgesJson;
+    public String name,imageUrl, description,badgesJson;
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
+    public long dataVersion;
 
 
     public User(int userid, int type) {
