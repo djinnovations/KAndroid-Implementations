@@ -95,6 +95,23 @@ public class NotificationsActivity extends BaseActivity {
                                     entity.getContent());
                             String content = convertStreamToString(instream);
                             Log.d("Response", content);
+//                            notificationJsons = new JSONArray("[  \n" +
+//                                    "   {  \n" +
+//                                    "      \"postid\":\"65\",\n" +
+//                                    "      \"commented\":\"\",\n" +
+//                                    "      \"commentcount\":4\n" +
+//                                    "   },\n" +
+//                                    "   {  \n" +
+//                                    "      \"postid\":\"65\",\n" +
+//                                    "      \"liked\":\"nithin, k\",\n" +
+//                                    "      \"likecount\":2\n" +
+//                                    "   },\n" +
+//                                    "   {  \n" +
+//                                    "      \"postid\":\"64\",\n" +
+//                                    "      \"liked\":\"nithin\",\n" +
+//                                    "      \"likecount\":1\n" +
+//                                    "   }\n" +
+//                                    "]");
                             notificationJsons = new JSONArray(content);
                             notificationsList.post(new Runnable() {
                                 @Override
@@ -181,7 +198,7 @@ public class NotificationsActivity extends BaseActivity {
             } else {
                 holder = (NotificationHolder) convertView.getTag();
             }
-            JSONObject object=getItem(position);
+            JSONObject object = getItem(position);
 
             // todo get person image
             holder.person.setImageResource(R.drawable.intro_screen_3_image_1);
@@ -194,44 +211,52 @@ public class NotificationsActivity extends BaseActivity {
 
         private String createString(JSONObject object) {
             StringBuilder builder = new StringBuilder();
-            String typeLabel=null;
+            String typeLabel = null;
             String type = "";
-            int typeCount=0;
-            if(object.has("liked")){
+            int typeCount = 0;
+            if (object.has("liked")) {
                 type = "liked your post";
                 typeLabel = object.optString("liked");
                 typeCount = object.optInt("likecount");
-            }else if(object.has("followers")){
+            } else if (object.has("followers")) {
                 type = "followed you";
                 typeLabel = object.optString("followers");
                 typeCount = object.optInt("followerscount");
-            }
-            else if(object.has("commented")){
+            } else if (object.has("commented")) {
                 type = "commented on your post";
                 typeLabel = object.optString("commented");
                 typeCount = object.optInt("commentcount");
-            }else  if(object.has("polled")){
+            } else if (object.has("polled")) {
                 type = "voted on your post";
                 typeLabel = object.optString("polled");
                 typeCount = object.optInt("pollcount");
-            }else if(object.has("bof3polled")){
+            } else if (object.has("bof3polled")) {
                 type = "voted on your post";
                 typeLabel = object.optString("bof3polled");
                 typeCount = object.optInt("bof3polledcount");
             }
-            if(!TextUtils.isEmpty(typeLabel)){
-                builder.append(typeLabel);
-                if(typeCount>0){
-                    if(typeCount==1){
-                        builder.append(" and 1 person");
-                    }else{
+            if (!TextUtils.isEmpty(typeLabel)) {
+                String[] names = typeLabel.split(",");
+                for (int i = 0; i < names.length; i++) {
+                    if (i == names.length - 1 && i != 0) {
                         builder.append(" and ");
-                        builder.append(Integer.toString(typeCount));
-                        builder.append(" people");
-                    }
+                    } else if (i != 0) builder.append(", ");
+                    builder.append(names[i].trim());
                 }
-                builder.append(type);
+//                builder.append(typeLabel);
+//                if(typeCount>0){
+//                    if(typeCount==1){
+//                        builder.append(" and 1 person");
+//                    }else{
+//                        builder.append(" and ");
+//                        builder.append(Integer.toString(typeCount));
+//                        builder.append(" people");
+//                    }
+//                }
+            } else {
+                builder.append(typeCount).append(" ").append(typeCount == 1 ? "person" : "people");
             }
+            builder.append(" ").append(type).append(".");
             return builder.toString();
         }
     }
