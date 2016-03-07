@@ -1,6 +1,7 @@
 package com.goldadorn.main.modules.socialFeeds.helper;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
@@ -108,6 +109,8 @@ abstract public class PostUpdateHelper {
     protected ExtendedAjaxCallback getAjaxCallback(final int id) {
         ExtendedAjaxCallback<Object> ajaxCallback = new ExtendedAjaxCallback<Object>() {
             public void callback(String url, Object json, AjaxStatus status) {
+                Log.d("Response url ","url "+url);
+                Log.d("Response from server ","response "+json.toString());
                 serverCallEnds(id,url,json,status);
                 posision=-1;
                 post=null;
