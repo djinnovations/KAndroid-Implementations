@@ -48,7 +48,6 @@
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
-        android:src="@drawable/feedback_item_image"
         android:scaleType="fitCenter"
         android:layout_height="120dp" />
     <LinearLayout

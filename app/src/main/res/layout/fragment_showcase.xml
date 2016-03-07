@@ -8,8 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:id="@+id/image"
-        android:src="@drawable/intro_screen_3_image_1"
-        />
+        android:id="@+id/image"/>
 
 </LinearLayout>

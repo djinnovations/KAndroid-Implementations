@@ -60,7 +60,7 @@ public class GalleryImageSelector extends ImageSelector
         };
         return items;
     }
-
+/*
     public void openStandardPopup()
     {
         final Item[] items = getOptions();
@@ -101,6 +101,7 @@ public class GalleryImageSelector extends ImageSelector
         //float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, activity.getResources().getDisplayMetrics());
         //alertDialog.getWindow().setLayout(Math.round(px),Math.round(px));
     }
+    */
 
     public void onOptionSelect(int which) {
         if (which == PICK_SERVER_GALLERY) {

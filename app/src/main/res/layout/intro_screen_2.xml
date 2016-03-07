@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         android:scaleType="fitEnd"
         android:layout_gravity="center_vertical|center_horizontal"
-        android:src="@drawable/intro_screen_3_image_1"
         android:id="@+id/imageView3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

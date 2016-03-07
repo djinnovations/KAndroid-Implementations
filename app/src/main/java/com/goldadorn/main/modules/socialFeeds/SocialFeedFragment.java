@@ -1194,7 +1194,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     map.put(Action.ATTRIBUTE_TITLE, getString(R.string.appShareTitle));
                     map.put(Action.ATTRIBUTE_DATA, getString(R.string.appShareBody) + appPlayStoreURL);
                     shareActionData.setParam(map);
-                    getAppMainActivity().action(shareActionData);
+                    if(getAppMainActivity()!=null)
+                        getAppMainActivity().action(shareActionData);
                 }
 
 
