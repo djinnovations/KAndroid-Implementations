@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -32,6 +34,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
+    @Bind(R.id.coordinatorlayout)
+    CoordinatorLayout mCoordinatorLayout;
+
+    @Bind(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
@@ -53,8 +60,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         });
 
         mPager.getLayoutParams().height =
-                (int) (.7f * getResources().getDisplayMetrics().heightPixels);
+                (int) (.7f*getResources().getDisplayMetrics().heightPixels);
+        mCollapsingToolbarLayout.setTitleEnabled(false);
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+
     }
 
     @Override

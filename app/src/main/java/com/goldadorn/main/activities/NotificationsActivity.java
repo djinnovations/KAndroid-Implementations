@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.androidquery.callback.AjaxStatus;
@@ -46,9 +47,18 @@ public class NotificationsActivity extends BaseActivity {
 
     @Bind(R.id.notificationsList)
     ListView notificationsList;
+    @Bind(R.id.emptyView)
+    View emptyView;
+    @Bind(R.id.progress)
+    ProgressBar progressBar;
+    @Bind(R.id.emptyViewMessage)
+    TextView emptyTextView;
+
+
     final private int postCallToken = IDUtils.generateViewId();
     private JSONArray notificationJsons;
     private NotificationsAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +123,23 @@ public class NotificationsActivity extends BaseActivity {
 //                                    "      \"likecount\":1\n" +
 //                                    "   }\n" +
 //                                    "]");
-                            notificationJsons = new JSONArray(content);
+                            try {
+                                notificationJsons = new JSONArray(content);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                             notificationsList.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if(notificationJsons!=null && notificationJsons.length()>0){
+                                        notificationsList.setVisibility(View.VISIBLE);
+                                        emptyView.setVisibility(View.GONE);
+                                    }else{
+                                        notificationsList.setVisibility(View.INVISIBLE);
+                                        emptyView.setVisibility(View.VISIBLE);
+                                        progressBar.setVisibility(View.GONE);
+                                        emptyTextView.setVisibility(View.VISIBLE);
+                                    }
                                     mAdapter.notifyDataSetChanged();
                                 }
                             });
