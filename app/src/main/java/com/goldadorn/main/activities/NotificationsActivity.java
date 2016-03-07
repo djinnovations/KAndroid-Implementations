@@ -69,6 +69,7 @@ public class NotificationsActivity extends BaseActivity {
 
                     HttpClient httpclient = new DefaultHttpClient();
                     HttpPost httppost = new HttpPost(URLHelper.getInstance().getNotificationsUrl());
+                    Log.d("Notification url "," url "+URLHelper.getInstance().getNotificationsUrl());
 
                     try {
 
