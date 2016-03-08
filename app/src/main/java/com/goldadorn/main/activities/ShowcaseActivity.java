@@ -2,6 +2,7 @@ package com.goldadorn.main.activities;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,12 +14,21 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
+import com.mikepenz.iconics.view.IconicsButton;
 
 import butterknife.Bind;
 
@@ -37,11 +47,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Bind(R.id.coordinatorlayout)
     CoordinatorLayout mCoordinatorLayout;
 
+    @Bind(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
+    private StaggeredGridLayoutManager gaggeredGridLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +76,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         mPager.getLayoutParams().height =
                 (int) (.7f*getResources().getDisplayMetrics().heightPixels);
-        mCollapsingToolbarLayout.setTitleEnabled(false);
+        mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
+        mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        int value = getResources().getDimensionPixelSize(R.dimen.appDefaultMargin);
+        mRecyclerView.setLayoutManager(gaggeredGridLayoutManager);
+
+
+        CollectionsAdapter rcAdapter = new CollectionsAdapter(this);
+        mRecyclerView.setAdapter(rcAdapter);
 
     }
 
@@ -114,6 +140,60 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
+
+        }
+    }
+
+    class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder>{
+
+        Context context;
+
+        public CollectionsAdapter(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_showcase_brand_item, null);
+            CollectionHolder rcv = new CollectionHolder(layoutView);
+            return rcv;
+        }
+
+        @Override
+        public void onBindViewHolder(CollectionHolder holder, int position) {
+            holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    (float) ((Math.random()+1)*100),getResources().getDisplayMetrics());
+        }
+
+        @Override
+        public int getItemCount() {
+            return 25;
+        }
+    }
+
+    private class CollectionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public TextView name;
+        public TextView description;
+        public TextView extra;
+        public TextView likeCount;
+        public ImageView image;
+        public IconicsButton like;
+
+        public CollectionHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            name = (TextView) itemView.findViewById(R.id.collection_name);
+            description = (TextView) itemView.findViewById(R.id.collection_description);
+            extra = (TextView) itemView.findViewById(R.id.extra);
+            likeCount = (TextView) itemView.findViewById(R.id.collection_likes);
+            like = (IconicsButton) itemView.findViewById(R.id.likeButton);
+            image = (ImageView) itemView.findViewById(R.id.collection_image);
+        }
+
+
+        @Override
+        public void onClick(View v) {
 
         }
     }
