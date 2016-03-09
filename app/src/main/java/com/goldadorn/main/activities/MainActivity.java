@@ -71,6 +71,7 @@ public class MainActivity extends BaseDrawerActivity  {
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)
             action(navigationDataObject);
+//        startActivity(CartManagerActivity.getLaunchIntent(this));
     }
 
 
