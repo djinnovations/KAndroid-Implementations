@@ -18,6 +18,7 @@ import java.util.ArrayList;
  */
 public class MyCartFragment extends Fragment {
     CartProductsViewHolder mCartProductsViewHolder;
+    private View mCartEmptyView;
     ArrayList<Product> mCart = new ArrayList<>(5);
 
     @Nullable
@@ -50,9 +51,21 @@ public class MyCartFragment extends Fragment {
         mCart.add(product);
         product = new Product(123123);
         product.name = "Gold";
-        mCart.add(product); product = new Product(123123);
+        mCart.add(product);
+        product = new Product(123123);
         product.name = "Gold";
         mCart.add(product);
-        mCartProductsViewHolder.bindUI(mCart);
+        onCartChanged();
+    }
+
+    private void onCartChanged() {
+        if (mCart.size() > 0) {
+            mCartEmptyView.setVisibility(View.GONE);
+            mCartProductsViewHolder.setVisibility(View.VISIBLE);
+            mCartProductsViewHolder.bindUI(mCart);
+        } else {
+            mCartEmptyView.setVisibility(View.VISIBLE);
+            mCartProductsViewHolder.setVisibility(View.GONE);
+        }
     }
 }

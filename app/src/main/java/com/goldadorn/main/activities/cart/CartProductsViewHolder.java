@@ -51,6 +51,10 @@ public class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
     }
 
+    public void setVisibility(int visibility) {
+        itemView.setVisibility(visibility);
+    }
+
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         public final ImageView image;
         public final TextView name, price;

@@ -18,6 +18,7 @@
 
     <LinearLayout
         android:id="@+id/container_cart"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -46,6 +47,12 @@
                 android:text="Price"/>
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:id="@+id/emptyview_cart"
+        android:layout_width="match_parent"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:text="Add some thing into Cart first"/>
 
     <View
         android:layout_width="match_parent"
