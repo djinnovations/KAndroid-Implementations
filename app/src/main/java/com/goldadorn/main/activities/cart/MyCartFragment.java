@@ -33,6 +33,26 @@ public class MyCartFragment extends Fragment {
         Product product = new Product(123123);
         product.name = "Gold";
         mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
+        product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product); product = new Product(123123);
+        product.name = "Gold";
+        mCart.add(product);
         mCartProductsViewHolder.bindUI(mCart);
     }
 }
