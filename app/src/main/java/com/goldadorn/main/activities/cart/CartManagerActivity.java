@@ -37,14 +37,16 @@ public class CartManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cart_manager);
         ButterKnife.bind(this);
         mContinueButton.setOnClickListener(mClickListener);
-        loadFragment(UISTATE_CART);
+        configureUI(UISTATE_CART);
     }
 
-    public void loadFragment(int uistate) {
+    public void configureUI(int uistate) {
         Fragment fragment = null;
         if (uistate == UISTATE_CART) {
             fragment = new MyCartFragment();
-        } else {
+        } else if (uistate == UISTATE_ADDRESS) {
+            fragment = new AddressFragment();
+        } else if (uistate == UISTATE_PAYMENT) {
             fragment = new AddressFragment();
         }
         if (fragment != null) {
@@ -58,10 +60,10 @@ public class CartManagerActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             if (mUIState == UISTATE_CART)
-                loadFragment(UISTATE_ADDRESS);
-            else if (mUIState == UISTATE_ADDRESS) loadFragment(UISTATE_PAYMENT);
-            else if (mUIState == UISTATE_FINAL) loadFragment(UISTATE_FINAL);
-            else loadFragment(UISTATE_CART);
+                configureUI(UISTATE_ADDRESS);
+            else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
+            else if (mUIState == UISTATE_FINAL) configureUI(UISTATE_FINAL);
+            else configureUI(UISTATE_CART);
         }
     };
 }
