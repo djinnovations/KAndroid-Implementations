@@ -30,6 +30,7 @@ public class MyCartFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mCartEmptyView=view.findViewById(R.id.emptyview_cart);
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart));
         Product product = new Product(123123);
         product.name = "Gold";

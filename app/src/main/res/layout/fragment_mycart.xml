@@ -18,10 +18,10 @@
 
     <LinearLayout
         android:id="@+id/container_cart"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,12 +47,13 @@
                 android:text="Price"/>
         </LinearLayout>
     </LinearLayout>
+
     <TextView
         android:id="@+id/emptyview_cart"
         android:layout_width="match_parent"
-        android:visibility="visible"
         android:layout_height="wrap_content"
-        android:text="Add some thing into Cart first"/>
+        android:text="Add some thing into Cart first"
+        android:visibility="visible"/>
 
     <View
         android:layout_width="match_parent"
@@ -61,4 +62,35 @@
         android:layout_marginRight="10dp"
         android:background="@android:color/black"/>
 
+    <LinearLayout
+        android:id="@+id/container_extra_cost"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ship to"/>
+
+        <EditText
+            android:id="@+id/edt_pincode"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/black"/>
+
+    <include
+        android:id="@+id/container_tax"
+        layout="@layout/item_extra_cost"/>
+
+    <include
+        android:id="@+id/container_shipping"
+        layout="@layout/item_extra_cost"/>
 </LinearLayout>

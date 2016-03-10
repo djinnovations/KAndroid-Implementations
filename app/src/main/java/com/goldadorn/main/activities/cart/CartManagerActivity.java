@@ -3,8 +3,10 @@ package com.goldadorn.main.activities.cart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.goldadorn.main.R;
 
@@ -17,6 +19,7 @@ public class CartManagerActivity extends AppCompatActivity {
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
     private int mUIState = 0;
+    View mContinueButton;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -27,12 +30,33 @@ public class CartManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_manager);
+        mContinueButton = findViewById(R.id.continueButton);
+        mContinueButton.setOnClickListener(mClickListener);
         loadFragment(UISTATE_CART);
     }
 
     public void loadFragment(int uistate) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.frame, new MyCartFragment());
-        fragmentTransaction.commit();
+        Fragment fragment = null;
+        if (uistate == UISTATE_CART) {
+            fragment = new MyCartFragment();
+        } else {
+            fragment = new AddressFragment();
+        }
+        if (fragment != null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame, fragment);
+            fragmentTransaction.commit();
+        }
     }
+
+    private View.OnClickListener mClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (mUIState == UISTATE_CART)
+                loadFragment(UISTATE_ADDRESS);
+            else if (mUIState == UISTATE_ADDRESS) loadFragment(UISTATE_PAYMENT);
+            else if (mUIState == UISTATE_FINAL) loadFragment(UISTATE_FINAL);
+            else loadFragment(UISTATE_CART);
+        }
+    };
 }
