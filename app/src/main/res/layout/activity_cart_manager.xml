@@ -7,10 +7,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -31,7 +32,7 @@
                 android:background="@android:color/holo_green_dark"
                 android:text="Continue"/>
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <android.support.design.widget.AppBarLayout

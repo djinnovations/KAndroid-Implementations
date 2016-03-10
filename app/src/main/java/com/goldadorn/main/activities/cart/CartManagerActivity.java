@@ -10,6 +10,9 @@ import android.view.View;
 
 import com.goldadorn.main.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Kiran BH on 08/03/16.
  */
@@ -19,6 +22,8 @@ public class CartManagerActivity extends AppCompatActivity {
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
     private int mUIState = 0;
+
+    @Bind(R.id.continueButton)
     View mContinueButton;
 
     public static Intent getLaunchIntent(Context context) {
@@ -30,7 +35,7 @@ public class CartManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_manager);
-        mContinueButton = findViewById(R.id.continueButton);
+        ButterKnife.bind(this);
         mContinueButton.setOnClickListener(mClickListener);
         loadFragment(UISTATE_CART);
     }
