@@ -18,11 +18,11 @@ import java.util.ArrayList;
  */
 public class CartProductsViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
-    ArrayList<ProductViewHolder> productsVh = new ArrayList<>(5);
+    private ArrayList<ProductViewHolder> productsVh = new ArrayList<>(5);
 
     public CartProductsViewHolder(LinearLayout itemView) {
         super(itemView);
-        container=itemView;
+        container = itemView;
     }
 
     private ProductViewHolder createItem(Product product) {
@@ -45,7 +45,8 @@ public class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
         productsVh.clear();
         for (Product product : cart) {
-            createItem(product);
+            ProductViewHolder pvh = createItem(product);
+            pvh.bindUI(product);
         }
 
     }
@@ -69,7 +70,7 @@ public class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         public void bindUI(Product product) {
             name.setText(product.name);
-            price.setText(product.price);
+            price.setText(product.price + " " + product.quantity * product.price);
         }
 
         public void remove() {

@@ -6,7 +6,8 @@ package com.goldadorn.main.model;
 public class Product {
     public final int id;
     public String name, description, imageUrl;
-    public String price;
+    public int price;
+    public String priceUnit;
 
     public int quantity;
 
