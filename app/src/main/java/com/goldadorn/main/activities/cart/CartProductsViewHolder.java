@@ -16,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by Kiran BH on 10/03/16.
  */
-public class CartProductsViewHolder extends RecyclerView.ViewHolder {
+class CartProductsViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
     private ArrayList<ProductViewHolder> productsVh = new ArrayList<>(5);
 
@@ -55,7 +55,7 @@ public class CartProductsViewHolder extends RecyclerView.ViewHolder {
         itemView.setVisibility(visibility);
     }
 
-    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+    static class ProductViewHolder extends RecyclerView.ViewHolder {
         public final ImageView image;
         public final TextView name, price;
         public final EditText quantityText;

@@ -68,7 +68,6 @@
                 android:background="@android:color/holo_red_dark"
                 app:layout_collapseMode="parallax"/>
 
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
 
