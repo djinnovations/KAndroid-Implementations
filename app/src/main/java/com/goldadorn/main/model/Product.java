@@ -5,6 +5,10 @@ package com.goldadorn.main.model;
  */
 public class Product {
     public final int id;
+    public String name, description, imageUrl;
+    public String price;
+
+    public int quantity;
 
     public Product(int id) {
         this.id = id;
