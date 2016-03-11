@@ -207,6 +207,14 @@ public class Tables {
                 Addresses.PINCODE + " TEXT," +
                 Addresses.LAST_USED + " INTEGER," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
+
+        static final String PAYMENT_DETAILS = "CREATE TABLE IF NOT EXISTS " + Addresses.TABLENAME + " (" +
+                Addresses._ID + " INTEGER PRIMARY KEY ," +
+                Addresses.NAME + " TEXT," +
+                Addresses.FULLADDRESS + " TEXT," +
+                Addresses.PINCODE + " TEXT," +
+                Addresses.LAST_USED + " INTEGER," +
+                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
     }
 
 

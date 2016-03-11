@@ -47,7 +47,9 @@ public class CartManagerActivity extends AppCompatActivity {
         } else if (uistate == UISTATE_ADDRESS) {
             fragment = new AddressFragment();
         } else if (uistate == UISTATE_PAYMENT) {
-            fragment = new AddressFragment();
+            fragment = new PaymentFragment();
+        } else if (uistate == UISTATE_FINAL) {
+            fragment = new SummaryFragment();
         }
         if (fragment != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
