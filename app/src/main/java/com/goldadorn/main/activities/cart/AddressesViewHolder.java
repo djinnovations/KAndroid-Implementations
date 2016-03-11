@@ -4,13 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Address;
-import com.goldadorn.main.model.Product;
 
 import java.util.ArrayList;
 
@@ -20,21 +21,24 @@ import java.util.ArrayList;
 class AddressesViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
     private ArrayList<AddressHolder> productsVh = new ArrayList<>(5);
+    IResultListener<Integer> resultListener;
 
-    public AddressesViewHolder(LinearLayout itemView) {
+    public AddressesViewHolder(LinearLayout itemView, IResultListener<Integer> resultListener) {
         super(itemView);
         container = itemView;
+        this.resultListener = resultListener;
     }
 
     private AddressHolder createItem(Address address) {
         AddressHolder vh = new AddressHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_cart_address, null, false));
         vh.addressId = address.id;
         container.addView(vh.itemView);
+        vh.checkBox.setOnCheckedChangeListener(mCheckListener);
         productsVh.add(vh);
         return vh;
     }
 
-    public AddressHolder getItem(Product product) {
+    public AddressHolder getItem(Address product) {
         for (AddressHolder vh : productsVh)
             if (product.id == vh.addressId) return vh;
         return null;
@@ -49,8 +53,29 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
             AddressHolder pvh = createItem(product);
             pvh.bindUI(product);
         }
+    }
+
+    public void setChecked(int addressID) {
+        for (AddressHolder vh : productsVh) {
+            vh.checkBox.setOnCheckedChangeListener(null);
+            vh.checkBox.setChecked(vh.addressId == addressID);
+            vh.checkBox.setOnCheckedChangeListener(mCheckListener);
+        }
 
     }
+
+    private final CheckBox.OnCheckedChangeListener mCheckListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            for (AddressHolder vh : productsVh) {
+                vh.checkBox.setOnCheckedChangeListener(null);
+                vh.checkBox.setChecked(buttonView.equals(vh.checkBox) && isChecked);
+                if (vh.checkBox.isChecked())
+                    resultListener.onResult(vh.addressId);
+                vh.checkBox.setOnCheckedChangeListener(mCheckListener);
+            }
+        }
+    };
 
     public void setVisibility(int visibility) {
         itemView.setVisibility(visibility);

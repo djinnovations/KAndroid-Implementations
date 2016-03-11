@@ -136,6 +136,30 @@ public class Tables {
 
     }
 
+    public static final class Addresses implements IDataVersion {
+        public static final String TABLENAME = "addresses";
+        public static final String _ID = "_id";
+        public static final String NAME = "name";
+        public static final String FULLADDRESS = "address";
+        public static final String PINCODE = "pincode";
+        public static final String LAST_USED = "lastused";
+
+        public static final Uri CONTENT_URI = Uri.parse("content://" +
+                AUTHORITY + "/" +
+                TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=true");
+
+        /**
+         * The content:// style URL for this table. When this Uri is used, no notification is
+         * sent if the content changes.
+         */
+        public static final Uri CONTENT_URI_NO_NOTIFICATION = Uri.parse("content://" +
+                AUTHORITY +
+                "/" + TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=false");
+    }
 
     public static final class CREATE_TABLE {
 
@@ -174,6 +198,14 @@ public class Tables {
                 Collections.IMAGEURL + " TEXT," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Collections.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
+                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
+
+        static final String ADDRESSES = "CREATE TABLE IF NOT EXISTS " + Addresses.TABLENAME + " (" +
+                Addresses._ID + " INTEGER PRIMARY KEY ," +
+                Addresses.NAME + " TEXT," +
+                Addresses.FULLADDRESS + " TEXT," +
+                Addresses.PINCODE + " TEXT," +
+                Addresses.LAST_USED + " INTEGER," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
     }
 

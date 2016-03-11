@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Address;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class AddressFragment extends Fragment {
 
     ArrayList<Address> mAddresses = new ArrayList<>(5);
     AddressesViewHolder mAddressesHolder;
-    private View mAddAddressButton;
+
 
     @Nullable
     @Override
@@ -31,9 +32,8 @@ public class AddressFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAddAddressButton = view.findViewById(R.id.action_add);
-        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses));
-        mAddAddressButton.setOnClickListener(mClick);
+        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses), mAddressSelectedListener);
+        view.findViewById(R.id.action_add).setOnClickListener(mClick);
 
         Address product = new Address(123123);
         product.name = "Home";
@@ -58,6 +58,13 @@ public class AddressFragment extends Fragment {
     private View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
+        }
+    };
+
+    IResultListener<Integer> mAddressSelectedListener = new IResultListener<Integer>() {
+        @Override
+        public void onResult(Integer addressId) {
 
         }
     };
