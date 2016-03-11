@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:textSize="17sp"
         android:padding="8dp"
+        android:id="@+id/cart_desc"
         android:layout_marginBottom="8dp"
         android:fontFamily="sans-serif-light"
         android:text="Ship to"/>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
@@ -34,6 +35,8 @@ public class PaymentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mPaymentsHolder = new PaymentModesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mPaymentSelectedListener);
         view.findViewById(R.id.action_add).setOnClickListener(mClick);
+
+        ((TextView)view.findViewById(R.id.cart_desc)).setText("Pay with");
 
         PaymentMode product = new PaymentMode(123123,2);
         product.name = "Mobikwik";
