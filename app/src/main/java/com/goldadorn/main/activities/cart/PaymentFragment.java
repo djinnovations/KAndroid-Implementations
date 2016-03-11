@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.model.Address;
+import com.goldadorn.main.model.PaymentMode;
 
 import java.util.ArrayList;
 
@@ -19,8 +19,8 @@ import java.util.ArrayList;
  */
 public class PaymentFragment extends Fragment {
 
-    ArrayList<Address> mAddresses = new ArrayList<>(5);
-    AddressesViewHolder mAddressesHolder;
+    ArrayList<PaymentMode> mPayments = new ArrayList<>(5);
+    PaymentModesViewHolder mPaymentsHolder;
 
 
     @Nullable
@@ -32,26 +32,26 @@ public class PaymentFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses), mAddressSelectedListener);
+        mPaymentsHolder = new PaymentModesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mPaymentSelectedListener);
         view.findViewById(R.id.action_add).setOnClickListener(mClick);
 
-        Address product = new Address(123123);
-        product.name = "Home";
-        product.detailed = "Jabong flipped on\n amazon";
-        mAddresses.add(product);
-        product = new Address(123123);
+        PaymentMode product = new PaymentMode(123123,2);
+        product.name = "Mobikwik";
+        product.details = "Jabong flipped on\n amazon";
+        mPayments.add(product);
+        product = new PaymentMode(123123,3);
         product.name = "Office";
-        product.detailed = "Snapdeal flipped on\n amazon";
-        mAddresses.add(product);
-        onAddressesChanged();
+        product.details = "Snapdeal flipped on\n amazon";
+        mPayments.add(product);
+        onPaymentOptionsChanged();
     }
 
-    private void onAddressesChanged() {
-        if (mAddresses.size() > 0) {
-            mAddressesHolder.setVisibility(View.VISIBLE);
-            mAddressesHolder.bindUI(mAddresses);
+    private void onPaymentOptionsChanged() {
+        if (mPayments.size() > 0) {
+            mPaymentsHolder.setVisibility(View.VISIBLE);
+            mPaymentsHolder.bindUI(mPayments);
         } else {
-            mAddressesHolder.setVisibility(View.GONE);
+            mPaymentsHolder.setVisibility(View.GONE);
         }
     }
 
@@ -62,7 +62,7 @@ public class PaymentFragment extends Fragment {
         }
     };
 
-    IResultListener<Integer> mAddressSelectedListener = new IResultListener<Integer>() {
+    IResultListener<Integer> mPaymentSelectedListener = new IResultListener<Integer>() {
         @Override
         public void onResult(Integer addressId) {
 

@@ -32,7 +32,7 @@ public class AddressFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses), mAddressSelectedListener);
+        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
         view.findViewById(R.id.action_add).setOnClickListener(mClick);
 
         Address product = new Address(123123);
