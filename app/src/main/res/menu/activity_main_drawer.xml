@@ -23,6 +23,10 @@
             android:visible="false"
             android:icon="@drawable/vector_icon_people"
             android:title="@string/collections" />
+        <item
+            android:id="@+id/nav_cart"
+            android:icon="@drawable/vector_icon_people"
+            android:title="@string/cart" />
 
         <item
             android:id="@+id/nav_people"

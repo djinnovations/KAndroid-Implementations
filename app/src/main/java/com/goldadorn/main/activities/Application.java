@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -96,6 +97,7 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_people, R.string.findPeople, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FindPeopleFragment.class);
         addItem(menu, R.id.nav_showcase, R.string.showcase, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ShowcaseActivity.class);
         addItem(menu, R.id.nav_collections, R.string.collections, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, TestActivity.class);
+        addItem(menu, R.id.nav_cart, R.string.cart, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CartManagerActivity.class);
 
 
         //UsersTimeLineFragment
