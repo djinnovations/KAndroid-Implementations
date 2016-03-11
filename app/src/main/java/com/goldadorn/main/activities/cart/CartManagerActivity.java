@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.goldadorn.main.R;
 
@@ -27,6 +29,9 @@ public class CartManagerActivity extends AppCompatActivity {
     @Bind(R.id.continueButton)
     View mContinueButton;
 
+    @Bind(R.id.container_progress_image)
+    LinearLayout mContainerProgressImage;
+
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
         return in;
@@ -42,6 +47,7 @@ public class CartManagerActivity extends AppCompatActivity {
     }
 
     public void configureUI(int uistate) {
+        mUIState=uistate;
         Fragment fragment = null;
         if (uistate == UISTATE_CART) {
             fragment = new MyCartFragment();
@@ -57,6 +63,14 @@ public class CartManagerActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.frame, fragment);
             fragmentTransaction.commit();
         }
+        bindProgress(uistate);
+    }
+
+    private void bindProgress(int index) {
+        for (int i = 0; i < mContainerProgressImage.getChildCount(); i++) {
+            ImageView iv = (ImageView) mContainerProgressImage.getChildAt(i);
+            iv.setImageResource(index > i ? R.drawable._tabby_ic_arrow_back : R.drawable._pin);
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
@@ -65,7 +79,7 @@ public class CartManagerActivity extends AppCompatActivity {
             if (mUIState == UISTATE_CART)
                 configureUI(UISTATE_ADDRESS);
             else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
-            else if (mUIState == UISTATE_FINAL) configureUI(UISTATE_FINAL);
+            else if (mUIState == UISTATE_PAYMENT) configureUI(UISTATE_FINAL);
             else configureUI(UISTATE_CART);
         }
     };

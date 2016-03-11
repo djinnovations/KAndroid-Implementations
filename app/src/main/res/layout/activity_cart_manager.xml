@@ -77,17 +77,20 @@
                     android:background="@android:color/black"/>
 
                 <LinearLayout
+                    android:id="@+id/container_progress_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center">
 
                     <ImageView
+                        android:id="@+id/progress_cart"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:src="@drawable/ic_menu_manage"/>
 
                     <ImageView
+                        android:id="@+id/progress_address"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
