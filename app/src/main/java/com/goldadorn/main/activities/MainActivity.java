@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -72,7 +71,6 @@ public class MainActivity extends BaseDrawerActivity  {
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)
             action(navigationDataObject);
-        startActivity(CartManagerActivity.getLaunchIntent(this));
     }
 
 

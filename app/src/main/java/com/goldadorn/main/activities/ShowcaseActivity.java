@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.mikepenz.iconics.view.IconicsButton;
 
@@ -147,6 +148,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder>{
 
         Context context;
+        private View.OnClickListener mCollectionClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_collections);
+                if(navigationDataObject !=null)
+                    action(navigationDataObject);
+            }
+        };
 
         public CollectionsAdapter(Context context) {
             this.context = context;
@@ -156,6 +165,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_showcase_brand_item, null);
             CollectionHolder rcv = new CollectionHolder(layoutView);
+            rcv.itemView.setOnClickListener(mCollectionClick);
             return rcv;
         }
 

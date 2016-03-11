@@ -24,7 +24,10 @@
     <string name="labelMale">Male</string>
     <string name="labelFemale">Female</string>
     <string name="labelGender">Gender</string>
-    <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>terms and conditions</u></font></a></string>
+    <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a
+        href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a
+        href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a
+        href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>terms and conditions</u></font></a></string>
     <string name="registerSuccssMsg">Registration done successfully</string>
     <string name="socialFeeds">Social Feed</string>
     <string name="findPeople">Find People</string>
@@ -49,7 +52,8 @@
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="appShareTitle">Share The App In Your Network</string>
-    <string name="appShareBody">"Hey Check out this app. it has interesting jewellery options :  "</string>
+    <string
+        name="appShareBody">"Hey Check out this app. it has interesting jewellery options :  "</string>
 
 
     <string name="contactUsURL">contact-us.html</string>
@@ -58,8 +62,6 @@
     <string name="privacyPolicyUTRL">privacy-policy.html</string>
     <string name="termsAndConditionsURL">terms.html</string>
     <string name="faqsURL">faqs.html</string>
-
-
 
 
     <string name="palyStoreBasicURL">https://play.google.com/store/apps/details?id=</string>
@@ -71,6 +73,7 @@
     <string name="faqs">FAQs</string>
     <string name="hashtag">Hashtags</string>
     <string name="showcase">Showcase</string>
+    <string name="collections">Collections</string>
 
 
 </resources>
