@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.goldadorn.main.R;
 
@@ -29,8 +28,14 @@ public class CartManagerActivity extends AppCompatActivity {
     @Bind(R.id.continueButton)
     View mContinueButton;
 
-    @Bind(R.id.container_progress_image)
-    LinearLayout mContainerProgressImage;
+    @Bind(R.id.progress_cart)
+    ImageView progressCart;
+    @Bind(R.id.progress_address)
+    ImageView progressAddress;
+    @Bind(R.id.progress_payment)
+    ImageView progressPayment;
+    @Bind(R.id.progress_complete)
+    ImageView progressComplete;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -67,9 +72,28 @@ public class CartManagerActivity extends AppCompatActivity {
     }
 
     private void bindProgress(int index) {
-        for (int i = 0; i < mContainerProgressImage.getChildCount(); i++) {
-            ImageView iv = (ImageView) mContainerProgressImage.getChildAt(i);
-            iv.setImageResource(index > i ? R.drawable._tabby_ic_arrow_back : R.drawable._pin);
+        switch (index){
+            case 0:
+                progressCart.setBackgroundResource(R.drawable.bg_thumb);
+                break;
+            case 1:
+                progressAddress.setBackgroundResource(R.drawable.bg_thumb);
+                bindProgress(0);
+                break;
+            case 2:
+                progressPayment.setBackgroundResource(R.drawable.bg_thumb);
+                bindProgress(1);
+                break;
+            case 3:
+                progressComplete.setBackgroundResource(R.drawable.bg_thumb);
+                bindProgress(2);
+                break;
+            default:
+                progressCart.setBackgroundResource(R.drawable.bg_thumb_n);
+                progressAddress.setBackgroundResource(R.drawable.bg_thumb_n);
+                progressPayment.setBackgroundResource(R.drawable.bg_thumb_n);
+                progressComplete.setBackgroundResource(R.drawable.bg_thumb_n);
+                break;
         }
     }
 
@@ -80,7 +104,10 @@ public class CartManagerActivity extends AppCompatActivity {
                 configureUI(UISTATE_ADDRESS);
             else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
             else if (mUIState == UISTATE_PAYMENT) configureUI(UISTATE_FINAL);
-            else configureUI(UISTATE_CART);
+            else {
+                bindProgress(-1);
+                configureUI(UISTATE_CART);
+            }
         }
     };
 }

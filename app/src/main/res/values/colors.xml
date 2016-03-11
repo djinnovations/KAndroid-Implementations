@@ -84,6 +84,7 @@
 
     <color name="darkDisable">#bb333333</color>
     <color name="overlay">#9f444444</color>
+    <color name="disabled_grey">#cccccc</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

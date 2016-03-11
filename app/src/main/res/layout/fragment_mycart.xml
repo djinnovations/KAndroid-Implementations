@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:padding="16dp"
               android:focusable="true"
               android:focusableInTouchMode="true"
               android:orientation="vertical">
@@ -9,19 +10,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="12dp"
         android:text="Total"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@android:color/black"/>
 
     <LinearLayout
         android:id="@+id/container_cart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -54,38 +62,50 @@
         android:id="@+id/emptyview_cart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:text="Add some thing into Cart first"
         android:visibility="visible"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@android:color/black"/>
 
     <LinearLayout
         android:id="@+id/container_extra_cost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="17sp"
+            android:padding="8dp"
+            android:fontFamily="sans-serif-light"
             android:text="Ship to"/>
 
         <EditText
             android:id="@+id/edt_pincode"
-            android:layout_width="70dp"
+            android:layout_width="wrap_content"
+            android:padding="8dp"
+            android:minEms="6"
+            android:text="560038"
+            android:gravity="center"
+            android:fontFamily="sans-serif-light"
+            android:textSize="14sp"
+            android:background="@color/disabled_grey"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@android:color/black"/>
 
     <include

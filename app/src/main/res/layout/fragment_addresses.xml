@@ -2,26 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:padding="16dp"
               android:focusable="true"
               android:focusableInTouchMode="true"
               android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:padding="8dp"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="sans-serif-light"
         android:text="Ship to"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:background="@android:color/black"/>
 
     <LinearLayout
         android:id="@+id/container_addresses_payment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:orientation="vertical">
 
     </LinearLayout>
@@ -30,8 +35,13 @@
         android:id="@+id/action_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/ic_menu_manage"
-        android:text="Add new addreses"
+        android:gravity="center"
+        android:drawablePadding="8dp"
+        android:textSize="16sp"
+        android:drawableLeft="@android:drawable/ic_input_add"
+        android:padding="8dp"
+        android:background="@color/disabled_grey"
+        android:text="Add new shipping address"
         android:visibility="visible"/>
 
 
