@@ -23,6 +23,7 @@ public class CartManagerActivity extends AppCompatActivity {
     public static final int UISTATE_FINAL = 3;
     private int mUIState = 0;
 
+
     @Bind(R.id.continueButton)
     View mContinueButton;
 
