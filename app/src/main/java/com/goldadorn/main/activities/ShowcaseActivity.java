@@ -129,6 +129,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             Bundle b = new Bundle(1);
             b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
             f.setArguments(b);
+            f.setUser(user);
             return f;
         }
 
