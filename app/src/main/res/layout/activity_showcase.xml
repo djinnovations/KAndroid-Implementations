@@ -56,7 +56,9 @@
                     android:foreground="@color/overlay"
                     />
 
-                <include layout="@layout/layout_brand_buttons"/>
+                <include
+                    android:id="@+id/container_designer_overlay"
+                    layout="@layout/layout_brand_buttons"/>
             </FrameLayout>
 
 

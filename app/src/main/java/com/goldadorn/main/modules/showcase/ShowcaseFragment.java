@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.model.User;
 import com.kimeeo.library.fragments.BaseFragment;
 
 /**
@@ -16,24 +15,16 @@ public class ShowcaseFragment extends BaseFragment {
     private final static String TAG = ShowcaseFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
     public static final String EXTRA_CATEGORY_POSITION = "position";
-    private User user;
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public static final String EXTRA_IMAGE_URL = "extra_image";
+    String mImageUrl;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+        Bundle b = bundle == null ? getArguments() : bundle;
+        mImageUrl = b.getString(EXTRA_IMAGE_URL);
         return layoutInflater.inflate(R.layout.fragment_showcase, viewGroup, false);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        if (user != null) {
-
-        }
-    }
 
     @Override
     protected void garbageCollectorCall() {

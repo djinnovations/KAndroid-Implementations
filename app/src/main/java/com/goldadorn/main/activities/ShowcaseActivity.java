@@ -60,6 +60,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
     private StaggeredGridLayoutManager gaggeredGridLayoutManager;
     private ShowcasePagerAdapter mShowCaseAdapter;
+    private OverlayViewHolder mOverlayVH;
 
 
     @Override
@@ -87,6 +88,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mRecyclerView.setHasFixedSize(true);
 
         gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        mOverlayVH = new OverlayViewHolder(findViewById(R.id.container_designer_overlay));
         int value = getResources().getDimensionPixelSize(R.dimen.appDefaultMargin);
         mRecyclerView.setLayoutManager(gaggeredGridLayoutManager);
 
@@ -94,6 +96,18 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         CollectionsAdapter rcAdapter = new CollectionsAdapter(this);
         mRecyclerView.setAdapter(rcAdapter);
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPager.addOnPageChangeListener(mPageChangeListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPager.removeOnPageChangeListener(mPageChangeListener);
     }
 
     @Override
@@ -108,6 +122,23 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         menu.findItem(R.id.nav_my_overflow).setVisible(false);
         return value;
     }
+
+    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            bindOverlay(mShowCaseAdapter.getUser(position));
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     private class ShowcasePagerAdapter extends FragmentStatePagerAdapter {
         Cursor cursor = null;
@@ -128,8 +159,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             ShowcaseFragment f = new ShowcaseFragment();
             Bundle b = new Bundle(1);
             b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
+            b.putString(ShowcaseFragment.EXTRA_IMAGE_URL, user.imageUrl);
             f.setArguments(b);
-            f.setUser(user);
             return f;
         }
 
@@ -161,8 +192,12 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
-
+            if (cursor != null) cursor.close();
         }
+    }
+
+    private void bindOverlay(User user) {
+        mOverlayVH.name.setText(user.name);
     }
 
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
@@ -201,7 +236,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-    private class CollectionHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    private static class CollectionHolder extends RecyclerView.ViewHolder {
 
         public TextView name;
         public TextView description;
@@ -212,7 +247,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public CollectionHolder(View itemView) {
             super(itemView);
-            itemView.setOnClickListener(this);
             name = (TextView) itemView.findViewById(R.id.collection_name);
             description = (TextView) itemView.findViewById(R.id.collection_description);
             extra = (TextView) itemView.findViewById(R.id.extra);
@@ -221,10 +255,21 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             image = (ImageView) itemView.findViewById(R.id.collection_image);
         }
 
-
-        @Override
-        public void onClick(View v) {
-
-        }
     }
+
+    private static class OverlayViewHolder extends RecyclerView.ViewHolder {
+
+        public ImageView badge1, badge2;
+        public TextView name, description;
+
+        public OverlayViewHolder(View itemView) {
+            super(itemView);
+            badge1 = (ImageView) itemView.findViewById(R.id.badge_1);
+            badge2 = (ImageView) itemView.findViewById(R.id.badge_2);
+            name = (TextView) itemView.findViewById(R.id.brand_name);
+            description = (TextView) itemView.findViewById(R.id.brand_description);
+        }
+
+    }
+
 }
