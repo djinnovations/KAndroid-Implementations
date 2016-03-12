@@ -90,9 +90,7 @@ public class Tables {
         public static final String TABLENAME = "users";
 
         public static final String _ID = "_id";
-
         public static final String TYPE = "type";
-
         public static final String NAME = "name";
 
         public static final String DESCRIPTION = "description";
