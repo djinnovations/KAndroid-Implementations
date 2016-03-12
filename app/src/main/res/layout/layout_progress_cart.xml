@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@color/disabled_grey"/>
+
+    <LinearLayout
+        android:id="@+id/container_progress_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <include layout="@layout/layout_progress_cart_sub"/>
+
+        <include layout="@layout/layout_progress_cart_sub"/>
+
+        <include layout="@layout/layout_progress_cart_sub"/>
+
+        <include layout="@layout/layout_progress_cart_sub"/>
+
+    </LinearLayout>
+</FrameLayout>
