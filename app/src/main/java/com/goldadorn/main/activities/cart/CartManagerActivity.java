@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.TimelineResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +26,7 @@ public class CartManagerActivity extends AppCompatActivity {
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
     private int mUIState = 0;
+    Context mContext;
 
 
     @Bind(R.id.continueButton)
@@ -45,6 +49,7 @@ public class CartManagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_cart_manager);
         ButterKnife.bind(this);
         mContinueButton.setOnClickListener(mClickListener);
@@ -108,6 +113,13 @@ public class CartManagerActivity extends AppCompatActivity {
                 bindProgress(-1);
                 configureUI(UISTATE_CART);
             }
+
+            UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
+                @Override
+                public void onResult(TimelineResponse result) {
+
+                }
+            });
         }
     };
 }

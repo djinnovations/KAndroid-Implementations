@@ -90,4 +90,7 @@ dependencies {
     compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.liangfeizc:flowlayout:1.0.0@aar'
     compile "com.splunk.mint:mint:4.4.0"
+
+    compile 'com.squareup.okio:okio:1.4.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
 }

@@ -216,4 +216,7 @@ public class Application extends BaseApplication {
     public void postWork(Runnable runnable) {
         new AsyncRunnableTask(runnable).execute(AsyncTask.SERIAL_EXECUTOR);
     }
+    public Handler getUIHandler() {
+        return mUIHandler;
+    }
 }
