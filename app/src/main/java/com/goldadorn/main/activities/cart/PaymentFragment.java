@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class PaymentFragment extends Fragment {
 
-    ArrayList<PaymentMode> mPayments = new ArrayList<>(5);
+    ArrayList<PaymentMode> mPaymentModes = new ArrayList<>(5);
     PaymentModesViewHolder mPaymentsHolder;
 
 
@@ -38,21 +38,21 @@ public class PaymentFragment extends Fragment {
 
         ((TextView)view.findViewById(R.id.cart_desc)).setText("Pay with");
 
-        PaymentMode product = new PaymentMode(123123,2);
-        product.name = "Mobikwik";
-        product.details = "Jabong flipped on\n amazon";
-        mPayments.add(product);
-        product = new PaymentMode(123123,3);
-        product.name = "Office";
-        product.details = "Snapdeal flipped on\n amazon";
-        mPayments.add(product);
+        PaymentMode pm = new PaymentMode(123123,2);
+        pm.name = "Mobikwik";
+        pm.details = "Jabong flipped on\n amazon";
+        mPaymentModes.add(pm);
+        pm = new PaymentMode(123123,3);
+        pm.name = "Office";
+        pm.details = "Snapdeal flipped on\n amazon";
+        mPaymentModes.add(pm);
         onPaymentOptionsChanged();
     }
 
     private void onPaymentOptionsChanged() {
-        if (mPayments.size() > 0) {
+        if (mPaymentModes.size() > 0) {
             mPaymentsHolder.setVisibility(View.VISIBLE);
-            mPaymentsHolder.bindUI(mPayments);
+            mPaymentsHolder.bindUI(mPaymentModes);
         } else {
             mPaymentsHolder.setVisibility(View.GONE);
         }
