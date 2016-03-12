@@ -10,6 +10,7 @@ import java.util.List;
 public class User {
 
     public static final int TYPE_INDIVIDUAL = 0;
+    public static final int TYPE_DESIGNER = 0;
     public static final int TYPE_BRAND = 1;
 
     public final int id;

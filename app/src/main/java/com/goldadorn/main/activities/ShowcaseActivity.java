@@ -26,8 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.mikepenz.iconics.view.IconicsButton;
 
@@ -57,6 +59,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
     private StaggeredGridLayoutManager gaggeredGridLayoutManager;
+    private ShowcasePagerAdapter mShowCaseAdapter;
 
 
     @Override
@@ -66,7 +69,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mContext = this;
 
         mPager.setOffscreenPageLimit(4);
-        mPager.setAdapter(new ShowcasePagerAdapter(getSupportFragmentManager()));
+        mPager.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(getSupportFragmentManager()));
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -76,7 +79,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         });
 
         mPager.getLayoutParams().height =
-                (int) (.7f*getResources().getDisplayMetrics().heightPixels);
+                (int) (.7f * getResources().getDisplayMetrics().heightPixels);
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -107,6 +110,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
     private class ShowcasePagerAdapter extends FragmentStatePagerAdapter {
+        Cursor cursor = null;
+
         public ShowcasePagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -114,29 +119,43 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public int getCount() {
-            return 5;
+            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         @Override
         public Fragment getItem(int position) {
+            User user = getUser(position);
             ShowcaseFragment f = new ShowcaseFragment();
             Bundle b = new Bundle(1);
             b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
             f.setArguments(b);
             return f;
         }
+
+        public User getUser(int position) {
+            cursor.moveToPosition(position);
+            return UserInfoCache.extractFromCursor(null, cursor);
+        }
+
+        public void changeCursor(Cursor cursor) {
+            this.cursor = cursor;
+            notifyDataSetChanged();
+        }
     }
 
     private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        Cursor cursor;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Tables.Users.CONTENT_URI, null, null, null, null);
+            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null, null, null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+            if (cursor != null) cursor.close();
+            this.cursor = data;
+            mShowCaseAdapter.changeCursor(data);
         }
 
         @Override
@@ -145,14 +164,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-    class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder>{
+    class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
 
         Context context;
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_collections);
-                if(navigationDataObject !=null)
+                NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_collections);
+                if (navigationDataObject != null)
                     action(navigationDataObject);
             }
         };
@@ -172,7 +191,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public void onBindViewHolder(CollectionHolder holder, int position) {
             holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    (float) ((Math.random()+1)*100),getResources().getDisplayMetrics());
+                    (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
         }
 
         @Override

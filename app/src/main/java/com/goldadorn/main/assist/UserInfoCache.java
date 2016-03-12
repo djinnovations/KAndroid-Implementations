@@ -21,7 +21,7 @@ import java.util.Map;
 public class UserInfoCache {
     public final boolean DEBUG;
     public static final String USER_INFO_SERVICE = "userinfocache";
-    private static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
+    public static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
             Users.IMAGEURL, Users.TYPE, Users.COUNT_LIKES, Users.COUNT_FOLLOWING,
             Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.BADGES, Users.DATAVERSION};
     private static final String[] PROJECTION_CACHE_CHECK = new String[]{Users.DATAVERSION};
@@ -358,7 +358,10 @@ public class UserInfoCache {
         return info;
     }
 
-    private User extractFromCursor(User info, Cursor cursor) {
+    public static User extractFromCursor(User info, Cursor cursor) {
+        if (info == null) {
+            info = new User(cursor.getInt(INDEX_ID), cursor.getInt(INDEX_TYPE));
+        }
         info.name = cursor.getString(INDEX_NAME);
         info.description = cursor.getString(INDEX_DESCRIPTION);
         info.imageUrl = cursor.getString(INDEX_IMAGE);
@@ -368,7 +371,7 @@ public class UserInfoCache {
         info.collections_cnt = cursor.getInt(INDEX_COUNT_COLLECTION);
         info.products_cnt = cursor.getInt(INDEX_COUNT_PRODUCT);
         info.badgesJson = cursor.getString(INDEX_BADGE_DUMP);
-        info.dataVersion=cursor.getLong(INDEX_DATAVERSION);
+        info.dataVersion = cursor.getLong(INDEX_DATAVERSION);
         return info;
     }
 
