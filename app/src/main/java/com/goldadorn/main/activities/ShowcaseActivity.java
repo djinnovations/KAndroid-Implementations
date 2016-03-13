@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.db.Tables.Collections;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
@@ -58,9 +59,12 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
-    private StaggeredGridLayoutManager gaggeredGridLayoutManager;
+    private final CollectionCallback mCollectionCallback = new CollectionCallback();
+    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private ShowcasePagerAdapter mShowCaseAdapter;
     private OverlayViewHolder mOverlayVH;
+
+    private CollectionsAdapter mCollectionAdapter;
 
 
     @Override
@@ -83,18 +87,20 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 (int) (.7f * getResources().getDisplayMetrics().heightPixels);
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
-        getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
 
         mRecyclerView.setHasFixedSize(true);
 
-        gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         mOverlayVH = new OverlayViewHolder(findViewById(R.id.container_designer_overlay));
         int value = getResources().getDimensionPixelSize(R.dimen.appDefaultMargin);
-        mRecyclerView.setLayoutManager(gaggeredGridLayoutManager);
+        mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
 
 
-        CollectionsAdapter rcAdapter = new CollectionsAdapter(this);
-        mRecyclerView.setAdapter(rcAdapter);
+        mCollectionAdapter = new CollectionsAdapter(this);
+        mRecyclerView.setAdapter(mCollectionAdapter);
+
+        getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+        getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
 
     }
 
@@ -123,6 +129,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         return value;
     }
 
+    private User mUser;
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -131,7 +138,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onPageSelected(int position) {
-            bindOverlay(mShowCaseAdapter.getUser(position));
+            mUser = mShowCaseAdapter.getUser(position);
+            bindOverlay(mUser);
+            getSupportLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
         }
 
         @Override
@@ -139,6 +148,53 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         }
     };
+
+
+    private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        Cursor cursor;
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null, null, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (cursor != null) cursor.close();
+            this.cursor = data;
+            mShowCaseAdapter.changeCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        Cursor cursor;
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(mContext, Collections.CONTENT_URI, null, Collections.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (cursor != null) cursor.close();
+            this.cursor = data;
+            mCollectionAdapter.changeCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private void bindOverlay(User user) {
+        mOverlayVH.name.setText(user.name);
+    }
 
     private class ShowcasePagerAdapter extends FragmentStatePagerAdapter {
         Cursor cursor = null;
@@ -175,33 +231,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-    private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
-        Cursor cursor;
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null, null, null);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (cursor != null) cursor.close();
-            this.cursor = data;
-            mShowCaseAdapter.changeCursor(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            if (cursor != null) cursor.close();
-        }
-    }
-
-    private void bindOverlay(User user) {
-        mOverlayVH.name.setText(user.name);
-    }
-
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
-
+        private Cursor cursor;
         Context context;
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
@@ -228,11 +259,20 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onBindViewHolder(CollectionHolder holder, int position) {
             holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
+            if (cursor.moveToPosition(position)) {
+                holder.name.setText(cursor.getString(cursor.getColumnIndex(Collections.NAME)));
+            }
         }
+
 
         @Override
         public int getItemCount() {
-            return 25;
+            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
+        }
+
+        public void changeCursor(Cursor cursor) {
+            this.cursor = cursor;
+            notifyDataSetChanged();
         }
     }
 
