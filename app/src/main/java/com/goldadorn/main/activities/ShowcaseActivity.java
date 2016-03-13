@@ -26,12 +26,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Collections;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.TimelineResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 
 import butterknife.Bind;
@@ -80,6 +83,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 Log.d(TAG, "offset : " + verticalOffset);
+
             }
         });
 
@@ -101,6 +105,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+
+        UIController
+                .getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
+                    @Override
+                    public void onResult(TimelineResponse result) {
+                        Log.d(TAG,"result : "+result.responseContent);
+                    }
+                });
 
     }
 

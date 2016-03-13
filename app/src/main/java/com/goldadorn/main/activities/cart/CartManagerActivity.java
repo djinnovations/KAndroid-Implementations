@@ -12,9 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.server.UIController;
-import com.goldadorn.main.server.response.TimelineResponse;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -102,12 +99,6 @@ public class CartManagerActivity extends AppCompatActivity {
                     configureUI(UISTATE_CART);
                 }
             }
-            UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
-                @Override
-                public void onResult(TimelineResponse result) {
-
-                }
-            });
         }
     };
 }
