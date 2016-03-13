@@ -6,8 +6,9 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="5dp"
+        android:layout_height="4dp"
         android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:background="@color/disabled_grey"/>

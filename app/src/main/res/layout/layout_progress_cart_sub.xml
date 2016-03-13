@@ -16,6 +16,7 @@
 
     <ImageView
         android:id="@+id/image"
+        android:background="@drawable/bg_thumb_n"
         android:layout_width="32dp"
         android:layout_height="32dp"/>
 </LinearLayout>
