@@ -21,8 +21,11 @@ public class Constants {
         public static final String COLLECTIONTITLE = "collectionTitle";
         public static final String COLLECTIONIMAGE = "collectionImage";
         public static final String COLLECTIONPRODUCTCOUNT = "collectionProductCount";
-
-
+        public static final String PRODUCTID = "productId";
+        public static final String PRODUCTLABEL = "productLabel";
+        public static final String LIKECOUNT = "likeCount";
+        public static final String PRODUCTPIC = "productPic";
+        public static final String PRODUCTPRICE = "productPrice";
 
     }
 

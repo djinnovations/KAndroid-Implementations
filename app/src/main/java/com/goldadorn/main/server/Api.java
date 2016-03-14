@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDiskIOException;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 
@@ -38,6 +39,19 @@ public class Api {
             ApiFactory.getProductShowCase(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductShowcaseData(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void getProducts(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getProducts(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeProducts(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

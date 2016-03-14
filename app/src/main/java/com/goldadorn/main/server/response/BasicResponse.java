@@ -31,6 +31,7 @@ public class BasicResponse implements Serializable {
     public boolean success;
     public String responseContent;
     public int responseCode;
+    public int mPageCount = 0;
 
 
 
