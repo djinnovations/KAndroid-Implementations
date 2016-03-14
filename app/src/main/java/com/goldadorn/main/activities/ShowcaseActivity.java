@@ -29,11 +29,13 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Collections;
+import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 
@@ -63,6 +65,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
     private final CollectionCallback mCollectionCallback = new CollectionCallback();
+    private final ProductCallback mProductCallback = new ProductCallback();
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private ShowcasePagerAdapter mShowCaseAdapter;
     private OverlayViewHolder mOverlayVH;
@@ -105,14 +108,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+        getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
 
-        UIController
-                .getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
-                    @Override
-                    public void onResult(TimelineResponse result) {
-                        Log.d(TAG,"result : "+result.responseContent);
-                    }
-                });
+
+        ProductResponse response = new ProductResponse();
+        UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
+            @Override
+            public void onResult(TimelineResponse result) {
+                Log.d(TAG, "result : " + result.responseContent);
+            }
+        });
 
     }
 
@@ -131,6 +136,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Override
     protected void onDestroy() {
         getSupportLoaderManager().destroyLoader(mShowCaseCallback.hashCode());
+        getSupportLoaderManager().destroyLoader(mCollectionCallback.hashCode());
+        getSupportLoaderManager().destroyLoader(mProductCallback.hashCode());
         super.onDestroy();
     }
 
@@ -153,6 +160,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             mUser = mShowCaseAdapter.getUser(position);
             bindOverlay(mUser);
             getSupportLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+            getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+
+            ProductResponse response = new ProductResponse();
+            response.userId = mUser.id;
+            UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
+                @Override
+                public void onResult(ProductResponse result) {
+                    Log.d(TAG, "result : " + result.responseContent);
+                }
+            });
         }
 
         @Override
@@ -196,6 +213,27 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mCollectionAdapter.changeCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            if (cursor != null) cursor.close();
+        }
+    }
+
+    private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        Cursor cursor;
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new CursorLoader(mContext, Products.CONTENT_URI, null, Products.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (cursor != null) cursor.close();
+            this.cursor = data;
+//            mCollectionAdapter.changeCursor(data);
         }
 
         @Override

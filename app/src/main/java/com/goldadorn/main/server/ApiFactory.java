@@ -48,13 +48,13 @@ public class ApiFactory extends ExtractResponse{
             }
             case PRODUCTS_TYPE: {
                 builder.appendPath("getproducts");
-                if(((ProductResponse)urlBuilder.mResponse).mCollectionId!=-1) {
+                if(((ProductResponse)urlBuilder.mResponse).collectionId !=-1) {
                     builder.appendPath("c");
-                    builder.appendPath(((ProductResponse)urlBuilder.mResponse).mCollectionId+"");
+                    builder.appendPath(((ProductResponse)urlBuilder.mResponse).collectionId +"");
                     builder.appendPath(urlBuilder.mResponse.mPageCount+"");
-                }else  if(((ProductResponse)urlBuilder.mResponse).mSellerId!=-1) {
+                }else  if(((ProductResponse)urlBuilder.mResponse).userId !=-1) {
                     builder.appendPath("d");
-                    builder.appendPath(((ProductResponse)urlBuilder.mResponse).mSellerId+"");
+                    builder.appendPath(((ProductResponse)urlBuilder.mResponse).userId +"");
                     builder.appendPath(urlBuilder.mResponse.mPageCount+"");
                 }
                 break;

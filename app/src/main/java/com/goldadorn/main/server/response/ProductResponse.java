@@ -5,6 +5,6 @@ package com.goldadorn.main.server.response;
  */
 public class ProductResponse extends BasicResponse {
 
-    public int mSellerId = -1;
-    public int mCollectionId = -1;
+    public int userId = -1;
+    public int collectionId = -1;
 }
