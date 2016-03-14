@@ -23,6 +23,7 @@ import android.view.Menu;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -34,6 +35,8 @@ import butterknife.Bind;
  */
 public class CollectionsActivity extends BaseDrawerActivity {
     private final static String TAG = CollectionsActivity.class.getSimpleName();
+
+    private final static String EXTRA_COLLECTION = "collection";
     private final static boolean DEBUG = true;
 
     @Bind(R.id.view_pager)
@@ -50,12 +53,17 @@ public class CollectionsActivity extends BaseDrawerActivity {
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    CollectionsPagerAdapter mCollectionAdapter;
+
     private final ProductCallback mProductCallback = new ProductCallback();
 
     private Context mContext;
+    private Collection mCollection;
 
-    public static Intent getLaunchIntent(Context context, int collectionId) {
-        return null;
+    public static Intent getLaunchIntent(Context context, Collection collection) {
+        Intent intent = new Intent(context, CollectionsActivity.class);
+        intent.putExtra(EXTRA_COLLECTION, collection);
+        return intent;
     }
 
     @Override
@@ -63,9 +71,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
         mContext = this;
+        Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
+        if (b != null) {
+            mCollection = (Collection) b.getSerializable(EXTRA_COLLECTION);
+        }
 
         mPager.setOffscreenPageLimit(4);
-        mPager.setAdapter(new CollectionsPagerAdapter(getSupportFragmentManager()));
+        mPager.setAdapter(mCollectionAdapter = new CollectionsPagerAdapter(getSupportFragmentManager()));
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -110,23 +122,35 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
 
     private class CollectionsPagerAdapter extends FragmentStatePagerAdapter {
+        private Cursor cursor;
+
         public CollectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
-
         @Override
         public int getCount() {
-            return 5;
+            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         @Override
         public Fragment getItem(int position) {
+            Collection collection = getCollection(position);
             ShowcaseFragment f = new ShowcaseFragment();
             Bundle b = new Bundle(1);
             b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
             f.setArguments(b);
             return f;
+        }
+
+        public void changeCursor(Cursor cursor) {
+            this.cursor = cursor;
+            notifyDataSetChanged();
+        }
+
+        public Collection getCollection(int position) {
+            cursor.moveToPosition(position);
+            return Collection.extractFromCursor(cursor);
         }
     }
 
@@ -135,14 +159,14 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Tables.Products.CONTENT_URI, null, Tables.Products.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
+            return new CursorLoader(mContext, Tables.Products.CONTENT_URI, null, Tables.Products.COLLECTION_ID + " = ?", new String[]{String.valueOf(mCollection == null ? -1 : mCollection.id)}, null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
-//            mCollectionAdapter.changeCursor(data);
+            mCollectionAdapter.changeCursor(data);
         }
 
         @Override

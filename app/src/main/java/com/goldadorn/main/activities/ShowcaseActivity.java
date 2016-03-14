@@ -31,7 +31,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Collections;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.db.Tables.Users;
-import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
@@ -287,9 +287,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_collections);
-                if (navigationDataObject != null)
-                    action(navigationDataObject);
+                mContext.startActivity(CollectionsActivity.getLaunchIntent(mContext, getCollection((Integer) v.getTag())));
             }
         };
 
@@ -307,10 +305,12 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onBindViewHolder(CollectionHolder holder, int position) {
+            Collection collection = getCollection(position);
+            holder.itemView.setTag(position);
             holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
             if (cursor.moveToPosition(position)) {
-                holder.name.setText(cursor.getString(cursor.getColumnIndex(Collections.NAME)));
+                holder.name.setText(collection.name);
             }
         }
 
@@ -318,6 +318,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public int getItemCount() {
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
+        }
+
+        public Collection getCollection(int position) {
+            cursor.moveToPosition(position);
+            return Collection.extractFromCursor(cursor);
         }
 
         public void changeCursor(Cursor cursor) {
