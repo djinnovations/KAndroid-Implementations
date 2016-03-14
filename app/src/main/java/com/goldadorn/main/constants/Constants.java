@@ -11,6 +11,8 @@ public class Constants {
     public class JsonConstants{
         public static final String USERNAME = "userName";
         public static final String USERID = "userId";
+        public static final String COLLECTION_ID = "collectionId";
+        public static final String PRODUCT_ID = "productId";
         public static final String USERPIC = "userPic";
         public static final String TOTALLIKES = "totalLikes";
         public static final String FOLLOWERS = "followers";
@@ -26,7 +28,7 @@ public class Constants {
         public static final String LIKECOUNT = "likeCount";
         public static final String PRODUCTPIC = "productPic";
         public static final String PRODUCTPRICE = "productPrice";
-
+;
     }
 
 }

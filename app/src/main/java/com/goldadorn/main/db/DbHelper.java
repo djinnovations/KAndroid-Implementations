@@ -20,13 +20,15 @@ public class DbHelper {
     public static void writeProducts(Context context, ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONArray productsArray = new JSONArray(response.responseContent);
-            if (productsArray != null && productsArray.length() != 0) {
+            if (productsArray.length() != 0) {
                 for (int i = 0; i < productsArray.length(); i++) {
                     JSONObject productObj = productsArray.getJSONObject(i);
                     ContentValues cv = new ContentValues();
                     cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCTID));
                     cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                     cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
+                    cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
+                    cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
                     String url = productObj.optString(Constants.JsonConstants.PRODUCTPIC);
                     url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
                     cv.put(Tables.Products.IMAGEURL, url);
@@ -42,7 +44,7 @@ public class DbHelper {
     public static void writeProductShowcaseData(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONArray userlist = new JSONArray(response.responseContent);
-            if (userlist != null && userlist.length() != 0) {
+            if (userlist.length() != 0) {
                 for (int i = 0; i < userlist.length(); i++) {
                     JSONObject userObj = userlist.getJSONObject(i);
                     ContentValues usercv = new ContentValues();
