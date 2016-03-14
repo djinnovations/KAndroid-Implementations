@@ -98,7 +98,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
 
         ProductResponse response = new ProductResponse();
-        response.collectionId = -1;
+        response.collectionId = mCollection.id;
         UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
