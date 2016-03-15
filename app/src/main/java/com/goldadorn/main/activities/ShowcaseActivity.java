@@ -17,29 +17,26 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.showcase.CollectionFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
-import com.goldadorn.main.db.Tables.Collections;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.db.Tables.Users;
-import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
-import com.mikepenz.iconics.view.IconicsButton;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 
@@ -62,8 +59,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Bind(R.id.coordinatorlayout)
     CoordinatorLayout mCoordinatorLayout;
 
-    @Bind(R.id.recyclerView)
-    RecyclerView mRecyclerView;
 
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -73,13 +68,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
-    private final CollectionCallback mCollectionCallback = new CollectionCallback();
     private final ProductCallback mProductCallback = new ProductCallback();
-    private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private ShowcasePagerAdapter mShowCaseAdapter;
     private OverlayViewHolder mOverlayVH;
-
-    private CollectionsAdapter mCollectionAdapter;
+    private User mUser;
+    private List<UserChangeListener> mUserChangeListeners = new ArrayList<>(4);
 
 
     @Override
@@ -104,18 +97,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-        mRecyclerView.setHasFixedSize(true);
-
-        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
         mOverlayVH = new OverlayViewHolder(findViewById(R.id.container_designer_overlay));
-        int value = getResources().getDimensionPixelSize(R.dimen.appDefaultMargin);
-        mRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
-
-
-        mCollectionAdapter = new CollectionsAdapter(this);
-        mRecyclerView.setAdapter(mCollectionAdapter);
 
         initTabs();
+        configureUI(mUIState);
 
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
@@ -124,7 +109,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
         getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
     }
 
@@ -159,7 +143,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Override
     protected void onDestroy() {
         getSupportLoaderManager().destroyLoader(mShowCaseCallback.hashCode());
-        getSupportLoaderManager().destroyLoader(mCollectionCallback.hashCode());
         getSupportLoaderManager().destroyLoader(mProductCallback.hashCode());
         super.onDestroy();
     }
@@ -171,7 +154,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         return value;
     }
 
-    private User mUser;
+    public void registerUserChangeListener(UserChangeListener listener) {
+        if (!mUserChangeListeners.contains(listener)) mUserChangeListeners.add(listener);
+    }
+
+    public void unRegisterUserChangeListener(UserChangeListener listener) {
+        mUserChangeListeners.remove(listener);
+    }
+
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -182,7 +172,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onPageSelected(int position) {
             mUser = mShowCaseAdapter.getUser(position);
             bindOverlay(mUser);
-            getSupportLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+            for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
             getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
 
             ProductResponse response = new ProductResponse();
@@ -221,19 +211,23 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     };
 
     private void configureUI(int uiState) {
-        Fragment f=null;
+        Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
 
         } else if (uiState == UISTATE_PRODUCT) {
 
         } else {
-
+            f = new CollectionFragment();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame, f);
+            fragmentTransaction.replace(R.id.frame_content, f);
             fragmentTransaction.commit();
         }
+    }
+
+    public User getCurrentUser() {
+        return mUser;
     }
 
 
@@ -259,26 +253,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-    private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
-        Cursor cursor;
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Collections.CONTENT_URI, null, Collections.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (cursor != null) cursor.close();
-            this.cursor = data;
-            mCollectionAdapter.changeCursor(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            if (cursor != null) cursor.close();
-        }
-    }
 
     private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
@@ -340,77 +314,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-    class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
-        private Cursor cursor;
-        Context context;
-        private View.OnClickListener mCollectionClick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mContext.startActivity(CollectionsActivity.getLaunchIntent(mContext, getCollection((Integer) v.getTag())));
-            }
-        };
-
-        public CollectionsAdapter(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_showcase_brand_item, null);
-            CollectionHolder rcv = new CollectionHolder(layoutView);
-            rcv.itemView.setOnClickListener(mCollectionClick);
-            return rcv;
-        }
-
-        @Override
-        public void onBindViewHolder(CollectionHolder holder, int position) {
-            Collection collection = getCollection(position);
-            holder.itemView.setTag(position);
-            holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
-            if (cursor.moveToPosition(position)) {
-                holder.name.setText(collection.name);
-            }
-        }
-
-
-        @Override
-        public int getItemCount() {
-            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
-        }
-
-        public Collection getCollection(int position) {
-            cursor.moveToPosition(position);
-            return Collection.extractFromCursor(cursor);
-        }
-
-        public void changeCursor(Cursor cursor) {
-            this.cursor = cursor;
-            notifyDataSetChanged();
-        }
-
-    }
-
-    private static class CollectionHolder extends RecyclerView.ViewHolder {
-
-        public TextView name;
-        public TextView description;
-        public TextView extra;
-        public TextView likeCount;
-        public ImageView image;
-        public IconicsButton like;
-
-        public CollectionHolder(View itemView) {
-            super(itemView);
-            name = (TextView) itemView.findViewById(R.id.collection_name);
-            description = (TextView) itemView.findViewById(R.id.collection_description);
-            extra = (TextView) itemView.findViewById(R.id.extra);
-            likeCount = (TextView) itemView.findViewById(R.id.collection_likes);
-            like = (IconicsButton) itemView.findViewById(R.id.likeButton);
-            image = (ImageView) itemView.findViewById(R.id.collection_image);
-        }
-
-    }
 
     private static class OverlayViewHolder extends RecyclerView.ViewHolder {
 
@@ -425,6 +328,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             description = (TextView) itemView.findViewById(R.id.brand_description);
         }
 
+    }
+
+    public interface UserChangeListener {
+        void onUserChange(User user);
     }
 
 }

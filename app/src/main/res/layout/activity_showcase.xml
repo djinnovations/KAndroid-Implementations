@@ -7,12 +7,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <FrameLayout
+        android:id="@+id/frame_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:padding="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
@@ -50,9 +48,9 @@
                 app:layout_collapseMode="parallax">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/view_pager"
@@ -67,22 +65,21 @@
                         android:id="@+id/tabs"
                         android:layout_width="match_parent"
                         android:layout_height="?attr/actionBarSize"
-                        app:tabTextColor="@color/colorPrimaryDark"
-                        app:tabIndicatorColor="@android:color/white"
-                        app:tabSelectedTextColor="@android:color/white"
                         android:layout_marginLeft="24dp"
                         android:layout_marginRight="24dp"
                         android:background="@android:color/black"
                         app:tabBackground="@android:color/black"
+                        app:tabContentStart="72dp"
+                        app:tabIndicatorColor="@android:color/white"
                         app:tabMode="scrollable"
-                        app:tabContentStart="72dp" />
+                        app:tabSelectedTextColor="@android:color/white"
+                        app:tabTextColor="@color/colorPrimaryDark"/>
                 </LinearLayout>
 
                 <include
                     android:id="@+id/container_designer_overlay"
                     layout="@layout/layout_brand_buttons"/>
             </FrameLayout>
-
 
 
         </android.support.design.widget.CollapsingToolbarLayout>
