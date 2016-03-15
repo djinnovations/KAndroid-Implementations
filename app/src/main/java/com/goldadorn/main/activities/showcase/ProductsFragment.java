@@ -18,8 +18,6 @@ import android.widget.Toast;
 
 import com.daprlabs.cardstack.SwipeDeck;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.CollectionsActivity;
-import com.goldadorn.main.activities.ShowcaseActivity;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;

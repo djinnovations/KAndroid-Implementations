@@ -1,4 +1,4 @@
-package com.goldadorn.main.activities;
+package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -24,10 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.showcase.CollectionsFragment;
-import com.goldadorn.main.activities.showcase.ProductsFragment;
-import com.goldadorn.main.activities.showcase.SocialFragment;
-import com.goldadorn.main.activities.showcase.UserChangeListener;
+import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;

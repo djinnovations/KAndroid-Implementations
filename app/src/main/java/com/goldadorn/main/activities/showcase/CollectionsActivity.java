@@ -1,4 +1,4 @@
-package com.goldadorn.main.activities;
+package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.showcase.CollectionChangeListener;
-import com.goldadorn.main.activities.showcase.ProductsFragment;
+import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;

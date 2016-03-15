@@ -124,12 +124,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activities.ShowcaseActivity"
+            android:name=".activities.showcase.ShowcaseActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".activities.CollectionsActivity"
+            android:name=".activities.showcase.CollectionsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>

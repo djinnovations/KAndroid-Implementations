@@ -18,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.CollectionsActivity;
-import com.goldadorn.main.activities.ShowcaseActivity;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;

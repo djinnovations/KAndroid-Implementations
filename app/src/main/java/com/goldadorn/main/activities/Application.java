@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
+import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
