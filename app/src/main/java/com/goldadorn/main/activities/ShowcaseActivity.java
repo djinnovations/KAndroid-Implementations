@@ -11,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -46,9 +47,13 @@ import butterknife.Bind;
  * Created by Vijith Menon on 6/3/16.
  */
 public class ShowcaseActivity extends BaseDrawerActivity {
+    private final static int UISTATE_COLLECTION = 0;
+    private final static int UISTATE_PRODUCT = 1;
+    private final static int UISTATE_SOCIAL = 2;
     private final static String TAG = ShowcaseActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
 
+    private int mUIState = UISTATE_COLLECTION;
     @Bind(R.id.view_pager)
     ViewPager mPager;
 
@@ -110,28 +115,33 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollectionAdapter = new CollectionsAdapter(this);
         mRecyclerView.setAdapter(mCollectionAdapter);
 
-        getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
-        getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+        initTabs();
 
-
-        TabLayout.Tab tab = mTabLayout.newTab();
-        tab.setText(getString(R.string.collections));
-        mTabLayout.addTab(tab);
-        tab = mTabLayout.newTab();
-        tab.setText(getString(R.string.products));
-        tab = mTabLayout.newTab();
-        tab.setText(getString(R.string.social));
-        mTabLayout.addTab(tab);
-
-        ProductResponse response = new ProductResponse();
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
                 Log.d(TAG, "result : " + result.responseContent);
             }
         });
+        getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+        getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+        getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+    }
 
+    private void initTabs() {
+        TabLayout.Tab tab = mTabLayout.newTab();
+        tab.setTag(UISTATE_COLLECTION);
+        tab.setText(getString(R.string.collections));
+        mTabLayout.addTab(tab);
+        tab = mTabLayout.newTab();
+        tab.setTag(UISTATE_PRODUCT);
+        tab.setText(getString(R.string.products));
+        mTabLayout.addTab(tab);
+        tab = mTabLayout.newTab();
+        tab.setTag(UISTATE_SOCIAL);
+        tab.setText(getString(R.string.social));
+        mTabLayout.addTab(tab);
+        mTabLayout.setOnTabSelectedListener(mTabSelectListener);
     }
 
     @Override
@@ -190,6 +200,41 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         }
     };
+    private TabLayout.OnTabSelectedListener mTabSelectListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            Log.d("OnTabSelectedListener", (String) tab.getText());
+            int uiState = (int) tab.getTag();
+            configureUI(uiState);
+
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
+    };
+
+    private void configureUI(int uiState) {
+        Fragment f=null;
+        if (uiState == UISTATE_SOCIAL) {
+
+        } else if (uiState == UISTATE_PRODUCT) {
+
+        } else {
+
+        }
+        if (f != null) {
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame, f);
+            fragmentTransaction.commit();
+        }
+    }
 
 
     private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
