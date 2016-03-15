@@ -1,9 +1,13 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,11 @@ import android.widget.Toast;
 
 import com.daprlabs.cardstack.SwipeDeck;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.CollectionsActivity;
+import com.goldadorn.main.activities.ShowcaseActivity;
+import com.goldadorn.main.db.Tables.Products;
+import com.goldadorn.main.model.Collection;
+import com.goldadorn.main.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +34,10 @@ import butterknife.Bind;
  */
 public class ProductsFragment extends Fragment {
     private final static String TAG = ProductsFragment.class.getSimpleName();
+    public static final String EXTRA_MODE = "mode";
+    public static final String EXTRA_DATA = "data";
+    public static final int MODE_COLLECTION = 0;
+    public static final int MODE_USER = 1;
     private final static boolean DEBUG = true;
 
     @Bind(R.id.swipe_deck)
@@ -32,11 +45,32 @@ public class ProductsFragment extends Fragment {
 
     Toast mToast;
 
+    private User mUser;
+    private Collection mCollection;
+    private int mMode=MODE_COLLECTION;
+    private ProductCallback mProductCallback = new ProductCallback();
+
+    public static ProductsFragment newInstance(int mode, User user, Collection collection) {
+        ProductsFragment f = new ProductsFragment();
+        Bundle b = new Bundle();
+        b.putInt(EXTRA_MODE, mode);
+        b.putSerializable(EXTRA_DATA, mode == MODE_COLLECTION ? collection : user);
+        f.setArguments(b);
+        return f;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_products,container,false);
+                             Bundle savedInstanceState) {
+        Bundle b = getArguments();
+        if (b != null) {
+            mMode = b.getInt(EXTRA_MODE);
+            if (mMode == MODE_COLLECTION)
+                mCollection = (Collection) b.getSerializable(EXTRA_DATA);
+            else mUser = (User) b.getSerializable(EXTRA_DATA);
+        }
+        return inflater.inflate(R.layout.fragment_products, container, false);
     }
 
     @Override
@@ -56,9 +90,9 @@ public class ProductsFragment extends Fragment {
         cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(int position) {
-                if(mToast!=null)
+                if (mToast != null)
                     mToast.cancel();
-                mToast = Toast.makeText(getActivity(),"Product "+position+" liked",Toast.LENGTH_LONG);
+                mToast = Toast.makeText(getActivity(), "Product " + position + " liked", Toast.LENGTH_LONG);
                 mToast.show();
 
                 Log.i("MainActivity", "card was swiped left, position in adapter: " + position);
@@ -67,21 +101,41 @@ public class ProductsFragment extends Fragment {
             @Override
             public void cardSwipedRight(int position) {
                 Log.i("MainActivity", "card was swiped right, position in adapter: " + position);
-                if(mToast!=null)
+                if (mToast != null)
                     mToast.cancel();
-                mToast = Toast.makeText(getActivity(),"Product "+position+" dis-liked",Toast.LENGTH_LONG);
+                mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked", Toast.LENGTH_LONG);
                 mToast.show();
             }
 
             @Override
             public void cardsDepleted() {
-                Log.i("MainActivity", "no more cards");if(mToast!=null)
+                Log.i("MainActivity", "no more cards");
+                if (mToast != null)
                     mToast.cancel();
-                mToast = Toast.makeText(getActivity(),"Products depleted ",Toast.LENGTH_LONG);
+                mToast = Toast.makeText(getActivity(), "Products depleted ", Toast.LENGTH_LONG);
                 mToast.show();
             }
         });
 
+        if (mMode == MODE_USER) {
+            ((ShowcaseActivity) getActivity()).registerUserChangeListener(mUserChangeListener);
+        } else {
+            ((CollectionsActivity) getActivity()).registerCollectionChangeListener(mCollectionChangeListener);
+        }
+
+
+        getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mMode == MODE_USER) {
+            ((ShowcaseActivity) getActivity()).unRegisterUserChangeListener(mUserChangeListener);
+        } else {
+            ((CollectionsActivity) getActivity()).unRegisterCollectionChangeListener(mCollectionChangeListener);
+        }
+        getLoaderManager().destroyLoader(mProductCallback.hashCode());
+        super.onDestroy();
     }
 
     public class SwipeDeckAdapter extends BaseAdapter {
@@ -113,17 +167,59 @@ public class ProductsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             View v = convertView;
-            if(v == null){
+            if (v == null) {
                 // normally use a viewholder
-                v = View.inflate(context,R.layout.layout_product_card, null);
+                v = View.inflate(context, R.layout.layout_product_card, null);
             }
-            ((TextView)v.findViewById(R.id.likes_count)).setText(Integer.toString(position));
+            ((TextView) v.findViewById(R.id.likes_count)).setText(Integer.toString(position));
 
             return v;
         }
     }
-    interface SwipeDeckTouchListener{
-        void onTouchStart();
-        void onTouchEnd();
+
+    private UserChangeListener mUserChangeListener = new UserChangeListener() {
+        @Override
+        public void onUserChange(User user) {
+            mUser = user;
+            getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+        }
+    };
+    private CollectionChangeListener mCollectionChangeListener = new CollectionChangeListener() {
+        @Override
+        public void onCollectionChange(Collection user) {
+            mCollection = user;
+            getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+
+        }
+    };
+
+    private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+        Cursor cursor;
+
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            String selection;
+            String[] selArgs;
+            if (mMode == MODE_COLLECTION) {
+                selection = Products.COLLECTION_ID + " = ?";
+                selArgs = new String[]{String.valueOf(mCollection == null ? -1 : mCollection.id)};
+            } else {
+                selection = Products.USER_ID + " = ?";
+                selArgs = new String[]{String.valueOf(mUser == null ? -1 : mUser.id)};
+            }
+            return new CursorLoader(getContext(), Products.CONTENT_URI, null, selection, selArgs, null);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (cursor != null) cursor.close();
+            this.cursor = data;
+//            mCollectionAdapter.changeCursor(data);
+        }
+
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
+            if (cursor != null) cursor.close();
+        }
     }
 }

@@ -12,6 +12,7 @@ import java.io.Serializable;
 public class Collection implements Serializable {
     public final int id;
     public String name, description, imageUrl;
+    public int userId;
 
     public Collection(int id) {
         this.id = id;
@@ -22,6 +23,7 @@ public class Collection implements Serializable {
         t.name = cursor.getString(cursor.getColumnIndex(Tables.Collections.NAME));
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Collections.DESCRIPTION));
         t.imageUrl = cursor.getString(cursor.getColumnIndex(Tables.Collections.IMAGEURL));
+        t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         return t;
     }
 }

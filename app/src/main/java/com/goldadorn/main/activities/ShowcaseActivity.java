@@ -30,7 +30,6 @@ import com.goldadorn.main.activities.showcase.SocialFragment;
 import com.goldadorn.main.activities.showcase.UserChangeListener;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
-import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
@@ -71,7 +70,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
-    private final ProductCallback mProductCallback = new ProductCallback();
     private ShowcasePagerAdapter mShowCaseAdapter;
     private OverlayViewHolder mOverlayVH;
     private User mUser;
@@ -112,7 +110,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
     }
 
     private void initTabs() {
@@ -146,7 +143,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Override
     protected void onDestroy() {
         getSupportLoaderManager().destroyLoader(mShowCaseCallback.hashCode());
-        getSupportLoaderManager().destroyLoader(mProductCallback.hashCode());
         super.onDestroy();
     }
 
@@ -176,8 +172,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             mUser = mShowCaseAdapter.getUser(position);
             bindOverlay(mUser);
             for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
-            getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
-
             ProductResponse response = new ProductResponse();
             response.userId = mUser.id;
             UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
@@ -218,7 +212,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         if (uiState == UISTATE_SOCIAL) {
             f = new SocialFragment();
         } else if (uiState == UISTATE_PRODUCT) {
-            f = new ProductsFragment();
+            f = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
         } else {
             f = new CollectionsFragment();
         }
@@ -256,27 +250,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     }
 
-
-    private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
-        Cursor cursor;
-
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Products.CONTENT_URI, null, Products.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
-        }
-
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if (cursor != null) cursor.close();
-            this.cursor = data;
-//            mCollectionAdapter.changeCursor(data);
-        }
-
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
-            if (cursor != null) cursor.close();
-        }
-    }
 
     private void bindOverlay(User user) {
         mOverlayVH.name.setText(user.name);

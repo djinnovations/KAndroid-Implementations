@@ -21,13 +21,16 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.showcase.CollectionsFragment;
+import com.goldadorn.main.activities.showcase.CollectionChangeListener;
+import com.goldadorn.main.activities.showcase.ProductsFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 
@@ -56,10 +59,11 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     CollectionsPagerAdapter mCollectionAdapter;
 
-    private final ProductCallback mProductCallback = new ProductCallback();
+    private final CollectionCallback mCollectionCallback = new CollectionCallback();
 
     private Context mContext;
     private Collection mCollection;
+    private ArrayList<CollectionChangeListener> mCollectionChangeListeners = new ArrayList<>(3);
 
     public static Intent getLaunchIntent(Context context, Collection collection) {
         Intent intent = new Intent(context, CollectionsActivity.class);
@@ -92,11 +96,11 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-        CollectionsFragment fragment = new CollectionsFragment();
+        ProductsFragment fragment = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.frame, fragment);
         ft.commitAllowingStateLoss();
-        getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+        getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
 
         ProductResponse response = new ProductResponse();
         response.collectionId = mCollection.id;
@@ -111,7 +115,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getSupportLoaderManager().destroyLoader(mProductCallback.hashCode());
+        getSupportLoaderManager().destroyLoader(mCollectionCallback.hashCode());
     }
 
     @Override
@@ -121,6 +125,14 @@ public class CollectionsActivity extends BaseDrawerActivity {
         return value;
     }
 
+    public void registerCollectionChangeListener(CollectionChangeListener listener) {
+        if (!mCollectionChangeListeners.contains(listener))
+            mCollectionChangeListeners.add(listener);
+    }
+
+    public void unRegisterCollectionChangeListener(CollectionChangeListener listener) {
+        mCollectionChangeListeners.remove(listener);
+    }
 
     private class CollectionsPagerAdapter extends FragmentStatePagerAdapter {
         private Cursor cursor;
@@ -155,12 +167,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
         }
     }
 
-    private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+    private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Tables.Products.CONTENT_URI, null, Tables.Products.COLLECTION_ID + " = ?", new String[]{String.valueOf(mCollection == null ? -1 : mCollection.id)}, null);
+            return new CursorLoader(mContext, Tables.Collections.CONTENT_URI, null, Tables.Collections.USER_ID + " = ?", new String[]{String.valueOf(mCollection == null ? -1 : mCollection.userId)}, null);
         }
 
         @Override

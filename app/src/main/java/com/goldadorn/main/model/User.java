@@ -2,12 +2,13 @@ package com.goldadorn.main.model;
 
 import com.goldadorn.main.assist.BadgeHelper;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by bhavinpadhiyar on 11/6/15.
  */
-public class User {
+public class User implements Serializable{
 
     public static final int TYPE_INDIVIDUAL = 0;
     public static final int TYPE_DESIGNER = 0;
