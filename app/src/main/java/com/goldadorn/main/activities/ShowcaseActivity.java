@@ -24,7 +24,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.showcase.CollectionFragment;
+import com.goldadorn.main.activities.showcase.CollectionsFragment;
+import com.goldadorn.main.activities.showcase.ProductsFragment;
+import com.goldadorn.main.activities.showcase.SocialFragment;
+import com.goldadorn.main.activities.showcase.UserChangeListener;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Products;
@@ -213,11 +216,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private void configureUI(int uiState) {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
-
+            f = new SocialFragment();
         } else if (uiState == UISTATE_PRODUCT) {
-
+            f = new ProductsFragment();
         } else {
-            f = new CollectionFragment();
+            f = new CollectionsFragment();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -328,10 +331,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             description = (TextView) itemView.findViewById(R.id.brand_description);
         }
 
-    }
-
-    public interface UserChangeListener {
-        void onUserChange(User user);
     }
 
 }

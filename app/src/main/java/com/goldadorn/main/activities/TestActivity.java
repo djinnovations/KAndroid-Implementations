@@ -24,7 +24,7 @@ public class TestActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_collections);
+        setContentView(R.layout.fragment_products);
         cardStack = (SwipeDeck) findViewById(R.id.swipe_deck);
         final ArrayList<String> testData = new ArrayList<>();
         testData.add("0");

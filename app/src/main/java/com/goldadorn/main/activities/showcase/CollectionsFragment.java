@@ -28,7 +28,7 @@ import com.mikepenz.iconics.view.IconicsButton;
 /**
  * Created by Kiran BH on 10/03/16.
  */
-public class CollectionFragment extends Fragment implements ShowcaseActivity.UserChangeListener {
+public class CollectionsFragment extends Fragment implements UserChangeListener {
 
     private CollectionsAdapter mCollectionAdapter;
     RecyclerView mRecyclerView;

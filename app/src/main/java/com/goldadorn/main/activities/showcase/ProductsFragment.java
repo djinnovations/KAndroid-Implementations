@@ -1,4 +1,4 @@
-package com.goldadorn.main.activities;
+package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,8 +23,8 @@ import butterknife.Bind;
 /**
  * Created by Vijith Menon on 11/3/16.
  */
-public class CollectionsFragment extends Fragment {
-    private final static String TAG = CollectionsFragment.class.getSimpleName();
+public class ProductsFragment extends Fragment {
+    private final static String TAG = ProductsFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
     @Bind(R.id.swipe_deck)
@@ -36,7 +36,7 @@ public class CollectionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_collections,container,false);
+        return inflater.inflate(R.layout.fragment_products,container,false);
     }
 
     @Override
