@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -62,6 +63,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    @Bind(R.id.tabs)
+    TabLayout mTabLayout;
+
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
     private final CollectionCallback mCollectionCallback = new CollectionCallback();
@@ -110,6 +114,15 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
         getSupportLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
 
+
+        TabLayout.Tab tab = mTabLayout.newTab();
+        tab.setText(getString(R.string.collections));
+        mTabLayout.addTab(tab);
+        tab = mTabLayout.newTab();
+        tab.setText(getString(R.string.products));
+        tab = mTabLayout.newTab();
+        tab.setText(getString(R.string.social));
+        mTabLayout.addTab(tab);
 
         ProductResponse response = new ProductResponse();
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {

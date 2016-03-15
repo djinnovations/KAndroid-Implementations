@@ -4,6 +4,7 @@
               android:layout_height="match_parent"
               android:id="@+id/brand_buttons"
               android:gravity="center_horizontal|bottom"
+              android:paddingBottom="?actionBarSize"
               android:orientation="vertical">
 
 
