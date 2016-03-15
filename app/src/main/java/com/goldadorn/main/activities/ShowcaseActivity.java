@@ -192,6 +192,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mShowCaseAdapter.changeCursor(data);
+            mPageChangeListener.onPageSelected(mPager.getCurrentItem());
         }
 
         @Override
@@ -329,6 +330,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             this.cursor = cursor;
             notifyDataSetChanged();
         }
+
     }
 
     private static class CollectionHolder extends RecyclerView.ViewHolder {
