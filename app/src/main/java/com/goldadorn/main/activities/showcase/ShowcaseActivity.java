@@ -211,17 +211,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
         } else {
-            f = new CollectionsFragment();
+            f = CollectionsFragment.newInstance(mUser);
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame_content, f);
             fragmentTransaction.commit();
         }
-    }
-
-    public User getCurrentUser() {
-        return mUser;
     }
 
 

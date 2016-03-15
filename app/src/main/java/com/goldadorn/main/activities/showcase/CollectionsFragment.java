@@ -28,15 +28,28 @@ import com.mikepenz.iconics.view.IconicsButton;
  */
 public class CollectionsFragment extends Fragment implements UserChangeListener {
 
+    public static final String EXTRA_DATA = "data";
     private CollectionsAdapter mCollectionAdapter;
     RecyclerView mRecyclerView;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private CollectionCallback mCollectionCallback = new CollectionCallback();
     private User mUser;
 
+    public static CollectionsFragment newInstance(User user) {
+        CollectionsFragment f = new CollectionsFragment();
+        Bundle b = new Bundle();
+        b.putSerializable(EXTRA_DATA, user);
+        f.setArguments(b);
+        return f;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle b = getArguments();
+        if (b != null) {
+            mUser = (User) b.getSerializable(EXTRA_DATA);
+        }
         return inflater.inflate(R.layout.fragment_recyclerview, container, false);
     }
 
@@ -50,7 +63,6 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         mCollectionAdapter = new CollectionsAdapter(view.getContext());
         mRecyclerView.setAdapter(mCollectionAdapter);
 
-        mUser = getShowcaseActivity().getCurrentUser();
         getShowcaseActivity().registerUserChangeListener(this);
 
         getLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);

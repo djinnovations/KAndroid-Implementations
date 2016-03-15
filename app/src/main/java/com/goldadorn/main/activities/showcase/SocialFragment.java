@@ -20,7 +20,7 @@ public class SocialFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_app_start,container,false);
+        return inflater.inflate(R.layout.under_development_activity,container,false);
     }
 
 }

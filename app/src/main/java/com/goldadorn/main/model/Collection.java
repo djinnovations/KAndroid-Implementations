@@ -13,6 +13,7 @@ public class Collection implements Serializable {
     public final int id;
     public String name, description, imageUrl;
     public int userId;
+    public float image_a_r = -1;
 
     public Collection(int id) {
         this.id = id;
@@ -24,6 +25,7 @@ public class Collection implements Serializable {
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Collections.DESCRIPTION));
         t.imageUrl = cursor.getString(cursor.getColumnIndex(Tables.Collections.IMAGEURL));
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
+        t.image_a_r=cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
         return t;
     }
 }
