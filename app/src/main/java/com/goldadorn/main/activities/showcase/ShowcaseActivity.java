@@ -96,6 +96,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
         mOverlayVH = new OverlayViewHolder(findViewById(R.id.container_designer_overlay));
+        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
 
         initTabs();
         configureUI(mUIState);
@@ -234,7 +235,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mShowCaseAdapter.changeCursor(data);
-            mPageChangeListener.onPageSelected(mPager.getCurrentItem());
+            if (data.getCount() > 0) {
+                mPageChangeListener.onPageSelected(mPager.getCurrentItem());
+                mOverlayVH.itemView.setVisibility(View.VISIBLE);
+            }
         }
 
         @Override
@@ -273,8 +277,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public User getUser(int position) {
-            cursor.moveToPosition(position);
-            return UserInfoCache.extractFromCursor(null, cursor);
+            if (cursor.moveToPosition(position))
+                return UserInfoCache.extractFromCursor(null, cursor);
+            else return null;
         }
 
         public void changeCursor(Cursor cursor) {

@@ -120,9 +120,9 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.itemView.setTag(position);
             holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
-            if (cursor.moveToPosition(position)) {
-                holder.name.setText(collection.name);
-            }
+            holder.name.setText(collection.name);
+            holder.description.setText(collection.description);
+            holder.likeCount.setText("" + collection.likecount);
         }
 
 
