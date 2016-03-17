@@ -10,7 +10,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,14 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.mikepenz.iconics.view.IconicsButton;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by Kiran BH on 10/03/16.
  */
 public class CollectionsFragment extends Fragment implements UserChangeListener {
 
+    private static boolean DUMMY = true;
     public static final String EXTRA_DATA = "data";
     private CollectionsAdapter mCollectionAdapter;
     RecyclerView mRecyclerView;
@@ -45,10 +46,13 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mUser = (User) b.getSerializable(EXTRA_DATA);
+            if(mUser!=null)
+                DUMMY = false;
         }
         return inflater.inflate(R.layout.fragment_recyclerview, container, false);
     }
@@ -95,10 +99,15 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
         private Cursor cursor;
         Context context;
+        int[] IMAGES =
+                {R.drawable.im1, R.drawable.im2, R.drawable.im3, R.drawable.im4, R.drawable.im5,
+                        R.drawable.im6, R.drawable.im7, R.drawable.im8, R.drawable.im9,
+                        R.drawable.im10};
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(CollectionsActivity.getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
+                startActivity(CollectionsActivity
+                        .getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
             }
         };
 
@@ -108,7 +117,8 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_showcase_brand_item, null);
+            View layoutView = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.layout_showcase_brand_item, parent,false);
             CollectionHolder rcv = new CollectionHolder(layoutView);
             rcv.itemView.setOnClickListener(mCollectionClick);
             return rcv;
@@ -116,22 +126,32 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public void onBindViewHolder(CollectionHolder holder, int position) {
+
+            if(DUMMY){
+                holder.itemView.setTag(position);
+                Picasso.with(context).load(IMAGES[position]).fit().into(holder.image);
+                return;
+            }
+
             Collection collection = getCollection(position);
-            holder.itemView.setTag(position);
-            holder.image.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    (float) ((Math.random() + 1) * 100), getResources().getDisplayMetrics());
+            Picasso.with(context).load(collection.imageUrl).fit().into(holder.image);
             holder.name.setText(collection.name);
             holder.description.setText(collection.description);
             holder.likeCount.setText("" + collection.likecount);
+            holder.itemView.setTag(position);
         }
 
 
         @Override
         public int getItemCount() {
+            if(DUMMY)
+                return 10;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         public Collection getCollection(int position) {
+            if(DUMMY)
+                return null;
             cursor.moveToPosition(position);
             return Collection.extractFromCursor(cursor);
         }
@@ -169,7 +189,9 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getContext(), Tables.Collections.CONTENT_URI, null, Tables.Collections.USER_ID + " = ?", new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
+            return new CursorLoader(getContext(), Tables.Collections.CONTENT_URI, null,
+                    Tables.Collections.USER_ID + " = ?",
+                    new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
         }
 
         @Override

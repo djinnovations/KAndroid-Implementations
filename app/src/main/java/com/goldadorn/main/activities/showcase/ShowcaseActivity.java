@@ -16,11 +16,16 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -48,8 +53,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private final static int UISTATE_SOCIAL = 2;
     private final static String TAG = ShowcaseActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
+    private static boolean DUMMY = true;
 
     private int mUIState = UISTATE_COLLECTION;
+
+
     @Bind(R.id.view_pager)
     ViewPager mPager;
 
@@ -61,9 +69,29 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
-
+    @Bind(R.id.toolbar)
+    Toolbar mToolBar;
     @Bind(R.id.tabs)
     TabLayout mTabLayout;
+
+    @Bind(R.id.previous)
+    ImageView mPrevious;
+    @Bind(R.id.next)
+    ImageView mNext;
+    @Bind(R.id.container_designer_overlay)
+    LinearLayout mBrandButtonsLayout;
+
+    @Bind(R.id.brand_description)
+    TextView mBrandDescription;
+
+    @Bind(R.id.layout_1)
+    View layout1;
+    @Bind(R.id.layout_2)
+    View layout2;
+    @Bind(R.id.layout_3)
+    View layout3;
+    @Bind(R.id.top_layout)
+    View topLayout;
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
@@ -72,31 +100,73 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private User mUser;
     private List<UserChangeListener> mUserChangeListeners = new ArrayList<>(4);
 
+    private int mStartHeight,mCollapsedHeight;
+    private int mVerticalOffset=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
         mContext = this;
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        mStartHeight = (int) (.7f*dm.heightPixels);
+        mCollapsedHeight = (int) (.25f*dm.heightPixels);
+
+        mPager.getLayoutParams().height = mStartHeight;
+        topLayout.getLayoutParams().height = mStartHeight;
+        mToolBar.getLayoutParams().height = mCollapsedHeight;
 
         mPager.setOffscreenPageLimit(4);
         mPager.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(getSupportFragmentManager()));
+        final int pad =(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,24,dm);
+
+        mPager.setPageMargin(-pad);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                Log.d(TAG, "offset : " + verticalOffset);
-
+                if(mVerticalOffset!=verticalOffset) {
+                    Log.d(TAG, "offset : " + verticalOffset);
+                    boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
+                    int visibility = change ? View.VISIBLE : View.GONE;
+                    topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
+                    CollapsingToolbarLayout.LayoutParams lp =
+                            ((CollapsingToolbarLayout.LayoutParams) mTabLayout.getLayoutParams());
+                    lp.leftMargin = lp.rightMargin = (int) (pad + (Math.abs(verticalOffset) * .1));
+                    mTabLayout.setLayoutParams(lp);
+                    mBrandDescription.setVisibility(visibility);
+                    layout1.setVisibility(visibility);
+                    layout2.setVisibility(visibility);
+                    layout3.setVisibility(visibility);
+                }
+                mVerticalOffset = verticalOffset;
             }
         });
 
-        mPager.getLayoutParams().height =
-                (int) (.7f * getResources().getDisplayMetrics().heightPixels);
+
+
+        mPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current =mPager.getCurrentItem()-1;
+                int pos = current<0?mShowCaseAdapter.getCount()-1:current;
+                mPager.setCurrentItem(pos);
+            }
+        });
+        mNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current =mPager.getCurrentItem()+1;
+                int pos = current>mShowCaseAdapter.getCount()-1?0:current;
+                mPager.setCurrentItem(pos);
+            }
+        });
+
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-        mOverlayVH = new OverlayViewHolder(findViewById(R.id.container_designer_overlay));
-        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+        mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
 
         initTabs();
         configureUI(mUIState);
@@ -105,6 +175,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onResult(TimelineResponse result) {
                 Log.d(TAG, "result : " + result.responseContent);
+                if(result.success)
+                    DUMMY = false;
+                if(!DUMMY)
+                    mOverlayVH.itemView.setVisibility(View.INVISIBLE);
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -167,6 +241,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onPageSelected(int position) {
+            if(DUMMY)
+                return;
             mUser = mShowCaseAdapter.getUser(position);
             bindOverlay(mUser);
             for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
@@ -234,6 +310,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
+            if(DUMMY)
+                return;
             mShowCaseAdapter.changeCursor(data);
             if (data.getCount() > 0) {
                 mPageChangeListener.onPageSelected(mPager.getCurrentItem());
@@ -262,17 +340,21 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public int getCount() {
+            if(DUMMY)
+                return 8;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         @Override
         public Fragment getItem(int position) {
-            User user = getUser(position);
             ShowcaseFragment f = new ShowcaseFragment();
-            Bundle b = new Bundle(1);
-            b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
-            b.putString(ShowcaseFragment.EXTRA_IMAGE_URL, user.imageUrl);
-            f.setArguments(b);
+            if(!DUMMY) {
+                User user = getUser(position);
+                Bundle b = new Bundle(1);
+                b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
+                b.putString(ShowcaseFragment.EXTRA_IMAGE_URL, user.imageUrl);
+                f.setArguments(b);
+            }
             return f;
         }
 

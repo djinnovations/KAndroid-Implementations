@@ -10,7 +10,7 @@
     <FrameLayout
         android:id="@+id/frame_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
@@ -37,52 +37,82 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="402dp"
-                app:layout_collapseMode="parallax"
+                android:layout_height="360dp"
                 android:layout_weight="1"
+                android:clipToPadding="false"
+                android:elevation="4dp"
                 android:fitsSystemWindows="true"
-                android:foreground="@color/overlay"
+                android:paddingLeft="24dp"
+                app:elevation="4dp"
+                app:layout_collapseMode="parallax"
                 />
 
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/buttons_frame"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@android:color/transparent"
+                android:elevation="4dp"
+                app:elevation="4dp"
                 app:layout_collapseMode="pin"
-                android:layout_height="402dp">
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@android:color/transparent"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-                <include
-                    android:id="@+id/container_designer_overlay"
-                    layout="@layout/layout_brand_buttons"/>
-
-                <android.support.design.widget.TabLayout
-                    android:id="@+id/tabs"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:tabTextColor="@color/colorPrimaryDark"
-                    app:tabIndicatorColor="@android:color/white"
-                    app:tabSelectedTextColor="@android:color/white"
-                    android:layout_marginLeft="24dp"
-                    android:layout_marginRight="24dp"
-                    android:background="@android:color/black"
-                    app:tabBackground="@android:color/black"
-                    app:tabMode="scrollable"
-                    app:tabContentStart="72dp" />
-            </LinearLayout>
-
-
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:background="@android:color/black"
+                android:elevation="4dp"
+                app:elevation="4dp"
+                app:tabBackground="@android:color/black"
+                app:tabContentStart="72dp"
+                app:tabIndicatorColor="@android:color/white"
+                app:tabMode="fixed"
+                app:tabSelectedTextColor="@android:color/white"
+                app:tabTextAppearance="@style/TabText"
+                app:tabTextColor="@color/colorPrimaryDark"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
-
     </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="56dp"
+        app:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/previous"
+            style="?actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="-90"
+            android:src="@android:drawable/arrow_up_float"
+
+            />
+
+        <include
+            android:id="@+id/container_designer_overlay"
+            layout="@layout/layout_brand_buttons"/>
+
+        <ImageView
+            android:id="@+id/next"
+            style="?actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotation="90"
+            android:src="@android:drawable/arrow_up_float"
+
+            />
+    </LinearLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
