@@ -16,7 +16,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -38,6 +37,7 @@ import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
+import com.goldadorn.main.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -248,6 +248,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
             ProductResponse response = new ProductResponse();
             response.userId = mUser.id;
+            L.d("USER id "+mUser.id);
             UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
                 @Override
                 public void onResult(ProductResponse result) {
