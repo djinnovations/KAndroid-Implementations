@@ -53,7 +53,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private final static int UISTATE_SOCIAL = 2;
     private final static String TAG = ShowcaseActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
-    private static boolean DUMMY = true;
+    private static boolean DUMMY = false;
 
     private int mUIState = UISTATE_COLLECTION;
 
@@ -100,8 +100,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private User mUser;
     private List<UserChangeListener> mUserChangeListeners = new ArrayList<>(4);
 
-    private int mStartHeight,mCollapsedHeight;
-    private int mVerticalOffset=0;
+    private int mStartHeight, mCollapsedHeight;
+    private int mVerticalOffset = 0;
 
 
     @Override
@@ -110,8 +110,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         setContentView(R.layout.activity_showcase);
         mContext = this;
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
-        mStartHeight = (int) (.7f*dm.heightPixels);
-        mCollapsedHeight = (int) (.25f*dm.heightPixels);
+        mStartHeight = (int) (.7f * dm.heightPixels);
+        mCollapsedHeight = (int) (.25f * dm.heightPixels);
 
         mPager.getLayoutParams().height = mStartHeight;
         topLayout.getLayoutParams().height = mStartHeight;
@@ -119,14 +119,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         mPager.setOffscreenPageLimit(4);
         mPager.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(getSupportFragmentManager()));
-        final int pad =(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,24,dm);
+        final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
 
         mPager.setPageMargin(-pad);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if(mVerticalOffset!=verticalOffset) {
+                if (mVerticalOffset != verticalOffset) {
                     Log.d(TAG, "offset : " + verticalOffset);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
@@ -145,20 +145,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         });
 
 
-
         mPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int current =mPager.getCurrentItem()-1;
-                int pos = current<0?mShowCaseAdapter.getCount()-1:current;
+                int current = mPager.getCurrentItem() - 1;
+                int pos = current < 0 ? mShowCaseAdapter.getCount() - 1 : current;
                 mPager.setCurrentItem(pos);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int current =mPager.getCurrentItem()+1;
-                int pos = current>mShowCaseAdapter.getCount()-1?0:current;
+                int current = mPager.getCurrentItem() + 1;
+                int pos = current > mShowCaseAdapter.getCount() - 1 ? 0 : current;
                 mPager.setCurrentItem(pos);
             }
         });
@@ -170,15 +169,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         initTabs();
         configureUI(mUIState);
-
+        if (!DUMMY)
+            mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
                 Log.d(TAG, "result : " + result.responseContent);
-                if(result.success)
+                if (result.success)
                     DUMMY = false;
-                if(!DUMMY)
-                    mOverlayVH.itemView.setVisibility(View.INVISIBLE);
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -241,14 +239,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if(DUMMY)
+            if (DUMMY)
                 return;
             mUser = mShowCaseAdapter.getUser(position);
             bindOverlay(mUser);
             for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
             ProductResponse response = new ProductResponse();
             response.userId = mUser.id;
-            L.d("USER id "+mUser.id);
+            L.d("USER id " + mUser.id);
             UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
                 @Override
                 public void onResult(ProductResponse result) {
@@ -311,7 +309,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
-            if(DUMMY)
+            if (DUMMY)
                 return;
             mShowCaseAdapter.changeCursor(data);
             if (data.getCount() > 0) {
@@ -341,7 +339,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public int getCount() {
-            if(DUMMY)
+            if (DUMMY)
                 return 8;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
@@ -349,7 +347,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public Fragment getItem(int position) {
             ShowcaseFragment f = new ShowcaseFragment();
-            if(!DUMMY) {
+            if (!DUMMY) {
                 User user = getUser(position);
                 Bundle b = new Bundle(1);
                 b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);

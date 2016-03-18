@@ -52,7 +52,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private final static int UISTATE_PRODUCT = 0;
     private final static int UISTATE_SOCIAL = 1;
     private final static boolean DEBUG = true;
-    private boolean DUMMY = true;
+    private boolean DUMMY = false;
     private int mUIState = UISTATE_PRODUCT;
 
     @Bind(R.id.view_pager)

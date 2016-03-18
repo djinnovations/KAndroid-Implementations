@@ -50,7 +50,7 @@ public class ShowcaseFragment extends BaseFragment {
             ((ImageView) view.findViewById(R.id.image)).setImageResource(
                     IMAGES[(int) (Math.random() * 10 % IMAGES.length)]);
         }
-        else Picasso.with(getActivity()).load(mImageUrl).centerCrop().into(
+        else Picasso.with(getActivity()).load(mImageUrl).into(
                 ((ImageView) view.findViewById(R.id.image)));
     }
 
