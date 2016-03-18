@@ -14,7 +14,7 @@ public class Collection implements Serializable {
     public String name, description, imageUrl;
     public int userId;
     public float image_a_r = -1;
-    public int likecount = 0;
+    public int likecount = 0,productcount = 0;
 
     public Collection(int id) {
         this.id = id;
@@ -28,6 +28,7 @@ public class Collection implements Serializable {
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
+        t.productcount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_PRODUCTS));
         return t;
     }
 }

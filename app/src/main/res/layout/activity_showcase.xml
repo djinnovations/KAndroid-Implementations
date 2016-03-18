@@ -114,5 +114,20 @@
             />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/progress_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="5dp"
+        app:elevation="5dp"
+        android:background="@android:color/white">
+
+        <ProgressBar
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>

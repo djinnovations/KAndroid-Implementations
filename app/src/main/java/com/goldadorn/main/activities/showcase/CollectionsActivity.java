@@ -94,8 +94,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
     View layout2;
     @Bind(R.id.layout_3)
     View layout3;
-    @Bind(R.id.layout_4)
-    View layout4;
     @Bind(R.id.top_layout)
     View topLayout;
 
@@ -159,7 +157,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
                     layout1.setVisibility(visibility);
                     layout2.setVisibility(visibility);
                     layout3.setVisibility(visibility);
-                    layout4.setVisibility(visibility);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                 }
                 mVerticalOffset = verticalOffset;

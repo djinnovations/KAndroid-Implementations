@@ -18,6 +18,9 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -41,6 +44,7 @@ import com.goldadorn.main.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 
@@ -92,6 +96,22 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     View layout3;
     @Bind(R.id.top_layout)
     View topLayout;
+
+    @Bind(R.id.badge_1)
+    ImageView mFeatured;
+    @Bind(R.id.badge_2)
+    ImageView mTrending;
+
+    @Bind(R.id.likes_count)
+    TextView mLikesCount;
+    @Bind(R.id.followers_count)
+    TextView mFollowersCount;
+    @Bind(R.id.following_count)
+    TextView mFollowingCount;
+
+    @Bind(R.id.progress_frame)
+    View mProgressFrame;
+
 
     private Context mContext;
     private final ShowCaseCallback mShowCaseCallback = new ShowCaseCallback();
@@ -168,15 +188,18 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
 
         initTabs();
-        configureUI(mUIState);
         if (!DUMMY)
             mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
                 Log.d(TAG, "result : " + result.responseContent);
-                if (result.success)
+                mProgressFrame.setVisibility(View.GONE);
+                if (result.success) {
                     DUMMY = false;
+                }
+                mUser = mShowCaseAdapter.getUser(0);
+                configureUI(mUIState);
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -263,7 +286,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private TabLayout.OnTabSelectedListener mTabSelectListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            Log.d("OnTabSelectedListener", (String) tab.getText());
+            Log.d("OnTabSelectedListener", ""+tab.getText());
             int uiState = (int) tab.getTag();
             configureUI(uiState);
 
@@ -284,10 +307,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
             f = new SocialFragment();
+            mTabLayout.getTabAt(2).select();
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
+            mTabLayout.getTabAt(1).select();
         } else {
             f = CollectionsFragment.newInstance(mUser);
+            mTabLayout.getTabAt(0).select();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -327,6 +353,24 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private void bindOverlay(User user) {
         mOverlayVH.name.setText(user.name);
+        mLikesCount.setText(String.format(Locale.getDefault(),"%d",user.likes_cnt));
+        mFollowersCount.setText(String.format(Locale.getDefault(),"%d",user.followers_cnt));
+        mFollowingCount.setText(String.format(Locale.getDefault(),"%d",user.following_cnt));
+
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        builder.append("Collections\n");
+        int start = builder.length();
+        builder.append(Integer.toString(user.collections_cnt));
+        builder.setSpan(new RelativeSizeSpan(1.5f),start,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        mTabLayout.getTabAt(0).setText(builder);
+
+        builder.clear();
+        builder.append("Products\n");
+        start = builder.length();
+        builder.append(Integer.toString(user.products_cnt));
+        builder.setSpan(new RelativeSizeSpan(1.5f),start,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mTabLayout.getTabAt(1).setText(builder);
     }
 
     private class ShowcasePagerAdapter extends FragmentStatePagerAdapter {
@@ -358,7 +402,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public User getUser(int position) {
-            if (cursor.moveToPosition(position))
+            if (!DUMMY && cursor.moveToPosition(position))
                 return UserInfoCache.extractFromCursor(null, cursor);
             else return null;
         }

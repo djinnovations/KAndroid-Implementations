@@ -138,6 +138,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.name.setText(collection.name);
             holder.description.setText(collection.description);
             holder.likeCount.setText("" + collection.likecount);
+            holder.extra.setText(collection.productcount+" Products");
             holder.itemView.setTag(position);
         }
 
