@@ -1,8 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:orientation="vertical"
-    android:padding="12dp"/>
+    android:paddingTop="12dp"
+    android:paddingBottom="16dp"
+    android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:paddingBottom="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/product_owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:fontFamily="sans-serif-light"
+                android:paddingRight="12dp"
+                android:text="Designer Name"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/followButton"
+                style="@style/ShowcaseButton"
+                android:layout_width="@dimen/circle_button_tiny_height"
+                android:layout_height="@dimen/circle_button_tiny_height"
+                android:text="@string/icon_liked_post"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/collection_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="12dp"
+            android:text="Eternity Rings Collection"
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+        <include
+            android:id="@+id/collection_style"
+            layout="@layout/layout_cutomize_title" />
+
+        <TextView
+            android:id="@+id/collection_style_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="12dp"
+            android:text="Everyday wear, lightweight"
+            android:layout_marginBottom="16dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <include
+
+            android:id="@+id/description"
+            layout="@layout/layout_cutomize_title" />
+
+        <TextView
+            android:id="@+id/description_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="12dp"
+            android:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+            android:textSize="14sp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <include
+            android:id="@+id/product_detail_style"
+            layout="@layout/layout_cutomize_title" />
+
+        <TextView
+            android:id="@+id/product_detail_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:lineSpacingMultiplier="1.2"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="12dp"
+            android:text="Product Code\n1001EA1115S9O2G2M07\n\nHeight\t\t\t\t\t\t\tWidth\n25.99 mm\t\t\t\t\t11.44 mm\n\nProduct Weight[Approx.]\n4.578 grams"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    </LinearLayout>
+
+</ScrollView>

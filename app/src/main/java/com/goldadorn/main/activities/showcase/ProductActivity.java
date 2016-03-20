@@ -198,6 +198,9 @@ public class ProductActivity extends BaseDrawerActivity {
         @Override
         public Fragment getItem(int position) {
             ShowcaseFragment f = new ShowcaseFragment();
+            Bundle b = new Bundle(1);
+            b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
+            f.setArguments(b);
             return f;
         }
 
