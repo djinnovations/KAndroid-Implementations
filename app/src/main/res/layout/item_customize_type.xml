@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:gravity="center_vertical"
+              android:padding="16dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <com.rey.material.widget.CircleCheckedTextView
+        android:id="@+id/image"
+        android:background="@drawable/btn_check"
+        android:checked="true"
+        android:layout_width="@dimen/circle_button_small1_height"
+        android:layout_height="@dimen/circle_button_small1_height"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:id="@+id/textView8"/>
+</LinearLayout>

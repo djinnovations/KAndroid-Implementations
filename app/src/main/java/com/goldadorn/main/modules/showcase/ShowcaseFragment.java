@@ -42,16 +42,20 @@ public class ShowcaseFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (mImageUrl == null) {
-            if(mPosition!=-1){
+        try {
+            if (mImageUrl == null) {
+                if(mPosition!=-1){
+                    ((ImageView) view.findViewById(R.id.image)).setImageResource(
+                            P_IMAGES[mPosition%P_IMAGES.length]);
+                }else
                 ((ImageView) view.findViewById(R.id.image)).setImageResource(
-                        P_IMAGES[mPosition%P_IMAGES.length]);
-            }else
-            ((ImageView) view.findViewById(R.id.image)).setImageResource(
-                    IMAGES[(int) (Math.random() * 10 % IMAGES.length)]);
+                        IMAGES[(int) (Math.random() * 10 % IMAGES.length)]);
+            }
+            else Picasso.with(getActivity()).load(mImageUrl).into(
+                    ((ImageView) view.findViewById(R.id.image)));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else Picasso.with(getActivity()).load(mImageUrl).into(
-                ((ImageView) view.findViewById(R.id.image)));
     }
 
     @Override

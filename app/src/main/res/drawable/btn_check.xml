@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_checked="true" >
+        <shape android:shape="oval">
+            <size android:height="@dimen/circle_button_small1_height" android:width="@dimen/circle_button_small1_height" />
+            <stroke android:color="@color/colorPrimaryDark" android:width="3dp" />
+        </shape>
+    </item>
+    <item >
+        <shape android:shape="oval">
+            <size android:height="@dimen/circle_button_small1_height" android:width="@dimen/circle_button_small1_height" />
+            <stroke android:color="@android:color/transparent" android:width="3dp" />
+        </shape>
+    </item>
+
+</selector>

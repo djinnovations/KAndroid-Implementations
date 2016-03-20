@@ -114,6 +114,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
         initTabs();
+        configureUI(UISTATE_CUSTOMIZE);
     }
 
     @Override
@@ -126,7 +127,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private void initTabs() {
         TabLayout.Tab tab = mTabLayout.newTab();
         tab.setTag(UISTATE_CUSTOMIZE);
-        tab.setText(getString(R.string.collections));
+        tab.setText("Customize");
         mTabLayout.addTab(tab);
         tab = mTabLayout.newTab();
         tab.setTag(UISTATE_SOCIAL);
@@ -252,7 +253,6 @@ public class ProductActivity extends BaseDrawerActivity {
             mProductCost2.setVisibility(oppositeVisibility);
             mProductName.setVisibility(visibility);
             mProductOwner.setVisibility(visibility);
-            layout4.setVisibility(oppositeVisibility);
         }
 
     }
