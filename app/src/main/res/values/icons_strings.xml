@@ -17,5 +17,10 @@
     <string name="icon_poll_post">{faw-bar_chart}</string>
     <string name="icon_remove">{faw-minus_circle}</string>
     <string name="icon_send">{faw-paper_plane_o}</string>
+    
+    <string name="icon_heart_dislike">{hea-broken-heart-fill}</string>
+    <string name="icon_heart_like">{hea-heart-fill}</string>
+
+    <string name="icon_cart">{gol-poll}</string>
 
 </resources>

@@ -140,6 +140,13 @@ public class ProductsFragment extends Fragment {
 
         private List<String> data;
         private Context context;
+        private View.OnClickListener mProductClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ProductActivity
+                        .getLaunchIntent(v.getContext()));
+            }
+        };
 
         public SwipeDeckAdapter(List<String> data, Context context) {
             this.data = data;
@@ -168,6 +175,7 @@ public class ProductsFragment extends Fragment {
             if (v == null) {
                 // normally use a viewholder
                 v = View.inflate(context, R.layout.layout_product_card, null);
+                v.setOnClickListener(mProductClick);
             }
             ((TextView) v.findViewById(R.id.likes_count)).setText(Integer.toString(position));
 

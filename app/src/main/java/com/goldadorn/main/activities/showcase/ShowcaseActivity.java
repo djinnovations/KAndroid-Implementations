@@ -47,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Vijith Menon on 6/3/16.
@@ -84,30 +85,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     ImageView mNext;
     @Bind(R.id.container_designer_overlay)
     LinearLayout mBrandButtonsLayout;
-
-    @Bind(R.id.brand_description)
-    TextView mBrandDescription;
-
-    @Bind(R.id.layout_1)
-    View layout1;
-    @Bind(R.id.layout_2)
-    View layout2;
-    @Bind(R.id.layout_3)
-    View layout3;
     @Bind(R.id.top_layout)
     View topLayout;
-
-    @Bind(R.id.badge_1)
-    ImageView mFeatured;
-    @Bind(R.id.badge_2)
-    ImageView mTrending;
-
-    @Bind(R.id.likes_count)
-    TextView mLikesCount;
-    @Bind(R.id.followers_count)
-    TextView mFollowersCount;
-    @Bind(R.id.following_count)
-    TextView mFollowingCount;
 
     @Bind(R.id.progress_frame)
     View mProgressFrame;
@@ -129,6 +108,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
         mContext = this;
+        mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
         mCollapsedHeight = (int) (.25f * dm.heightPixels);
@@ -155,10 +135,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                             ((CollapsingToolbarLayout.LayoutParams) mTabLayout.getLayoutParams());
                     lp.leftMargin = lp.rightMargin = (int) (pad + (Math.abs(verticalOffset) * .1));
                     mTabLayout.setLayoutParams(lp);
-                    mBrandDescription.setVisibility(visibility);
-                    layout1.setVisibility(visibility);
-                    layout2.setVisibility(visibility);
-                    layout3.setVisibility(visibility);
+                    mOverlayVH.setVisisbility(visibility);
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -185,7 +162,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-        mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
 
         initTabs();
         if (!DUMMY)
@@ -352,10 +328,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
 
     private void bindOverlay(User user) {
-        mOverlayVH.name.setText(user.name);
-        mLikesCount.setText(String.format(Locale.getDefault(),"%d",user.likes_cnt));
-        mFollowersCount.setText(String.format(Locale.getDefault(),"%d",user.followers_cnt));
-        mFollowingCount.setText(String.format(Locale.getDefault(),"%d",user.following_cnt));
+        mOverlayVH.mBrandName.setText(user.name);
+        mOverlayVH.mLikesCount.setText(String.format(Locale.getDefault(),"%d",user.likes_cnt));
+        mOverlayVH.mFollowersCount.setText(String.format(Locale.getDefault(),"%d",user.followers_cnt));
+        mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(),"%d",user.following_cnt));
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append("Collections\n");
@@ -414,17 +390,42 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
 
-    private static class OverlayViewHolder extends RecyclerView.ViewHolder {
+    static class OverlayViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView badge1, badge2;
-        public TextView name, description;
+        @Bind(R.id.brand_name)
+        TextView mBrandName;
+        @Bind(R.id.brand_description)
+        TextView mBrandDescription;
+
+        @Bind(R.id.layout_1)
+        View layout1;
+        @Bind(R.id.layout_2)
+        View layout2;
+        @Bind(R.id.layout_3)
+        View layout3;
+
+        @Bind(R.id.badge_1)
+        ImageView mFeatured;
+        @Bind(R.id.badge_2)
+        ImageView mTrending;
+
+        @Bind(R.id.likes_count)
+        TextView mLikesCount;
+        @Bind(R.id.followers_count)
+        TextView mFollowersCount;
+        @Bind(R.id.following_count)
+        TextView mFollowingCount;
 
         public OverlayViewHolder(View itemView) {
             super(itemView);
-            badge1 = (ImageView) itemView.findViewById(R.id.badge_1);
-            badge2 = (ImageView) itemView.findViewById(R.id.badge_2);
-            name = (TextView) itemView.findViewById(R.id.brand_name);
-            description = (TextView) itemView.findViewById(R.id.brand_description);
+            ButterKnife.bind(this,itemView);
+        }
+
+        public void setVisisbility(int visibility){
+            mBrandDescription.setVisibility(visibility);
+            layout1.setVisibility(visibility);
+            layout2.setVisibility(visibility);
+            layout3.setVisibility(visibility);
         }
 
     }

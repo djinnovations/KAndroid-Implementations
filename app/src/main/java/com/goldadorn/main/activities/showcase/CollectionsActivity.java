@@ -18,6 +18,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -37,10 +38,13 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.mikepenz.iconics.view.IconicsButton;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Vijith Menon on 11/3/16.
@@ -83,19 +87,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
     @Bind(R.id.container_designer_overlay)
     LinearLayout mBrandButtonsLayout;
 
-    @Bind(R.id.collection_description)
-    TextView mBrandDescription;
-    @Bind(R.id.collection_extra_description)
-    TextView mBrandExtraDescription;
-
-    @Bind(R.id.layout_1)
-    View layout1;
-    @Bind(R.id.layout_2)
-    View layout2;
-    @Bind(R.id.layout_3)
-    View layout3;
     @Bind(R.id.top_layout)
     View topLayout;
+
+    @Bind(R.id.progress_frame)
+    View mProgressLayout;
+
+    OverlayViewHolder mOverlayViewHolder;
 
     CollectionsPagerAdapter mCollectionAdapter;
 
@@ -118,6 +116,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
         mContext = this;
+        mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
         mCollapsedHeight = (int) (.25f * dm.heightPixels);
@@ -152,11 +151,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
                             ((CollapsingToolbarLayout.LayoutParams) mTabLayout.getLayoutParams());
                     lp.leftMargin = lp.rightMargin = (int) (pad + (Math.abs(verticalOffset) * .1));
                     mTabLayout.setLayoutParams(lp);
-                    mBrandDescription.setVisibility(visibility);
-                    mBrandExtraDescription.setVisibility(visibility);
-                    layout1.setVisibility(visibility);
-                    layout2.setVisibility(visibility);
-                    layout3.setVisibility(visibility);
+                    mOverlayViewHolder.setVisisbility(visibility);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                 }
                 mVerticalOffset = verticalOffset;
@@ -180,7 +175,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         });
 
         initTabs();
-        configureUI(mUIState);
 
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
@@ -199,7 +193,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
             @Override
             public void onResult(ProductResponse result) {
                 Log.d(TAG, "result : " + result.responseContent);
+                mProgressLayout.setVisibility(View.GONE);
                 if (result.success) DUMMY = false;
+                configureUI(mUIState);
             }
         });
 
@@ -215,6 +211,17 @@ public class CollectionsActivity extends BaseDrawerActivity {
         tab.setText(getString(R.string.social));
         mTabLayout.addTab(tab);
         mTabLayout.setOnTabSelectedListener(mTabSelectListener);
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPager.addOnPageChangeListener(mPageChangeListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPager.removeOnPageChangeListener(mPageChangeListener);
     }
 
     @Override
@@ -237,6 +244,36 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     public void unRegisterCollectionChangeListener(CollectionChangeListener listener) {
         mCollectionChangeListeners.remove(listener);
+    }
+    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (DUMMY)
+                return;
+            mCollection = mCollectionAdapter.getCollection(position);
+            bindOverlay(mCollection);
+            for (CollectionChangeListener l : mCollectionChangeListeners) l.onCollectionChange(mCollection);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    private void bindOverlay(Collection collection) {
+        mOverlayViewHolder.name.setText(collection.name);
+        mOverlayViewHolder.ownerName.setText(Integer.toString(collection.userId));
+        mOverlayViewHolder.description.setText(collection.description);
+        mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(),"%d",collection.likecount));
+        mOverlayViewHolder.extra.setText(Integer.toString(collection.id));
+
+        mTabLayout.getTabAt(0).setText("Products\n"+collection.productcount);
     }
 
     private TabLayout.OnTabSelectedListener mTabSelectListener =
@@ -324,12 +361,67 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
+            if (DUMMY)
+                return;
             mCollectionAdapter.changeCursor(data);
+            if (data.getCount() > 0) {
+                mPageChangeListener.onPageSelected(mPager.getCurrentItem());
+                mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
+            }
+
         }
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
             if (cursor != null) cursor.close();
         }
+    }
+
+    static class OverlayViewHolder extends RecyclerView.ViewHolder {
+
+        @Bind(R.id.collection_name)
+        TextView name;
+        @Bind(R.id.collection_owner_name)
+        TextView ownerName;
+        @Bind(R.id.followButton)
+        IconicsButton followButton;
+        @Bind(R.id.collection_description)
+        TextView description;
+        @Bind(R.id.collection_extra_description)
+        TextView extra;
+
+        @Bind(R.id.layout_1)
+        View layout1;
+        @Bind(R.id.layout_2)
+        View layout2;
+        @Bind(R.id.layout_3)
+        View layout3;
+
+        @Bind(R.id.badge_1)
+        ImageView mFeatured;
+        @Bind(R.id.badge_2)
+        ImageView mTrending;
+
+        @Bind(R.id.likes_count)
+        TextView likesCount;
+        @Bind(R.id.likeButton)
+        IconicsButton like;
+        @Bind(R.id.shareButton)
+        IconicsButton share;
+
+        public OverlayViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+        }
+
+        public void setVisisbility(int visibility){
+            ownerName.setVisibility(visibility);
+            description.setVisibility(visibility);
+            extra.setVisibility(visibility);
+            layout1.setVisibility(visibility);
+            layout2.setVisibility(visibility);
+            layout3.setVisibility(visibility);
+        }
+
     }
 }

@@ -45,7 +45,7 @@ public class ShowcaseFragment extends BaseFragment {
         if (mImageUrl == null) {
             if(mPosition!=-1){
                 ((ImageView) view.findViewById(R.id.image)).setImageResource(
-                        P_IMAGES[mPosition]);
+                        P_IMAGES[mPosition%P_IMAGES.length]);
             }else
             ((ImageView) view.findViewById(R.id.image)).setImageResource(
                     IMAGES[(int) (Math.random() * 10 % IMAGES.length)]);

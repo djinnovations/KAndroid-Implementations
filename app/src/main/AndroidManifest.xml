@@ -134,6 +134,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".activities.showcase.ProductActivity"
+                  android:launchMode="singleTop"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2d0816b755371517bad5e7ac4a9e2291e5671804"/>

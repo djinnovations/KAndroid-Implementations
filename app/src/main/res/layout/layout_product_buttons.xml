@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:padding="12dp"
+              android:paddingBottom="56dp"
+              android:layout_height="360dp"
+              android:layout_width="match_parent"
+              android:elevation="4dp"
+              app:elevation="4dp">
+
+    <LinearLayout
+        android:id="@+id/layout_1"
+        android:layout_gravity="right"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="64"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:gravity="center"
+            android:id="@+id/likes_count"
+            android:layout_gravity="center_vertical"/>
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/likeButton"
+            style="@style/circleSmallButton"
+            android:text="@string/icon_heart_like"
+            android:layout_width="@dimen/circle_button_tiny_height"
+            android:layout_height="@dimen/circle_button_tiny_height"/>
+    </LinearLayout>
+
+    <com.mikepenz.iconics.view.IconicsButton
+        style="@style/circleSmallButton"
+        android:text="+"
+        android:layout_marginTop="8dp"
+        android:layout_gravity="right"
+        android:layout_width="@dimen/circle_button_tiny_height"
+        android:layout_height="@dimen/circle_button_tiny_height"/>
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/indicator"
+        app:fillColor="@android:color/black"
+        app:pageColor="@android:color/darker_gray"
+        app:radius="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/product_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/white"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+    <LinearLayout
+        android:id="@+id/layout_2"
+        android:orientation="horizontal"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:paddingBottom="12dp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/product_owner_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="8dp"
+            android:text="Small Text"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/followButton"
+            style="@style/ShowcaseButton"
+            android:layout_width="@dimen/circle_button_tiny_height"
+            android:layout_height="@dimen/circle_button_tiny_height"
+            android:text="@string/icon_liked_post"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/product_collection_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:layout_gravity="center_horizontal"
+        android:textSize="12sp"
+        android:paddingRight="8dp"
+        android:textColor="@android:color/white"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <TextView
+        android:id="@+id/product_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:layout_gravity="center_horizontal"
+        android:textSize="19sp"
+        android:paddingRight="8dp"
+        android:textColor="@android:color/white"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+    <LinearLayout
+        android:id="@+id/layout_4"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/shareButton"
+            style="@style/ShowcaseButton"
+            android:layout_marginLeft="@dimen/appDefault2XMargin"
+            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_width="@dimen/circle_button_height"
+            android:layout_height="@dimen/circle_button_height"
+            android:text="@string/icon_share_post"/>
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/likeDislikeButton"
+            style="@style/ShowcaseButton"
+            android:layout_marginLeft="@dimen/appDefault2XMargin"
+            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_width="@dimen/circle_button_height"
+            android:layout_height="@dimen/circle_button_height"
+            android:text="@string/icon_liked_post"/>
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/commentButton"
+            style="@style/ShowcaseButton"
+            android:layout_marginLeft="@dimen/appDefault2XMargin"
+            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_width="@dimen/circle_button_height"
+            android:layout_height="@dimen/circle_button_height"
+            android:text="@string/icon_comment_post"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/layout_3"
+        android:orientation="vertical"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/cartButton"
+            style="@style/ShowcaseButton"
+            android:layout_width="@dimen/circle_button_height"
+            android:layout_height="@dimen/circle_button_height"
+            android:text="@string/icon_cart"/>
+
+        <TextView
+            android:id="@+id/product_collection_name_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:textSize="12sp"
+            android:paddingTop="8dp"
+            android:paddingRight="8dp"
+            android:textColor="@android:color/white"
+            android:text="Collection Name"
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
+        <TextView
+            android:id="@+id/product_cost_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:fontFamily="sans-serif-light"
+            android:layout_gravity="center_horizontal"
+            android:textSize="19sp"
+            android:paddingRight="8dp"
+            android:textColor="@android:color/white"
+            android:text="Rs. 000"
+            android:textAppearance="?android:attr/textAppearanceLarge"/>
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
