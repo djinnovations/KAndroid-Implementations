@@ -25,11 +25,12 @@ public class ApiFactory extends ExtractResponse{
 
     private static final int PRODUCT_SHOWCASE_TYPE = 1;
     private static final int PRODUCTS_TYPE = 2;
+    private static final int PRODUCT_BASIC_INFO_TYPE = 3;
 
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/goldadorn_dev/";
+    public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/goldadorn_prod/";
     private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
     private static final String HOST_NAME_PROD = "demo.eremotus-portal.com";
     public static final String HOST_NAME = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV;
@@ -38,12 +39,17 @@ public class ApiFactory extends ExtractResponse{
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http");
         builder.authority(HOST_NAME);
-        builder.appendPath("goldadorn_dev");
+        builder.appendPath("goldadorn_prod");
         builder.appendPath("rest");
         switch (urlBuilder.mUrlType) {
             case PRODUCT_SHOWCASE_TYPE: {
                 builder.appendPath("getdesigners");
                 builder.appendPath(urlBuilder.mResponse.mPageCount+"");
+                break;
+            }
+            case PRODUCT_BASIC_INFO_TYPE: {
+                builder.appendPath("getproductbasicinfo");
+                builder.appendPath(((ProductResponse)urlBuilder.mResponse).productId+"");
                 break;
             }
             case PRODUCTS_TYPE: {
@@ -117,6 +123,33 @@ public class ApiFactory extends ExtractResponse{
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void getProductBasicInfo(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies==null||response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = PRODUCT_BASIC_INFO_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = PRODUCT_BASIC_INFO_TYPE;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getProductBasicInfo " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

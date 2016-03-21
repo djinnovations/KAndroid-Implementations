@@ -18,11 +18,14 @@ public class Constants {
         public static final String FOLLOWERS = "followers";
         public static final String FOLLOWING = "following";
         public static final String COLLECTIONCOUNT = "collectionCount";
-        public static final String PRODUCTS = "products";
+        public static final String PRODUCTCOUNT = "productCount";
         public static final String COLLECTIONLIST = "collectionList";
         public static final String COLLECTIONTITLE = "collectionTitle";
+        public static final String COLLECTIONDESC = "collectionDesc";
         public static final String COLLECTIONIMAGE = "collectionImage";
         public static final String COLLECTIONPRODUCTCOUNT = "collectionProductCount";
+        public static final String COLLECTIONIMAGEAR = "collectionImageAR";
+        public static final String ASPECTRATIO = "aspectRatio";
         public static final String PRODUCTID = "productId";
         public static final String PRODUCTLABEL = "productLabel";
         public static final String LIKECOUNT = "likeCount";

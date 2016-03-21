@@ -59,6 +59,19 @@ public class Api {
         }
     }
 
+    public static void getProductBasicInfo(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getProductBasicInfo(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeProductBasicInfo(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     /**
      * this function will handle all the exceptions related to http calls to server. the exception
      * message will be extracted and exception type will be saved in response class.

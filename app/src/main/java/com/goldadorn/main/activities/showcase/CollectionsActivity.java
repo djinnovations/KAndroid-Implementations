@@ -192,7 +192,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
-                Log.d(TAG, "result : " + result.responseContent);
                 mProgressLayout.setVisibility(View.GONE);
                 if (result.success) DUMMY = false;
                 configureUI(mUIState);
