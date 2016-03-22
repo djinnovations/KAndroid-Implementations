@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -107,6 +108,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
+        startActivity(new Intent(this,TestActivity.class));
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();

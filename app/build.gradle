@@ -93,4 +93,5 @@ dependencies {
 
     compile 'com.squareup.okio:okio:1.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
 }
