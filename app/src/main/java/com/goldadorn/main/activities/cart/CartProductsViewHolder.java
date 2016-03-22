@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.cart;
 
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +85,9 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         public void bindUI(Product product) {
             name.setText(product.name);
+            quantityText.removeTextChangedListener(this);
             quantityText.setText(product.quantity + "");
+            quantityText.addTextChangedListener(this);
             price.setText(product.getDisplayTotal());
         }
 
@@ -100,7 +103,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            quatityChangeListener.onQuantityChanged(productId, Integer.parseInt(s.toString()));
+            quatityChangeListener.onQuantityChanged(productId, TextUtils.isEmpty(s) ? 0 : Integer.parseInt(s.toString()));
         }
 
         @Override
