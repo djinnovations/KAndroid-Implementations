@@ -60,6 +60,7 @@ public class CartManagerActivity extends AppCompatActivity {
         mContinueButton.setOnClickListener(mClickListener);
         configureUI(UISTATE_CART);
         mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+        mToolbar.setTitle("My Cart");
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
