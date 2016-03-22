@@ -37,6 +37,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
@@ -260,7 +261,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private TabLayout.OnTabSelectedListener mTabSelectListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
-            Log.d("OnTabSelectedListener", ""+tab.getText());
+            Log.d("OnTabSelectedListener", "" + tab.getText());
             int uiState = (int) tab.getTag();
             configureUI(uiState);
 
@@ -280,15 +281,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private void configureUI(int uiState) {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFragment();
-            mTabLayout.getTabAt(2).select();
+            f = new SocialFeedFragment();
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
-            mTabLayout.getTabAt(1).select();
         } else {
             f = CollectionsFragment.newInstance(mUser);
-            mTabLayout.getTabAt(0).select();
         }
+        mTabLayout.getTabAt(uiState).select();
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame_content, f);
@@ -327,15 +326,15 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private void bindOverlay(User user) {
         mOverlayVH.mBrandName.setText(user.name);
-        mOverlayVH.mLikesCount.setText(String.format(Locale.getDefault(),"%d",user.likes_cnt));
-        mOverlayVH.mFollowersCount.setText(String.format(Locale.getDefault(),"%d",user.followers_cnt));
-        mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(),"%d",user.following_cnt));
+        mOverlayVH.mLikesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+        mOverlayVH.mFollowersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
+        mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         SpannableStringBuilder builder = new SpannableStringBuilder();
         builder.append("Collections\n");
         int start = builder.length();
         builder.append(Integer.toString(user.collections_cnt));
-        builder.setSpan(new RelativeSizeSpan(1.5f),start,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(new RelativeSizeSpan(1.5f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         mTabLayout.getTabAt(0).setText(builder);
 
@@ -343,7 +342,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         builder.append("Products\n");
         start = builder.length();
         builder.append(Integer.toString(user.products_cnt));
-        builder.setSpan(new RelativeSizeSpan(1.5f),start,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        builder.setSpan(new RelativeSizeSpan(1.5f), start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mTabLayout.getTabAt(1).setText(builder);
     }
 
@@ -416,10 +415,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public OverlayViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void setVisisbility(int visibility){
+        public void setVisisbility(int visibility) {
             mBrandDescription.setVisibility(visibility);
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);

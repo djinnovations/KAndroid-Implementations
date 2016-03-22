@@ -36,6 +36,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
@@ -211,6 +212,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mTabLayout.addTab(tab);
         mTabLayout.setOnTabSelectedListener(mTabSelectListener);
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -244,6 +246,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     public void unRegisterCollectionChangeListener(CollectionChangeListener listener) {
         mCollectionChangeListeners.remove(listener);
     }
+
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -256,7 +259,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 return;
             mCollection = mCollectionAdapter.getCollection(position);
             bindOverlay(mCollection);
-            for (CollectionChangeListener l : mCollectionChangeListeners) l.onCollectionChange(mCollection);
+            for (CollectionChangeListener l : mCollectionChangeListeners)
+                l.onCollectionChange(mCollection);
         }
 
         @Override
@@ -269,10 +273,10 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mOverlayViewHolder.name.setText(collection.name);
         mOverlayViewHolder.ownerName.setText(Integer.toString(collection.userId));
         mOverlayViewHolder.description.setText(collection.description);
-        mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(),"%d",collection.likecount));
+        mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
         mOverlayViewHolder.extra.setText(Integer.toString(collection.id));
 
-        mTabLayout.getTabAt(0).setText("Products\n"+collection.productcount);
+        mTabLayout.getTabAt(0).setText("Products\n" + collection.productcount);
     }
 
     private TabLayout.OnTabSelectedListener mTabSelectListener =
@@ -299,7 +303,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void configureUI(int uiState) {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFragment();
+            f = new SocialFeedFragment();
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
@@ -410,10 +414,10 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         public OverlayViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
 
-        public void setVisisbility(int visibility){
+        public void setVisisbility(int visibility) {
             ownerName.setVisibility(visibility);
             description.setVisibility(visibility);
             extra.setVisibility(visibility);
