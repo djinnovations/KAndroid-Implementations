@@ -53,6 +53,16 @@ public class DbHelper {
             context.getContentResolver().update(Tables.Products.CONTENT_URI,cv, Tables.Products._ID+" = ? ",new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID)+""});
         }
     }
+
+    public static void writeProductCustomization(Context context, ProductResponse response) throws JSONException {
+        if (response.responseContent != null) {
+            JSONObject productObj = new JSONObject(response.responseContent);
+            ContentValues cv = new ContentValues();
+            cv.put(Tables.Products.CUSTOMIZATION_INFO,productObj.toString());
+            context.getContentResolver().update(Tables.Products.CONTENT_URI,cv, Tables.Products._ID+" = ? ",new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID)+""});
+        }
+    }
+
     public static void writeProductShowcaseData(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONArray userlist = new JSONArray(response.responseContent);
