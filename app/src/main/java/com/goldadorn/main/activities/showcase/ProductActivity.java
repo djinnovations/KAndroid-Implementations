@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -165,7 +166,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private void configureUI(int uiState) {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFragment();
+            f = new SocialFeedFragment();
             mTabLayout.getTabAt(1).select();
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
