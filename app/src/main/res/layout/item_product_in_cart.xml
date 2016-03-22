@@ -42,6 +42,7 @@
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:background="@color/disabled_grey"
+            android:inputType="numberDecimal"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
             tools:text="1"/>

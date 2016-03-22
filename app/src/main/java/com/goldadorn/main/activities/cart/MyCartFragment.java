@@ -14,14 +14,16 @@ import com.goldadorn.main.model.Product;
 
 import java.util.ArrayList;
 
+
 /**
  * Created by Kiran BH on 10/03/16.
  */
-public class MyCartFragment extends Fragment {
+public class MyCartFragment extends Fragment implements CartProductsViewHolder.IQuantityChangeListener {
     CartProductsViewHolder mCartProductsViewHolder;
     private View mCartEmptyView;
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
+    float mCostShipping = 200.00f, mCostTax = 420.00f;
 
     @Nullable
     @Override
@@ -38,44 +40,35 @@ public class MyCartFragment extends Fragment {
         mTaxContainer = view.findViewById(R.id.container_tax);
         mTotalContainer = view.findViewById(R.id.container_total);
         ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
-        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText("Rs. 200");
         ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs. 420");
         ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
 
-        mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart));
+        mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
         Product product = new Product(123123);
         product.name = "Gold";
+        product.unitPrice = 1400;
+        product.quantity = 1;
         mCart.add(product);
         product = new Product(123123);
         product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
+        product.unitPrice = 4900;
+        product.quantity = 1;
         mCart.add(product);
         onCartChanged();
     }
 
-    private float getCartTotal() {
-        float cost = 0.0f;
-        for (Product p : mCart)
-            cost = cost + p.getTotalPrice();
-        return cost;
+    private void bindCostUi() {
+        float total = 0.0f;
+        int totalUnits = 0;
+        for (Product p : mCart) {
+            total = total + p.getTotalPrice();
+            totalUnits = totalUnits + p.quantity;
+        }
+        total = total + mCostShipping + mCostTax;
+        int t = totalUnits > 0 ? 1 : 0;
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + mCostTax * t);
+        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + mCostShipping * t);
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + total * t);
     }
 
     private void onCartChanged() {
@@ -87,6 +80,18 @@ public class MyCartFragment extends Fragment {
             mCartEmptyView.setVisibility(View.VISIBLE);
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
-        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + getCartTotal());
+        bindCostUi();
+    }
+
+    @Override
+    public void onQuantityChanged(int id, int quantity) {
+        find(id).quantity = quantity;
+        bindCostUi();
+    }
+
+    private Product find(int id) {
+        Product t = new Product(id);
+        int index = mCart.indexOf(t);
+        return mCart.get(index);
     }
 }

@@ -24,6 +24,13 @@ public class Product {
     }
 
     public String getDisplayPrice() {
-        return  currency + ". " + unitPrice;
+        return currency + ". " + unitPrice;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof Product)
+            return ((Product) o).id == id;
+        else return false;
     }
 }

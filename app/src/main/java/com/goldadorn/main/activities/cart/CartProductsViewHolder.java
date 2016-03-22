@@ -1,6 +1,8 @@
 package com.goldadorn.main.activities.cart;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -19,10 +21,12 @@ import java.util.ArrayList;
 class CartProductsViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
     private ArrayList<ProductViewHolder> productsVh = new ArrayList<>(5);
+    IQuantityChangeListener quatityChangeListener;
 
-    public CartProductsViewHolder(LinearLayout itemView) {
+    public CartProductsViewHolder(LinearLayout itemView, IQuantityChangeListener quatityChangeListener) {
         super(itemView);
         container = itemView;
+        this.quatityChangeListener = quatityChangeListener;
     }
 
     private ProductViewHolder createItem(Product product) {
@@ -55,7 +59,12 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         itemView.setVisibility(visibility);
     }
 
-    static class ProductViewHolder extends RecyclerView.ViewHolder {
+
+    public interface IQuantityChangeListener {
+        void onQuantityChanged(int id, int quantity);
+    }
+
+    class ProductViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
         public final ImageView image;
         public final TextView name, price;
         public final EditText quantityText;
@@ -70,6 +79,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             price = (TextView) itemView.findViewById(R.id.product_price);
             quantityText = (EditText) itemView.findViewById(R.id.product_quantity);
             quantityChange = itemView.findViewById(R.id.product_quantity_change);
+            quantityText.addTextChangedListener(this);
         }
 
         public void bindUI(Product product) {
@@ -79,7 +89,23 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
 
         public void remove() {
+            quantityText.removeTextChangedListener(this);
             ((LinearLayout) itemView.getParent()).removeView(itemView);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            quatityChangeListener.onQuantityChanged(productId, Integer.parseInt(s.toString()));
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
         }
     }
 }
