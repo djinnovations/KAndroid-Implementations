@@ -85,7 +85,7 @@ public class TestActivity extends Activity {
             bank.setArguments(args);
             findViewById(R.id.parent).bringToFront();
             try {
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.cb_face_out).add(R.id.parent, bank).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.cb_fade_in, R.anim.cb_face_out).add(R.id.parent, bank).commit();
             }catch(Exception e)
             {
                 e.printStackTrace();
