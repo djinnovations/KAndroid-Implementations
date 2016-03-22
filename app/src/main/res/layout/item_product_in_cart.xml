@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -16,11 +16,11 @@
 
         <TextView
             android:id="@+id/product_name"
-            android:fontFamily="sans-serif-light"
-            android:text="Product Name"
-            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="sans-serif-light"
+            tools:text="Product Name"/>
 
         <ImageView
             android:id="@+id/product_image"
@@ -39,30 +39,31 @@
 
         <EditText
             android:id="@+id/product_quantity"
-            android:layout_width="64dp"
+            android:layout_width="48dp"
+            android:layout_height="32dp"
             android:background="@color/disabled_grey"
-            android:text="1"
-            android:gravity="center"
             android:fontFamily="sans-serif-light"
-            android:layout_height="48dp"/>
+            android:gravity="center"
+            tools:text="1"/>
 
         <ImageButton
             android:id="@+id/product_quantity_change"
             android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:adjustViewBounds="true"
             android:background="@color/colorPrimaryDark"
-            android:src="@android:drawable/arrow_down_float"
-            android:layout_height="48dp"
-            android:scaleType="centerInside"/>
+            android:scaleType="centerInside"
+            android:src="@android:drawable/arrow_down_float"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/product_price"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:textSize="16sp"
+        android:layout_weight="1"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:layout_weight="1"
-        android:text="Rs. 2500"/>
+        android:padding="8dp"
+        android:textSize="16sp"
+        tools:text="Rs. 2500"/>
 </LinearLayout>

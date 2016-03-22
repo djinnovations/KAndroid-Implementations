@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.Product;
@@ -20,6 +21,7 @@ public class MyCartFragment extends Fragment {
     CartProductsViewHolder mCartProductsViewHolder;
     private View mCartEmptyView;
     ArrayList<Product> mCart = new ArrayList<>(5);
+    View mShippingContainer, mTaxContainer, mTotalContainer;
 
     @Nullable
     @Override
@@ -30,7 +32,17 @@ public class MyCartFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mCartEmptyView=view.findViewById(R.id.emptyview_cart);
+        mCartEmptyView = view.findViewById(R.id.emptyview_cart);
+
+        mShippingContainer = view.findViewById(R.id.container_shipping);
+        mTaxContainer = view.findViewById(R.id.container_tax);
+        mTotalContainer = view.findViewById(R.id.container_total);
+        ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
+        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText("Rs. 200");
+        ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs. 420");
+        ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
+
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart));
         Product product = new Product(123123);
         product.name = "Gold";
@@ -59,6 +71,13 @@ public class MyCartFragment extends Fragment {
         onCartChanged();
     }
 
+    private float getCartTotal() {
+        float cost = 0.0f;
+        for (Product p : mCart)
+            cost = cost + p.getTotalPrice();
+        return cost;
+    }
+
     private void onCartChanged() {
         if (mCart.size() > 0) {
             mCartEmptyView.setVisibility(View.GONE);
@@ -68,5 +87,6 @@ public class MyCartFragment extends Fragment {
             mCartEmptyView.setVisibility(View.VISIBLE);
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + getCartTotal());
     }
 }

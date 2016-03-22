@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +31,8 @@ public class CartManagerActivity extends AppCompatActivity {
 
     @Bind(R.id.continueButton)
     View mContinueButton;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     @Bind(R.id.container_progress_image)
     LinearLayout mContainerProgressImage;
@@ -56,6 +59,13 @@ public class CartManagerActivity extends AppCompatActivity {
         }
         mContinueButton.setOnClickListener(mClickListener);
         configureUI(UISTATE_CART);
+        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     public void configureUI(int uistate) {

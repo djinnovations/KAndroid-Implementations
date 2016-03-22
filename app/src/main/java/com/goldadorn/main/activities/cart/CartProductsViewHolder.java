@@ -26,7 +26,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
     }
 
     private ProductViewHolder createItem(Product product) {
-        ProductViewHolder vh = new ProductViewHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_product_in_cart, null, false));
+        ProductViewHolder vh = new ProductViewHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_product_in_cart, container, false));
         vh.productId = product.id;
         container.addView(vh.itemView);
         productsVh.add(vh);
@@ -74,7 +74,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         public void bindUI(Product product) {
             name.setText(product.name);
-            price.setText(product.price + " " + product.quantity * product.price);
+            quantityText.setText(product.quantity + "");
+            price.setText(product.getDisplayTotal());
         }
 
         public void remove() {
