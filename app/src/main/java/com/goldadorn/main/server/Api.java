@@ -59,6 +59,42 @@ public class Api {
         }
     }
 
+    public static void getProductBasicInfo(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getProductBasicInfo(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeProductBasicInfo(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    public static void getProductCustomization(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getProductBasicInfo(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeProductCustomization(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    public static void getPriceForCustomization(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getPriceForCustomization(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     /**
      * this function will handle all the exceptions related to http calls to server. the exception
      * message will be extracted and exception type will be saved in response class.

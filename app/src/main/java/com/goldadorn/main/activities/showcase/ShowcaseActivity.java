@@ -171,7 +171,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
-                Log.d(TAG, "result : " + result.responseContent);
                 mProgressFrame.setVisibility(View.GONE);
                 if (result.success) {
                     DUMMY = false;
@@ -251,7 +250,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
                 @Override
                 public void onResult(ProductResponse result) {
-                    Log.d(TAG, "result : " + result.responseContent);
                 }
             });
         }

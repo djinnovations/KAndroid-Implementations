@@ -42,6 +42,8 @@ public class Tables {
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_UNLIKES = "unlikes";
         public static final String CART_ADDED_TSP = "carttsp";
+        public static final String BASIC_INFO = "basic_info";
+        public static final String CUSTOMIZATION_INFO = "customization_info";
 
 
 
@@ -190,6 +192,8 @@ public class Tables {
                 Products.IMAGEURL + " TEXT," +
                 Products.IMAGE_ASPECT_RATIO + " REAL," +
                 Products.PRICE + " TEXT," +
+                Products.BASIC_INFO + " TEXT," +
+                Products.CUSTOMIZATION_INFO + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
                 Products.CART_ADDED_TSP + " INTEGER DEFAULT 0," +
