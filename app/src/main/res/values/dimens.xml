@@ -8,6 +8,7 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="padding_default_half">4dp</dimen>
     <dimen name="padding_default">8dp</dimen>
+    <dimen name="padding_default_1.5X">8dp</dimen>
     <dimen name="padding_default_2x">16dp</dimen>
     <dimen name="padding_default_4x">32dp</dimen>
     <dimen name="smallProgressBar">30dp</dimen>
@@ -19,4 +20,8 @@
     <dimen name="card_insets">10dp</dimen>
     <dimen name="recomandationThumbSize">70dp</dimen>
     <dimen name="griditem_margin">5dp</dimen>
+
+    <dimen name="ts_header">20sp</dimen>
+    <dimen name="ts_primary">16sp</dimen>
+    <dimen name="ts_secondary">14sp</dimen>
 </resources>

@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
-        android:paddingBottom="12dp"
+        android:paddingBottom="@dimen/padding_default_1.5X"
         android:paddingLeft="@dimen/padding_default"
         android:paddingRight="@dimen/padding_default"
         android:text="@string/total"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="@dimen/ts_header"
         android:textStyle="bold"/>
 
     <View

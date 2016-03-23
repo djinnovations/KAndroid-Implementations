@@ -8,25 +8,25 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:layout_weight="2"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/padding_default">
 
         <TextView
             android:id="@+id/address_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:fontFamily="sans-serif-medium"
-            android:text="Home"/>
+            android:text="Home"
+            android:textSize="@dimen/ts_primary"/>
 
         <TextView
             android:id="@+id/address_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="14sp"
-            android:text="house no 38\njithkam house "/>
+            android:text="house no 38\njithkam house "
+            android:textSize="@dimen/ts_secondary"/>
     </LinearLayout>
 
     <LinearLayout
@@ -36,19 +36,19 @@
         android:orientation="horizontal">
 
         <ImageView
-            style="?actionButtonStyle"
             android:id="@+id/action_edit"
+            style="?actionButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
             android:src="@drawable/ic_menu_manage"/>
 
         <CheckBox
-            style="?actionButtonStyle"
             android:id="@+id/checkbox"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            style="?actionButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"/>
     </LinearLayout>
 </LinearLayout>
