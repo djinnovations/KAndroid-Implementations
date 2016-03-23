@@ -27,10 +27,10 @@
         app:border_width="1dp"
         app:shadow="false"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/appDefault3XMargin"/>
+        android:layout_marginTop="@dimen/padding_default_4x"/>
 
     <TextView
-        android:layout_marginTop="@dimen/appDefault2XMargin"
+        android:layout_marginTop="@dimen/padding_default_2x"
         android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:id="@+id/userName"
@@ -45,8 +45,8 @@
         android:text="Edit Profile"
         style="@style/linkWhiteButton"
         android:visibility="gone"
-        android:layout_marginTop="@dimen/appDefault3XMargin"
-        android:layout_marginRight="@dimen/appDefault2XMargin"
+        android:layout_marginTop="@dimen/padding_default_4x"
+        android:layout_marginRight="@dimen/padding_default_2x"
         android:textSize="11sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

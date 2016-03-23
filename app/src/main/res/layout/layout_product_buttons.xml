@@ -125,24 +125,24 @@
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/shareButton"
             style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:layout_height="@dimen/circle_button_height"
             android:text="@string/icon_share_post"/>
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/likeDislikeButton"
             style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:layout_height="@dimen/circle_button_height"
             android:text="@string/icon_liked_post"/>
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/commentButton"
             style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:layout_height="@dimen/circle_button_height"
             android:text="@string/icon_comment_post"/>

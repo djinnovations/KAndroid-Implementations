@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginLeft="@dimen/appDefault2XMargin"
-        android:layout_marginRight="@dimen/appDefault2XMargin"
+        android:layout_marginLeft="@dimen/padding_default_2x"
+        android:layout_marginRight="@dimen/padding_default_2x"
         android:layout_height="match_parent">
 
         <include layout="@layout/logo"/>
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content" android:text="@string/forgotPassword"/>
 
         <RelativeLayout
-            android:layout_marginTop="@dimen/appDefault2XMargin"
+            android:layout_marginTop="@dimen/padding_default_2x"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
@@ -90,14 +90,14 @@
                 app:pv_circular="true"
                 app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle"
                 app:pv_progressMode="indeterminate"
-                android:layout_marginRight="@dimen/appDefaultMargin"
+                android:layout_marginRight="@dimen/padding_default_half"
 
                 android:layout_alignParentRight="true" />
 
 
         </RelativeLayout>
         <LinearLayout
-            android:layout_marginTop="@dimen/appDefault2XMargin"
+            android:layout_marginTop="@dimen/padding_default_2x"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
@@ -109,8 +109,8 @@
                 android:layout_weight="1"
                 android:background="@color/colorPrimary"/>
             <TextView
-                android:layout_marginLeft="@dimen/appDefault2XMargin"
-                android:layout_marginRight="@dimen/appDefault2XMargin"
+                android:layout_marginLeft="@dimen/padding_default_2x"
+                android:layout_marginRight="@dimen/padding_default_2x"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:text="@string/orSocialLogin" />
             <View
@@ -121,7 +121,7 @@
         </LinearLayout>
 
     <LinearLayout
-        android:layout_marginTop="@dimen/appDefault2XMargin"
+        android:layout_marginTop="@dimen/padding_default_2x"
         android:orientation="horizontal"
         android:gravity="center_vertical|center_horizontal"
         android:layout_gravity="center_vertical"
@@ -129,8 +129,8 @@
         android:layout_height="wrap_content">
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:text="@string/icon_facebook"
             android:layout_height="@dimen/circle_button_height"
@@ -138,8 +138,8 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:layout_height="@dimen/circle_button_height"
             android:text="@string/icon_google_plus"
@@ -147,8 +147,8 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/appDefault2XMargin"
-            android:layout_marginRight="@dimen/appDefault2XMargin"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:layout_width="@dimen/circle_button_height"
             android:layout_height="@dimen/circle_button_height"
             android:text="@string/icon_twitter"
@@ -157,8 +157,8 @@
 
 
         <Button
-            android:paddingTop="@dimen/appDefault2XMargin"
-            android:layout_marginTop="@dimen/appDefault2XMargin"
+            android:paddingTop="@dimen/padding_default_2x"
+            android:layout_marginTop="@dimen/padding_default_2x"
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             style="@style/linkButton"

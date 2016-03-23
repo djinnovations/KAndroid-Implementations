@@ -77,6 +77,7 @@
     <string name="cart">Cart</string>
     <string name="products">Products</string>
     <string name="social">Social</string>
+    <string name="total">Total</string>
 
 
 </resources>

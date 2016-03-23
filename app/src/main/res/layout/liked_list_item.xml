@@ -23,11 +23,11 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:layout_marginLeft="@dimen/appDefaultMargin"
-        android:layout_marginStart="@dimen/appDefaultMargin"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:layout_marginStart="@dimen/padding_default_half"
 
-        android:layout_marginRight="@dimen/appDefault1XMargin"
-        android:layout_marginEnd="@dimen/appDefault1XMargin"
+        android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginEnd="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"

@@ -101,7 +101,7 @@
         android:textSize="10sp"
         android:id="@+id/refreshTriger"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/appDefault3XMargin"
+        android:layout_marginTop="@dimen/padding_default_4x"
         android:text="New Update Found"
         android:visibility="gone"
         android:layout_height="wrap_content" />

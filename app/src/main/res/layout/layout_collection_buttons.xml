@@ -127,9 +127,9 @@
                 style="@style/ShowcaseButton"
                 android:layout_width="@dimen/circle_button_small_height"
                 android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginRight="@dimen/appDefault3XMargin"
-                android:layout_marginTop="@dimen/appDefault2XMargin"
-                android:layout_marginBottom="@dimen/appDefault2XMargin"
+                android:layout_marginRight="@dimen/padding_default_4x"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:layout_marginBottom="@dimen/padding_default_2x"
                 android:text="@string/icon_liked_post"/>
 
 
@@ -138,9 +138,9 @@
                 style="@style/ShowcaseButton"
                 android:layout_width="@dimen/circle_button_small_height"
                 android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginLeft="@dimen/appDefault3XMargin"
-                android:layout_marginTop="@dimen/appDefault2XMargin"
-                android:layout_marginBottom="@dimen/appDefault2XMargin"
+                android:layout_marginLeft="@dimen/padding_default_4x"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:layout_marginBottom="@dimen/padding_default_2x"
                 android:text="@string/icon_share_post"/>
 
         </LinearLayout>

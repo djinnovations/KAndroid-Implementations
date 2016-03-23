@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_margin="@dimen/padding_default"
     android:layout_gravity="center"
     android:elevation="10dp"
     android:layout_width="match_parent"
@@ -57,11 +57,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/image"
-            android:layout_marginTop="@dimen/appDefault1XMargin"
-            android:layout_marginBottom="@dimen/appDefault1XMargin"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
 
-            android:layout_marginLeft="@dimen/appDefault3XMargin"
-            android:layout_marginRight="@dimen/appDefault3XMargin"
+            android:layout_marginLeft="@dimen/padding_default_4x"
+            android:layout_marginRight="@dimen/padding_default_4x"
             android:id="@+id/linearLayout">
 
         <com.mikepenz.iconics.view.IconicsButton
@@ -90,10 +90,10 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/image"
-            android:layout_marginTop="@dimen/appDefault1XMargin"
-            android:layout_marginBottom="@dimen/appDefault1XMargin"
-            android:layout_marginLeft="@dimen/appDefault3XMargin"
-            android:layout_marginRight="@dimen/appDefault3XMargin">
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginLeft="@dimen/padding_default_4x"
+            android:layout_marginRight="@dimen/padding_default_4x">
 
             <com.mikepenz.iconics.view.IconicsButton
                 style="@style/voteLinkButton"

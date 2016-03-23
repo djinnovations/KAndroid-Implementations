@@ -17,9 +17,9 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:vertical_spacing="@dimen/appDefaultMargin"
-            app:horizontal_spacing="@dimen/appDefaultMargin"
-            android:layout_margin="@dimen/appDefaultMargin"/>
+            app:vertical_spacing="@dimen/padding_default_half"
+            app:horizontal_spacing="@dimen/padding_default_half"
+            android:layout_margin="@dimen/padding_default_half"/>
     </ScrollView>
     <include layout="@layout/_fragment_recycler_empty_view"/>
 

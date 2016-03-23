@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_view"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_margin="@dimen/padding_default"
     android:layout_gravity="center"
     android:elevation="10dp"
 
@@ -44,10 +44,10 @@
             android:id="@+id/optionBox1"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/appDefault1XMargin"
-            android:layout_marginBottom="@dimen/appDefault1XMargin"
-            android:layout_marginLeft="@dimen/appDefault1XMargin"
-            android:layout_marginRight="@dimen/appDefault1XMargin"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
             android:layout_height="wrap_content">
 
 
@@ -101,9 +101,9 @@
             android:id="@+id/optionBox2"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/appDefault1XMargin"
-            android:layout_marginBottom="@dimen/appDefault1XMargin"
-            android:layout_marginRight="@dimen/appDefault1XMargin"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
             android:layout_height="wrap_content">
 
 
@@ -156,10 +156,10 @@
             tools:visibility="visible"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_marginTop="@dimen/appDefault1XMargin"
-            android:layout_marginBottom="@dimen/appDefault1XMargin"
-            android:layout_marginLeft="@dimen/appDefault1XMargin"
-            android:layout_marginRight="@dimen/appDefault1XMargin"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
             android:layout_height="wrap_content">
 
 

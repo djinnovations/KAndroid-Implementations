@@ -9,9 +9,9 @@
 
 
     <org.github.images.CircularImageView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
-        android:layout_marginBottom="@dimen/appDefault1XMargin"
-        android:layout_marginTop="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginTop="@dimen/padding_default"
         android:layout_width="50dp"
         android:layout_height="50dp"
         tools:background="#cccccc"
@@ -24,7 +24,7 @@
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -51,9 +51,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/appDefault1XMargin"
-        android:layout_marginRight="@dimen/appDefault1XMargin"
-        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_marginTop="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Details"
         android:id="@+id/details"

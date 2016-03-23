@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/appDefault1XMargin"
-    android:layout_marginBottom="@dimen/appDefault1XMargin"
+    android:layout_marginTop="@dimen/padding_default"
+    android:layout_marginBottom="@dimen/padding_default"
     xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
     android:layout_height="wrap_content">
@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/appDefaultMargin"/>
+        android:layout_marginRight="@dimen/padding_default_half"/>
 
 
     <TextView
@@ -82,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/pollLabel"
-        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_marginRight="@dimen/padding_default_half"
         android:layout_alignParentRight="true"
         />
 
@@ -95,7 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/likesLabel"
-        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_marginRight="@dimen/padding_default_half"
         android:layout_alignParentRight="true"/>
 
 
@@ -114,14 +114,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/commentsLabel"
-        android:layout_marginRight="@dimen/appDefaultMargin"
+        android:layout_marginRight="@dimen/padding_default_half"
         android:layout_alignParentRight="true"/>
 
 
 
     <View
-        android:layout_marginTop="@dimen/appDefault2XMargin"
-        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_marginTop="@dimen/padding_default_2x"
+        android:layout_marginBottom="@dimen/padding_default"
         android:layout_below="@+id/likePostButton"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -136,14 +136,14 @@
         android:textStyle="bold"
         android:text="Recomandation:"
         android:layout_below="@+id/div"
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
-        android:layout_marginBottom="@dimen/appDefault1XMargin"/>
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default"/>
 
 
 
     <ImageView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
-        android:layout_marginBottom="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginBottom="@dimen/padding_default"
         android:layout_below="@+id/recomandationLabel"
         android:layout_height="@dimen/recomandationThumbSize"
         android:visibility="gone"
@@ -156,7 +156,7 @@
 
 
     <ImageView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
         android:layout_height="@dimen/recomandationThumbSize"
         android:visibility="gone"
         android:layout_width="@dimen/recomandationThumbSize"
@@ -168,11 +168,11 @@
         android:layout_below="@+id/recomandationLabel"
         android:layout_toRightOf="@+id/reco1"
         android:layout_toEndOf="@+id/reco1"
-        android:layout_marginStart="@dimen/appDefault1XMargin" />
+        android:layout_marginStart="@dimen/padding_default" />
 
 
     <ImageView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
         android:layout_height="@dimen/recomandationThumbSize"
         android:visibility="gone"
         android:layout_width="@dimen/recomandationThumbSize"
@@ -184,11 +184,11 @@
         android:layout_below="@+id/recomandationLabel"
         android:layout_toRightOf="@+id/reco2"
         android:layout_toEndOf="@+id/reco2"
-        android:layout_marginStart="@dimen/appDefault1XMargin" />
+        android:layout_marginStart="@dimen/padding_default" />
 
 
     <ImageView
-        android:layout_marginLeft="@dimen/appDefault1XMargin"
+        android:layout_marginLeft="@dimen/padding_default"
         android:layout_height="@dimen/recomandationThumbSize"
         android:visibility="gone"
         android:layout_width="@dimen/recomandationThumbSize"
@@ -200,6 +200,6 @@
         android:layout_below="@+id/recomandationLabel"
         android:layout_toRightOf="@+id/reco3"
         android:layout_toEndOf="@+id/reco3"
-        android:layout_marginStart="@dimen/appDefault1XMargin" />
+        android:layout_marginStart="@dimen/padding_default" />
 </RelativeLayout>
 

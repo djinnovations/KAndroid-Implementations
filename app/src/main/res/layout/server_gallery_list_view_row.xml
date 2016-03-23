@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_margin="@dimen/appDefault1XMargin"
+    android:layout_margin="@dimen/padding_default"
     android:layout_gravity="center"
     android:elevation="10dp"
     android:layout_width="match_parent"

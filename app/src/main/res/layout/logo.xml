@@ -6,6 +6,6 @@ android:layout_margin="10dp"
     android:src="@drawable/vector_image_logo_final"
 android:layout_height="120dp" android:id="@+id/logo"
 android:layout_centerVertical="true"
-android:layout_marginTop="@dimen/appDefault2XMargin"
-android:layout_marginBottom="@dimen/appDefault2XMargin"
+android:layout_marginTop="@dimen/padding_default_2x"
+android:layout_marginBottom="@dimen/padding_default_2x"
 android:layout_centerHorizontal="true" />

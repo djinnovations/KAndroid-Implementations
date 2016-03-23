@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:background="@color/white"
-    android:padding="@dimen/appDefault1XMargin"
+    android:padding="@dimen/padding_default"
     android:layout_height="wrap_content">
 
 
@@ -18,7 +18,7 @@
     <com.mikepenz.iconics.view.IconicsButton
         style="@style/linkButton"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/appDefault2XMargin"
+        android:layout_marginLeft="@dimen/padding_default_2x"
         android:layout_width="@dimen/circle_button_height"
         android:text="@string/icon_send"
         android:textSize="30sp"

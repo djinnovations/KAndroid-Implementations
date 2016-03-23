@@ -18,7 +18,7 @@
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="@dimen/appDefault3XMargin"
+            android:layout_marginRight="@dimen/padding_default_4x"
             android:text="@string/icon_heart_dislike"/>
 
         <com.daprlabs.cardstack.SwipeDeck
@@ -38,7 +38,7 @@
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_marginRight="12dp"
-            android:layout_marginLeft="@dimen/appDefault3XMargin"
+            android:layout_marginLeft="@dimen/padding_default_4x"
             android:text="@string/icon_heart_like"/>
 
     </com.daprlabs.cardstack.SwipeLinearLayout>
