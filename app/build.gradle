@@ -39,6 +39,11 @@ android {
     useLibrary 'org.apache.http.legacy'
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
@@ -93,5 +98,6 @@ dependencies {
 
     compile 'com.squareup.okio:okio:1.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
+//    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
+    compile(name: 'CustomBrowser', ext: 'aar')
 }
