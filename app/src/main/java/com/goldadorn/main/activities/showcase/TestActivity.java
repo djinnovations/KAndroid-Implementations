@@ -60,8 +60,8 @@ public class TestActivity extends Activity {
     */
 
     // Final Variables
-    private String mMerchantKey = "Your Merchant Key";
-    private String mSalt = "Salt";
+    private String mMerchantKey = "VH3HuI";
+    private String mSalt = "TppVcnTs";
     private String mBaseURL = "https://secure.payu.in";
 
 
