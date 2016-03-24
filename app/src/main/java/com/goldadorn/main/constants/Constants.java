@@ -55,7 +55,8 @@ public class Constants {
         public static final String METALPURITYLIST = "metalPurityList";
         public static final String METALCOLORLIST = "metalColorList";
         public static final String CENTERSTONE = "CenterStone";
-        public static final String ACCENTSTONE1 = "AccentStone1";
+        public static final String ACCENTSTONE = "AccentStone";
+        public static final String GEMSTONE = "gemStone";
     }
 
 }

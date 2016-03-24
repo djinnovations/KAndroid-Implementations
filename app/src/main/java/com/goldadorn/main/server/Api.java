@@ -33,12 +33,26 @@ public class Api {
         L.d("User credentials "+response.mCookies);
     }
 
-    public static void getProductShowCase(Context context, TimelineResponse response, int retryCount) {
+    public static void getDesigners(Context context, TimelineResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
-            ApiFactory.getProductShowCase(context, response);
+            ApiFactory.getDesigners(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductShowcaseData(context, response);
+                getDesignersSocial(context,new TimelineResponse(),0);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    private static void getDesignersSocial(Context context, TimelineResponse response, int retryCount){
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getDesignersSocial(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeDesignersSocial(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -52,6 +66,20 @@ public class Api {
             ApiFactory.getProducts(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProducts(context, response);
+                response.responseContent = null;
+                getProductsSocial(context,response,retryCount);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    private static void getProductsSocial(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getProductsSocial(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeProductsSocial(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

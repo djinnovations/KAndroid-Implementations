@@ -167,7 +167,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         initTabs();
         if (!DUMMY)
             mOverlayVH.itemView.setVisibility(View.INVISIBLE);
-        UIController.getProductShowCase(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
+        UIController.getDesigners(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
                 mProgressFrame.setVisibility(View.GONE);

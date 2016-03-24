@@ -30,6 +30,8 @@ public class ApiFactory extends ExtractResponse {
     private static final int PRODUCT_BASIC_INFO_TYPE = 3;
     private static final int PRODUCT_CUSTOMIZATION_TYPE = 4;
     private static final int PRODUCT_PRICE_CUSTOMIZATION_TYPE = 5;
+    private static final int GETDESIGNERS_SOCIAL_TYPE = 6;
+    private static final int PRODUCTS_SOCIAL_TYPE = 7;
 
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -48,6 +50,11 @@ public class ApiFactory extends ExtractResponse {
         switch (urlBuilder.mUrlType) {
             case PRODUCT_SHOWCASE_TYPE: {
                 builder.appendPath("getdesigners");
+                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                break;
+            }
+            case GETDESIGNERS_SOCIAL_TYPE: {
+                builder.appendPath("getdesignerssocial");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
@@ -78,6 +85,19 @@ public class ApiFactory extends ExtractResponse {
                 }
                 break;
             }
+            case PRODUCTS_SOCIAL_TYPE: {
+                builder.appendPath("getproductssocial");
+                if (((ProductResponse) urlBuilder.mResponse).collectionId != -1) {
+                    builder.appendPath("c");
+                    builder.appendPath(((ProductResponse) urlBuilder.mResponse).collectionId + "");
+                    builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                } else if (((ProductResponse) urlBuilder.mResponse).userId != -1) {
+                    builder.appendPath("d");
+                    builder.appendPath(((ProductResponse) urlBuilder.mResponse).userId + "");
+                    builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                }
+                break;
+            }
         }
         return builder.build().toString();
     }
@@ -89,7 +109,7 @@ public class ApiFactory extends ExtractResponse {
         return headers;
     }
 
-    protected static void getProductShowCase(Context context, TimelineResponse response) throws IOException, JSONException {
+    protected static void getDesigners(Context context, TimelineResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -108,7 +128,33 @@ public class ApiFactory extends ExtractResponse {
             Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
-            L.d("getProductShowCase " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            L.d("getDesigners " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+    protected static void getDesignersSocial(Context context, TimelineResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = GETDESIGNERS_SOCIAL_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = GETDESIGNERS_SOCIAL_TYPE;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getDesignersSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
@@ -136,6 +182,33 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void getProductsSocial(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = PRODUCTS_SOCIAL_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = PRODUCTS_SOCIAL_TYPE;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getProductsSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
@@ -193,7 +266,7 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.mPrimaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.mPrimaryMetalColor);
             jsonObject.put(Constants.JsonConstants.CENTERSTONE, response.productDetail.mCenterStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE1, response.productDetail.mAccentStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, response.productDetail.mAccentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 

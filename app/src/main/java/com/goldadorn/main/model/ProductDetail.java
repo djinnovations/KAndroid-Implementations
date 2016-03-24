@@ -40,7 +40,8 @@ public class ProductDetail {
     ArrayList<Integer> mMetalPurityList;
     ArrayList<Integer> mMetalColorList;
     ArrayList<String> mCenterStone;
-    ArrayList<String> mAccentStone;
+    ArrayList<ArrayList<String>> mAccentStones;
+    ArrayList<ArrayList<String>> mGemStones;
     public String mCenterStoneSelected;
     public String mAccentStoneSelected;
 
@@ -96,11 +97,24 @@ public class ProductDetail {
                 mCenterStone.add(productInfo.getJSONArray(Constants.JsonConstants.CENTERSTONE).getString(i));
             }
         }
-        if (productInfo.has(Constants.JsonConstants.ACCENTSTONE1)) {
-            mAccentStone = new ArrayList<>();
-            for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE1).length(); i++) {
-                mAccentStone.add(productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE1).getString(i));
+        for (int i = 0; i < 11; i++) {
+            if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
+                ArrayList<String> accentStonelist = new ArrayList<>();
+                for (int j = 0; i < productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE + i).length(); j++) {
+                    accentStonelist.add(productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE + i).getString(j));
+                }
+                mAccentStones.add(accentStonelist);
             }
         }
+        for (int i = 0; i < 11; i++) {
+            if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
+                ArrayList<String> gemstonelist = new ArrayList<>();
+                for (int j = 0; i < productInfo.getJSONArray(Constants.JsonConstants.GEMSTONE + i).length(); j++) {
+                    gemstonelist.add(productInfo.getJSONArray(Constants.JsonConstants.GEMSTONE + i).getString(j));
+                }
+                mGemStones.add(gemstonelist);
+            }
+        }
+
     }
 }

@@ -30,7 +30,7 @@ public class DbHelper {
                     cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
                     cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
                     String url = productObj.optString(Constants.JsonConstants.PRODUCTPIC);
-                    if(url!=null) {
+                    if (url != null) {
                         url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
                         cv.put(Tables.Products.IMAGEURL, url);
                         cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
@@ -45,12 +45,26 @@ public class DbHelper {
         }
     }
 
+    public static void writeProductsSocial(Context context, ProductResponse response) throws JSONException {
+        if (response.responseContent != null) {
+            JSONArray productsArray = new JSONArray(response.responseContent);
+            if (productsArray.length() != 0) {
+                for (int i = 0; i < productsArray.length(); i++) {
+                    JSONObject productObj = productsArray.getJSONObject(i);
+                    ContentValues cv = new ContentValues();
+                    cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
+                    context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                }
+            }
+        }
+    }
+
     public static void writeProductBasicInfo(Context context, ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject productObj = new JSONObject(response.responseContent);
             ContentValues cv = new ContentValues();
-            cv.put(Tables.Products.BASIC_INFO,productObj.toString());
-            context.getContentResolver().update(Tables.Products.CONTENT_URI,cv, Tables.Products._ID+" = ? ",new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID)+""});
+            cv.put(Tables.Products.BASIC_INFO, productObj.toString());
+            context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID) + ""});
         }
     }
 
@@ -58,8 +72,35 @@ public class DbHelper {
         if (response.responseContent != null) {
             JSONObject productObj = new JSONObject(response.responseContent);
             ContentValues cv = new ContentValues();
-            cv.put(Tables.Products.CUSTOMIZATION_INFO,productObj.toString());
-            context.getContentResolver().update(Tables.Products.CONTENT_URI,cv, Tables.Products._ID+" = ? ",new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID)+""});
+            cv.put(Tables.Products.CUSTOMIZATION_INFO, productObj.toString());
+            context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID) + ""});
+        }
+    }
+
+    public static void writeDesignersSocial(Context context, TimelineResponse response) throws JSONException {
+        if (response.responseContent != null) {
+            JSONArray userlist = new JSONArray(response.responseContent);
+            if (userlist.length() != 0) {
+                for (int i = 0; i < userlist.length(); i++) {
+                    JSONObject userObj = userlist.getJSONObject(i);
+                    ContentValues usercv = new ContentValues();
+                    long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
+                    usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
+                    usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
+                    usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
+                    context.getContentResolver().update(Tables.Users.CONTENT_URI, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
+                    if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
+                        JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
+                        for (int j = 0; j < collarray.length(); j++) {
+                            JSONObject collObj = collarray.getJSONObject(j);
+                            ContentValues collcv = new ContentValues();
+                            collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
+                            context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -74,13 +115,10 @@ public class DbHelper {
                     long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
                     usercv.put(Tables.Users._ID, userId);
                     String url = userObj.optString(Constants.JsonConstants.USERPIC, null);
-                    if(url!=null) {
+                    if (url != null) {
                         url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
                         usercv.put(Tables.Users.IMAGEURL, url);
                     }
-//                    usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
-//                    usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
-//                    usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
                     usercv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT, 0));
                     usercv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT, 0));
                     int updatecnt = context.getContentResolver().update(Tables.Users.CONTENT_URI, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
@@ -96,7 +134,7 @@ public class DbHelper {
                             collcv.put(Tables.Collections.USER_ID, userId);
                             collcv.put(Tables.Collections.NAME, collObj.optString(Constants.JsonConstants.COLLECTIONTITLE, null));
                             String urlimage = collObj.optString(Constants.JsonConstants.COLLECTIONIMAGE, null);
-                            if(urlimage!=null) {
+                            if (urlimage != null) {
                                 urlimage = urlimage.replace("../", ApiFactory.IMAGE_URL_HOST);
                                 collcv.put(Tables.Collections.IMAGEURL, urlimage);
                                 collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
@@ -104,9 +142,9 @@ public class DbHelper {
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
-                            int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{userId + ""});
+                            int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
                             if (updatecollcnt == 0)
-                            context.getContentResolver().insert(Tables.Collections.CONTENT_URI, collcv);
+                                context.getContentResolver().insert(Tables.Collections.CONTENT_URI, collcv);
 
                         }
                     }

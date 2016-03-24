@@ -13,11 +13,11 @@ import com.goldadorn.main.server.response.TimelineResponse;
  */
 public class UIController {
 
-    public static void getProductShowCase(final Context context, final TimelineResponse response, final IResultListener<TimelineResponse> listener) {
+    public static void getDesigners(final Context context, final TimelineResponse response, final IResultListener<TimelineResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.getProductShowCase(context, response, 0);
+                Api.getDesigners(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
