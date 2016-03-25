@@ -3,18 +3,17 @@ package com.goldadorn.main.activities.cart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.assist.IFragmentCloser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class CartManagerActivity extends AppCompatActivity implements IFragmentCloser {
+public class CartManagerActivity extends FragmentActivity  {
     public static final int UISTATE_CART = 0;
     public static final int UISTATE_ADDRESS = 1;
     public static final int UISTATE_PAYMENT = 2;
@@ -42,8 +41,8 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
     View mOverlayFrame;
     @Bind(R.id.container_progress_image)
     LinearLayout mContainerProgressImage;
-    @Bind(R.id.app_bar)
-    AppBarLayout mAppBarLayout;
+    @Bind(R.id.scrollview)
+    ScrollView mScollView;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -68,27 +67,30 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
         mContinueButton.setOnClickListener(mClickListener);
         configureUI(UISTATE_CART);
         mToolbar.setNavigationIcon(R.drawable.ic_action_back);
-        mToolbar.setTitle("My Cart");
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (!closeOverlay())
+                    finish();
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        if (mUIState != mMainUiState) {
-            closeOverlay();
+        if (closeOverlay())
             return;
-        }
         super.onBackPressed();
     }
 
-    private void closeOverlay() {
-        mOverlayFrame.setVisibility(View.GONE);
-        mUIState = mMainUiState;
+    private boolean closeOverlay() {
+        if (mUIState != mMainUiState) {
+            mOverlayFrame.setVisibility(View.GONE);
+            mUIState = mMainUiState;
+            refreshToolBar();
+            return true;
+        }
+        return false;
     }
 
     public void configureUI(int uistate) {
@@ -115,14 +117,26 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
         } else {
             mMainUiState = uistate;
             bindProgress(uistate);
-            findViewById(R.id.frame_overlay).setVisibility(View.GONE);
+            mOverlayFrame.setVisibility(View.GONE);
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(frame, f, String.valueOf(uistate));
             fragmentTransaction.commit();
         }
-        mAppBarLayout.setExpanded(true, true);
+        mScollView.scrollTo(0, 0);
+        refreshToolBar();
+    }
+
+    private void refreshToolBar() {
+        if (mUIState == UISTATE_OVERLAY_ADD_PAYEMNT) {
+            mToolbar.setTitle("Add Payment");
+        } else if (mUIState == UISTATE_OVERLAY_ADD_ADDRESS) {
+            mToolbar.setTitle("Add Address");
+        } else {
+            mToolbar.setTitle("My Cart");
+        }
+
     }
 
     private void bindProgress(int index) {
@@ -151,8 +165,4 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
         }
     };
 
-    @Override
-    public void closeFragment(Fragment fragment) {
-        closeOverlay();
-    }
 }
