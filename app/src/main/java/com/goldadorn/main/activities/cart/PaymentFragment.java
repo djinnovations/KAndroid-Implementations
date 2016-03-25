@@ -22,6 +22,7 @@ public class PaymentFragment extends Fragment {
 
     ArrayList<PaymentMode> mPaymentModes = new ArrayList<>(5);
     PaymentModesViewHolder mPaymentsHolder;
+    TextView mAddButton;
 
 
     @Nullable
@@ -34,15 +35,17 @@ public class PaymentFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPaymentsHolder = new PaymentModesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mPaymentSelectedListener);
-        view.findViewById(R.id.action_add).setOnClickListener(mClick);
+        mAddButton = (TextView) view.findViewById(R.id.action_add);
+        mAddButton.setText("Add new payment method");
+        mAddButton.setOnClickListener(mClick);
 
-        ((TextView)view.findViewById(R.id.cart_desc)).setText("Pay with");
+        ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
 
-        PaymentMode pm = new PaymentMode(123123,2);
+        PaymentMode pm = new PaymentMode(123123, 2);
         pm.name = "Mobikwik";
         pm.details = "Jabong flipped on\n amazon";
         mPaymentModes.add(pm);
-        pm = new PaymentMode(123123,3);
+        pm = new PaymentMode(123123, 3);
         pm.name = "Office";
         pm.details = "Snapdeal flipped on\n amazon";
         mPaymentModes.add(pm);
@@ -61,7 +64,7 @@ public class PaymentFragment extends Fragment {
     private View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((CartManagerActivity)getActivity()).configureUI(CartManagerActivity.UISTATE_OVERLAY_ADD_PAYEMNT);
+            ((CartManagerActivity) getActivity()).configureUI(CartManagerActivity.UISTATE_OVERLAY_ADD_PAYEMNT);
         }
     };
 

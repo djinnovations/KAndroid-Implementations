@@ -75,14 +75,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:visibility="gone"
         android:background="@android:color/black"/>
 
     <LinearLayout
-        android:id="@+id/container_extra_cost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:padding="@dimen/padding_default">
 
         <TextView

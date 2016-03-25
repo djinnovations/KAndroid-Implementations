@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
@@ -29,6 +30,7 @@ public class AddressFragment extends Fragment {
 AddressCallBacks mAddressCallBacks= new AddressCallBacks();
     ArrayList<Address> mAddresses = new ArrayList<>(5);
     AddressesViewHolder mAddressesHolder;
+    private TextView mAddButton;
 
 
     @Nullable
@@ -41,7 +43,9 @@ AddressCallBacks mAddressCallBacks= new AddressCallBacks();
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
-        view.findViewById(R.id.action_add).setOnClickListener(mClick);
+        mAddButton = (TextView) view.findViewById(R.id.action_add);
+        mAddButton.setText("Add new shipping address");
+        mAddButton.setOnClickListener(mClick);
         getLoaderManager().initLoader(mAddressCallBacks.hashCode(),null,mAddressCallBacks);
 
     }

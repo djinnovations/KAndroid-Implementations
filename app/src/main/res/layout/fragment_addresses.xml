@@ -44,7 +44,6 @@
         android:drawablePadding="@dimen/padding_default"
         android:gravity="center"
         android:padding="@dimen/padding_default"
-        android:text="Add new shipping address"
         android:textSize="@dimen/ts_secondary"
         android:visibility="visible"/>
 
