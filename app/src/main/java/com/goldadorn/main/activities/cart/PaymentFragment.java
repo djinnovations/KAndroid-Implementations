@@ -61,7 +61,7 @@ public class PaymentFragment extends Fragment {
     private View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            ((CartManagerActivity)getActivity()).configureUI(CartManagerActivity.UISTATE_OVERLAY_ADD_PAYEMNT);
         }
     };
 

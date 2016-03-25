@@ -71,4 +71,10 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <FrameLayout
+        android:id="@+id/frame_overlay"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:layout_height="match_parent"/>
+
 </android.support.design.widget.CoordinatorLayout>

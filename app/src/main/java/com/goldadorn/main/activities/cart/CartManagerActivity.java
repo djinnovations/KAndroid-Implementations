@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IFragmentCloser;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,12 +21,15 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class CartManagerActivity extends AppCompatActivity {
+public class CartManagerActivity extends AppCompatActivity implements IFragmentCloser {
     public static final int UISTATE_CART = 0;
     public static final int UISTATE_ADDRESS = 1;
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
-    private int mUIState = 0;
+    public static final int UISTATE_OVERLAY_ADD_ADDRESS = 10;
+    public static final int UISTATE_OVERLAY_ADD_PAYEMNT = 11;
+    private int mUIState = UISTATE_CART;
+    private int mMainUiState = UISTATE_CART;
     Context mContext;
 
 
@@ -33,7 +37,8 @@ public class CartManagerActivity extends AppCompatActivity {
     View mContinueButton;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-
+    @Bind(R.id.frame_overlay)
+    View mOverlayFrame;
     @Bind(R.id.container_progress_image)
     LinearLayout mContainerProgressImage;
 
@@ -69,24 +74,51 @@ public class CartManagerActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mUIState != mMainUiState) {
+            closeOverlay();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    private void closeOverlay() {
+        mOverlayFrame.setVisibility(View.GONE);
+        mUIState = mMainUiState;
+    }
+
     public void configureUI(int uistate) {
         mUIState = uistate;
-        Fragment fragment = null;
+        Fragment f = null;
+        int frame = R.id.frame;
         if (uistate == UISTATE_CART) {
-            fragment = new MyCartFragment();
+            f = new MyCartFragment();
         } else if (uistate == UISTATE_ADDRESS) {
-            fragment = new AddressFragment();
+            f = new AddressFragment();
         } else if (uistate == UISTATE_PAYMENT) {
-            fragment = new PaymentFragment();
+            f = new PaymentFragment();
         } else if (uistate == UISTATE_FINAL) {
-            fragment = new SummaryFragment();
+            f = new SummaryFragment();
+        } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
+            frame = R.id.frame_overlay;
+            f = new AddPaymentFragment();
+        } else if (uistate == UISTATE_OVERLAY_ADD_PAYEMNT) {
+            frame = R.id.frame_overlay;
+            f = new AddPaymentFragment();
         }
-        if (fragment != null) {
+        if (frame == R.id.frame_overlay) {
+            mOverlayFrame.setVisibility(View.VISIBLE);
+        } else {
+            mMainUiState = uistate;
+            bindProgress(uistate);
+            findViewById(R.id.frame_overlay).setVisibility(View.GONE);
+        }
+        if (f != null) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame, fragment);
+            fragmentTransaction.replace(frame, f, String.valueOf(uistate));
             fragmentTransaction.commit();
         }
-        bindProgress(uistate);
     }
 
     private void bindProgress(int index) {
@@ -100,6 +132,8 @@ public class CartManagerActivity extends AppCompatActivity {
             if (v.getId() == R.id.image) {
                 int uistate = (int) v.getTag();
                 configureUI(uistate);
+//                Intent in = new Intent(mContext, com.goldadorn.main.activities.showcase.TestActivity.class);
+//                startActivity(in);
             } else {
                 if (mUIState == UISTATE_CART)
                     configureUI(UISTATE_ADDRESS);
@@ -112,4 +146,9 @@ public class CartManagerActivity extends AppCompatActivity {
             }
         }
     };
+
+    @Override
+    public void closeFragment(Fragment fragment) {
+        closeOverlay();
+    }
 }

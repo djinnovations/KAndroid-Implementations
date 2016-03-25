@@ -46,7 +46,6 @@ public class Tables {
         public static final String CUSTOMIZATION_INFO = "customization_info";
 
 
-
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" +
                 TABLENAME +
@@ -166,6 +165,35 @@ public class Tables {
                 "=false");
     }
 
+    public static final class PaymentDetails implements IDataVersion {
+        public static final String TABLENAME = "paymentdets";
+        public static final String _ID = "_id";
+        public static final String TYPE = "type";
+        public static final String NAME = "name";
+        public static final String NAME_ON_CARD = "nameoncard";
+        public static final String CARD_NUMBER = "cardnumber";
+        public static final String EXPIRY_MONTH = "month";
+        public static final String EXPIRY_YEAR = "year";
+        public static final String CVV = "cvv";
+        public static final String LAST_USED = "lastused";
+
+        public static final Uri CONTENT_URI = Uri.parse("content://" +
+                AUTHORITY + "/" +
+                TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=true");
+
+        /**
+         * The content:// style URL for this table. When this Uri is used, no notification is
+         * sent if the content changes.
+         */
+        public static final Uri CONTENT_URI_NO_NOTIFICATION = Uri.parse("content://" +
+                AUTHORITY +
+                "/" + TABLENAME +
+                "?" + PARAMETER_NOTIFY +
+                "=false");
+    }
+
     public static final class CREATE_TABLE {
 
         static final String USERS = "CREATE TABLE IF NOT EXISTS " + Users.TABLENAME + " (" +
@@ -218,13 +246,17 @@ public class Tables {
                 Addresses.LAST_USED + " INTEGER," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
 
-        static final String PAYMENT_DETAILS = "CREATE TABLE IF NOT EXISTS " + Addresses.TABLENAME + " (" +
-                Addresses._ID + " INTEGER PRIMARY KEY ," +
-                Addresses.NAME + " TEXT," +
-                Addresses.FULLADDRESS + " TEXT," +
-                Addresses.PINCODE + " TEXT," +
-                Addresses.LAST_USED + " INTEGER," +
-                IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
+        static final String PAYMENT_DETAILS = "CREATE TABLE IF NOT EXISTS " + PaymentDetails.TABLENAME + " (" +
+                PaymentDetails._ID + " INTEGER PRIMARY KEY ," +
+                PaymentDetails.NAME + " TEXT," +
+                PaymentDetails.TYPE + " INTEGER," +
+                PaymentDetails.NAME_ON_CARD + " TEXT," +
+                PaymentDetails.CARD_NUMBER + " TEXT," +
+                PaymentDetails.EXPIRY_MONTH + " INTEGER," +
+                PaymentDetails.EXPIRY_YEAR + " INTEGER," +
+                PaymentDetails.CVV + " INTEGER," +
+                PaymentDetails.LAST_USED + " INTEGER," +
+                PaymentDetails.DATAVERSION + " INTEGER DEFAULT 0)";
     }
 
 

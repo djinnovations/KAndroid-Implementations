@@ -150,7 +150,6 @@ public class LoginPageActivity extends BaseActivity {
         progressBar.setVisibility(View.GONE);
         progressBar.setProgress(0f);
         progressBar.stop();
-
         password.setEnabled(true);
         userName.setEnabled(true);
         loginAccount.setEnabled(true);

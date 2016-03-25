@@ -62,7 +62,7 @@ public class TestActivity extends Activity {
     // Final Variables
     private String mMerchantKey = "VH3HuI";
     private String mSalt = "TppVcnTs";
-    private String mBaseURL = "https://secure.payu.in";
+    private String mBaseURL = "https://test.payu.in/_payment";
 
 
     private String mAction = ""; // For Final URL
@@ -116,9 +116,11 @@ public class TestActivity extends Activity {
         if (bundle != null) {
 
             mFirstName = bundle.getString("name");
+            mFirstName = "Kiran";
             mEmailId = bundle.getString("email");
-            mAmount = bundle.getDouble("amount");
-            mPhone = bundle.getString("phone");
+            mEmailId = "kiran.b.h.mec@gmail.com";
+            mAmount = 100;
+            mPhone = "+918147199835";
             mId = bundle.getInt("id");
             isFromOrder = bundle.getBoolean("isFromOrder");
 

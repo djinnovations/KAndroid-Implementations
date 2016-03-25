@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/disabled_grey"
-        android:drawableLeft="@android:drawable/ic_input_add"
+        android:drawableLeft="@drawable/ic_content_add"
         android:drawablePadding="@dimen/padding_default"
         android:gravity="center"
         android:padding="@dimen/padding_default"
