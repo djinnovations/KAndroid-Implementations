@@ -1,10 +1,13 @@
 package com.goldadorn.main.activities.cart;
 
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +35,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
     private ProductViewHolder createItem(Product product) {
         ProductViewHolder vh = new ProductViewHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_product_in_cart, container, false));
-        vh.productId = product.id;
+        vh.product = product;
         container.addView(vh.itemView);
         productsVh.add(vh);
         return vh;
@@ -40,7 +43,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
     public ProductViewHolder getItem(Product product) {
         for (ProductViewHolder vh : productsVh)
-            if (product.id == vh.productId) return vh;
+            if (product.equals(vh.product)) return vh;
         return null;
     }
 
@@ -62,15 +65,16 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
 
     public interface IQuantityChangeListener {
-        void onQuantityChanged(int id, int quantity);
+        void onQuantityChanged(Product product);
     }
 
-    class ProductViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
+
+    class ProductViewHolder extends RecyclerView.ViewHolder implements TextWatcher, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
         public final ImageView image;
         public final TextView name, price;
         public final EditText quantityText;
         public final View quantityChange;
-        private int productId;
+        private Product product;
 
 
         public ProductViewHolder(View itemView) {
@@ -81,6 +85,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText = (EditText) itemView.findViewById(R.id.product_quantity);
             quantityChange = itemView.findViewById(R.id.product_quantity_change);
             quantityText.addTextChangedListener(this);
+            quantityChange.setOnClickListener(this);
         }
 
         public void bindUI(Product product) {
@@ -92,8 +97,25 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
 
         public void remove() {
+            quantityChange.setOnClickListener(null);
             quantityText.removeTextChangedListener(this);
             ((LinearLayout) itemView.getParent()).removeView(itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            PopupMenu popupMenu = new PopupMenu(quantityChange.getContext(), quantityChange);
+            Menu menu = popupMenu.getMenu();
+            for (int i = 0; i < product.maxQuantity + 1; i++)
+                menu.add(0, i, i, "" + i);
+            popupMenu.setOnMenuItemClickListener(this);
+            popupMenu.show();
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            changeQuantity(item.getItemId());
+            return true;
         }
 
         @Override
@@ -103,12 +125,20 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            quatityChangeListener.onQuantityChanged(productId, TextUtils.isEmpty(s) ? 0 : Integer.parseInt(s.toString()));
+            changeQuantity(TextUtils.isEmpty(s) ? 0 : Integer.parseInt(s.toString()));
+        }
+
+        private void changeQuantity(int newQuantity) {
+            product.quantity = newQuantity;
+            bindUI(product);
+            quatityChangeListener.onQuantityChanged(product);
         }
 
         @Override
         public void afterTextChanged(Editable s) {
 
         }
+
+
     }
 }

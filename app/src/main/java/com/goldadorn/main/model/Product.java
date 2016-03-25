@@ -9,7 +9,7 @@ public class Product {
     public float unitPrice;
     public static final String currency = " RS";
 
-    public int quantity;
+    public int quantity,maxQuantity=5;
 
     public Product(int id) {
         this.id = id;

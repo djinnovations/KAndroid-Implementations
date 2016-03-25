@@ -84,10 +84,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     @Override
-    public void onQuantityChanged(int id, int quantity) {
-        Product p = find(id);
-        p.quantity = quantity;
-        mCartProductsViewHolder.getItem(p).bindUI(p);
+    public void onQuantityChanged(Product product) {
         bindCostUi();
     }
 
