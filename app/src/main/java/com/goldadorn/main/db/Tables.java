@@ -144,7 +144,10 @@ public class Tables {
         public static final String TABLENAME = "addresses";
         public static final String _ID = "_id";
         public static final String NAME = "name";
-        public static final String FULLADDRESS = "address";
+        public static final String STREET = "street";
+        public static final String CITY = "city";
+        public static final String STATE = "state";
+        public static final String COUNTRY = "country";
         public static final String PINCODE = "pincode";
         public static final String LAST_USED = "lastused";
 
@@ -241,7 +244,7 @@ public class Tables {
         static final String ADDRESSES = "CREATE TABLE IF NOT EXISTS " + Addresses.TABLENAME + " (" +
                 Addresses._ID + " INTEGER PRIMARY KEY ," +
                 Addresses.NAME + " TEXT," +
-                Addresses.FULLADDRESS + " TEXT," +
+                Addresses.STREET + " TEXT," + Addresses.CITY + " TEXT," + Addresses.STATE + " TEXT," + Addresses.COUNTRY + " TEXT," +
                 Addresses.PINCODE + " TEXT," +
                 Addresses.LAST_USED + " INTEGER," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
