@@ -65,6 +65,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     @Bind(R.id.frame)
     FrameLayout mFrame;
+    @Bind(R.id.frame_dummy)
+    FrameLayout mFrameDummy;
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinatorlayout)
@@ -302,15 +304,21 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void configureUI(int uiState) {
         Fragment f = null;
+        int id = R.id.frame;
+        mFrame.setVisibility(View.VISIBLE);
+        mFrameDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
             f = new SocialFeedFragment();
+            id = R.id.frame_dummy;
+            mFrame.setVisibility(View.INVISIBLE);
+            mFrameDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame, f);
+            fragmentTransaction.replace(id, f);
             fragmentTransaction.commit();
         }
     }
