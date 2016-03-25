@@ -3,6 +3,7 @@ package com.goldadorn.main.activities.cart;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,8 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
     View mOverlayFrame;
     @Bind(R.id.container_progress_image)
     LinearLayout mContainerProgressImage;
+    @Bind(R.id.app_bar)
+    AppBarLayout mAppBarLayout;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -119,6 +122,7 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
             fragmentTransaction.replace(frame, f, String.valueOf(uistate));
             fragmentTransaction.commit();
         }
+        mAppBarLayout.setExpanded(true, true);
     }
 
     private void bindProgress(int index) {
