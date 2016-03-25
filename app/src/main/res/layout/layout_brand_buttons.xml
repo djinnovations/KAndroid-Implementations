@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:visibility="invisible"
             android:src="@mipmap/ic_launcher"/>
 
         <ImageView
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:visibility="invisible"
             android:src="@mipmap/ic_launcher"/>
 
     </LinearLayout>
@@ -64,7 +66,7 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/likeButton"
-            style="@style/ShowcaseButton"
+            style="@style/ShowcaseButton.White"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"
@@ -72,7 +74,7 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/followButton"
-            style="@style/ShowcaseButton"
+            style="@style/ShowcaseButton.White"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"
@@ -80,7 +82,7 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/shareButton"
-            style="@style/ShowcaseButton"
+            style="@style/ShowcaseButton.White"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"

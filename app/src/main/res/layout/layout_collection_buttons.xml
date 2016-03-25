@@ -65,10 +65,11 @@
             android:textAppearance="?android:attr/textAppearanceSmall"/>
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/followButton"
-            style="@style/ShowcaseButton"
+            style="@style/ShowcaseButton.White"
             android:layout_width="@dimen/circle_button_tiny_height"
             android:layout_height="@dimen/circle_button_tiny_height"
-            android:text="@string/icon_liked_post"/>
+            android:textSize="12sp"
+            android:text="@string/icon_follow_user"/>
     </LinearLayout>
 
     <TextView
@@ -110,7 +111,7 @@
             android:layout_toLeftOf="@+id/lin_buttons"
             android:layout_toStartOf="@+id/lin_buttons"
             android:textStyle="italic"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:text="2012"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
@@ -124,7 +125,7 @@
 
             <com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
-                style="@style/ShowcaseButton"
+                style="@style/ShowcaseButton.White"
                 android:layout_width="@dimen/circle_button_small_height"
                 android:layout_height="@dimen/circle_button_small_height"
                 android:layout_marginRight="@dimen/padding_default_4x"
@@ -135,7 +136,7 @@
 
             <com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/shareButton"
-                style="@style/ShowcaseButton"
+                style="@style/ShowcaseButton.White"
                 android:layout_width="@dimen/circle_button_small_height"
                 android:layout_height="@dimen/circle_button_small_height"
                 android:layout_marginLeft="@dimen/padding_default_4x"
