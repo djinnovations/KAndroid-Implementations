@@ -97,14 +97,21 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
 
         public void remove() {
+            if (popupMenu != null) {
+                popupMenu.dismiss();
+                popupMenu = null;
+            }
             quantityChange.setOnClickListener(null);
             quantityText.removeTextChangedListener(this);
             ((LinearLayout) itemView.getParent()).removeView(itemView);
         }
 
+        PopupMenu popupMenu;
+
         @Override
         public void onClick(View v) {
-            PopupMenu popupMenu = new PopupMenu(quantityChange.getContext(), quantityChange);
+            if (popupMenu != null) popupMenu.dismiss();
+            popupMenu = new PopupMenu(quantityChange.getContext(), quantityChange);
             Menu menu = popupMenu.getMenu();
             for (int i = 0; i < product.maxQuantity + 1; i++)
                 menu.add(0, i, i, "" + i);
@@ -138,7 +145,5 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         public void afterTextChanged(Editable s) {
 
         }
-
-
     }
 }
