@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/white"
               android:focusable="true"
               android:focusableInTouchMode="true"
-              android:background="@color/white"
               android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -15,7 +15,7 @@
         android:background="?attr/colorPrimary"/>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_name_on_card"
+        android:id="@+id/input_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:errorEnabled="true">
@@ -23,14 +23,14 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name on Card"
-            android:textColor="@color/bel_grey_text"
+            android:hint="Name"
             android:inputType="textPersonName"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textColor="@color/bel_grey_text"/>
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_card_number"
+        android:id="@+id/input_address_local"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:errorEnabled="true">
@@ -38,10 +38,69 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/bel_grey_text"
             android:hint="Card Number"
+            android:inputType="text"
+            android:textColor="@color/bel_grey_text"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_city"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="City/Town"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/bel_grey_text"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="State/District"
+            android:inputType="text"
+            android:singleLine="true"
+            android:textColor="@color/bel_grey_text"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_pincode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Pin code"
             android:inputType="number"
-            android:singleLine="true"/>
+            android:singleLine="true"
+            android:textColor="@color/bel_grey_text"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/input_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Phone number"
+            android:inputType="phone"
+            android:singleLine="true"
+            android:textColor="@color/bel_grey_text"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button
