@@ -102,7 +102,7 @@ public class CartManagerActivity extends AppCompatActivity implements IFragmentC
             f = new SummaryFragment();
         } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
-            f = new AddPaymentFragment();
+            f = new AddAddressFragment();
         } else if (uistate == UISTATE_OVERLAY_ADD_PAYEMNT) {
             frame = R.id.frame_overlay;
             f = new AddPaymentFragment();
