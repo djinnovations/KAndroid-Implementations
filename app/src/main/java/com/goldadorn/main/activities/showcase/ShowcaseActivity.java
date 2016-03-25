@@ -506,6 +506,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 configureUI(UISTATE_COLLECTION);
             }else if(id==R.id.tab2){
                 configureUI(UISTATE_PRODUCT);
+                mAppBarLayout.setExpanded(false);
             }else if(id==R.id.tab3){
                 configureUI(UISTATE_SOCIAL);
             }
