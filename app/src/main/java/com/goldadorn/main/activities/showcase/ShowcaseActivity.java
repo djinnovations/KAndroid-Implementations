@@ -196,7 +196,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 mProgressFrame.setVisibility(View.GONE);
                 if (!result.success) {
                     DUMMY = true;
-                    configureUI(mUIState);
                 }
                 mUser = mShowCaseAdapter.getUser(0);
             }
