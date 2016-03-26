@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 9
@@ -18,9 +18,15 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.0.0'
-    compile project(':CustomBrowser-release')
-    compile project(':PayU-release')
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile(name: 'CustomBrowser-release', ext: 'aar')
+    compile(name: 'PayU-release', ext: 'aar')
 }

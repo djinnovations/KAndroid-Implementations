@@ -1,1 +1,1 @@
-include ':app', ':kandroid'
+include ':app', ':kandroid','payu_ui'
