@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.model.PaymentMode;
+import com.payu.india.Model.StoredCard;
 
 import java.util.ArrayList;
 
@@ -20,45 +20,45 @@ import java.util.ArrayList;
  */
 class PaymentModesViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
-    private ArrayList<PaymentHolder> paymentsVh = new ArrayList<>(5);
-    IResultListener<Integer> resultListener;
+    private ArrayList<CardHolder> paymentsVh = new ArrayList<>(5);
+    IResultListener<StoredCard> resultListener;
 
-    public PaymentModesViewHolder(LinearLayout itemView, IResultListener<Integer> resultListener) {
+    public PaymentModesViewHolder(LinearLayout itemView, IResultListener<StoredCard> resultListener) {
         super(itemView);
         container = itemView;
         this.resultListener = resultListener;
     }
 
-    private PaymentHolder createItem(PaymentMode paymentmode) {
-        PaymentHolder vh = new PaymentHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_payment_mode, null, false));
-        vh.paymentId = paymentmode.id;
+    private CardHolder createItem(StoredCard card) {
+        CardHolder vh = new CardHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_payment_mode, null, false));
+        vh.card = card;
         container.addView(vh.itemView);
         vh.checkBox.setOnCheckedChangeListener(mCheckListener);
         paymentsVh.add(vh);
         return vh;
     }
 
-    public PaymentHolder getItem(PaymentMode payment) {
-        for (PaymentHolder vh : paymentsVh)
-            if (payment.id == vh.paymentId) return vh;
+    public CardHolder getItem(StoredCard card) {
+        for (CardHolder vh : paymentsVh)
+            if (card.equals(vh.card)) return vh;
         return null;
     }
 
-    public void bindUI(ArrayList<PaymentMode> addresses) {
-        for (PaymentHolder vh : paymentsVh) {
+    public void bindUI(ArrayList<StoredCard> cards) {
+        for (CardHolder vh : paymentsVh) {
             vh.remove();
         }
         paymentsVh.clear();
-        for (PaymentMode product : addresses) {
-            PaymentHolder pvh = createItem(product);
-            pvh.bindUI(product);
+        for (StoredCard product : cards) {
+            CardHolder pvh = createItem(product);
+            pvh.bindUI();
         }
     }
 
-    public void setChecked(int addressID) {
-        for (PaymentHolder vh : paymentsVh) {
+    public void setChecked(StoredCard card) {
+        for (CardHolder vh : paymentsVh) {
             vh.checkBox.setOnCheckedChangeListener(null);
-            vh.checkBox.setChecked(vh.paymentId == addressID);
+            vh.checkBox.setChecked(vh.card.equals(card));
             vh.checkBox.setOnCheckedChangeListener(mCheckListener);
         }
 
@@ -67,11 +67,11 @@ class PaymentModesViewHolder extends RecyclerView.ViewHolder {
     private final CheckBox.OnCheckedChangeListener mCheckListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            for (PaymentHolder vh : paymentsVh) {
+            for (CardHolder vh : paymentsVh) {
                 vh.checkBox.setOnCheckedChangeListener(null);
                 vh.checkBox.setChecked(buttonView.equals(vh.checkBox) && isChecked);
                 if (vh.checkBox.isChecked())
-                    resultListener.onResult(vh.paymentId);
+                    resultListener.onResult(vh.card);
                 vh.checkBox.setOnCheckedChangeListener(mCheckListener);
             }
         }
@@ -81,14 +81,14 @@ class PaymentModesViewHolder extends RecyclerView.ViewHolder {
         itemView.setVisibility(visibility);
     }
 
-    static class PaymentHolder extends RecyclerView.ViewHolder {
+    static class CardHolder extends RecyclerView.ViewHolder {
         public final TextView name, details;
         public final CheckBox checkBox;
-        public final ImageView actionEdit,icon;
-        private int paymentId;
+        public final ImageView actionEdit, icon;
+        private StoredCard card;
 
 
-        public PaymentHolder(View itemView) {
+        public CardHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.payment_title);
             details = (TextView) itemView.findViewById(R.id.payment_description);
@@ -97,8 +97,8 @@ class PaymentModesViewHolder extends RecyclerView.ViewHolder {
             icon = (ImageView) itemView.findViewById(R.id.payment_icon);
         }
 
-        public void bindUI(PaymentMode address) {
-            name.setText(address.name);
+        public void bindUI() {
+            name.setText(card.getCardName());
         }
 
         public void remove() {

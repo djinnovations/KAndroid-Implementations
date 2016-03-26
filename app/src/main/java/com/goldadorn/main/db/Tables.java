@@ -168,6 +168,7 @@ public class Tables {
                 "=false");
     }
 
+    @Deprecated
     public static final class PaymentDetails implements IDataVersion {
         public static final String TABLENAME = "paymentdets";
         public static final String _ID = "_id";

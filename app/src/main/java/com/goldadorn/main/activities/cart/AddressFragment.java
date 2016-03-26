@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -27,10 +28,11 @@ import java.util.List;
  * Created by Kiran BH on 10/03/16.
  */
 public class AddressFragment extends Fragment {
-AddressCallBacks mAddressCallBacks= new AddressCallBacks();
+    AddressCallBacks mAddressCallBacks = new AddressCallBacks();
     ArrayList<Address> mAddresses = new ArrayList<>(5);
     AddressesViewHolder mAddressesHolder;
     private TextView mAddButton;
+    ProgressBar mProgressBar;
 
 
     @Nullable
@@ -44,9 +46,10 @@ AddressCallBacks mAddressCallBacks= new AddressCallBacks();
         super.onViewCreated(view, savedInstanceState);
         mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mAddButton.setText("Add new shipping address");
         mAddButton.setOnClickListener(mClick);
-        getLoaderManager().initLoader(mAddressCallBacks.hashCode(),null,mAddressCallBacks);
+        getLoaderManager().initLoader(mAddressCallBacks.hashCode(), null, mAddressCallBacks);
 
     }
 
@@ -126,6 +129,7 @@ AddressCallBacks mAddressCallBacks= new AddressCallBacks();
             mAddresses.clear();
             if (data.object != null)
                 mAddresses.addAll((Collection<? extends Address>) data.object);
+            mProgressBar.setVisibility(View.GONE);
             onAddressesChanged();
         }
 
