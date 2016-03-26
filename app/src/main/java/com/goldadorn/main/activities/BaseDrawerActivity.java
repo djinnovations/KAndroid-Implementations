@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 public class BaseDrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     @Bind(R.id.drawerLayout)
-    DrawerLayout drawerLayout;
+    protected DrawerLayout drawerLayout;
     @Bind(R.id.vNavigation)
     NavigationView vNavigation;
     Toolbar toolbar;

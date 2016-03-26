@@ -7,17 +7,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -25,6 +20,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,9 +30,9 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
-import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.mikepenz.iconics.view.IconicsButton;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -57,8 +53,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private boolean DUMMY = false;
     private int mUIState = UISTATE_PRODUCT;
 
-    @Bind(R.id.view_pager)
-    ViewPager mPager;
+    @Bind(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @Bind(R.id.view_pager_dummy)
+    View mPagerDummy;
+    @Bind(R.id.overlay)
+    View mOverlay;
 
     @Bind(R.id.frame)
     FrameLayout mFrame;
@@ -68,11 +68,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
     FrameLayout mFrameNoScrollDummy;
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
-    @Bind(R.id.coordinatorlayout)
-    CoordinatorLayout mCoordinatorLayout;
-
-    @Bind(R.id.scrollView)
-    NestedScrollView mScrollView;
 
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
@@ -80,7 +75,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
     @Bind(R.id.tabs)
-    TabLayout mTabLayout;
+    View mTabLayout;
 
     @Bind(R.id.previous)
     ImageView mPrevious;
@@ -106,6 +101,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private int mStartHeight, mCollapsedHeight;
     private ArrayList<CollectionChangeListener> mCollectionChangeListeners = new ArrayList<>(3);
     private int mVerticalOffset = 0;
+    private int mCurrentPosition = 0;
+    private TabViewHolder mTabViewHolder;
 
     public static Intent getLaunchIntent(Context context, Collection collection) {
         Intent intent = new Intent(context, CollectionsActivity.class);
@@ -117,13 +114,17 @@ public class CollectionsActivity extends BaseDrawerActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
+        drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);
-        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        initTabs();
+        final DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
         mCollapsedHeight = (int) (.25f * dm.heightPixels);
 
-        mPager.getLayoutParams().height = mStartHeight;
+        mPagerDummy.getLayoutParams().height = mStartHeight;
+        mRecyclerView.getLayoutParams().height = mStartHeight;
+        mOverlay.getLayoutParams().height = mStartHeight;
         topLayout.getLayoutParams().height = mStartHeight;
         mToolBar.getLayoutParams().height = mCollapsedHeight;
 
@@ -133,13 +134,16 @@ public class CollectionsActivity extends BaseDrawerActivity {
             if (mCollection != null) DUMMY = false;
         }
 
-        mPager.setOffscreenPageLimit(4);
-        mPager.setAdapter(
-                mCollectionAdapter = new CollectionsPagerAdapter(getSupportFragmentManager()));
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
+        final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
+        final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mPager.setPageMargin(-pad);
+        mRecyclerView.setAdapter(
+                mCollectionAdapter = new CollectionsPagerAdapter(mContext,dm.widthPixels-2*pad,mStartHeight));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+
         mFrame.animate().setDuration(0).y(mStartHeight);
+        mTabLayout.animate().setDuration(0).y(mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height));
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -148,13 +152,19 @@ public class CollectionsActivity extends BaseDrawerActivity {
                     Log.d(TAG, "offset : " + verticalOffset);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
-                    topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
-                    CollapsingToolbarLayout.LayoutParams lp =
-                            ((CollapsingToolbarLayout.LayoutParams) mTabLayout.getLayoutParams());
-                    lp.leftMargin = lp.rightMargin = (int) (pad + (Math.abs(verticalOffset) * .1));
-                    mTabLayout.setLayoutParams(lp);
                     mOverlayViewHolder.setVisisbility(visibility);
+                    mOverlay.getLayoutParams().height = mStartHeight+verticalOffset;
+                    mRecyclerView.getLayoutParams().height = mStartHeight+verticalOffset;
+                    topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
+                    int p= (int) (((maxPad*0.25f*verticalOffset)/maxHeight)-pad);
+                    mCollectionAdapter.setDimens(dm.widthPixels+2*p,mStartHeight+verticalOffset);
+                    mRecyclerView.getLayoutManager().offsetChildrenHorizontal(-p);
+                    mRecyclerView.setPadding(-p,0,-p,0);
+                    mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
+                    mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mTabLayout.getLayoutParams();
+                    lp.leftMargin = lp.rightMargin = -p;
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -162,21 +172,22 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int current = mPager.getCurrentItem() - 1;
-                int pos = current < 0 ? mCollectionAdapter.getCount() - 1 : current;
-                mPager.setCurrentItem(pos);
+                mCurrentPosition--;
+                if(mCurrentPosition<0)
+                    mCurrentPosition =mCollectionAdapter.getItemCount() - 1;
+                mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int current = mPager.getCurrentItem() + 1;
-                int pos = current > mCollectionAdapter.getCount() - 1 ? 0 : current;
-                mPager.setCurrentItem(pos);
+                mCurrentPosition++;
+                if(mCurrentPosition>mCollectionAdapter.getItemCount()-1)
+                    mCurrentPosition =0;
+                mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
 
-        initTabs();
 
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
@@ -191,27 +202,25 @@ public class CollectionsActivity extends BaseDrawerActivity {
     }
 
     private void initTabs() {
-        TabLayout.Tab tab = mTabLayout.newTab();
-        tab.setTag(UISTATE_PRODUCT);
-        tab.setText(getString(R.string.products));
-        mTabLayout.addTab(tab);
-        tab = mTabLayout.newTab();
-        tab.setTag(UISTATE_SOCIAL);
-        tab.setText(getString(R.string.social));
-        mTabLayout.addTab(tab);
-        mTabLayout.setOnTabSelectedListener(mTabSelectListener);
+        mTabViewHolder = new TabViewHolder(mContext,mTabLayout);
+        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null, new TabViewHolder.TabClickListener() {
+            @Override
+            public void onTabClick(int position) {
+                configureUI(position);
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mPager.addOnPageChangeListener(mPageChangeListener);
+        mRecyclerView.addOnScrollListener(mPageChangeListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mPager.removeOnPageChangeListener(mPageChangeListener);
+        mRecyclerView.addOnScrollListener(mPageChangeListener);
     }
 
     @Override
@@ -236,27 +245,19 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mCollectionChangeListeners.remove(listener);
     }
 
-    private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
+    private RecyclerView.OnScrollListener mPageChangeListener = new RecyclerView.OnScrollListener() {
         @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
             if (DUMMY)
                 return;
-            mCollection = mCollectionAdapter.getCollection(position);
+            mCollection = mCollectionAdapter.getCollection(mCurrentPosition);
             bindOverlay(mCollection);
             for (CollectionChangeListener l : mCollectionChangeListeners)
                 l.onCollectionChange(mCollection);
         }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
     };
+
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
@@ -265,29 +266,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
         mOverlayViewHolder.extra.setText(Integer.toString(collection.id));
 
-        mTabLayout.getTabAt(0).setText("Products\n" + collection.productcount);
+        mTabViewHolder.setCounts(collection.productcount,-1);
     }
-
-    private TabLayout.OnTabSelectedListener mTabSelectListener =
-            new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    Log.d("OnTabSelectedListener", (String) tab.getText());
-                    int uiState = (int) tab.getTag();
-                    configureUI(uiState);
-
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
-                }
-            };
 
     private void configureUI(int uiState) {
         Fragment f = null;
@@ -301,7 +281,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
-//            mScrollView.setNestedScrollingEnabled(false);
 
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
@@ -314,32 +293,52 @@ public class CollectionsActivity extends BaseDrawerActivity {
         }
     }
 
-    private class CollectionsPagerAdapter extends FragmentStatePagerAdapter {
-        private Cursor cursor;
+    private class CollectionsPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private final Context context;
+        private int height;
+        Cursor cursor = null;
+        private int width;
 
-        public CollectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            if (DUMMY) return 8;
-            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            ShowcaseFragment f = new ShowcaseFragment();
-            Bundle b = new Bundle(1);
-            b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
-            f.setArguments(b);
-            return f;
+        public CollectionsPagerAdapter(Context context,int width,int height) {
+            this.context = context;
+            this.width = width;
+            this.height = height;
         }
 
         public void changeCursor(Cursor cursor) {
             this.cursor = cursor;
             notifyDataSetChanged();
         }
+
+        @Override
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image,parent,false)) {
+            };
+            return vh;
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            Collection collection = getCollection(position);
+            ImageView image  = (ImageView) holder.itemView.findViewById(R.id.image);
+            Picasso.with(mContext).load(collection.imageUrl).placeholder(R.drawable.designer).into(image);
+            image.getLayoutParams().width = this.width;
+            image.getLayoutParams().height = this.height;
+            image.requestLayout();
+        }
+
+        @Override
+        public int getItemCount() {
+            if (DUMMY) return 8;
+            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
+        }
+
+        public void setDimens(int width,int height){
+            this.width = width;
+            this.height = height;
+            notifyDataSetChanged();
+        }
+
 
         public Collection getCollection(int position) {
             if (DUMMY) return null;
@@ -367,7 +366,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 return;
             mCollectionAdapter.changeCursor(data);
             if (data.getCount() > 0) {
-                mPageChangeListener.onPageSelected(mPager.getCurrentItem());
+                mPageChangeListener.onScrolled(mRecyclerView,0,0);
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }
 
