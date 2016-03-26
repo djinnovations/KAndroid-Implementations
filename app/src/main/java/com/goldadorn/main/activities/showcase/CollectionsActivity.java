@@ -65,8 +65,10 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     @Bind(R.id.frame)
     FrameLayout mFrame;
-    @Bind(R.id.frame_dummy)
-    FrameLayout mFrameDummy;
+    @Bind(R.id.frame_scroll_dummy)
+    FrameLayout mFrameScrollDummy;
+    @Bind(R.id.frame_no_scroll_dummy)
+    FrameLayout mFrameNoScrollDummy;
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
     @Bind(R.id.coordinatorlayout)
@@ -306,12 +308,16 @@ public class CollectionsActivity extends BaseDrawerActivity {
         Fragment f = null;
         int id = R.id.frame;
         mFrame.setVisibility(View.VISIBLE);
-        mFrameDummy.setVisibility(View.INVISIBLE);
+        mFrameScrollDummy.setVisibility(View.INVISIBLE);
+        mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
             f = new SocialFeedFragment();
-            id = R.id.frame_dummy;
+            id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
-            mFrameDummy.setVisibility(View.VISIBLE);
+            mFrameScrollDummy.setVisibility(View.INVISIBLE);
+            mFrameNoScrollDummy.setVisibility(View.VISIBLE);
+//            mScrollView.setNestedScrollingEnabled(false);
+
         } else if (uiState == UISTATE_PRODUCT) {
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
