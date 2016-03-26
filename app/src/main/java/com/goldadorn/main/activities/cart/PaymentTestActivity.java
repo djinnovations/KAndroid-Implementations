@@ -38,6 +38,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Iterator;
 
+@Deprecated
 public class PaymentTestActivity extends AppCompatActivity implements View.OnClickListener {
 
 
@@ -397,7 +398,7 @@ public class PaymentTestActivity extends AppCompatActivity implements View.OnCli
                             break;
                         default:
                             break;
-                    }                    
+                    }
                 }
 
             } catch (MalformedURLException e) {

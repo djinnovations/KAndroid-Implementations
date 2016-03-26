@@ -27,7 +27,6 @@ public class CartManagerActivity extends FragmentActivity  {
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
     public static final int UISTATE_OVERLAY_ADD_ADDRESS = 10;
-    public static final int UISTATE_OVERLAY_ADD_PAYEMNT = 11;
     private int mUIState = UISTATE_CART;
     private int mMainUiState = UISTATE_CART;
     Context mContext;
@@ -108,9 +107,6 @@ public class CartManagerActivity extends FragmentActivity  {
         } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
             f = new AddAddressFragment();
-        } else if (uistate == UISTATE_OVERLAY_ADD_PAYEMNT) {
-            frame = R.id.frame_overlay;
-            f = new AddPaymentFragment();
         }
         if (frame == R.id.frame_overlay) {
             mOverlayFrame.setVisibility(View.VISIBLE);
@@ -129,9 +125,7 @@ public class CartManagerActivity extends FragmentActivity  {
     }
 
     private void refreshToolBar() {
-        if (mUIState == UISTATE_OVERLAY_ADD_PAYEMNT) {
-            mToolbar.setTitle("Add Payment");
-        } else if (mUIState == UISTATE_OVERLAY_ADD_ADDRESS) {
+        if (mUIState == UISTATE_OVERLAY_ADD_ADDRESS) {
             mToolbar.setTitle("Add Address");
         } else {
             mToolbar.setTitle("My Cart");
