@@ -74,6 +74,8 @@ public class CartManagerActivity extends FragmentActivity  {
                     finish();
             }
         });
+        Intent in = new Intent(mContext,PaymentTestActivity.class);
+        startActivity(in);
     }
 
     @Override
