@@ -101,4 +101,5 @@ dependencies {
 //    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
     compile(name: 'CustomBrowser-release', ext: 'aar')
     compile(name: 'PayU-release', ext: 'aar')
+    compile project(':payu_ui')
 }
