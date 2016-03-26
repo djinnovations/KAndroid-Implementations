@@ -42,52 +42,59 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     PaymentParams mPaymentParams;
     PayuHashes mPayUHashes;
     ProgressBar mProgressBar;
+    PayUHelper mPayUHelper;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
-        payuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
-        mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
-        mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
         return inflater.inflate(R.layout.fragment_addresses, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPaymentsHolder = new PaymentModesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mPaymentSelectedListener);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
         mAddButton.setText("Add new payment method");
         mAddButton.setOnClickListener(mClick);
-
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
-
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        if (null == savedInstanceState) { // dont fetch the data if its been called from payment activity.
-            MerchantWebService merchantWebService = new MerchantWebService();
-            merchantWebService.setKey(mPaymentParams.getKey());
-            merchantWebService.setCommand(PayuConstants.PAYMENT_RELATED_DETAILS_FOR_MOBILE_SDK);
-            merchantWebService.setVar1(mPaymentParams.getUserCredentials() == null ? "default" : mPaymentParams.getUserCredentials());
-            // hash we have to generate
-            merchantWebService.setHash(mPayUHashes.getPaymentRelatedDetailsForMobileSdkHash());
-            PostData postData = new MerchantWebServicePostParams(merchantWebService).getMerchantWebServicePostParams();
-            if (postData.getCode() == PayuErrors.NO_ERROR) {
-                // ok we got the post params, let make an api call to payu to fetch the payment related details
-                payuConfig.setData(postData.getResult());
 
-                // lets set the visibility of progress bar
-                mProgressBar.setVisibility(View.VISIBLE);
-                GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(this);
-                paymentRelatedDetailsForMobileSdkTask.execute(payuConfig);
-            } else {
-                Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
-                // close the progress bar
-                mProgressBar.setVisibility(View.GONE);
+        mPayUHelper= new PayUHelper(new IResultListener<Bundle>() {
+            @Override
+            public void onResult(Bundle bundle) {
+                Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
+                payuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
+                mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
+                mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
+                if (savedInstanceState == null) { // dont fetch the data if its been called from payment activity.
+                    MerchantWebService merchantWebService = new MerchantWebService();
+                    merchantWebService.setKey(mPaymentParams.getKey());
+                    merchantWebService.setCommand(PayuConstants.PAYMENT_RELATED_DETAILS_FOR_MOBILE_SDK);
+                    merchantWebService.setVar1(mPaymentParams.getUserCredentials() == null ? "default" : mPaymentParams.getUserCredentials());
+                    // hash we have to generate
+                    merchantWebService.setHash(mPayUHashes.getPaymentRelatedDetailsForMobileSdkHash());
+                    PostData postData = new MerchantWebServicePostParams(merchantWebService).getMerchantWebServicePostParams();
+                    if (postData.getCode() == PayuErrors.NO_ERROR) {
+                        // ok we got the post params, let make an api call to payu to fetch the payment related details
+                        payuConfig.setData(postData.getResult());
+
+                        // lets set the visibility of progress bar
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
+                        paymentRelatedDetailsForMobileSdkTask.execute(payuConfig);
+                    } else {
+                        Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
+                        // close the progress bar
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                }
             }
-        }
+        });
+
+
+
 
 
 //        PaymentMode pm = new PaymentMode(123123, 2);
@@ -128,7 +135,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onPaymentRelatedDetailsResponse(PayuResponse payuResponse) {
         mPayuResponse = payuResponse;
         mProgressBar.setVisibility(View.GONE);
-        mPaymentModes = payuResponse.getStoredCards();
+        mPaymentModes.clear();
+        if(payuResponse.getStoredCards()!=null)
+            mPaymentModes.addAll(payuResponse.getStoredCards());
         onPaymentOptionsChanged();
     }
 }

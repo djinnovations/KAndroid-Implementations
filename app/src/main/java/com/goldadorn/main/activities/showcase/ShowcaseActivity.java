@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.cart.PaymentTestActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
@@ -204,6 +206,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+        Intent in = new Intent(mContext,PaymentTestActivity.class);
+        startActivity(in);
     }
 
     private void initTabs() {
