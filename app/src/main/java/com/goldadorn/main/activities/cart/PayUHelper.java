@@ -72,6 +72,7 @@ public class PayUHelper {
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
         mPaymentParams.setSurl("https://payu.herokuapp.com/success");
         mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
+        mPaymentParams.setUserCredentials(merchantKey+":payutest@payu.in");
         mPaymentParams.setUdf1("udf1");
         mPaymentParams.setUdf2("udf2");
         mPaymentParams.setUdf3("udf3");
@@ -81,7 +82,6 @@ public class PayUHelper {
 
         // optional
 //        mPaymentParams.setOfferKey(inputData);
-//        mPaymentParams.setUserCredentials(inputData);
 //        intent.putExtra(PayuConstants.SALT, inputData);
 //        cardBin
 
