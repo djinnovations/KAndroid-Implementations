@@ -35,9 +35,7 @@ import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
-import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
-import com.goldadorn.main.utils.L;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -56,7 +54,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private final static int UISTATE_SOCIAL = 2;
     private final static String TAG = ShowcaseActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
-    private static boolean DUMMY = false;
 
     private int mUIState = UISTATE_COLLECTION;
 
@@ -112,6 +109,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private int mStartHeight, mCollapsedHeight;
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
+    private boolean DUMMY = true;
 
 
     @Override
@@ -135,11 +133,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext,dm.widthPixels-2*pad,mStartHeight));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
-        mTabLayout.animate().setDuration(0).y(mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height));
+        mTabLayout.animate().setDuration(0).y(mStartHeight - getResources().getDimensionPixelSize(R.dimen.tab_height));
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -150,16 +148,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     int visibility = change ? View.VISIBLE : View.GONE;
                     topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
                     mOverlayVH.setVisisbility(visibility);
-                    mOverlay.getLayoutParams().height = mStartHeight+verticalOffset;
-                    mRecyclerView.getLayoutParams().height = mStartHeight+verticalOffset;
-                    int p= (int) (((maxPad*0.25f*verticalOffset)/maxHeight)-pad);
-                    mShowCaseAdapter.setDimens(dm.widthPixels+2*p,mStartHeight+verticalOffset);
+                    mOverlay.getLayoutParams().height = mStartHeight + verticalOffset;
+                    mRecyclerView.getLayoutParams().height = mStartHeight + verticalOffset;
+                    int p = (int) (((maxPad * 0.25f * verticalOffset) / maxHeight) - pad);
+                    mShowCaseAdapter.setDimens(dm.widthPixels + 2 * p, mStartHeight + verticalOffset);
                     mRecyclerView.getLayoutManager().offsetChildrenHorizontal(-p);
-                    mRecyclerView.setPadding(-p,0,-p,0);
+                    mRecyclerView.setPadding(-p, 0, -p, 0);
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mTabLayout.getLayoutParams();
+                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
                     lp.leftMargin = lp.rightMargin = -p;
                 }
                 mVerticalOffset = verticalOffset;
@@ -171,8 +169,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition--;
-                if(mCurrentPosition<0)
-                    mCurrentPosition =mShowCaseAdapter.getItemCount() - 1;
+                if (mCurrentPosition < 0)
+                    mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -180,8 +178,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition++;
-                if(mCurrentPosition>mShowCaseAdapter.getItemCount()-1)
-                    mCurrentPosition =0;
+                if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1)
+                    mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -190,17 +188,17 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
 
-        if (!DUMMY)
-            mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+        configureUI(mUIState);
         UIController.getDesigners(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override
             public void onResult(TimelineResponse result) {
                 mProgressFrame.setVisibility(View.GONE);
-                if (result.success) {
-                    DUMMY = false;
+                if (!result.success) {
+                    DUMMY = true;
+                    configureUI(mUIState);
                 }
                 mUser = mShowCaseAdapter.getUser(0);
-                configureUI(mUIState);
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -243,19 +241,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if (DUMMY)
-                return;
             mUser = mShowCaseAdapter.getUser(mCurrentPosition);
             bindOverlay(mUser);
             for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
-            ProductResponse response = new ProductResponse();
-            response.userId = mUser.id;
-            L.d("USER id " + mUser.id);
-            UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
-                @Override
-                public void onResult(ProductResponse result) {
-                }
-            });
         }
     };
     private TabLayout.OnTabSelectedListener mTabSelectListener = new TabLayout.OnTabSelectedListener() {
@@ -318,7 +306,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 return;
             mShowCaseAdapter.changeCursor(data);
             if (data.getCount() > 0) {
-                mPageChangeListener.onScrolled(mRecyclerView,0,0);
+                mPageChangeListener.onScrolled(mRecyclerView, 0, 0);
                 mOverlayVH.itemView.setVisibility(View.VISIBLE);
             }
         }
@@ -336,7 +324,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlayVH.mFollowersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
         mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(), "%d", user.following_cnt));
 
-        mTabViewHolder.setCounts(user.collections_cnt,user.products_cnt);
+        mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
     }
 
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -345,14 +333,20 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         Cursor cursor = null;
         private int width;
 
-        public ShowcasePagerAdapter(Context context,int width,int height) {
+        public ShowcasePagerAdapter(Context context, int width, int height) {
             this.context = context;
             this.width = width;
             this.height = height;
         }
 
         public User getUser(int position) {
-            if (!DUMMY && cursor.moveToPosition(position))
+            if (DUMMY) {
+                User user = new User(2, User.TYPE_DESIGNER);
+                user.name = "Kiran BH";
+                user.imageUrl = "/kiran";
+                return user;
+            }
+            if (cursor.moveToPosition(position))
                 return UserInfoCache.extractFromCursor(null, cursor);
             else return null;
         }
@@ -364,7 +358,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image,parent,false)) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
             };
             return vh;
         }
@@ -372,7 +366,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
-            ImageView image  = (ImageView) holder.itemView.findViewById(R.id.image);
+            ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
             Picasso.with(mContext).load(user.imageUrl).placeholder(R.drawable.designer).into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
@@ -382,10 +376,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public int getItemCount() {
             if (DUMMY) return 8;
-           return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
+            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
-        public void setDimens(int width,int height){
+        public void setDimens(int width, int height) {
             this.width = width;
             this.height = height;
             notifyDataSetChanged();
@@ -433,7 +427,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     }
 
-    class TabViewHolder implements View.OnClickListener{
+    class TabViewHolder implements View.OnClickListener {
         private final float INTERVAL_TEXT_SIZE = 1;//in sp
         @Bind(R.id.tab1)
         View tab1;
@@ -458,41 +452,41 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Bind(R.id.divider2)
         View divider2;
 
-        int topMargin=0;
+        int topMargin = 0;
 
         public TabViewHolder(View itemView) {
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             topMargin = getResources().getDimensionPixelSize(R.dimen.tab_top_margin);
             tab1.setOnClickListener(this);
             tab2.setOnClickListener(this);
             tab3.setOnClickListener(this);
         }
 
-        public void setCounts(int count1,int count2){
-            tabCount1.setText(String.format(Locale.getDefault(),"%d",count1));
-            tabCount2.setText(String.format(Locale.getDefault(),"%d",count2));
+        public void setCounts(int count1, int count2) {
+            tabCount1.setText(String.format(Locale.getDefault(), "%d", count1));
+            tabCount2.setText(String.format(Locale.getDefault(), "%d", count2));
         }
 
-        public void setSelected(int pos){
-            switch (pos){
+        public void setSelected(int pos) {
+            switch (pos) {
                 case 0:
-                    setView(tabName1,tabCount1,true);
-                    setView(tabName2,tabCount2,false);
-                    setView(tabName3,null,false);
+                    setView(tabName1, tabCount1, true);
+                    setView(tabName2, tabCount2, false);
+                    setView(tabName3, null, false);
                     divider1.setVisibility(View.GONE);
                     divider2.setVisibility(View.VISIBLE);
                     break;
                 case 1:
-                    setView(tabName1,tabCount1,false);
-                    setView(tabName2,tabCount2,true);
-                    setView(tabName3,null,false);
+                    setView(tabName1, tabCount1, false);
+                    setView(tabName2, tabCount2, true);
+                    setView(tabName3, null, false);
                     divider1.setVisibility(View.GONE);
                     divider2.setVisibility(View.GONE);
                     break;
                 case 2:
-                    setView(tabName1,tabCount1,false);
-                    setView(tabName2,tabCount2,false);
-                    setView(tabName3,null,true);
+                    setView(tabName1, tabCount1, false);
+                    setView(tabName2, tabCount2, false);
+                    setView(tabName3, null, true);
                     divider1.setVisibility(View.VISIBLE);
                     divider2.setVisibility(View.GONE);
                     break;
@@ -502,25 +496,25 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public void onClick(View v) {
             int id = v.getId();
-            if(id==R.id.tab1){
+            if (id == R.id.tab1) {
                 configureUI(UISTATE_COLLECTION);
-            }else if(id==R.id.tab2){
+            } else if (id == R.id.tab2) {
                 configureUI(UISTATE_PRODUCT);
                 mAppBarLayout.setExpanded(false);
-            }else if(id==R.id.tab3){
+            } else if (id == R.id.tab3) {
                 configureUI(UISTATE_SOCIAL);
             }
         }
 
-        private void setView(TextView view1,TextView view2,boolean selected){
-            view1.setTextColor(selected?Color.BLACK:Color.WHITE);
-            if(view2!=null) {
+        private void setView(TextView view1, TextView view2, boolean selected) {
+            view1.setTextColor(selected ? Color.BLACK : Color.WHITE);
+            if (view2 != null) {
                 view2.setTextColor(selected ? Color.BLACK : Color.WHITE);
-                view2.setTextSize(TypedValue.COMPLEX_UNIT_SP,selected?34:12);
+                view2.setTextSize(TypedValue.COMPLEX_UNIT_SP, selected ? 34 : 12);
             }
-            View parent = ((ViewGroup)view1.getParent());
-            parent.setBackgroundColor(selected?Color.WHITE:Color.BLACK);
-            ((LinearLayout.LayoutParams)parent.getLayoutParams()).topMargin=selected?0:topMargin;
+            View parent = ((ViewGroup) view1.getParent());
+            parent.setBackgroundColor(selected ? Color.WHITE : Color.BLACK);
+            ((LinearLayout.LayoutParams) parent.getLayoutParams()).topMargin = selected ? 0 : topMargin;
         }
     }
 

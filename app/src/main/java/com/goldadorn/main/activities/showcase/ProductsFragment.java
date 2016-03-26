@@ -21,6 +21,8 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.ProductResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +47,7 @@ public class ProductsFragment extends Fragment {
 
     private User mUser;
     private Collection mCollection;
-    private int mMode=MODE_COLLECTION;
+    private int mMode = MODE_COLLECTION;
     private ProductCallback mProductCallback = new ProductCallback();
 
     public static ProductsFragment newInstance(int mode, User user, Collection collection) {
@@ -120,9 +122,8 @@ public class ProductsFragment extends Fragment {
         } else {
             ((CollectionsActivity) getActivity()).registerCollectionChangeListener(mCollectionChangeListener);
         }
-
-
         getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+        refreshData();
     }
 
     @Override
@@ -188,6 +189,7 @@ public class ProductsFragment extends Fragment {
         public void onUserChange(User user) {
             mUser = user;
             getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+            refreshData();
         }
     };
     private CollectionChangeListener mCollectionChangeListener = new CollectionChangeListener() {
@@ -195,9 +197,19 @@ public class ProductsFragment extends Fragment {
         public void onCollectionChange(Collection user) {
             mCollection = user;
             getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
-
+            refreshData();
         }
     };
+
+    private void refreshData() {
+        ProductResponse response = new ProductResponse();
+        if (mMode == MODE_USER) {
+            response.userId = mUser.id;
+        } else {
+            response.collectionId = mCollection.id;
+        }
+        UIController.getProducts(getContext(), response, null);
+    }
 
     private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;

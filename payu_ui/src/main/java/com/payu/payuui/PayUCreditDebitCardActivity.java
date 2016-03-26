@@ -12,13 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.payu.india.Model.CCDCCard;
-import com.payu.india.Model.PaymentDefaultParams;
 import com.payu.india.Model.PaymentParams;
 import com.payu.india.Model.PayuConfig;
 import com.payu.india.Model.PayuHashes;
@@ -26,7 +23,6 @@ import com.payu.india.Model.PostData;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.india.Payu.PayuErrors;
 import com.payu.india.Payu.PayuUtils;
-import com.payu.india.PostParams.CCDCPostParams;
 import com.payu.india.PostParams.PaymentPostParams;
 
 

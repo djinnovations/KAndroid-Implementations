@@ -32,13 +32,10 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
-import com.goldadorn.main.server.UIController;
-import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 
 import java.util.ArrayList;
@@ -191,18 +188,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         ft.commitAllowingStateLoss();
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null,
                 mCollectionCallback);
-
-        final ProductResponse response = new ProductResponse();
-        if (!DUMMY) response.collectionId = mCollection.id;
-        UIController.getProducts(mContext, response, new IResultListener<ProductResponse>() {
-            @Override
-            public void onResult(ProductResponse result) {
-                mProgressLayout.setVisibility(View.GONE);
-                if (result.success) DUMMY = false;
-                configureUI(mUIState);
-            }
-        });
-
     }
 
     private void initTabs() {
