@@ -1,10 +1,10 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.activities.cart.PaymentTestActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
@@ -113,6 +112,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
     private boolean DUMMY = true;
+    private Handler mHandler;
 
 
     @Override
@@ -133,7 +133,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlay.getLayoutParams().height = mStartHeight;
         topLayout.getLayoutParams().height = mStartHeight;
         mToolBar.getLayoutParams().height = mCollapsedHeight;
+        mHandler = new Handler();
 
+        final int tabStart = mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height)+
+                getResources().getDimensionPixelSize(R.dimen.shadow_height);
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
@@ -142,7 +145,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
-        mTabLayout.animate().setDuration(0).y(mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height));
+        mTabLayout.animate().setDuration(0).y(tabStart);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -162,8 +165,18 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
-                    lp.leftMargin = lp.rightMargin = -p;
+//                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
+//                    lp.leftMargin = lp.rightMargin = -p;
+                    mTabViewHolder.setSides(-p);
+
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(mVerticalOffset==0){
+                                mTabLayout.animate().setDuration(0).y(tabStart);
+                            }
+                        }
+                    },180);
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -193,7 +206,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
 
-        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+//        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         configureUI(mUIState);
         UIController.getDesigners(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
             @Override

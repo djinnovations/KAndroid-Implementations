@@ -1,143 +1,359 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="bottom"
-              android:orientation="horizontal">
+<LinearLayout
+    android:id="@+id/layoutTab"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:clickable="true"
+    <View
+        android:id="@+id/shadow_left"
+        android:layout_width="@dimen/shadow_height"
+        android:layout_height="@dimen/shadow_height"
+        android:background="@drawable/bg_shadow_top"
+        />
+
+    <RelativeLayout
         android:id="@+id/tab1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:clickable="true">
 
-        <TextView
-            android:id="@+id/tab1_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:gravity="center"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/collections"
-            android:textColor="@android:color/black"/>
-
-        <TextView
-            android:id="@+id/tab1_count"
+        <LinearLayout
+            android:id="@+id/lin_tab1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textSize="22sp"
-            android:paddingBottom="4dp"
-            android:gravity="center"
-            android:textStyle="italic"
-            android:fontFamily="sans-serif-light"
-            android:text="66"
-            android:textColor="@android:color/black"/>
+            android:layout_marginBottom="@dimen/shadow_height"
+            android:background="@android:color/white"
+            android:orientation="vertical">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tab1_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp"
+                android:text="@string/collections"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:id="@+id/tab1_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="66"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/shadow_left_1"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/shadow_round_1"
+            android:background="@drawable/bg_shadow_left"/>
+
+        <View
+            android:id="@+id/shadow_round_1"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_shadow_round"/>
+
+
+        <View
+            android:id="@+id/shadow_top_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_top"/>
+        <LinearLayout
+            android:id="@+id/shadow_right_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/shadow_right_round_1"
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:visibility="visible"
+                android:background="@drawable/bg_shadow_round_right"
+                />
+
+            <View
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:layout_weight="1"
+                android:background="@drawable/bg_shadow_top"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 
     <LinearLayout
         android:id="@+id/divider1"
+        android:orientation="vertical"
         android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/tab_top_margin"
         android:visibility="gone"
-        android:background="@android:color/black"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/tab_top_margin">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="8dp"
+            android:background="@android:color/black"/>
 
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@android:color/white"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="8dp"
+            android:background="@android:color/black"/>
+        <View
+            android:layout_width="24dp"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_top"/>
     </LinearLayout>
 
-    <LinearLayout
+
+    <RelativeLayout
         android:id="@+id/tab2"
-        android:clickable="true"
         android:layout_width="0dp"
-        android:background="@android:color/black"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/tab_top_margin"
-        android:gravity="center"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:clickable="true">
 
-        <TextView
-            android:id="@+id/tab2_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="4dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textSize="12sp"
-            android:textStyle="italic"
-            android:fontFamily="sans-serif-light"
-            android:text="@string/products"
-            android:textColor="@android:color/white"/>
-
-        <TextView
-            android:id="@+id/tab2_count"
+        <LinearLayout
+            android:id="@+id/lin_tab2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingBottom="4dp"
+            android:layout_marginTop="@dimen/tab_top_margin"
+            android:layout_marginBottom="@dimen/shadow_height"
+            android:background="@android:color/black"
             android:gravity="center"
-            android:textSize="22sp"
-            android:textStyle="italic"
-            android:fontFamily="sans-serif-light"
-            android:text="122"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tab2_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="4dp"
+                android:text="@string/products"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+
+            <TextView
+                android:id="@+id/tab2_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:text="122"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/shadow_left_2"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/shadow_round_2"
+            android:background="@drawable/bg_shadow_left"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/shadow_round_2"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_shadow_round"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/shadow_top_2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_top"
+            android:visibility="gone"/>
+        <LinearLayout
+            android:id="@+id/shadow_right_2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <View
+                android:id="@+id/shadow_right_round_2"
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:background="@drawable/bg_shadow_round_right"
+                android:visibility="visible"
+                />
+
+            <View
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:layout_weight="1"
+                android:background="@drawable/bg_shadow_top"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/divider2"
+        android:orientation="vertical"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/tab_top_margin"
-        android:background="@android:color/black"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp">
+        android:layout_marginTop="@dimen/tab_top_margin">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="8dp"
+            android:background="@android:color/black"/>
 
         <View
             android:layout_width="1dp"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:background="@android:color/white"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="8dp"
+            android:background="@android:color/black"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_top"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:clickable="true"
+
+    <RelativeLayout
         android:id="@+id/tab3"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:layout_marginTop="@dimen/tab_top_margin"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:clickable="true">
 
-        <TextView
-            android:id="@+id/tab3_name"
+        <LinearLayout
+            android:id="@+id/lin_tab3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="4dp"
-            android:textSize="12sp"
-            android:gravity="center"
-            android:textStyle="italic"
-            android:maxLines="2"
-            android:fontFamily="sans-serif-light"
-            android:text="social@\nJunhaywndgasdddsewjsda"
-            android:textColor="@android:color/white"/>
+            android:layout_marginTop="@dimen/tab_top_margin"
+            android:layout_marginBottom="@dimen/shadow_height"
+            android:background="@android:color/black"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tab3_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center"
+                android:maxLines="2"
+                android:padding="4dp"
+                android:text="social@\nJunhaywndgasdddsewjsda"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/shadow_left_3"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_shadow_left"
+            android:layout_above="@+id/shadow_round_3"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/shadow_round_3"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_shadow_round"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/shadow_top_3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_top"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/shadow_right_3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/shadow_right_round_3"
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:background="@drawable/bg_shadow_round_right"
+                />
+
+            <View
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:layout_weight="1"
+                android:background="@drawable/bg_shadow_top"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/shadow_right"
+        android:layout_width="24dp"
+        android:layout_height="@dimen/shadow_height"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/shadow_right_round"
+            android:visibility="gone"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="@dimen/shadow_height"
+            android:background="@drawable/bg_shadow_round_right"
+            />
+
+        <View
+            android:id="@+id/shadow_right_extra5"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/shadow_height"
+            android:visibility="visible"
+            android:layout_weight="1"
+            android:background="@drawable/bg_shadow_top"
+            />
     </LinearLayout>
+
 </LinearLayout>
