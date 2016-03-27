@@ -20,7 +20,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +61,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     PaymentParams mPaymentParams;
     PayuHashes mPayUHashes;
     ProgressBar mProgressBar;
-    ListView mRecyclerView;
+    LinearLayout mRecyclerView;
     PayUHelper mPayUHelper;
     private Bundle mPayuBundle;
     PayUStoredCardsAdapter mStoredCardsAdapter;
@@ -80,8 +79,8 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         super.onViewCreated(view, savedInstanceState);
         mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(), mPaymentModes);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
-        mRecyclerView = (ListView) view.findViewById(R.id.recyclerView);
-        mRecyclerView.setAdapter(mStoredCardsAdapter);
+        mRecyclerView = (LinearLayout) view.findViewById(R.id.recyclerView);
+//        mRecyclerView.setAdapter(mStoredCardsAdapter);
         mAddButton.setText("Add new payment method");
         mAddButton.setOnClickListener(mAddClick);
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
@@ -133,6 +132,21 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     }
 
     private void onPaymentOptionsChanged() {
+        if (mPaymentModes.size() == 0) {
+            StoredCard card = new StoredCard();
+            card.setCardName("Master");
+            card.setCardBin("visa");
+            card.setMaskedCardNumber("783");
+            mPaymentModes.add(card);
+            card = new StoredCard();
+            card.setCardName("Kiran"); card.setCardBin("visa");
+            card.setMaskedCardNumber("783");
+            mPaymentModes.add(card);
+            new StoredCard();
+            card.setCardName("vijith");
+            card.setMaskedCardNumber("783"); card.setCardBin("visa");
+            mPaymentModes.add(card);
+        }
         if (mPaymentModes.size() > 0) {
             mRecyclerView.setVisibility(View.VISIBLE);
         } else {
@@ -370,7 +384,20 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
         public void changeData(ArrayList<StoredCard> mPaymentModes) {
             storedCards = mPaymentModes;
-            notifyDataSetChanged();
+            for (int i = 0; i < storedCards.size(); i++) {
+                View child = mRecyclerView.getChildAt(i);
+                View v = getView(i, child, mRecyclerView);
+                v.setVisibility(View.VISIBLE);
+                if (child == null) {
+                    mRecyclerView.addView(v);
+                }
+            }
+            if (mRecyclerView.getChildCount() > storedCards.size()) {
+                for (int i = storedCards.size(); i < mRecyclerView.getChildCount(); i++) {
+                    mRecyclerView.getChildAt(i).setVisibility(View.GONE);
+                }
+            }
+//            notifyDataSetChanged();
         }
 
 
