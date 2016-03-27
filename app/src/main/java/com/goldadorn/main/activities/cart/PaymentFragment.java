@@ -118,37 +118,26 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 }
             }
         });
-
-
-//        PaymentMode pm = new PaymentMode(123123, 2);
-//        pm.name = "Mobikwik";
-//        pm.details = "Jabong flipped on\n amazon";
-//        mPaymentModes.add(pm);
-//        pm = new PaymentMode(123123, 3);
-//        pm.name = "Office";
-//        pm.details = "Snapdeal flipped on\n amazon";
-//        mPaymentModes.add(pm);
-//        onPaymentOptionsChanged();
     }
 
     private void onPaymentOptionsChanged() {
-        if (mPaymentModes.size() == 0) {
-            StoredCard card = new StoredCard();
-            card.setCardName("Master");
-            card.setCardBin("visa");
-            card.setMaskedCardNumber("783");
-            mPaymentModes.add(card);
-            card = new StoredCard();
-            card.setCardName("Kiran");
-            card.setCardBin("visa");
-            card.setMaskedCardNumber("783");
-            mPaymentModes.add(card);
-            new StoredCard();
-            card.setCardName("vijith");
-            card.setMaskedCardNumber("783");
-            card.setCardBin("visa");
-            mPaymentModes.add(card);
-        }
+//        if (mPaymentModes.size() == 0) {
+//            StoredCard card = new StoredCard();
+//            card.setCardName("Master");
+//            card.setCardBin("visa");
+//            card.setMaskedCardNumber("783");
+//            mPaymentModes.add(card);
+//            card = new StoredCard();
+//            card.setCardName("Kiran");
+//            card.setCardBin("visa");
+//            card.setMaskedCardNumber("783");
+//            mPaymentModes.add(card);
+//            new StoredCard();
+//            card.setCardName("vijith");
+//            card.setMaskedCardNumber("783");
+//            card.setCardBin("visa");
+//            mPaymentModes.add(card);
+//        }
         if (mPaymentModes.size() > 0) {
             mContainerCard.setVisibility(View.VISIBLE);
         } else {
@@ -478,7 +467,6 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                         cvvContainer.setVisibility(View.GONE);
                     }
                 }
-
                 if (view.getId() == R.id.image_view_card_trash) {
                     deleteCard(storedCards.get(position));
                 } else if (view.getId() == R.id.button_pay_now) {
