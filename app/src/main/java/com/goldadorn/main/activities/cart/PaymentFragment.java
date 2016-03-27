@@ -58,13 +58,13 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     ArrayList<StoredCard> mPaymentModes = new ArrayList<>(5);
     TextView mAddButton;
     PayuResponse mPayuResponse;
-    PayuConfig payuConfig;
+    PayuConfig mPayuConfig;
     PaymentParams mPaymentParams;
     PayuHashes mPayUHashes;
     ProgressBar mProgressBar;
     ListView mRecyclerView;
     PayUHelper mPayUHelper;
-    private Bundle mBundle;
+    private Bundle mPayuBundle;
     PayUStoredCardsAdapter mStoredCardsAdapter;
     ICartData mCartData;
 
@@ -87,14 +87,13 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-        mPayUHelper = new PayUHelper(new IResultListener<Bundle>() {
+        mPayUHelper = new PayUHelper(mCartData.getBillableAmount(), new IResultListener<Bundle>() {
             @Override
             public void onResult(Bundle bundle) {
-                mBundle = bundle;
+                mPayuBundle = bundle;
                 Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
-                payuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
+                mPayuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
                 mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
-                mPaymentParams.setAmount(String.valueOf(mCartData.getBillableAmount()));
                 mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
                 if (savedInstanceState == null) { // dont fetch the data if its been called from payment activity.
                     MerchantWebService merchantWebService = new MerchantWebService();
@@ -106,12 +105,12 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     PostData postData = new MerchantWebServicePostParams(merchantWebService).getMerchantWebServicePostParams();
                     if (postData.getCode() == PayuErrors.NO_ERROR) {
                         // ok we got the post params, let make an api call to payu to fetch the payment related details
-                        payuConfig.setData(postData.getResult());
+                        mPayuConfig.setData(postData.getResult());
 
                         // lets set the visibility of progress bar
                         mProgressBar.setVisibility(View.VISIBLE);
                         GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
-                        paymentRelatedDetailsForMobileSdkTask.execute(payuConfig);
+                        paymentRelatedDetailsForMobileSdkTask.execute(mPayuConfig);
                     } else {
                         Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
                         // close the progress bar
@@ -196,11 +195,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             if (postData.getCode() == PayuErrors.NO_ERROR) {
                 // ok we got the post params, let make an api call to payu to fetch the payment related details
 
-                payuConfig.setData(postData.getResult());
-                payuConfig.setEnvironment(payuConfig.getEnvironment());
+                mPayuConfig.setData(postData.getResult());
+                mPayuConfig.setEnvironment(mPayuConfig.getEnvironment());
 
                 GetStoredCardTask getStoredCardTask = new GetStoredCardTask(this);
-                getStoredCardTask.execute(payuConfig);
+                getStoredCardTask.execute(mPayuConfig);
             } else {
                 Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
             }
@@ -219,11 +218,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     private void launchActivity(Intent intent) {
         intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
         intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
-        payuConfig.setData(null);
-        intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
+        mPayuConfig.setData(null);
+        intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
         // salt
-        if (mBundle.getString(PayuConstants.SALT) != null)
-            intent.putExtra(PayuConstants.SALT, mBundle.getString(PayuConstants.SALT));
+        if (mPayuBundle.getString(PayuConstants.SALT) != null)
+            intent.putExtra(PayuConstants.SALT, mPayuBundle.getString(PayuConstants.SALT));
 
         startActivityForResult(intent, PayuConstants.PAYU_REQUEST_CODE);
     }
@@ -242,11 +241,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         if (postData.getCode() == PayuErrors.NO_ERROR) {
             // ok we got the post params, let make an api call to payu to fetch
             // the payment related details
-            payuConfig.setData(postData.getResult());
-            payuConfig.setEnvironment(payuConfig.getEnvironment());
+            mPayuConfig.setData(postData.getResult());
+            mPayuConfig.setEnvironment(mPayuConfig.getEnvironment());
 
             DeleteCardTask deleteCardTask = new DeleteCardTask(this);
-            deleteCardTask.execute(payuConfig);
+            deleteCardTask.execute(mPayuConfig);
         } else {
             Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
         }
@@ -269,9 +268,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         postData = new PaymentPostParams(mPaymentParams, PayuConstants.CC).getPaymentPostParams();
 
         if (postData.getCode() == PayuErrors.NO_ERROR) {
-            payuConfig.setData(postData.getResult());
+            mPayuConfig.setData(postData.getResult());
             Intent intent = new Intent(getContext(), PaymentsActivity.class);
-            intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
+            intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
             startActivityForResult(intent, PayuConstants.PAYU_REQUEST_CODE);
         } else {
             Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_SHORT).show();
@@ -357,7 +356,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             ViewHolder holder = null;
             if (convertView == null) {
                 LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(R.layout.item_payment_mode, parent,false);
+                convertView = mInflater.inflate(R.layout.item_payment_mode, parent, false);
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
             } else {

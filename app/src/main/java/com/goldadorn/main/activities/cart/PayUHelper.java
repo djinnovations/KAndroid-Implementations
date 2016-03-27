@@ -28,7 +28,7 @@ import java.util.Iterator;
 /**
  * Created by Kiran BH on 26/03/16.
  */
-public class PayUHelper {
+ class PayUHelper {
 
     public static final boolean PRODUCTION = true;
     int merchantIndex = 0;
@@ -57,7 +57,7 @@ public class PayUHelper {
     private String cardBin;
     private IResultListener<Bundle> mInitListner;
 
-    PayUHelper(IResultListener<Bundle> initListner) {
+    PayUHelper(float amount,IResultListener<Bundle> initListner) {
         PayUSdkDetails payUSdkDetails = new PayUSdkDetails();
         Log.d("PayUSdkDetails", "Build No: " + payUSdkDetails.getSdkBuildNumber() + "\n Build Type: " + payUSdkDetails.getSdkBuildType() + " \n Build Flavor: " + payUSdkDetails.getSdkFlavor() + "\n Application Id: " + payUSdkDetails.getSdkApplicationId() + "\n Version Code: " + payUSdkDetails.getSdkVersionCode() + "\n Version Name: " + payUSdkDetails.getSdkVersionName());
         mInitListner = initListner;
@@ -65,7 +65,7 @@ public class PayUHelper {
         payuConfig = new PayuConfig();
 
         mPaymentParams.setKey(key = merchantKey);
-        mPaymentParams.setAmount("10.0");
+        mPaymentParams.setAmount(String.valueOf(amount));
         mPaymentParams.setProductInfo("myproduct");
         mPaymentParams.setFirstName("firstname");
         mPaymentParams.setEmail("me@itsmeonly.com");
