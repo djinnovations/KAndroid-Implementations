@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class CartManagerActivity extends FragmentActivity  {
+public class CartManagerActivity extends FragmentActivity  implements ICartData{
     public static final int UISTATE_CART = 0;
     public static final int UISTATE_ADDRESS = 1;
     public static final int UISTATE_PAYMENT = 2;
@@ -48,7 +48,8 @@ public class CartManagerActivity extends FragmentActivity  {
     ScrollView mScollView;
 
     public List<Product> mCartItems= new ArrayList<>();
-    private float mCostTotal;
+    public float mCostTotal;
+    private boolean mPaymentSuccess;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -166,9 +167,30 @@ public class CartManagerActivity extends FragmentActivity  {
         }
     };
 
+    @Override
     public void storeCartData(ArrayList<Product> cart, float costTotal) {
         mCartItems.clear();
         if(cart!=null)mCartItems.addAll(cart);
         mCostTotal=costTotal;
+    }
+
+    @Override
+    public List<Product> getCartProducts() {
+        return mCartItems;
+    }
+
+    @Override
+    public float getBillableAmount() {
+        return mCostTotal;
+    }
+
+    @Override
+    public void setPaymentDone(boolean done) {
+        mPaymentSuccess=done;
+    }
+
+    @Override
+    public boolean isPaymentDone() {
+        return mPaymentSuccess;
     }
 }

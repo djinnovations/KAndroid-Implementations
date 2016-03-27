@@ -66,20 +66,21 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     PayUHelper mPayUHelper;
     private Bundle mBundle;
     PayUStoredCardsAdapter mStoredCardsAdapter;
-
+    ICartData mCartData;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mCartData = (ICartData) getActivity();
         return inflater.inflate(R.layout.fragment_payment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(),mPaymentModes);
+        mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(), mPaymentModes);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
-        mRecyclerView= (ListView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (ListView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setAdapter(mStoredCardsAdapter);
         mAddButton.setText("Add new payment method");
         mAddButton.setOnClickListener(mAddClick);
@@ -89,10 +90,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         mPayUHelper = new PayUHelper(new IResultListener<Bundle>() {
             @Override
             public void onResult(Bundle bundle) {
-                mBundle=bundle;
+                mBundle = bundle;
                 Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
                 payuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
                 mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
+                mPaymentParams.setAmount(String.valueOf(mCartData.getBillableAmount()));
                 mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
                 if (savedInstanceState == null) { // dont fetch the data if its been called from payment activity.
                     MerchantWebService merchantWebService = new MerchantWebService();
@@ -143,7 +145,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     private View.OnClickListener mAddClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent  intent= new Intent(getContext(), PayUCreditDebitCardActivity.class);
+            Intent intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
             intent.putParcelableArrayListExtra(PayuConstants.CREDITCARD, mPayuResponse.getCreditCard());
             intent.putParcelableArrayListExtra(PayuConstants.DEBITCARD, mPayuResponse.getDebitCard());
             launchActivity(intent);
@@ -153,7 +155,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
-            if(data != null ) {
+            if (data != null) {
                 new AlertDialog.Builder(getContext())
                         .setCancelable(false)
                         .setMessage(data.getStringExtra("result"))
@@ -162,11 +164,12 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
                             }
                         }).show();
-            }else{
+            } else {
                 Toast.makeText(getContext(), "Could not receive data", Toast.LENGTH_LONG).show();
             }
         }
     }
+
     @Override
     public void onPaymentRelatedDetailsResponse(PayuResponse payuResponse) {
         mPayuResponse = payuResponse;
@@ -212,17 +215,19 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             mPaymentModes.addAll(payuResponse.getStoredCards());
         onPaymentOptionsChanged();
     }
+
     private void launchActivity(Intent intent) {
         intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
         intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
         payuConfig.setData(null);
         intent.putExtra(PayuConstants.PAYU_CONFIG, payuConfig);
         // salt
-        if(mBundle.getString(PayuConstants.SALT) != null)
+        if (mBundle.getString(PayuConstants.SALT) != null)
             intent.putExtra(PayuConstants.SALT, mBundle.getString(PayuConstants.SALT));
 
         startActivityForResult(intent, PayuConstants.PAYU_REQUEST_CODE);
     }
+
     private void deleteCard(StoredCard storedCard) {
         MerchantWebService merchantWebService = new MerchantWebService();
         merchantWebService.setKey(mPaymentParams.getKey());
@@ -287,50 +292,50 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             payuUtils = new PayuUtils();
         }
 
-        private void viewHolder(ViewHolder holder, int position) {
+        private void bindUI(ViewHolder holder, int position) {
 //            holder.setPosition(position);
+            holder.cvvPayNowLinearLayout.setVisibility(View.GONE);
             String issuer = payuUtils.getIssuer(storedCards.get(position).getCardBin());
             switch (issuer) {
                 case PayuConstants.VISA:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.visa);
+                    holder.cardIconImageView.setImageResource(R.mipmap.visa);
                     break;
                 case PayuConstants.LASER:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.laser);
+                    holder.cardIconImageView.setImageResource(R.mipmap.laser);
                     break;
                 case PayuConstants.DISCOVER:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.discover);
+                    holder.cardIconImageView.setImageResource(R.mipmap.discover);
                     break;
                 case PayuConstants.MAES:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.maestro);
+                    holder.cardIconImageView.setImageResource(R.mipmap.maestro);
                     break;
                 case PayuConstants.MAST:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.master);
+                    holder.cardIconImageView.setImageResource(R.mipmap.master);
                     break;
                 case PayuConstants.AMEX:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.amex);
+                    holder.cardIconImageView.setImageResource(R.mipmap.amex);
                     break;
                 case PayuConstants.DINR:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.diner);
+                    holder.cardIconImageView.setImageResource(R.mipmap.diner);
                     break;
                 case PayuConstants.JCB:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.jcb);
+                    holder.cardIconImageView.setImageResource(R.mipmap.jcb);
                     break;
                 case PayuConstants.SMAE:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.maestro);
+                    holder.cardIconImageView.setImageResource(R.mipmap.maestro);
                     break;
                 default:
-                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.card);
+                    holder.cardIconImageView.setImageResource(R.mipmap.card);
                     break;
 
             }
-
             holder.cardNumberTextView.setText(storedCards.get(position).getMaskedCardNumber());
             holder.cardNameTextView.setText(storedCards.get(position).getCardName());
         }
 
         @Override
         public int getCount() {
-            if(storedCards != null)
+            if (storedCards != null)
                 return storedCards.size();
             else
                 return 0;
@@ -338,7 +343,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
         @Override
         public Object getItem(int index) {
-            if(null != storedCards) return storedCards.get(index);
+            if (null != storedCards) return storedCards.get(index);
             else return 0;
         }
 
@@ -352,20 +357,20 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             ViewHolder holder = null;
             if (convertView == null) {
                 LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-                convertView = mInflater.inflate(R.layout.item_payment_mode, null);
+                convertView = mInflater.inflate(R.layout.item_payment_mode, parent,false);
                 holder = new ViewHolder(convertView);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
             holder.setPosition(position);
-            viewHolder(holder, position);
+            bindUI(holder, position);
 
             return convertView;
         }
 
         public void changeData(ArrayList<StoredCard> mPaymentModes) {
-            storedCards =mPaymentModes;
+            storedCards = mPaymentModes;
             notifyDataSetChanged();
         }
 
@@ -389,14 +394,14 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
             public ViewHolder(View itemView) {
 
-                cardIconImageView = (ImageView) itemView.findViewById(com.payu.payuui.R.id.image_view_card_icon);
-                cardNumberTextView = (TextView) itemView.findViewById(com.payu.payuui.R.id.text_view_card_number);
-                cardTrashImageView = (ImageView) itemView.findViewById(com.payu.payuui.R.id.image_view_card_trash);
-                cardNameTextView = (TextView) itemView.findViewById(com.payu.payuui.R.id.text_view_card_name);
-                rowLinearLayout = (LinearLayout) itemView.findViewById(com.payu.payuui.R.id.linear_layout_row);
-                cvvPayNowLinearLayout = (LinearLayout) itemView.findViewById(com.payu.payuui.R.id.linear_layout_cvv_paynow);
-                paynNowButton = (Button) itemView.findViewById(com.payu.payuui.R.id.button_pay_now);
-                cvvEditText = (EditText) itemView.findViewById(com.payu.payuui.R.id.edit_text_cvv);
+                cardIconImageView = (ImageView) itemView.findViewById(R.id.image_view_card_icon);
+                cardNumberTextView = (TextView) itemView.findViewById(R.id.text_view_card_number);
+                cardTrashImageView = (ImageView) itemView.findViewById(R.id.image_view_card_trash);
+                cardNameTextView = (TextView) itemView.findViewById(R.id.text_view_card_name);
+                rowLinearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_row);
+                cvvPayNowLinearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_cvv_paynow);
+                paynNowButton = (Button) itemView.findViewById(R.id.button_pay_now);
+                cvvEditText = (EditText) itemView.findViewById(R.id.edit_text_cvv);
 
                 // lets restrict the user not from typing alpha characters.
 
@@ -438,9 +443,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 } else {
                     cvvPayNowLinearLayout.setVisibility(View.VISIBLE);
                 }
-                if (view.getId() == com.payu.payuui.R.id.image_view_card_trash) {
+                if (view.getId() == R.id.image_view_card_trash) {
                     deleteCard(storedCards.get(position));
-                } else if (view.getId() == com.payu.payuui.R.id.button_pay_now) {
+                } else if (view.getId() == R.id.button_pay_now) {
                     makePayment(storedCards.get(position), cvvEditText.getText().toString());
                 }
             }

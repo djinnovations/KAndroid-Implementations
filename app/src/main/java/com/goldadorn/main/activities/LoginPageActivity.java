@@ -249,8 +249,8 @@ public class LoginPageActivity extends BaseActivity {
         icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock, R.color.colorPrimary, iconSize);
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
-//        Intent in = new Intent(this, CartManagerActivity.class);
-//        startActivity(in);
+        Intent in = new Intent(this, CartManagerActivity.class);
+        startActivity(in);
     }
 
     private class LoginTextWatcher implements TextWatcher {
