@@ -14,6 +14,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.model.Product;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -42,6 +46,9 @@ public class CartManagerActivity extends FragmentActivity  {
     LinearLayout mContainerProgressImage;
     @Bind(R.id.scrollview)
     ScrollView mScollView;
+
+    public List<Product> mCartItems= new ArrayList<>();
+    private float mCostTotal;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -159,4 +166,9 @@ public class CartManagerActivity extends FragmentActivity  {
         }
     };
 
+    public void storeCartData(ArrayList<Product> cart, float costTotal) {
+        mCartItems.clear();
+        if(cart!=null)mCartItems.addAll(cart);
+        mCostTotal=costTotal;
+    }
 }

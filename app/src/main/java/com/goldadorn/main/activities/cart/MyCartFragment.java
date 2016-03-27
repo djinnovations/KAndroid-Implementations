@@ -23,7 +23,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     private View mCartEmptyView;
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
-    float mCostShipping = 200.00f, mCostTax = 420.00f;
+    float mCostShipping = 200.00f, mCostTax = 420.00f, mCostTotal;
 
     @Nullable
     @Override
@@ -58,17 +58,17 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     private void bindCostUi() {
-        float total = 0.0f;
+        mCostTotal = 0.0f;
         int totalUnits = 0;
         for (Product p : mCart) {
-            total = total + p.getTotalPrice();
+            mCostTotal = mCostTotal + p.getTotalPrice();
             totalUnits = totalUnits + p.quantity;
         }
-        total = total + mCostShipping + mCostTax;
+        mCostTotal = mCostTotal + mCostShipping + mCostTax;
         int t = totalUnits > 0 ? 1 : 0;
         ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + mCostTax * t);
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + mCostShipping * t);
-        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + total * t);
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(Product.currency + ". " + mCostTotal * t);
     }
 
     private void onCartChanged() {
@@ -81,6 +81,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
         bindCostUi();
+        ((CartManagerActivity) getActivity()).storeCartData(mCart, mCostTotal);
     }
 
     @Override

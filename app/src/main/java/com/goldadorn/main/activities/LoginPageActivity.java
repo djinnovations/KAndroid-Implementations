@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.utils.URLHelper;
@@ -247,6 +249,8 @@ public class LoginPageActivity extends BaseActivity {
         icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock, R.color.colorPrimary, iconSize);
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
+        Intent in = new Intent(this, CartManagerActivity.class);
+        startActivity(in);
     }
 
     private class LoginTextWatcher implements TextWatcher {

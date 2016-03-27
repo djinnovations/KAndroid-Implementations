@@ -1,16 +1,26 @@
 package com.goldadorn.main.activities.cart;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +39,7 @@ import com.payu.india.Model.PostData;
 import com.payu.india.Model.StoredCard;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.india.Payu.PayuErrors;
+import com.payu.india.Payu.PayuUtils;
 import com.payu.india.PostParams.MerchantWebServicePostParams;
 import com.payu.india.PostParams.PaymentPostParams;
 import com.payu.india.Tasks.DeleteCardTask;
@@ -45,15 +56,16 @@ import java.util.ArrayList;
 public class PaymentFragment extends Fragment implements PaymentRelatedDetailsListener, DeleteCardApiListener, GetStoredCardApiListener {
 
     ArrayList<StoredCard> mPaymentModes = new ArrayList<>(5);
-    PaymentModesViewHolder mPaymentsHolder;
     TextView mAddButton;
     PayuResponse mPayuResponse;
     PayuConfig payuConfig;
     PaymentParams mPaymentParams;
     PayuHashes mPayUHashes;
     ProgressBar mProgressBar;
+    ListView mRecyclerView;
     PayUHelper mPayUHelper;
     private Bundle mBundle;
+    PayUStoredCardsAdapter mStoredCardsAdapter;
 
 
     @Nullable
@@ -65,8 +77,10 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     @Override
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPaymentsHolder = new PaymentModesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mPaymentSelectedListener);
+        mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(),mPaymentModes);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
+        mRecyclerView= (ListView) view.findViewById(R.id.recyclerView);
+        mRecyclerView.setAdapter(mStoredCardsAdapter);
         mAddButton.setText("Add new payment method");
         mAddButton.setOnClickListener(mAddClick);
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
@@ -119,11 +133,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     private void onPaymentOptionsChanged() {
         if (mPaymentModes.size() > 0) {
-            mPaymentsHolder.setVisibility(View.VISIBLE);
-            mPaymentsHolder.bindUI(mPaymentModes);
+            mRecyclerView.setVisibility(View.VISIBLE);
         } else {
-            mPaymentsHolder.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
         }
+        mStoredCardsAdapter.changeData(mPaymentModes);
     }
 
     private View.OnClickListener mAddClick = new View.OnClickListener() {
@@ -136,12 +150,6 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         }
     };
 
-    IResultListener<StoredCard> mPaymentSelectedListener = new IResultListener<StoredCard>() {
-        @Override
-        public void onResult(StoredCard selectedCard) {
-
-        }
-    };
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
@@ -265,4 +273,178 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         }
 
     }
+
+    public class PayUStoredCardsAdapter extends BaseAdapter { // todo rename to storedcardAdapter
+
+        private ArrayList<StoredCard> storedCards;
+        private Context context;
+
+        private PayuUtils payuUtils;
+
+        public PayUStoredCardsAdapter(Context context, ArrayList<StoredCard> StoredCards) {
+            this.context = context;
+            storedCards = StoredCards;
+            payuUtils = new PayuUtils();
+        }
+
+        private void viewHolder(ViewHolder holder, int position) {
+//            holder.setPosition(position);
+            String issuer = payuUtils.getIssuer(storedCards.get(position).getCardBin());
+            switch (issuer) {
+                case PayuConstants.VISA:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.visa);
+                    break;
+                case PayuConstants.LASER:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.laser);
+                    break;
+                case PayuConstants.DISCOVER:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.discover);
+                    break;
+                case PayuConstants.MAES:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.maestro);
+                    break;
+                case PayuConstants.MAST:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.master);
+                    break;
+                case PayuConstants.AMEX:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.amex);
+                    break;
+                case PayuConstants.DINR:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.diner);
+                    break;
+                case PayuConstants.JCB:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.jcb);
+                    break;
+                case PayuConstants.SMAE:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.maestro);
+                    break;
+                default:
+                    holder.cardIconImageView.setImageResource(com.payu.payuui.R.mipmap.card);
+                    break;
+
+            }
+
+            holder.cardNumberTextView.setText(storedCards.get(position).getMaskedCardNumber());
+            holder.cardNameTextView.setText(storedCards.get(position).getCardName());
+        }
+
+        @Override
+        public int getCount() {
+            if(storedCards != null)
+                return storedCards.size();
+            else
+                return 0;
+        }
+
+        @Override
+        public Object getItem(int index) {
+            if(null != storedCards) return storedCards.get(index);
+            else return 0;
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                LayoutInflater mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                convertView = mInflater.inflate(R.layout.item_payment_mode, null);
+                holder = new ViewHolder(convertView);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+            holder.setPosition(position);
+            viewHolder(holder, position);
+
+            return convertView;
+        }
+
+        public void changeData(ArrayList<StoredCard> mPaymentModes) {
+            storedCards =mPaymentModes;
+            notifyDataSetChanged();
+        }
+
+
+        class ViewHolder implements View.OnClickListener {
+
+            int position; //for index
+
+            ImageView cardIconImageView;
+            ImageView cardTrashImageView;
+            TextView cardNumberTextView;
+            TextView cardNameTextView;
+            LinearLayout cvvPayNowLinearLayout;
+            LinearLayout rowLinearLayout;
+            Button paynNowButton;
+            EditText cvvEditText;
+
+            public void setPosition(int position) {
+                this.position = position;
+            }
+
+            public ViewHolder(View itemView) {
+
+                cardIconImageView = (ImageView) itemView.findViewById(com.payu.payuui.R.id.image_view_card_icon);
+                cardNumberTextView = (TextView) itemView.findViewById(com.payu.payuui.R.id.text_view_card_number);
+                cardTrashImageView = (ImageView) itemView.findViewById(com.payu.payuui.R.id.image_view_card_trash);
+                cardNameTextView = (TextView) itemView.findViewById(com.payu.payuui.R.id.text_view_card_name);
+                rowLinearLayout = (LinearLayout) itemView.findViewById(com.payu.payuui.R.id.linear_layout_row);
+                cvvPayNowLinearLayout = (LinearLayout) itemView.findViewById(com.payu.payuui.R.id.linear_layout_cvv_paynow);
+                paynNowButton = (Button) itemView.findViewById(com.payu.payuui.R.id.button_pay_now);
+                cvvEditText = (EditText) itemView.findViewById(com.payu.payuui.R.id.edit_text_cvv);
+
+                // lets restrict the user not from typing alpha characters.
+
+                cardTrashImageView.setOnClickListener(this);
+                cvvPayNowLinearLayout.setOnClickListener(this);
+                rowLinearLayout.setOnClickListener(this);
+                paynNowButton.setOnClickListener(this);
+
+                // we need to set the length of cvv field according to the card number
+
+                cvvEditText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        /// lets enable or disable the pay now button according to the cvv and card number
+                        cvvEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(payuUtils.getIssuer(storedCards.get(position).getCardBin()).contentEquals(PayuConstants.AMEX) ? 4 : 3)});
+                        if (payuUtils.validateCvv(storedCards.get(position).getCardBin(), s.toString())) {
+                            paynNowButton.setEnabled(true);
+                        } else {
+                            paynNowButton.setEnabled(false);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onClick(View view) {
+                if (cvvPayNowLinearLayout.getVisibility() == View.VISIBLE) {
+                    cvvPayNowLinearLayout.setVisibility(View.GONE);
+                } else {
+                    cvvPayNowLinearLayout.setVisibility(View.VISIBLE);
+                }
+                if (view.getId() == com.payu.payuui.R.id.image_view_card_trash) {
+                    deleteCard(storedCards.get(position));
+                } else if (view.getId() == com.payu.payuui.R.id.button_pay_now) {
+                    makePayment(storedCards.get(position), cvvEditText.getText().toString());
+                }
+            }
+        }
+    }
+
 }
