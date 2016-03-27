@@ -206,8 +206,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             }
         });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        Intent in = new Intent(mContext,PaymentTestActivity.class);
-        startActivity(in);
+//        Intent in = new Intent(mContext,PaymentTestActivity.class);
+//        startActivity(in);
     }
 
     private void initTabs() {
