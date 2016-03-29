@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.goldadorn.main.model.ProductDetail;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.ProductResponse;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,5 +60,16 @@ public class ExtractResponse {
             }
         }
         return null;
+    }
+
+    protected static void extractGetCart( ProductResponse response) throws JSONException {
+        if(response.responseContent!=null){
+            JSONArray productArray = new JSONArray(response.responseContent);
+            for(int i =0; i < productArray.length();i++){
+                ProductDetail productDetail = new ProductDetail();
+
+            }
+
+        }
     }
 }

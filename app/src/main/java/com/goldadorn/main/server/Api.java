@@ -102,7 +102,7 @@ public class Api {
     public static void getProductCustomization(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
-            ApiFactory.getProductBasicInfo(context, response);
+            ApiFactory.getProductCustomization(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductCustomization(context, response);
             }
@@ -116,6 +116,19 @@ public class Api {
             generateUserCredentials(context, response);
             ApiFactory.getPriceForCustomization(context, response);
             if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void getCartDetails(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getCartDetails(context, response);
+            if (response.success && response.responseContent != null) {
+                ExtractResponse.extractGetCart(response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

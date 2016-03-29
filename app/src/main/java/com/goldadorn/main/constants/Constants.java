@@ -34,6 +34,7 @@ public class Constants {
         public static final String HEIGHT = "height";
         public static final String WIDTH = "width";
         public static final String SIZE = "size";
+        public static final String PRODUCTSIZE = "productSize";
         public static final String WIDTHUNITS = "widthUnits";
         public static final String COSTUNITS = "costunits";
         public static final String PRODUCTCODE = "productCode";

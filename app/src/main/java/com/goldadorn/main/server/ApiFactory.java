@@ -3,6 +3,7 @@ package com.goldadorn.main.server;
 import android.content.Context;
 import android.net.Uri;
 
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -32,6 +33,7 @@ public class ApiFactory extends ExtractResponse {
     private static final int PRODUCT_PRICE_CUSTOMIZATION_TYPE = 5;
     private static final int GETDESIGNERS_SOCIAL_TYPE = 6;
     private static final int PRODUCTS_SOCIAL_TYPE = 7;
+    private static final int CART_DETAIL_TYPE = 8;
 
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -50,6 +52,12 @@ public class ApiFactory extends ExtractResponse {
         switch (urlBuilder.mUrlType) {
             case PRODUCT_SHOWCASE_TYPE: {
                 builder.appendPath("getdesigners");
+                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                break;
+            }
+            case CART_DETAIL_TYPE: {
+                builder.appendPath("getcartdetails");
+                builder.appendPath(((Application)context.getApplicationContext()).getUser().id+"");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
@@ -281,7 +289,6 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-
     protected static void getProductCustomization(Context context, ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
@@ -290,18 +297,56 @@ public class ApiFactory extends ExtractResponse {
         }
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = PRODUCT_CUSTOMIZATION_TYPE;
+            urlBuilder.mUrlType = PRODUCT_PRICE_CUSTOMIZATION_TYPE;
 
             urlBuilder.mResponse = response;
             ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
             paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = PRODUCT_CUSTOMIZATION_TYPE;
+            paramsBuilder.mApiType = PRODUCT_PRICE_CUSTOMIZATION_TYPE;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("prodId", response.productDetail.mId);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, response.productDetail.mPrimaryMetal);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.mPrimaryMetalPurity);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.mPrimaryMetalColor);
+            jsonObject.put(Constants.JsonConstants.CENTERSTONE, response.productDetail.mCenterStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, response.productDetail.mAccentStoneSelected);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getPriceForCustomization " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+
+    protected static void getCartDetails(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = CART_DETAIL_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = CART_DETAIL_TYPE;
 
 
             Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
-            L.d("getProductCustomization " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            L.d("getCartDetails " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
