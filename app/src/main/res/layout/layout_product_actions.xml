@@ -19,7 +19,7 @@
         android:text="@string/icon_share_post"/>
 
     <com.mikepenz.iconics.view.IconicsButton
-        android:id="@+id/likeDislikeButton"
+        android:id="@+id/buyNoBuyButton"
         style="@style/ShowcaseButton"
         android:layout_width="@dimen/circle_button_height"
         android:layout_height="@dimen/circle_button_height"
@@ -28,7 +28,7 @@
         android:text="@string/icon_liked_post"/>
 
     <com.mikepenz.iconics.view.IconicsButton
-        android:id="@+id/commentButton"
+        android:id="@+id/wishlistButton"
         style="@style/ShowcaseButton"
         android:layout_width="@dimen/circle_button_height"
         android:layout_height="@dimen/circle_button_height"
