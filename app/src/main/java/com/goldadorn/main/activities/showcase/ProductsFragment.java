@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,9 +26,11 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.mikepenz.iconics.view.IconicsButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,6 +49,11 @@ public class ProductsFragment extends Fragment {
     @Bind(R.id.swipe_deck)
     SwipeDeck cardStack;
 
+    @Bind(R.id.product_price)
+    TextView price;
+    @Bind(R.id.product_name)
+    TextView name;
+
     @Bind(R.id.buyButton)
     Button buyButton;
 
@@ -57,7 +66,7 @@ public class ProductsFragment extends Fragment {
     private View.OnClickListener mBuyClick=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //todo kiran add to cart click
+            //todo kiran go to product info page
         }
     };
 
@@ -107,7 +116,6 @@ public class ProductsFragment extends Fragment {
                     mToast.cancel();
                 mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked", Toast.LENGTH_LONG);
                 mToast.show();
-
             }
 
             @Override
@@ -152,17 +160,10 @@ public class ProductsFragment extends Fragment {
         super.onDestroy();
     }
 
-    public class SwipeDeckAdapter extends BaseAdapter {
+    public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener{
 
         private List<String> data;
         private Context context;
-        private View.OnClickListener mProductClick = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(ProductActivity
-                        .getLaunchIntent(v.getContext()));
-            }
-        };
 
         public SwipeDeckAdapter(List<String> data, Context context) {
             this.data = data;
@@ -187,15 +188,85 @@ public class ProductsFragment extends Fragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View v = convertView;
-            if (v == null) {
-                // normally use a viewholder
-                v = View.inflate(context, R.layout.layout_product_card, null);
-                v.setOnClickListener(mProductClick);
-            }
-            ((TextView) v.findViewById(R.id.likes_count)).setText(Integer.toString(position));
+            ProductViewHolder holder;
+            if (convertView == null) {
+                holder = new ProductViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_product_card,parent,false));
+                convertView = holder.itemview;
+                convertView.setTag(holder);
+                convertView.setOnClickListener(this);
 
-            return v;
+                holder.like.setOnClickListener(this);
+                holder.productActionsToggle.setOnClickListener(this);
+                holder.shareButton.setOnClickListener(this);
+                holder.buyNoBuyButton.setOnClickListener(this);
+                holder.wishlistButton.setOnClickListener(this);
+
+            }else
+                holder = (ProductViewHolder) convertView.getTag();
+
+            holder.productActionsToggle.setTag(holder);
+            holder.likesCount.setText(String.format(Locale.getDefault(),"%d",position));
+
+            return convertView;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            if(id==R.id.likeButton){
+                //todo like click
+                Toast.makeText(v.getContext(),"Like click!",Toast.LENGTH_SHORT).show();
+            }else if(id==R.id.product_actions_open){
+                ProductViewHolder holder = (ProductViewHolder) v.getTag();
+                boolean isVisible = holder.productActions.getVisibility()==View.VISIBLE;
+                if(isVisible) {
+                    holder.productActionsToggle.setImageResource(R.drawable.add);
+                    holder.productActions.setVisibility(View.GONE);
+                }else{
+                    holder.productActionsToggle.setImageResource(R.drawable.close);
+                    holder.productActions.setVisibility(View.VISIBLE);
+                }
+            }else if(id==R.id.shareButton){
+                //todo like click
+                Toast.makeText(v.getContext(),"Share click!",Toast.LENGTH_SHORT).show();
+            }else if(id==R.id.buyNoBuyButton){
+                //todo buy no buy click
+                Toast.makeText(v.getContext(),"Buy No buy click!",Toast.LENGTH_SHORT).show();
+            }else if(id==R.id.wishlistButton){
+                //todo wishlist click
+                Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT).show();
+            }else{
+                startActivity(ProductActivity
+                        .getLaunchIntent(v.getContext()));
+            }
+        }
+
+        class ProductViewHolder {
+            View itemview;
+
+            @Bind(R.id.likes_count)
+            TextView likesCount;
+            @Bind(R.id.likeButton)
+            IconicsButton like;
+            @Bind(R.id.product_image)
+            ImageView image;
+            @Bind(R.id.product_actions_open)
+            ImageButton productActionsToggle;
+
+            @Bind(R.id.layout_product_actions)
+            View productActions;
+            @Bind(R.id.shareButton)
+            IconicsButton shareButton;
+            @Bind(R.id.buyNoBuyButton)
+            IconicsButton buyNoBuyButton;
+            @Bind(R.id.wishlistButton)
+            IconicsButton wishlistButton;
+
+
+            public ProductViewHolder(View itemview) {
+                this.itemview = itemview;
+                ButterKnife.bind(this,itemview);
+            }
         }
     }
 

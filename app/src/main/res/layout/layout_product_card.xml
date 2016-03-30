@@ -4,66 +4,73 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:cardCornerRadius="2dp"
     android:orientation="vertical"
-    app:cardBackgroundColor="@android:color/white">
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="2dp">
+
     <LinearLayout
-        android:orientation="vertical"
-        android:padding="8dp"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp">
+
         <LinearLayout
-            android:layout_gravity="right"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:orientation="horizontal">
+
             <TextView
+                android:id="@+id/likes_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical|right"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:text="64"
-                android:padding="8dp"
-                android:gravity="center"
-                android:id="@+id/likes_count"
-                android:layout_gravity="center_vertical"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
             <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
                 style="@style/iconSmallButton"
-                android:text="@string/icon_heart_like"
                 android:layout_width="@dimen/circle_button_tiny_height"
-                android:layout_height="@dimen/circle_button_tiny_height"/>
+                android:layout_height="@dimen/circle_button_tiny_height"
+                android:text="@string/icon_heart_like"/>
         </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <ImageView
+                android:id="@+id/product_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
                 android:scaleType="centerInside"
-                android:src="@drawable/eric"
-                android:id="@+id/product_image"
-                android:layout_gravity="center_horizontal"/>
+                android:src="@drawable/eric"/>
 
             <include
-                layout="@layout/layout_product_actions" />
+                layout="@layout/layout_product_actions"/>
 
         </FrameLayout>
 
 
-        <Button
+        <ImageButton
+            android:id="@+id/product_actions_open"
             style="@style/circleSmallButton"
             android:layout_width="@dimen/circle_button_tiny_height"
             android:layout_height="@dimen/circle_button_tiny_height"
-            android:text="+"
-            android:textStyle="bold"
+            android:layout_gravity="right"
             android:gravity="center"
-            android:id="@+id/button"
-            android:layout_gravity="right"/>
+            android:textAlignment="center"
+            android:src="@drawable/add"
+            android:textStyle="bold"/>
     </LinearLayout>
-
 
 
 </android.support.v7.widget.CardView>
