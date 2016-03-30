@@ -36,6 +36,7 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.TimelineResponse;
+import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -335,6 +336,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
+        mOverlayVH.setBadges(user.trending,user.featured);
+
+
     }
 
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -395,7 +399,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder {
+    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.brand_name)
         TextView mBrandName;
@@ -421,9 +425,25 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Bind(R.id.following_count)
         TextView mFollowingCount;
 
+        @Bind(R.id.likeButton)
+        IconicsButton mLikeButton;
+        @Bind(R.id.followButton)
+        IconicsButton mFollowButton;
+        @Bind(R.id.shareButton)
+        IconicsButton mShareButton;
+
         public OverlayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            mLikeButton.setOnClickListener(this);
+            mShareButton.setOnClickListener(this);
+            mFollowButton.setOnClickListener(this);
+        }
+
+        public void setBadges(boolean trending,boolean featured){
+            mFeatured.setVisibility(featured?View.VISIBLE:View.GONE);
+            mTrending.setVisibility(trending?View.VISIBLE:View.GONE);
         }
 
         public void setVisisbility(int visibility) {
@@ -431,7 +451,20 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
+
         }
 
+        @Override
+        public void onClick(View v) {
+            int id = v.getId();
+            User user = (User) v.getTag();
+            if(id==R.id.likeButton){
+                //// TODO: 30/3/16 like click
+            }else if(id==R.id.followButton){
+                // TODO: 30/3/16 follow click
+            }else if(id==R.id.shareButton){
+                //// TODO: 30/3/16 share click
+            }
+        }
     }
 }

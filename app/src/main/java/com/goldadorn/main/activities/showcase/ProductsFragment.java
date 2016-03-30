@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,12 +44,21 @@ public class ProductsFragment extends Fragment {
     @Bind(R.id.swipe_deck)
     SwipeDeck cardStack;
 
+    @Bind(R.id.buyButton)
+    Button buyButton;
+
     Toast mToast;
 
     private User mUser;
     private Collection mCollection;
     private int mMode = MODE_COLLECTION;
     private ProductCallback mProductCallback = new ProductCallback();
+    private View.OnClickListener mBuyClick=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //todo kiran add to cart click
+        }
+    };
 
     public static ProductsFragment newInstance(int mode, User user, Collection collection) {
         ProductsFragment f = new ProductsFragment();
@@ -125,6 +135,8 @@ public class ProductsFragment extends Fragment {
         }
         getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
         refreshData();
+
+        buyButton.setOnClickListener(mBuyClick);
     }
 
     @Override

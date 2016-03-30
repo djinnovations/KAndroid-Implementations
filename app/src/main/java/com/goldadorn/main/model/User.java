@@ -16,6 +16,7 @@ public class User implements Serializable{
 
     public final int id;
     public String name,imageUrl, description,badgesJson;
+    public boolean featured,trending;
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
     public long dataVersion;

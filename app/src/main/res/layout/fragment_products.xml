@@ -26,12 +26,12 @@
             android:layout_width="0dp"
             android:layout_height="260dp"
             android:layout_weight="1"
-            android:paddingTop="24dp"
             android:paddingBottom="24dp"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            swipedeck:deck_max_visible="3"
+            android:paddingTop="24dp"
             swipedeck:card_spacing="8dp"
+            swipedeck:deck_max_visible="3"
             swipedeck:render_above="true"
             swipedeck:rotation_degrees="15"/>
 
@@ -40,39 +40,39 @@
             style="@style/ShowcaseButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
-            android:layout_marginRight="12dp"
             android:layout_marginLeft="@dimen/padding_default_half"
+            android:layout_marginRight="12dp"
             android:text="@string/icon_heart_like"/>
 
     </com.daprlabs.cardstack.SwipeLinearLayout>
 
     <TextView
+        android:id="@+id/product_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="Product Name"
-        android:id="@+id/product_name"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Product Name"/>
 
     <TextView
+        android:id="@+id/product_price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Product Price"
+        android:layout_gravity="center_horizontal"
         android:padding="8dp"
-        android:id="@+id/product_price"
-        android:layout_gravity="center_horizontal"/>
+        android:text="Product Price"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <Button
+        android:id="@+id/buyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:layout_marginBottom="24dp"
-        android:text="About produtc/Buy"
-        android:id="@+id/buyButton"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_marginTop="16dp"
+        android:text="About produtc/Buy"/>
 
 
 </LinearLayout>
