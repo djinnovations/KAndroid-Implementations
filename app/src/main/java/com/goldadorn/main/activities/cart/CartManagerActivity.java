@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.cart;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.model.Product;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class CartManagerActivity extends FragmentActivity  implements ICartData{
+public class CartManagerActivity extends FragmentActivity implements ICartData, ILoadingProgress {
     public static final int UISTATE_CART = 0;
     public static final int UISTATE_ADDRESS = 1;
     public static final int UISTATE_PAYMENT = 2;
@@ -47,7 +49,9 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
     @Bind(R.id.scrollview)
     ScrollView mScollView;
 
-    public List<Product> mCartItems= new ArrayList<>();
+    ProgressDialog mProgressDialog;
+
+    public List<Product> mCartItems = new ArrayList<>();
     public float mCostTotal;
     private boolean mPaymentSuccess;
 
@@ -62,6 +66,11 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
         mContext = this;
         setContentView(R.layout.activity_cart_manager);
         ButterKnife.bind(this);
+
+        mProgressDialog = new ProgressDialog(mContext);
+        mProgressDialog.setMessage("Loading");
+        mProgressDialog.setCancelable(false);
+
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_CART).findViewById(R.id.text)).setText("My cart");
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_ADDRESS).findViewById(R.id.text)).setText("Address");
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_PAYMENT).findViewById(R.id.text)).setText("Payment");
@@ -148,6 +157,12 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
 
     }
 
+    @Override
+    public void showLoading(boolean show) {
+        if (show) mProgressDialog.show();
+        else mProgressDialog.dismiss();
+    }
+
     private void bindProgress(int index) {
         for (int i = 0; i < mContainerProgressImage.getChildCount(); i++)
             ((ImageView) mContainerProgressImage.getChildAt(i).findViewById(R.id.image)).setImageResource(index >= i ? R.drawable.bg_thumb : R.drawable.bg_thumb_n);
@@ -177,8 +192,8 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
     @Override
     public void storeCartData(ArrayList<Product> cart, float costTotal) {
         mCartItems.clear();
-        if(cart!=null)mCartItems.addAll(cart);
-        mCostTotal=costTotal;
+        if (cart != null) mCartItems.addAll(cart);
+        mCostTotal = costTotal;
     }
 
     @Override
@@ -193,7 +208,7 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
 
     @Override
     public void setPaymentDone(boolean done) {
-        mPaymentSuccess=done;
+        mPaymentSuccess = done;
     }
 
     @Override

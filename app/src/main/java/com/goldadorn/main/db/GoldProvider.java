@@ -126,7 +126,6 @@ public class GoldProvider extends ContentProvider {
             db.execSQL(Tables.CREATE_TABLE.PRODUCTS);
             db.execSQL(Tables.CREATE_TABLE.COLLECTIONS);
             db.execSQL(Tables.CREATE_TABLE.ADDRESSES);
-            db.execSQL(Tables.CREATE_TABLE.PAYMENT_DETAILS);
         }
 
         @Override

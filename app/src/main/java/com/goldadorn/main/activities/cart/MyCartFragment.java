@@ -13,7 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.ILoadingProgress;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.ProductResponse;
 
 import java.util.ArrayList;
 
@@ -48,28 +52,37 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
         ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
         ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
-        ((TextView)mContainer_header_row.getChildAt(0)).setText(R.string.product);
-        ((TextView)mContainer_header_row.getChildAt(1)).setText(R.string.quantity);
+        ((TextView) mContainer_header_row.getChildAt(0)).setText(R.string.product);
+        ((TextView) mContainer_header_row.getChildAt(1)).setText(R.string.quantity);
         SpannableStringBuilder sbr = new SpannableStringBuilder(getString(R.string.price));
         int start = sbr.length();
         sbr.append("\n").append("(quantity * unit price)");
         int end = sbr.length();
         sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ((TextView)mContainer_header_row.getChildAt(2)).setText(sbr);
+        ((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
 
 
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
-        Product product = new Product(123123);
-        product.name = "Gold";
-        product.unitPrice = 1400;
-        product.quantity = 1;
-        mCart.add(product);
-        product = new Product(123123);
-        product.name = "Gold";
-        product.unitPrice = 4900;
-        product.quantity = 1;
-        mCart.add(product);
-        onCartChanged();
+
+        ((ILoadingProgress) getActivity()).showLoading(true);
+        UIController.getCartDetails(getContext(), new ProductResponse(), new IResultListener<ProductResponse>() {
+            @Override
+            public void onResult(ProductResponse result) {
+
+                Product product = new Product(123123);
+                product.name = "Gold";
+                product.unitPrice = 1400;
+                product.quantity = 1;
+                mCart.add(product);
+                product = new Product(123123);
+                product.name = "Gold";
+                product.unitPrice = 4900;
+                product.quantity = 1;
+                mCart.add(product);
+                onCartChanged();
+                ((ILoadingProgress) getActivity()).showLoading(false);
+            }
+        });
     }
 
     private void bindCostUi() {
