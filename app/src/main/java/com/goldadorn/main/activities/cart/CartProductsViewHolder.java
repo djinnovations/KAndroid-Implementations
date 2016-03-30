@@ -3,8 +3,11 @@ package com.goldadorn.main.activities.cart;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,7 +96,14 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText.removeTextChangedListener(this);
             quantityText.setText(product.quantity + "");
             quantityText.addTextChangedListener(this);
-            price.setText(product.getDisplayTotal());
+
+            SpannableStringBuilder sbr = new SpannableStringBuilder(Product.currency + ". " + (product.unitPrice * product.quantity));
+            int start = sbr.length();
+            sbr.append("\n").append("(").append(product.quantity + " * " + product.unitPrice).append(")");
+            int end = sbr.length();
+            sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            price.setText(sbr);
         }
 
         public void remove() {

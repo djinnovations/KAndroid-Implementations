@@ -3,6 +3,9 @@ package com.goldadorn.main.activities.cart;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     private View mCartEmptyView;
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
+    LinearLayout mContainer_header_row;
     float mCostShipping = 200.00f, mCostTax = 420.00f, mCostTotal;
 
     @Nullable
@@ -39,9 +43,19 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         mShippingContainer = view.findViewById(R.id.container_shipping);
         mTaxContainer = view.findViewById(R.id.container_tax);
         mTotalContainer = view.findViewById(R.id.container_total);
+        mContainer_header_row = (LinearLayout) view.findViewById(R.id.container_header_row);
         ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
         ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
         ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
+        ((TextView)mContainer_header_row.getChildAt(0)).setText(R.string.product);
+        ((TextView)mContainer_header_row.getChildAt(1)).setText(R.string.quantity);
+        SpannableStringBuilder sbr = new SpannableStringBuilder(getString(R.string.price));
+        int start = sbr.length();
+        sbr.append("\n").append("(quantity * unit price)");
+        int end = sbr.length();
+        sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ((TextView)mContainer_header_row.getChildAt(2)).setText(sbr);
+
 
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
         Product product = new Product(123123);

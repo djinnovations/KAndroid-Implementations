@@ -9,7 +9,7 @@ public class Product {
     public float unitPrice;
     public static final String currency = " RS";
 
-    public int quantity,maxQuantity=5;
+    public int quantity,maxQuantity=10;
 
     public Product(int id) {
         this.id = id;
@@ -17,10 +17,6 @@ public class Product {
 
     public float getTotalPrice() {
         return unitPrice * quantity;
-    }
-
-    public String getDisplayTotal() {
-        return currency + ". " + (unitPrice * quantity);
     }
 
     public String getDisplayPrice() {
