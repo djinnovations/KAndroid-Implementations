@@ -67,6 +67,7 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             //todo kiran go to product info page
+            goToProductPage(v.getContext());
         }
     };
 
@@ -236,8 +237,7 @@ public class ProductsFragment extends Fragment {
                 //todo wishlist click
                 Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT).show();
             }else{
-                startActivity(ProductActivity
-                        .getLaunchIntent(v.getContext()));
+                goToProductPage(v.getContext());
             }
         }
 
@@ -268,6 +268,11 @@ public class ProductsFragment extends Fragment {
                 ButterKnife.bind(this,itemview);
             }
         }
+    }
+
+    private void goToProductPage(Context context) {
+        startActivity(ProductActivity
+                .getLaunchIntent(context));
     }
 
     private UserChangeListener mUserChangeListener = new UserChangeListener() {
