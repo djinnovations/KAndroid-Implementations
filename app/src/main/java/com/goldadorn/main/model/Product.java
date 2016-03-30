@@ -7,6 +7,7 @@ import com.goldadorn.main.utils.ImageFilePath;
  */
 public class Product {
     public final int id;
+    public int userId, collectionId;
     public String name, description;
     public float unitPrice;
     public String currency = " RS";
