@@ -81,6 +81,7 @@
     <string name="product">Product</string>
     <string name="quantity">Quantity</string>
     <string name="price">Price</string>
+    <string name="customize">Customize</string>
 
 
 </resources>

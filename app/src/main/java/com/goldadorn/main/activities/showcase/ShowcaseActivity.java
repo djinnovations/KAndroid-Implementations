@@ -347,7 +347,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
 
-
     }
 
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

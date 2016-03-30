@@ -1,7 +1,6 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,14 +17,13 @@ import android.widget.EditText;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
-import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
@@ -249,7 +247,7 @@ public class LoginPageActivity extends BaseActivity {
         icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock, R.color.colorPrimary, iconSize);
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
-//        Intent in = new Intent(this, CartManagerActivity.class);
+//        Intent in = new Intent(this, ProductActivity.class);
 //        startActivity(in);
     }
 

@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,11 +17,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
@@ -35,28 +37,30 @@ import butterknife.ButterKnife;
 
 public class ProductActivity extends BaseDrawerActivity {
     private final static int UISTATE_CUSTOMIZE = 0;
-    private final static int UISTATE_SOCIAL = 1;
-    private final static int UISTATE_PRODUCT = 2;
+    private final static int UISTATE_PRODUCT = 1;
+    private final static int UISTATE_SOCIAL = 2;
     private static final String TAG = ProductActivity.class.getName();
 
     private int mUIState = UISTATE_CUSTOMIZE;
 
-    @Bind(R.id.view_pager)
-    ViewPager mPager;
-
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
-
 
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     @Bind(R.id.toolbar)
     Toolbar mToolBar;
     @Bind(R.id.tabs)
-    TabLayout mTabLayout;
+    View mTabLayout;
 
     @Bind(R.id.container_designer_overlay)
     LinearLayout mBrandButtonsLayout;
+
+    @Bind(R.id.frame_content)
+    FrameLayout mFrame;
+
+    @Bind(R.id.view_pager_dummy)
+    View mPagerDummy;
 
     @Bind(R.id.progress_frame)
     View mProgressFrame;
@@ -67,6 +71,28 @@ public class ProductActivity extends BaseDrawerActivity {
     private int mCollapsedHeight;
     private ProductPagerAdapter mProductAdapter;
     private int mVerticalOffset = 0;
+    private Handler mHandler = new Handler();
+    private TabViewHolder mTabViewHolder;
+    private ViewPager.OnPageChangeListener mPageChangeListener =
+            new ViewPager.OnPageChangeListener() {
+
+
+                @Override
+                public void onPageScrolled(int position, float positionOffset,
+                        int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    //todo pager page changes
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            };
 
     public static Intent getLaunchIntent(Context context) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -77,19 +103,27 @@ public class ProductActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+        drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
+        initTabs();
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.9f * dm.heightPixels);
         mCollapsedHeight = (int) (.4f * dm.heightPixels);
 
-        mPager.getLayoutParams().height = mStartHeight;
-//        mBrandButtonsLayout.getLayoutParams().height = mStartHeight;
+        mPagerDummy.getLayoutParams().height = mStartHeight;
+        mBrandButtonsLayout.getLayoutParams().height = mStartHeight;
         mToolBar.getLayoutParams().height = mCollapsedHeight;
-        final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
 
-        mPager.setOffscreenPageLimit(4);
-        mPager.setAdapter(mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager()));
+        final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
+                R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
+
+
+        mOverlayVH.pager.setAdapter(
+                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager()));
+        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
+
+        mTabLayout.animate().setDuration(0).y(tabStart);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -98,13 +132,18 @@ public class ProductActivity extends BaseDrawerActivity {
                     Log.d(TAG, "offset : " + verticalOffset);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
-//                    mBrandButtonsLayout.getLayoutParams().height =
-//                            change ? mStartHeight : mCollapsedHeight;
-                    CollapsingToolbarLayout.LayoutParams lp =
-                            ((CollapsingToolbarLayout.LayoutParams) mTabLayout.getLayoutParams());
-                    lp.leftMargin = lp.rightMargin = (int) (pad + (Math.abs(verticalOffset) * .1));
-                    mTabLayout.setLayoutParams(lp);
+                    mBrandButtonsLayout.getLayoutParams().height =
+                            change ? mStartHeight : mCollapsedHeight;
                     mOverlayVH.setVisisbility(visibility);
+                    mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mVerticalOffset == 0) {
+                                mTabLayout.animate().setDuration(0).y(tabStart);
+                            }
+                        }
+                    }, 180);
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -114,7 +153,6 @@ public class ProductActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
 
-        initTabs();
         configureUI(UISTATE_CUSTOMIZE);
     }
 
@@ -126,54 +164,36 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     private void initTabs() {
-        TabLayout.Tab tab = mTabLayout.newTab();
-        tab.setTag(UISTATE_CUSTOMIZE);
-        tab.setText("Customize");
-        mTabLayout.addTab(tab);
-        tab = mTabLayout.newTab();
-        tab.setTag(UISTATE_SOCIAL);
-        tab.setText(getString(R.string.social));
-        mTabLayout.addTab(tab);
-        tab = mTabLayout.newTab();
-        tab.setTag(UISTATE_PRODUCT);
-        tab.setText(getString(R.string.products));
-        mTabLayout.addTab(tab);
-        mTabLayout.setOnTabSelectedListener(mTabSelectListener);
+        mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
+        mTabViewHolder.initTabs(getString(R.string.customize), getString(R.string.products),
+                getString(R.string.social), new TabViewHolder.TabClickListener() {
+                    @Override
+                    public void onTabClick(int position) {
+                        configureUI(position);
+                    }
+                });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mOverlayVH.indicator.setOnPageChangeListener(mPageChangeListener);
+    }
 
-    private TabLayout.OnTabSelectedListener mTabSelectListener =
-            new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    Log.d("OnTabSelectedListener", "" + tab.getText());
-                    int uiState = (int) tab.getTag();
-                    configureUI(uiState);
-
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-
-                }
-            };
+    @Override
+    public void onStop() {
+        super.onStop();
+        mOverlayVH.indicator.setOnPageChangeListener(null);
+    }
 
     private void configureUI(int uiState) {
         Fragment f = null;
         if (uiState == UISTATE_SOCIAL) {
             f = new SocialFeedFragment();
-            mTabLayout.getTabAt(1).select();
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
-            mTabLayout.getTabAt(2).select();
         } else {
             f = new CustomizeFragment();
-            mTabLayout.getTabAt(0).select();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
@@ -207,8 +227,26 @@ public class ProductActivity extends BaseDrawerActivity {
 
     }
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder {
+    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        @Bind(R.id.likes_count)
+        TextView likesCount;
+        @Bind(R.id.likeButton)
+        IconicsButton like;
+
+        @Bind(R.id.product_actions_open)
+        ImageButton productActionsToggle;
+        @Bind(R.id.layout_product_actions)
+        View productActions;
+        @Bind(R.id.shareButton)
+        IconicsButton shareButton;
+        @Bind(R.id.buyNoBuyButton)
+        IconicsButton buyNoBuyButton;
+        @Bind(R.id.wishlistButton)
+        IconicsButton wishlistButton;
+
+        @Bind(R.id.view_pager)
+        ViewPager pager;
         @Bind(R.id.indicator)
         CirclePageIndicator indicator;
 
@@ -234,30 +272,55 @@ public class ProductActivity extends BaseDrawerActivity {
         View layout2;
         @Bind(R.id.layout_3)
         View layout3;
-        @Bind(R.id.layout_product_actions)
-        View layout4;
 
-
-        @Bind(R.id.likes_count)
-        TextView mLikesCount;
-
+        @Bind(R.id.cartButton)
+        IconicsButton cartButton;
 
         public OverlayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            productActionsToggle.setOnClickListener(this);
+            like.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
-            int oppositeVisibility = View.VISIBLE==visibility?View.GONE:View.VISIBLE;
+            int oppositeVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
+            layout3.setVisibility(visibility);
+            productActions.setVisibility(visibility);
             mProductCollection.setVisibility(visibility);
-            mProductCollection2.setVisibility(oppositeVisibility);
-            mProductCost.setVisibility(visibility);
-            mProductCost2.setVisibility(oppositeVisibility);
-            mProductName.setVisibility(visibility);
+            mProductCollection2.setVisibility(visibility);
             mProductOwner.setVisibility(visibility);
+            pager.setVisibility(visibility);
+            indicator.setVisibility(visibility);
+            productActionsToggle.setVisibility(visibility);
         }
 
+        @Override
+        public void onClick(View v) {
+            if (v == productActionsToggle) {
+                boolean visible = productActions.getVisibility() == View.VISIBLE;
+                if (visible) {
+                    productActions.setVisibility(View.GONE);
+                    productActionsToggle.setImageResource(R.drawable.add);
+                } else {
+                    productActions.setVisibility(View.VISIBLE);
+                    productActionsToggle.setImageResource(R.drawable.close);
+                }
+            } else if (v == like) {
+                //todo like click
+                Toast.makeText(v.getContext(), "like click", Toast.LENGTH_SHORT).show();
+            }else if(v==shareButton){
+                //todo like click
+                Toast.makeText(v.getContext(),"Share click!",Toast.LENGTH_SHORT).show();
+            }else if(v==buyNoBuyButton){
+                //todo buy no buy click
+                Toast.makeText(v.getContext(),"Buy No buy click!",Toast.LENGTH_SHORT).show();
+            }else if(v==wishlistButton){
+                //todo wishlist click
+                Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

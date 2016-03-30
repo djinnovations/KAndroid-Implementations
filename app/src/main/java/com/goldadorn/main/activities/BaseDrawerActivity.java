@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.User;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -120,22 +121,24 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                 }
             }
         });
-        userName.setText(getApp().getUser().getName());
-        ImageView userImage = (ImageView)headerLayout.findViewById(R.id.userImage);
-        userImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_settings);
-                if(navigationDataObject !=null) {
-                    action(navigationDataObject);
-                    drawerLayout.closeDrawer(GravityCompat.START);
+        User user = getApp().getUser();
+        if(user!=null) {
+            userName.setText(user.getName());
+            ImageView userImage = (ImageView) headerLayout.findViewById(R.id.userImage);
+            userImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NavigationDataObject navigationDataObject =
+                            (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_settings);
+                    if (navigationDataObject != null) {
+                        action(navigationDataObject);
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                    }
                 }
-            }
-        });
-        Picasso.with(this)
-               .load(getApp().getUser().getImageUrl())
-               .placeholder(R.drawable.vector_image_place_holder_profile)
-               .into(userImage);
+            });
+            Picasso.with(this).load(user.getImageUrl()).placeholder(R.drawable
+                    .vector_image_place_holder_profile).into(userImage);
+        }
 
     }
 
