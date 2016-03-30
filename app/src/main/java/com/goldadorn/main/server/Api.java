@@ -165,6 +165,7 @@ public class Api {
             generateUserCredentials(context, response);
             ApiFactory.like(context, response);
             if (response.success && response.responseContent != null) {
+                DbHelper.writeLike(context,response);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -176,6 +177,7 @@ public class Api {
             generateUserCredentials(context, response);
             ApiFactory.unLike(context, response);
             if (response.success && response.responseContent != null) {
+                DbHelper.writeunLike(context,response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

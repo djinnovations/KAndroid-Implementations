@@ -50,6 +50,7 @@ public class DbHelper {
                     JSONObject productObj = productsArray.getJSONObject(i);
                     ContentValues cv = new ContentValues();
                     cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
+                    cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                     context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                 }
             }
@@ -92,6 +93,7 @@ public class DbHelper {
                             JSONObject collObj = collarray.getJSONObject(j);
                             ContentValues collcv = new ContentValues();
                             collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
+                            collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                             context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
 
                         }
@@ -145,6 +147,28 @@ public class DbHelper {
 
             }
 
+        }
+    }
+
+    public static void writeLike(Context context, ProductResponse response) {
+        ContentValues cv = new ContentValues();
+        if (response.productId != -1) {
+            cv.put(Tables.Products.IS_LIKED, 1);
+            context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
+        } else if (response.collectionId != -1) {
+            cv.put(Tables.Collections.IS_LIKED, 1);
+            context.getContentResolver().update(Tables.Collections.CONTENT_URI, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
+        }
+    }
+
+    public static void writeunLike(Context context, ProductResponse response) {
+        ContentValues cv = new ContentValues();
+        if (response.productId != -1) {
+            cv.put(Tables.Products.IS_LIKED, 0);
+            context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
+        } else if (response.collectionId != -1) {
+            cv.put(Tables.Collections.IS_LIKED, 0);
+            context.getContentResolver().update(Tables.Collections.CONTENT_URI, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
         }
     }
 }

@@ -39,6 +39,7 @@ public class Tables {
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String PRICE = "price";
         public static final String CURRENCY = "currency";
+        public static final String IS_LIKED = "isliked";
         public static final String DESCRIPTION = "description";
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_UNLIKES = "unlikes";
@@ -74,6 +75,7 @@ public class Tables {
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_PRODUCTS = "products";
+        public static final String IS_LIKED = "isliked";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" +
@@ -200,6 +202,7 @@ public class Tables {
                 Products.BASIC_INFO + " TEXT," +
                 Products.CUSTOMIZATION_INFO + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Products.IS_LIKED + " INTEGER DEFAULT 0," +
                 Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
                 Products.CART_ADDED_TSP + " INTEGER DEFAULT 0," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
@@ -212,6 +215,7 @@ public class Tables {
                 Collections.IMAGEURL + " TEXT," +
                 Collections.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Collections.IS_LIKED + " INTEGER DEFAULT 0," +
                 Collections.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
 

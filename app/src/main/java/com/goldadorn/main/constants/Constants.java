@@ -17,6 +17,7 @@ public class Constants {
         public static final String USERPIC = "userPic";
         public static final String TOTALLIKES = "totalLikes";
         public static final String FOLLOWERS = "followers";
+        public static final String ISLIKED = "isLiked";
         public static final String FOLLOWING = "following";
         public static final String COLLECTIONCOUNT = "collectionCount";
         public static final String PRODUCTCOUNT = "productCount";
