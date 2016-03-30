@@ -50,7 +50,7 @@ import java.util.Iterator;
     private String cardBin;
     private IResultListener<Bundle> mInitListner;
 
-    PayUHelper(float amount,IResultListener<Bundle> initListner) {
+    PayUHelper(double amount,IResultListener<Bundle> initListner) {
         PayUSdkDetails payUSdkDetails = new PayUSdkDetails();
         Log.d("PayUSdkDetails", "Build No: " + payUSdkDetails.getSdkBuildNumber() + "\n Build Type: " + payUSdkDetails.getSdkBuildType() + " \n Build Flavor: " + payUSdkDetails.getSdkFlavor() + "\n Application Id: " + payUSdkDetails.getSdkApplicationId() + "\n Version Code: " + payUSdkDetails.getSdkVersionCode() + "\n Version Name: " + payUSdkDetails.getSdkVersionName());
         mInitListner = initListner;

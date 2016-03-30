@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.model.ProductDetail;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
@@ -281,12 +282,13 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.id);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, response.productDetail.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, response.productDetail.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, response.productDetail.accentStoneSelected);
+            jsonObject.put("prodId", response.productToAdd.id);
+            ProductDetail productDetail= (ProductDetail) response.productToAdd;
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
+            jsonObject.put(Constants.JsonConstants.CENTERSTONE, productDetail.centerStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, productDetail.accentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
@@ -318,12 +320,13 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.id);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, response.productDetail.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, response.productDetail.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, response.productDetail.accentStoneSelected);
+            jsonObject.put("prodId", response.productToAdd.id);
+            ProductDetail productDetail= (ProductDetail) response.productToAdd;
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
+            jsonObject.put(Constants.JsonConstants.CENTERSTONE, productDetail.centerStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, productDetail.accentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
@@ -385,7 +388,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.id);
+            jsonObject.put("prodId", response.productToAdd.id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -417,7 +420,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.id);
+            jsonObject.put("prodId", response.productToAdd.id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);

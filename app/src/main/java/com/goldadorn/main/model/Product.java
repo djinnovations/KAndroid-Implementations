@@ -4,9 +4,9 @@ package com.goldadorn.main.model;
  * Created by Kiran BH on 06/03/16.
  */
 public class Product {
-    public int id;
+    public final int id;
     public String name, description, imageUrl;
-    public float unitPrice;
+    public double unitPrice;
     public static final String currency = " RS";
 
     public int quantity,maxQuantity=10;
@@ -15,7 +15,7 @@ public class Product {
         this.id = id;
     }
 
-    public float getTotalPrice() {
+    public double getTotalPrice() {
         return unitPrice * quantity;
     }
 

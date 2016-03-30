@@ -52,7 +52,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     ProgressDialog mProgressDialog;
 
     public List<Product> mCartItems = new ArrayList<>();
-    public float mCostTotal;
+    public double mCostTotal;
     private boolean mPaymentSuccess;
 
     public static Intent getLaunchIntent(Context context) {
@@ -190,7 +190,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     };
 
     @Override
-    public void storeCartData(ArrayList<Product> cart, float costTotal) {
+    public void storeCartData(ArrayList<Product> cart, double costTotal) {
         mCartItems.clear();
         if (cart != null) mCartItems.addAll(cart);
         mCostTotal = costTotal;
@@ -202,7 +202,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     }
 
     @Override
-    public float getBillableAmount() {
+    public double getBillableAmount() {
         return mCostTotal;
     }
 

@@ -16,7 +16,6 @@ public class ProductDetail extends Product {
     public String code;
     public double type;
     public float price;
-    public String costunit;
     public float aspectratio;
     public String widthUnit;
     public float weight;
@@ -45,8 +44,8 @@ public class ProductDetail extends Product {
 
 
     public String centerStoneSelected;
-    public HashMap<String, String> accentStoneSelected;
-    public HashMap<String, String> gemStoneSelected;
+    public final HashMap<String, String> accentStoneSelected = new HashMap<>();
+    public final HashMap<String, String> gemStoneSelected = new HashMap<>();
 
     public ProductDetail(int id) {
         super(id);
@@ -59,7 +58,7 @@ public class ProductDetail extends Product {
         p.name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
         p.description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
         p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
-        p.costunit = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        p.unitPrice = productInfo.optDouble(Constants.JsonConstants.COSTUNITS, -1f);
         p.aspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
         p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
         p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
