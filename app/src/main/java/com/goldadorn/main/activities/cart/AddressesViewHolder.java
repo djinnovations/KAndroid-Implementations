@@ -98,6 +98,10 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
         public void bindUI(Address address) {
             name.setText(address.name);
+            StringBuilder sbr = new StringBuilder();
+            sbr.append(address.street).append(", ").append(address.city).append(", ").append(address.state)
+                    .append(". Pin:").append(address.pincode).append("\n").append("Ph: ").append(address.phoneNumber);
+            detailedAddress.setText(sbr);
 
         }
 

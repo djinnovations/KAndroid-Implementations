@@ -9,7 +9,7 @@ import com.goldadorn.main.db.Tables;
  */
 public class Address {
     public final int id;
-    public String name, street, city, state, country;
+    public String name, street, city, state, country,phoneNumber;
     public int pincode;
 
     public Address(int id) {
@@ -24,6 +24,7 @@ public class Address {
         t.state = cursor.getString(cursor.getColumnIndex(Tables.Addresses.STATE));
         t.country = cursor.getString(cursor.getColumnIndex(Tables.Addresses.COUNTRY));
         t.pincode = cursor.getInt(cursor.getColumnIndex(Tables.Addresses.PINCODE));
+        t.phoneNumber = cursor.getString(cursor.getColumnIndex(Tables.Addresses.PHONENUMBER));
         return t;
     }
 }
