@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.ILoadingProgress;
@@ -177,9 +178,11 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
 //                Intent in = new Intent(mContext, com.goldadorn.main.activities.showcase.TestActivity.class);
 //                startActivity(in);
             } else {
-                if (mUIState == UISTATE_CART)
-                    configureUI(UISTATE_ADDRESS);
-                else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
+                if (mUIState == UISTATE_CART) {
+                    if (getBillableAmount() > 0)
+                        configureUI(UISTATE_ADDRESS);
+                    else Toast.makeText(mContext, "No items in Cart", Toast.LENGTH_SHORT).show();
+                } else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
                 else if (mUIState == UISTATE_PAYMENT) configureUI(UISTATE_FINAL);
                 else {
                     bindProgress(-1);

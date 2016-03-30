@@ -10,7 +10,7 @@
         android:layout_gravity="center"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/padding_default_1.5X"
         android:background="@color/disabled_grey"/>
 
     <LinearLayout

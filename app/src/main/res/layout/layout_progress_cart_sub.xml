@@ -3,19 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_weight="1"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/activity_vertical_margin">
+    android:paddingTop="@dimen/padding_default_2x"
+    android:paddingBottom="@dimen/padding_default_2x"
+    android:paddingLeft="@dimen/padding_default"
+    android:paddingRight="@dimen/padding_default">
 
     <TextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:text="Payment"
+        tools:text="Kiran"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/ts_secondary"/>
+        android:layout_marginBottom="@dimen/padding_default_half"
+        android:textSize="@dimen/ts_tertiary"/>
 
     <ImageView
         android:id="@+id/image"
