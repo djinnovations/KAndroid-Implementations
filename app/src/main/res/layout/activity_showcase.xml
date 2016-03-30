@@ -107,6 +107,7 @@
             android:elevation="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingTop="56dp"
             android:paddingBottom="@dimen/tab_height"
             app:elevation="5dp">
 
@@ -115,7 +116,6 @@
                 style="?actionButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:rotation="-90"
                 android:src="@android:drawable/arrow_up_float"
 
@@ -128,7 +128,6 @@
             <ImageView
                 android:id="@+id/next"
                 style="?actionButtonStyle"
-                android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:rotation="90"

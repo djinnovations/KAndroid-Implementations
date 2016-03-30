@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Vijith Menon on 11/3/16.
@@ -86,6 +87,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this,view);
         final ArrayList<String> testData = new ArrayList<>();
         testData.add("0");
         testData.add("1");
@@ -93,7 +95,7 @@ public class ProductsFragment extends Fragment {
         testData.add("3");
         testData.add("4");
 
-        cardStack = (SwipeDeck) view.findViewById(R.id.swipe_deck);
+//        cardStack = (SwipeDeck) view.findViewById(R.id.swipe_deck);
         final SwipeDeckAdapter adapter = new SwipeDeckAdapter(testData, getActivity());
         cardStack.setAdapter(adapter);
 
