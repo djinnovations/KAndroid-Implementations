@@ -4,10 +4,12 @@ import android.database.Cursor;
 
 import com.goldadorn.main.db.Tables;
 
+import java.io.Serializable;
+
 /**
  * Created by Kiran BH on 06/03/16.
  */
-public class Address {
+public class Address implements Serializable{
     public final int id;
     public String name, street, city, state, country,phoneNumber;
     public int pincode;
@@ -26,5 +28,11 @@ public class Address {
         t.pincode = cursor.getInt(cursor.getColumnIndex(Tables.Addresses.PINCODE));
         t.phoneNumber = cursor.getString(cursor.getColumnIndex(Tables.Addresses.PHONENUMBER));
         return t;
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof Address)
+            return ((Address) o).id == id;
+        else return false;
     }
 }

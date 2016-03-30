@@ -21,9 +21,9 @@ import java.util.ArrayList;
 class AddressesViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
     private ArrayList<AddressHolder> productsVh = new ArrayList<>(5);
-    IResultListener<Integer> resultListener;
+    IResultListener<Address> resultListener;
 
-    public AddressesViewHolder(LinearLayout itemView, IResultListener<Integer> resultListener) {
+    public AddressesViewHolder(LinearLayout itemView, IResultListener<Address> resultListener) {
         super(itemView);
         container = itemView;
         this.resultListener = resultListener;
@@ -31,7 +31,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
     private AddressHolder createItem(Address address) {
         AddressHolder vh = new AddressHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_cart_address, null, false));
-        vh.addressId = address.id;
+        vh.address = address;
         container.addView(vh.itemView);
         vh.checkBox.setOnCheckedChangeListener(mCheckListener);
         productsVh.add(vh);
@@ -40,7 +40,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
     public AddressHolder getItem(Address product) {
         for (AddressHolder vh : productsVh)
-            if (product.id == vh.addressId) return vh;
+            if (product.equals(vh.address)) return vh;
         return null;
     }
 
@@ -55,10 +55,10 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void setChecked(int addressID) {
+    public void setChecked(Address address) {
         for (AddressHolder vh : productsVh) {
             vh.checkBox.setOnCheckedChangeListener(null);
-            vh.checkBox.setChecked(vh.addressId == addressID);
+            vh.checkBox.setChecked(vh.address.equals(address));
             vh.checkBox.setOnCheckedChangeListener(mCheckListener);
         }
 
@@ -71,7 +71,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
                 vh.checkBox.setOnCheckedChangeListener(null);
                 vh.checkBox.setChecked(buttonView.equals(vh.checkBox) && isChecked);
                 if (vh.checkBox.isChecked())
-                    resultListener.onResult(vh.addressId);
+                    resultListener.onResult(vh.address);
                 vh.checkBox.setOnCheckedChangeListener(mCheckListener);
             }
         }
@@ -81,11 +81,11 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
         itemView.setVisibility(visibility);
     }
 
-    static class AddressHolder extends RecyclerView.ViewHolder {
+    static class AddressHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView name, detailedAddress;
         public final CheckBox checkBox;
         public final ImageView actionEdit;
-        private int addressId;
+        private Address address;
 
 
         public AddressHolder(View itemView) {
@@ -94,6 +94,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
             detailedAddress = (TextView) itemView.findViewById(R.id.address_detail);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
             actionEdit = (ImageView) itemView.findViewById(R.id.action_edit);
+            actionEdit.setOnClickListener(this);
         }
 
         public void bindUI(Address address) {
@@ -107,6 +108,11 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
         public void remove() {
             ((LinearLayout) itemView.getParent()).removeView(itemView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            ((CartManagerActivity) v.getContext()).showAddAddress(address);
         }
     }
 }

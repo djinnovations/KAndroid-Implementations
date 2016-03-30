@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.model.Address;
 
 import java.util.ArrayList;
 
@@ -27,10 +28,24 @@ public class AddAddressFragment extends Fragment {
     private int TAG_ERROR = R.id.tag_error;
     private int TAG_COLUMN = R.id.tag_collom;
     private boolean mInErrorUi;
+    private boolean mIsEditMode;
+    private Address mAddressToEdit;
+
+    public static AddAddressFragment newInstance(Address address) {
+        AddAddressFragment f = new AddAddressFragment();
+        Bundle b = new Bundle();
+        if (address != null)
+            b.putSerializable("address", address);
+        f.setArguments(b);
+        return f;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle b = savedInstanceState == null ? getArguments() : savedInstanceState;
+        mAddressToEdit = (Address) b.getSerializable("address");
+        mIsEditMode = mAddressToEdit != null;
         return inflater.inflate(R.layout.fragment_add_address, container, false);
     }
 
@@ -59,6 +74,14 @@ public class AddAddressFragment extends Fragment {
         mPinCodeInput.setTag(TAG_COLUMN, Tables.Addresses.PINCODE);
         mPhoneNumberInput.setTag(TAG_COLUMN, Tables.Addresses.PHONENUMBER);
 
+        if (mAddressToEdit != null) {
+            mNameInput.getEditText().setText(mAddressToEdit.name);
+            mStreetInput.getEditText().setText(mAddressToEdit.street);
+            mCityInput.getEditText().setText(mAddressToEdit.city);
+            mStateInput.getEditText().setText(mAddressToEdit.state);
+            mPinCodeInput.getEditText().setText(mAddressToEdit.pincode);
+            mPhoneNumberInput.getEditText().setText(mAddressToEdit.phoneNumber);
+        }
 
         mInputs.add(mNameInput);
         mInputs.add(mStreetInput);
@@ -121,7 +144,14 @@ public class AddAddressFragment extends Fragment {
                     return;
                 }
             }
-            getContext().getContentResolver().insert(Tables.Addresses.CONTENT_URI, cv);
+            int id = -1;
+            if (mAddressToEdit != null)
+                id = mAddressToEdit.id;
+            int cnt = 0;
+            if (id != -1)
+                cnt = getContext().getContentResolver().update(Tables.Addresses.CONTENT_URI, cv, Tables.Addresses._ID + " = ?", new String[]{String.valueOf(id)});
+            if (cnt == 0)
+                getContext().getContentResolver().insert(Tables.Addresses.CONTENT_URI, cv);
             getActivity().onBackPressed();
         }
     };

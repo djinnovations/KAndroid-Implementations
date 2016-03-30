@@ -71,14 +71,14 @@ public class AddressFragment extends Fragment {
     private View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ((CartManagerActivity) getActivity()).configureUI(CartManagerActivity.UISTATE_OVERLAY_ADD_ADDRESS);
+            ((CartManagerActivity) getActivity()).showAddAddress(null);
         }
     };
 
-    IResultListener<Integer> mAddressSelectedListener = new IResultListener<Integer>() {
+    IResultListener<Address> mAddressSelectedListener = new IResultListener<Address>() {
         @Override
-        public void onResult(Integer addressId) {
-
+        public void onResult(Address address) {
+            ((ICartData) getActivity()).storeAddressData(address);
         }
     };
 

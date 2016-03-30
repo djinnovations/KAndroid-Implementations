@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.ILoadingProgress;
+import com.goldadorn.main.model.Address;
 import com.goldadorn.main.model.Product;
 
 import java.util.ArrayList;
@@ -55,6 +56,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     public List<Product> mCartItems = new ArrayList<>();
     public float mCostTotal;
     private boolean mPaymentSuccess;
+    private Address mSelectedAddress;
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, CartManagerActivity.class);
@@ -131,7 +133,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
             mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
-            f = new AddAddressFragment();
+            f = AddAddressFragment.newInstance(mAddressToEdit);
         }
         if (frame == R.id.frame_overlay) {
             mOverlayFrame.setVisibility(View.VISIBLE);
@@ -175,18 +177,23 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
             if (v.getId() == R.id.image) {
                 int uistate = (int) v.getTag();
                 configureUI(uistate);
-//                Intent in = new Intent(mContext, com.goldadorn.main.activities.showcase.TestActivity.class);
-//                startActivity(in);
             } else {
                 if (mUIState == UISTATE_CART) {
                     if (getBillableAmount() > 0)
                         configureUI(UISTATE_ADDRESS);
-                    else Toast.makeText(mContext, "No items in Cart", Toast.LENGTH_SHORT).show();
-                } else if (mUIState == UISTATE_ADDRESS) configureUI(UISTATE_PAYMENT);
-                else if (mUIState == UISTATE_PAYMENT) configureUI(UISTATE_FINAL);
-                else {
-                    bindProgress(-1);
-                    configureUI(UISTATE_CART);
+                    else {
+                        Toast.makeText(mContext, "No items in Cart", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (mUIState == UISTATE_ADDRESS) {
+                    if (mSelectedAddress != null)
+                        configureUI(UISTATE_PAYMENT);
+                    else {
+                        Toast.makeText(mContext, "Please Select or Add an address", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (mUIState == UISTATE_FINAL) {
+                    Intent in = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                    startActivity(in);
+                    finish();
                 }
             }
         }
@@ -217,5 +224,17 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     @Override
     public boolean isPaymentDone() {
         return mPaymentSuccess;
+    }
+
+    @Override
+    public void storeAddressData(Address address) {
+        mSelectedAddress = address;
+    }
+
+    private Address mAddressToEdit;
+
+    public void showAddAddress(Address address) {
+        mAddressToEdit = address;
+        configureUI(UISTATE_OVERLAY_ADD_ADDRESS);
     }
 }
