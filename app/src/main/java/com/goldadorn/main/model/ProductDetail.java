@@ -11,22 +11,19 @@ import java.util.HashMap;
 /**
  * Created by nithinjohn on 22/03/16.
  */
-public class ProductDetail {
+public class ProductDetail extends Product{
 
-    public long mId;
-    public String mCode;
-    public String mName;
-    public String mDescription;
-    public double mType;
-    public float mPrice;
-    public String mCostUnit;
-    public float mAspectratio;
-    public String mWidthUnit;
-    public float mWeight;
-    public String mSizeUnit;
-    public float mHeight;
-    public float mWidth;
-    public float mSize;
+    public String code;
+    public double type;
+    public float price;
+    public String costunit;
+    public float aspectratio;
+    public String widthUnit;
+    public float weight;
+    public String sizeUnit;
+    public float height;
+    public float width;
+    public float size;
 
     ///customization variables
     public float mMakeingCharge;
@@ -51,26 +48,30 @@ public class ProductDetail {
     public HashMap<String, String> mAccentStoneSelected;
     public HashMap<String, String> mGemStoneSelected;
 
+    public ProductDetail(int id) {
+        super(id);
+    }
+
 
     public void extractBasicInfo(JSONObject productInfo) {
-        mId = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
-        mCode = productInfo.optString(Constants.JsonConstants.PRODUCTCODE);
-        mName = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
-        mDescription = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
-        mType = productInfo.optDouble(Constants.JsonConstants.TYPE);
-        mCostUnit = productInfo.optString(Constants.JsonConstants.COSTUNITS);
-        mAspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
-        mWidthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
-        mWeight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
-        mSizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
-        mHeight = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
-        mWidth = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
-        mSize = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
+        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
+        code = productInfo.optString(Constants.JsonConstants.PRODUCTCODE);
+        name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
+        description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
+        type = productInfo.optDouble(Constants.JsonConstants.TYPE);
+        costunit = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        aspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
+        widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
+        weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
+        sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
+        height = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
+        width = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
+        size = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
     }
 
     public void extractGetCartProductList(JSONObject productInfo) {
-        mId = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
-        mName = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
+        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
+        name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
         mPrimaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
         mPrimaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
         mPrimaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
@@ -85,12 +86,12 @@ public class ProductDetail {
                 mGemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
             }
         }
-        mPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
-        mSize = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
+        price = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
+        size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
     }
 
     public void extractCustomization(JSONObject productInfo) throws JSONException {
-        mId = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
+        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
         mMakeingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
         mMakeingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
         mPrimaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
