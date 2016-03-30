@@ -50,7 +50,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private final static int UISTATE_PRODUCT = 0;
     private final static int UISTATE_SOCIAL = 1;
     private final static boolean DEBUG = true;
-    private boolean DUMMY = false;
     private int mUIState = UISTATE_PRODUCT;
 
     @Bind(R.id.recyclerView)
@@ -131,7 +130,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (b != null) {
             mCollection = (Collection) b.getSerializable(EXTRA_COLLECTION);
-            if (mCollection != null) DUMMY = false;
         }
 
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
@@ -192,11 +190,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
-        ProductsFragment fragment = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION,
-                null, mCollection);
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.frame, fragment);
-        ft.commitAllowingStateLoss();
+        configureUI(mUIState);
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null,
                 mCollectionCallback);
     }
@@ -249,8 +243,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
-            if (DUMMY)
-                return;
             mCollection = mCollectionAdapter.getCollection(mCurrentPosition);
             bindOverlay(mCollection);
             for (CollectionChangeListener l : mCollectionChangeListeners)
@@ -329,7 +321,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         @Override
         public int getItemCount() {
-            if (DUMMY) return 8;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
@@ -341,7 +332,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
 
         public Collection getCollection(int position) {
-            if (DUMMY) return null;
             cursor.moveToPosition(position);
             return Collection.extractFromCursor(cursor);
         }
@@ -362,8 +352,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
-            if (DUMMY)
-                return;
             mCollectionAdapter.changeCursor(data);
             if (data.getCount() > 0) {
                 mPageChangeListener.onScrolled(mRecyclerView,0,0);

@@ -111,7 +111,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private int mStartHeight, mCollapsedHeight;
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
-    private boolean DUMMY = true;
     private Handler mHandler;
 
 
@@ -135,14 +134,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mToolBar.getLayoutParams().height = mCollapsedHeight;
         mHandler = new Handler();
 
-        final int tabStart = mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height)+
+        final int tabStart = mStartHeight - getResources().getDimensionPixelSize(R.dimen.tab_height) +
                 getResources().getDimensionPixelSize(R.dimen.shadow_height);
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext,dm.widthPixels-2*pad,mStartHeight));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
@@ -172,11 +171,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            if(mVerticalOffset==0){
+                            if (mVerticalOffset == 0) {
                                 mTabLayout.animate().setDuration(0).y(tabStart);
                             }
                         }
-                    },180);
+                    }, 180);
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -212,9 +211,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onResult(TimelineResponse result) {
                 mProgressFrame.setVisibility(View.GONE);
-                if (!result.success) {
-                    DUMMY = true;
-                }
                 mUser = mShowCaseAdapter.getUser(0);
             }
         });
@@ -224,7 +220,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
     private void initTabs() {
-        mTabViewHolder = new TabViewHolder(mContext,mTabLayout);
+        mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
         mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products),
                 getString(R.string.social), new TabViewHolder.TabClickListener() {
                     @Override
@@ -318,8 +314,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
-            if (DUMMY)
-                return;
             mShowCaseAdapter.changeCursor(data);
             if (data.getCount() > 0) {
                 mPageChangeListener.onScrolled(mRecyclerView, 0, 0);
@@ -346,8 +340,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private int height;
-        Cursor cursor = null;
         private int width;
+        Cursor cursor = null;
 
         public ShowcasePagerAdapter(Context context, int width, int height) {
             this.context = context;
@@ -356,15 +350,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public User getUser(int position) {
-            if (DUMMY) {
+            if (cursor.moveToPosition(position))
+                return UserInfoCache.extractFromCursor(null, cursor);
+            else {
                 User user = new User(2, User.TYPE_DESIGNER);
                 user.name = "Kiran BH";
                 user.imageUrl = "/kiran";
                 return user;
             }
-            if (cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null, cursor);
-            else return null;
         }
 
         public void changeCursor(Cursor cursor) {
@@ -391,7 +384,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public int getItemCount() {
-            if (DUMMY) return 8;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 

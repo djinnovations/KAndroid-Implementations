@@ -28,7 +28,6 @@ import com.squareup.picasso.Picasso;
  */
 public class CollectionsFragment extends Fragment implements UserChangeListener {
 
-    private static boolean DUMMY = true;
     public static final String EXTRA_DATA = "data";
     private CollectionsAdapter mCollectionAdapter;
     RecyclerView mRecyclerView;
@@ -51,8 +50,6 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         Bundle b = getArguments();
         if (b != null) {
             mUser = (User) b.getSerializable(EXTRA_DATA);
-            if(mUser!=null)
-                DUMMY = false;
         }
         return inflater.inflate(R.layout.fragment_recyclerview, container, false);
     }
@@ -126,13 +123,6 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public void onBindViewHolder(CollectionHolder holder, int position) {
-
-            if(DUMMY){
-                holder.itemView.setTag(position);
-                Picasso.with(context).load(IMAGES[position]).fit().into(holder.image);
-                return;
-            }
-
             Collection collection = getCollection(position);
             Picasso.with(context).load(collection.imageUrl).fit().into(holder.image);
             holder.name.setText(collection.name);
@@ -145,14 +135,10 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public int getItemCount() {
-            if(DUMMY)
-                return 10;
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         public Collection getCollection(int position) {
-            if(DUMMY)
-                return null;
             cursor.moveToPosition(position);
             return Collection.extractFromCursor(cursor);
         }
