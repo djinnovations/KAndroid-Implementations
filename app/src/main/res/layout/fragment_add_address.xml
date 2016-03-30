@@ -37,7 +37,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Card Number"
+                android:hint="Street address"
                 android:inputType="text"
                 android:textColor="@color/bel_grey_text"/>
         </android.support.design.widget.TextInputLayout>

@@ -37,7 +37,7 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
 
 
     @Bind(R.id.continueButton)
-    View mContinueButton;
+    TextView mContinueButton;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.frame_overlay)
@@ -106,12 +106,19 @@ public class CartManagerActivity extends FragmentActivity  implements ICartData{
         int frame = R.id.frame;
         if (uistate == UISTATE_CART) {
             f = new MyCartFragment();
+            mContinueButton.setText("Select address ->");
+            mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_ADDRESS) {
             f = new AddressFragment();
+            mContinueButton.setVisibility(View.VISIBLE);
+            mContinueButton.setText("Proceed to payment");
         } else if (uistate == UISTATE_PAYMENT) {
             f = new PaymentFragment();
+            mContinueButton.setVisibility(View.INVISIBLE);
         } else if (uistate == UISTATE_FINAL) {
             f = new SummaryFragment();
+            mContinueButton.setText("Go to home");
+            mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
             f = new AddAddressFragment();

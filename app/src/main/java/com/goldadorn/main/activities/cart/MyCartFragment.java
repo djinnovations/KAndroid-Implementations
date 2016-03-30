@@ -27,7 +27,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
     LinearLayout mContainer_header_row;
-    float mCostShipping = 200.00f, mCostTax = 420.00f, mCostTotal;
+    float mCostShipping = 0.0f, mCostTax = 420.00f, mCostTotal;
 
     @Nullable
     @Override
@@ -42,6 +42,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
 
         mShippingContainer = view.findViewById(R.id.container_shipping);
         mTaxContainer = view.findViewById(R.id.container_tax);
+        mTaxContainer.setVisibility(View.GONE);
         mTotalContainer = view.findViewById(R.id.container_total);
         mContainer_header_row = (LinearLayout) view.findViewById(R.id.container_header_row);
         ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
