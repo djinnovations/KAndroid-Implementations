@@ -62,11 +62,13 @@ public class ExtractResponse {
         return null;
     }
 
-    protected static void extractGetCart( ProductResponse response) throws JSONException {
-        if(response.responseContent!=null){
+    protected static void extractGetCart(ProductResponse response) throws JSONException {
+        if (response.responseContent != null) {
             JSONArray productArray = new JSONArray(response.responseContent);
-            for(int i =0; i < productArray.length();i++){
+            for (int i = 0; i < productArray.length(); i++) {
                 ProductDetail productDetail = new ProductDetail();
+                productDetail.extractGetCartProductList(productArray.getJSONObject(i));
+                response.productArray.add(productDetail);
 
             }
 
