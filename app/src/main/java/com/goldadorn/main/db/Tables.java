@@ -38,6 +38,7 @@ public class Tables {
         public static final String IMAGEURL = "imageurl";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String PRICE = "price";
+        public static final String CURRENCY = "currency";
         public static final String DESCRIPTION = "description";
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_UNLIKES = "unlikes";
@@ -175,7 +176,7 @@ public class Tables {
                 Users.NAME + " TEXT," +
                 Users.DESCRIPTION + " TEXT," +
                 Users.IMAGEURL + " TEXT," +
-                Users.IMAGE_ASPECT_RATIO + " REAL," +
+                Users.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Users.BADGES + " TEXT," +
                 Users.TYPE + " INTEGER DEFAULT 0," +
                 Users.COUNT_LIKES + " INTEGER DEFAULT 0," +
@@ -192,8 +193,9 @@ public class Tables {
                 Products.NAME + " TEXT," +
                 Products.DESCRIPTION + " TEXT," +
                 Products.IMAGEURL + " TEXT," +
-                Products.IMAGE_ASPECT_RATIO + " REAL," +
-                Products.PRICE + " TEXT," +
+                Products.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
+                Products.PRICE + " REAL," +
+                Products.CURRENCY + " TEXT," +
                 Products.BASIC_INFO + " TEXT," +
                 Products.CUSTOMIZATION_INFO + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
@@ -207,7 +209,7 @@ public class Tables {
                 Collections.NAME + " TEXT," +
                 Collections.DESCRIPTION + " TEXT," +
                 Collections.IMAGEURL + " TEXT," +
-                Collections.IMAGE_ASPECT_RATIO + " REAL," +
+                Collections.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Collections.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";

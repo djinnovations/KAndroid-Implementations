@@ -1,5 +1,8 @@
 package com.goldadorn.main.model;
 
+import android.database.Cursor;
+
+import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.utils.ImageFilePath;
 
 /**
@@ -14,6 +17,7 @@ public class Product {
     public float image_a_r = 1;
 
     public int quantity, maxQuantity = 10;
+    private int likecount;
 
     public Product(int id) {
         this.id = id;
@@ -36,5 +40,20 @@ public class Product {
 
     public String getImageUrl() {
         return ImageFilePath.getImageUrlForProduct(id);
+    }
+
+    public static Product extractFromCursor(Cursor cursor) {
+        Product t = new Product(cursor.getInt(cursor.getColumnIndex(Tables.Products._ID)));
+        t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Products.USER_ID));
+        t.collectionId = cursor.getInt(cursor.getColumnIndex(Tables.Products.COLLECTION_ID));
+        t.name = cursor.getString(cursor.getColumnIndex(Tables.Products.NAME));
+        t.description = cursor.getString(cursor.getColumnIndex(Tables.Products.DESCRIPTION));
+        t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES));
+        t.unitPrice = cursor.getFloat(cursor.getColumnIndex(Tables.Products.PRICE));
+        t.currency = cursor.getString(cursor.getColumnIndex(Tables.Products.CURRENCY));
+        t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
+        if (t.image_a_r == 0)
+            t.image_a_r = 1;
+        return t;
     }
 }
