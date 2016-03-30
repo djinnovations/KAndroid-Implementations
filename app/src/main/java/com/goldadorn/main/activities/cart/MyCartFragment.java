@@ -31,7 +31,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
     LinearLayout mContainer_header_row;
-    float mCostShipping = 0.0f, mCostTax = 420.00f, mCostTotal;
+    double mCostShipping = 0.0f, mCostTax = 420.00f, mCostTotal;
 
     @Nullable
     @Override
@@ -68,18 +68,10 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         UIController.getCartDetails(getContext(), new ProductResponse(), new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
-
-                Product product = new Product(123123);
-                product.name = "Gold";
-                product.unitPrice = 1400;
-                product.quantity = 1;
-                mCart.add(product);
-                product = new Product(123123);
-                product.name = "Gold";
-                product.unitPrice = 4900;
-                product.quantity = 1;
-                mCart.add(product);
-                onCartChanged();
+                if (result.success&&result.productArray!=null) {
+                    mCart.addAll(result.productArray);
+                    onCartChanged();
+                }
                 ((ILoadingProgress) getActivity()).showLoading(false);
             }
         });
