@@ -20,6 +20,8 @@ public class CustomizeFragment extends Fragment {
     private final static String TAG = CustomizeFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
+
+
     RecyclerView mRecyclerView;
     MergeRecycleAdapter mAdapter;
 
@@ -250,6 +252,13 @@ public class CustomizeFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
 
+            holder.itemView.findViewById(R.id.addToCart).setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    //// TODO: 30/3/16 kiran add to cart click
+                }
+            });
         }
 
         @Override
