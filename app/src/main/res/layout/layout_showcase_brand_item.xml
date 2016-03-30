@@ -1,86 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:padding="@dimen/griditem_margin"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="@dimen/griditem_margin">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/default_circle_indicator_stroke_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/default_circle_indicator_stroke_color"
+        android:orientation="vertical">
+
         <ImageView
+            android:id="@+id/collection_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
             android:background="@drawable/header_bg"
-            android:id="@+id/collection_image"/>
+            android:scaleType="centerCrop"/>
 
         <TextView
+            android:id="@+id/collection_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/griditem_margin"
             android:paddingRight="@dimen/griditem_margin"
             android:paddingTop="@dimen/griditem_margin"
-            android:textSize="16sp"
             android:text="Large Text"
             android:textColor="@android:color/black"
-            android:id="@+id/collection_name"/>
+            android:textSize="16sp"/>
 
         <TextView
+            android:id="@+id/collection_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
-            android:padding="@dimen/griditem_margin"
-            android:maxLines="3"
             android:ellipsize="end"
-            android:textSize="12sp"
+            android:maxLines="3"
+            android:lineSpacingMultiplier="1.1"
+            android:padding="@dimen/griditem_margin"
+            android:text="New Text"
             android:textColor="@android:color/black"
-            android:id="@+id/collection_description"/>
+            android:textSize="12sp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginBottom="@dimen/griditem_margin"
+            android:gravity="center"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/griditem_margin"
             android:paddingRight="@dimen/griditem_margin"
-            android:gravity="center"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Text"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:textSize="13sp"
-                android:textColor="@color/colorPrimary"
-                android:id="@+id/extra"/>
 
             <TextView
+                android:id="@+id/extra"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="275"
-                android:textSize="18sp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="New Text"
+                android:textStyle="italic"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/collection_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/griditem_margin"
                 android:paddingRight="@dimen/griditem_margin"
+                android:text="275"
+                android:textStyle="italic"
                 android:textColor="@color/colorPrimary"
-                android:id="@+id/collection_likes"/>
+                android:textSize="18sp"/>
 
             <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
                 style="@style/circleSmallButton"
                 android:layout_width="@dimen/circle_button_tiny_height"
-                android:text="@string/icon_liked_post"
                 android:layout_height="@dimen/circle_button_tiny_height"
-                android:id="@+id/likeButton"/>
+                android:text="@string/icon_liked_post"/>
 
         </LinearLayout>
 
 
-
     </LinearLayout>
-
 
 
 </LinearLayout>
