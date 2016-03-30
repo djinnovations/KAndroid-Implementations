@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -17,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:text="Home"
+            tools:text="Home"
             android:textSize="@dimen/ts_primary"/>
 
         <TextView
@@ -25,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="house no 38\njithkam house "
+            tools:text="house no 38\njithkam house "
             android:textSize="@dimen/ts_secondary"/>
     </LinearLayout>
 
@@ -33,15 +35,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/action_edit"
-            style="?actionButtonStyle"
+            style="@style/circleSmallButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_menu_manage"/>
+            android:src="@drawable/ic_content_create"/>
 
         <CheckBox
             android:id="@+id/checkbox"

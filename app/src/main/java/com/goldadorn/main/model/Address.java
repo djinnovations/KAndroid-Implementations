@@ -9,12 +9,13 @@ import com.goldadorn.main.db.Tables;
  */
 public class Address {
     public final int id;
-    public String name,street,city,state,country;
+    public String name, street, city, state, country;
     public int pincode;
 
     public Address(int id) {
         this.id = id;
     }
+
     public static Address extractFromCursor(Cursor cursor) {
         Address t = new Address(cursor.getInt(cursor.getColumnIndex(Tables.Addresses._ID)));
         t.name = cursor.getString(cursor.getColumnIndex(Tables.Addresses.NAME));

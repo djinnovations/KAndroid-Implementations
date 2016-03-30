@@ -98,6 +98,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
         public void bindUI(Address address) {
             name.setText(address.name);
+
         }
 
         public void remove() {

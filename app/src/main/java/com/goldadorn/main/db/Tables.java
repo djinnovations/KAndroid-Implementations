@@ -150,6 +150,7 @@ public class Tables {
         public static final String STATE = "state";
         public static final String COUNTRY = "country";
         public static final String PINCODE = "pincode";
+        public static final String PHONENUMBER = "number";
         public static final String LAST_USED = "lastused";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
@@ -218,6 +219,7 @@ public class Tables {
                 Addresses._ID + " INTEGER PRIMARY KEY ," +
                 Addresses.NAME + " TEXT," +
                 Addresses.STREET + " TEXT," + Addresses.CITY + " TEXT," + Addresses.STATE + " TEXT," + Addresses.COUNTRY + " TEXT," +
+                Addresses.PHONENUMBER + " TEXT," +
                 Addresses.PINCODE + " TEXT," +
                 Addresses.LAST_USED + " INTEGER," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";

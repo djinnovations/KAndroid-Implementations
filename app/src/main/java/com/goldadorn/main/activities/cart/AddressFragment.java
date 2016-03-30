@@ -109,16 +109,6 @@ public class AddressFragment extends Fragment {
                         c.close();
                     }
                     result.object = t;
-
-                    if (t.size() == 0) {
-                        Address product = new Address(123123);
-                        product.name = "Home";
-                        product.street = "no 45, heather street";
-                        product.city = "Bangalore";
-                        product.state = "Karnataka";
-                        product.pincode = 560095;
-                        t.add(product);
-                    }
                     return result;
                 }
             };
