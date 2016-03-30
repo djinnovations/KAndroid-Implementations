@@ -35,20 +35,13 @@ import java.util.Iterator;
     //    int env = PayuConstants.MOBILE_STAGING_ENV;
     // in case of production make sure that merchantIndex is fixed as 0 (0MQaQP) for other key's payu server cant generate hash
 
-    String merchantTestKeys[] = {"gtKFFx", "gtKFFx"};
-    String merchantTestSalts[] = {"eCwWELxi", "eCwWELxi"};
 
-    String merchantProductionKeys[] = {"0MQaQP", "smsplus"};
-    String merchantProductionSalts[] = {"13p0PXZk", "1b1b0",};
-
-    String offerKeys[] = {"test123@6622", "offer_test@ffer_t5172", "offerfranklin@6636"};
-
-    String merchantKey = PRODUCTION ? merchantProductionKeys[merchantIndex] : merchantTestKeys[merchantIndex];
+    String merchantKey = "VH3HuI";
     //    String merchantSalt = env == PayuConstants.PRODUCTION_ENV ? merchantProductionSalts[merchantIndex] : merchantTestSalts[merchantIndex];
     private PayUChecksum checksum;
     private PostData postData;
     private String key;
-    private String salt;
+    private String salt="TppVcnTs";
     private String var1;
     private Bundle bundle = new Bundle();
     //    private mPaymentParams mPaymentParams;
