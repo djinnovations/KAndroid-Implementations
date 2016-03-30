@@ -79,7 +79,7 @@ public class AddAddressFragment extends Fragment {
             mStreetInput.getEditText().setText(mAddressToEdit.street);
             mCityInput.getEditText().setText(mAddressToEdit.city);
             mStateInput.getEditText().setText(mAddressToEdit.state);
-            mPinCodeInput.getEditText().setText(mAddressToEdit.pincode);
+            mPinCodeInput.getEditText().setText(mAddressToEdit.pincode+"");
             mPhoneNumberInput.getEditText().setText(mAddressToEdit.phoneNumber);
         }
 
