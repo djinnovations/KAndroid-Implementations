@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,11 @@ public class ProductsFragment extends Fragment {
 
     @Bind(R.id.swipe_deck)
     SwipeDeck cardStack;
+
+    @Bind(R.id.product_price)
+    TextView price;
+    @Bind(R.id.product_name)
+    TextView name;
 
     @Bind(R.id.buyButton)
     Button buyButton;
@@ -110,7 +116,6 @@ public class ProductsFragment extends Fragment {
                     mToast.cancel();
                 mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked", Toast.LENGTH_LONG);
                 mToast.show();
-
             }
 
             @Override
@@ -210,26 +215,26 @@ public class ProductsFragment extends Fragment {
             int id = v.getId();
             if(id==R.id.likeButton){
                 //todo like click
-                Toast.makeText(v.getContext(),"Like click!",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(),"Like click!",Toast.LENGTH_SHORT).show();
             }else if(id==R.id.product_actions_open){
                 ProductViewHolder holder = (ProductViewHolder) v.getTag();
                 boolean isVisible = holder.productActions.getVisibility()==View.VISIBLE;
                 if(isVisible) {
-                    holder.productActionsToggle.setText("+");
+                    holder.productActionsToggle.setImageResource(R.drawable.add);
                     holder.productActions.setVisibility(View.GONE);
                 }else{
-                    holder.productActionsToggle.setText("X");
+                    holder.productActionsToggle.setImageResource(R.drawable.close);
                     holder.productActions.setVisibility(View.VISIBLE);
                 }
             }else if(id==R.id.shareButton){
                 //todo like click
-                Toast.makeText(v.getContext(),"Share click!",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(),"Share click!",Toast.LENGTH_SHORT).show();
             }else if(id==R.id.buyNoBuyButton){
                 //todo buy no buy click
-                Toast.makeText(v.getContext(),"Buy No buy click!",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(),"Buy No buy click!",Toast.LENGTH_SHORT).show();
             }else if(id==R.id.wishlistButton){
                 //todo wishlist click
-                Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT);
+                Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT).show();
             }else{
                 startActivity(ProductActivity
                         .getLaunchIntent(v.getContext()));
@@ -246,7 +251,7 @@ public class ProductsFragment extends Fragment {
             @Bind(R.id.product_image)
             ImageView image;
             @Bind(R.id.product_actions_open)
-            Button productActionsToggle;
+            ImageButton productActionsToggle;
 
             @Bind(R.id.layout_product_actions)
             View productActions;

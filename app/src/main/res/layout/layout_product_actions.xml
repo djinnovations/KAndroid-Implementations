@@ -3,19 +3,19 @@
 <LinearLayout android:id="@+id/layout_product_actions"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="match_parent"
               android:layout_gravity="center"
               android:gravity="center"
+              android:background="@drawable/shadow_overlay"
               android:orientation="horizontal"
-              android:visibility="gone">
+              android:visibility="invisible">
 
     <com.mikepenz.iconics.view.IconicsButton
         android:id="@+id/shareButton"
         style="@style/ShowcaseButton"
         android:layout_width="@dimen/circle_button_height"
         android:layout_height="@dimen/circle_button_height"
-        android:layout_marginLeft="@dimen/padding_default_2x"
-        android:layout_marginRight="@dimen/padding_default_2x"
+        android:layout_marginLeft="@dimen/padding_default"
         android:text="@string/icon_share_post"/>
 
     <com.mikepenz.iconics.view.IconicsButton
@@ -23,8 +23,8 @@
         style="@style/ShowcaseButton"
         android:layout_width="@dimen/circle_button_height"
         android:layout_height="@dimen/circle_button_height"
-        android:layout_marginLeft="@dimen/padding_default_2x"
-        android:layout_marginRight="@dimen/padding_default_2x"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
         android:text="@string/icon_liked_post"/>
 
     <com.mikepenz.iconics.view.IconicsButton
@@ -32,7 +32,6 @@
         style="@style/ShowcaseButton"
         android:layout_width="@dimen/circle_button_height"
         android:layout_height="@dimen/circle_button_height"
-        android:layout_marginLeft="@dimen/padding_default_2x"
-        android:layout_marginRight="@dimen/padding_default_2x"
+        android:layout_marginRight="@dimen/padding_default"
         android:text="@string/icon_comment_post"/>
 </LinearLayout>

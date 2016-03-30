@@ -60,7 +60,7 @@
         </FrameLayout>
 
 
-        <Button
+        <ImageButton
             android:id="@+id/product_actions_open"
             style="@style/circleSmallButton"
             android:layout_width="@dimen/circle_button_tiny_height"
@@ -68,7 +68,7 @@
             android:layout_gravity="right"
             android:gravity="center"
             android:textAlignment="center"
-            android:text="+"
+            android:src="@drawable/add"
             android:textStyle="bold"/>
     </LinearLayout>
 
