@@ -11,7 +11,7 @@ import java.util.HashMap;
 /**
  * Created by nithinjohn on 22/03/16.
  */
-public class ProductDetail extends Product{
+public class ProductDetail extends Product {
 
     public String code;
     public double type;
@@ -26,103 +26,105 @@ public class ProductDetail extends Product{
     public float size;
 
     ///customization variables
-    public float mMakeingCharge;
-    public String mMakeingChargeUnit;
-    public String mPrimaryMetal;
-    public String mPrimaryMetalColor;
-    public float mPrimaryMetalPurity;
-    public float mPrimaryMetalPrice;
-    public String mPrimaryMetalPriceUnits;
-    public float mStonePrice;
-    public String mStonePriceUnit;
-    ArrayList<String> mMetalList;
-    ArrayList<Integer> mMetalPurityList;
-    ArrayList<Integer> mMetalColorList;
-    ArrayList<String> mCenterStone;
+    public float makeingCharge;
+    public String makeingChargeUnit;
+    public String primaryMetal;
+    public String primaryMetalColor;
+    public float primaryMetalPurity;
+    public float primaryMetalPrice;
+    public String primaryMetalPriceUnits;
+    public float stonePrice;
+    public String stonePriceUnit;
+    ArrayList<String> metalList;
+    ArrayList<Integer> metalPurityList;
+    ArrayList<Integer> metalColorList;
+    ArrayList<String> centerStone;
 
-    HashMap<String, ArrayList<String>> mAccentStones;
-    HashMap<String, ArrayList<String>> mGemStones;
+    HashMap<String, ArrayList<String>> accentStones;
+    HashMap<String, ArrayList<String>> gemStones;
 
 
-    public String mCenterStoneSelected;
-    public HashMap<String, String> mAccentStoneSelected;
-    public HashMap<String, String> mGemStoneSelected;
+    public String centerStoneSelected;
+    public HashMap<String, String> accentStoneSelected;
+    public HashMap<String, String> gemStoneSelected;
 
     public ProductDetail(int id) {
         super(id);
     }
 
 
-    public void extractBasicInfo(JSONObject productInfo) {
-        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
-        code = productInfo.optString(Constants.JsonConstants.PRODUCTCODE);
-        name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
-        description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
-        type = productInfo.optDouble(Constants.JsonConstants.TYPE);
-        costunit = productInfo.optString(Constants.JsonConstants.COSTUNITS);
-        aspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
-        widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
-        weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
-        sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
-        height = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
-        width = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
-        size = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
+    public static ProductDetail extractBasicInfo(JSONObject productInfo) {
+        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
+        p.code = productInfo.optString(Constants.JsonConstants.PRODUCTCODE);
+        p.name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
+        p.description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
+        p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
+        p.costunit = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        p.aspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
+        p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
+        p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
+        p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
+        p.height = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
+        p.width = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
+        p.size = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
+        return p;
     }
 
-    public void extractGetCartProductList(JSONObject productInfo) {
-        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
-        name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
-        mPrimaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-        mPrimaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-        mPrimaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
-        mCenterStoneSelected = productInfo.optString(Constants.JsonConstants.CENTERSTONE);
+    public static ProductDetail extractGetCartProductList(JSONObject productInfo) {
+        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
+        p.name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
+        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
+        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
+        p.primaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
+        p.centerStoneSelected = productInfo.optString(Constants.JsonConstants.CENTERSTONE);
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
-                mAccentStoneSelected.put(Constants.JsonConstants.ACCENTSTONE + i, productInfo.optString(Constants.JsonConstants.ACCENTSTONE + i));
+                p.accentStoneSelected.put(Constants.JsonConstants.ACCENTSTONE + i, productInfo.optString(Constants.JsonConstants.ACCENTSTONE + i));
             }
         }
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
-                mGemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
+                p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
             }
         }
-        price = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
-        size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
+        p.price = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
+        p.size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
+        return p;
     }
 
-    public void extractCustomization(JSONObject productInfo) throws JSONException {
-        id = productInfo.optInt(Constants.JsonConstants.PRODUCTID);
-        mMakeingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
-        mMakeingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
-        mPrimaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-        mPrimaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-        mPrimaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
-        mPrimaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
-        mPrimaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
-        mStonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
-        mStonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
+    public static ProductDetail extractCustomization(JSONObject productInfo) throws JSONException {
+        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
+        p.makeingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
+        p.makeingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
+        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
+        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
+        p.primaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
+        p.primaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
+        p.primaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
+        p.stonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
+        p.stonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
         if (productInfo.has(Constants.JsonConstants.METALLIST)) {
-            mMetalList = new ArrayList<>();
+            p.metalList = new ArrayList<>();
             for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.METALLIST).length(); i++) {
-                mMetalList.add(productInfo.getJSONArray(Constants.JsonConstants.METALLIST).getString(i));
+                p.metalList.add(productInfo.getJSONArray(Constants.JsonConstants.METALLIST).getString(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.METALPURITYLIST)) {
-            mMetalPurityList = new ArrayList<>();
+            p.metalPurityList = new ArrayList<>();
             for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.METALPURITYLIST).length(); i++) {
-                mMetalPurityList.add(productInfo.getJSONArray(Constants.JsonConstants.METALPURITYLIST).getInt(i));
+                p.metalPurityList.add(productInfo.getJSONArray(Constants.JsonConstants.METALPURITYLIST).getInt(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.METALCOLORLIST)) {
-            mMetalColorList = new ArrayList<>();
+            p.metalColorList = new ArrayList<>();
             for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.METALCOLORLIST).length(); i++) {
-                mMetalColorList.add(productInfo.getJSONArray(Constants.JsonConstants.METALCOLORLIST).getInt(i));
+                p.metalColorList.add(productInfo.getJSONArray(Constants.JsonConstants.METALCOLORLIST).getInt(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.CENTERSTONE)) {
-            mCenterStone = new ArrayList<>();
+            p.centerStone = new ArrayList<>();
             for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.CENTERSTONE).length(); i++) {
-                mCenterStone.add(productInfo.getJSONArray(Constants.JsonConstants.CENTERSTONE).getString(i));
+                p.centerStone.add(productInfo.getJSONArray(Constants.JsonConstants.CENTERSTONE).getString(i));
             }
         }
         for (int i = 0; i < 11; i++) {
@@ -131,7 +133,7 @@ public class ProductDetail extends Product{
                 for (int j = 0; i < productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE + i).length(); j++) {
                     accentStonelist.add(productInfo.getJSONArray(Constants.JsonConstants.ACCENTSTONE + i).getString(j));
                 }
-                mAccentStones.put(Constants.JsonConstants.ACCENTSTONE + i, accentStonelist);
+                p.accentStones.put(Constants.JsonConstants.ACCENTSTONE + i, accentStonelist);
             }
         }
         for (int i = 0; i < 11; i++) {
@@ -140,9 +142,10 @@ public class ProductDetail extends Product{
                 for (int j = 0; i < productInfo.getJSONArray(Constants.JsonConstants.GEMSTONE + i).length(); j++) {
                     gemstonelist.add(productInfo.getJSONArray(Constants.JsonConstants.GEMSTONE + i).getString(j));
                 }
-                mGemStones.put(Constants.JsonConstants.GEMSTONE + i, gemstonelist);
+                p.gemStones.put(Constants.JsonConstants.GEMSTONE + i, gemstonelist);
             }
         }
+        return p;
 
     }
 }
