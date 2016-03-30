@@ -109,6 +109,15 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                         .getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
             }
         };
+        private View.OnClickListener mLikeClick = new View.OnClickListener() {
+            public int mCount = 0;
+
+            @Override
+            public void onClick(View v) {
+                Collection collection = (Collection) v.getTag();
+                v.setSelected(mCount++%2==0);
+            }
+        };
 
         public CollectionsAdapter(Context context) {
             this.context = context;
@@ -123,6 +132,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                     R.layout.layout_showcase_brand_item, parent,false);
             CollectionHolder rcv = new CollectionHolder(layoutView);
             rcv.itemView.setOnClickListener(mCollectionClick);
+            rcv.like.setOnClickListener(mLikeClick);
             return rcv;
         }
 
@@ -135,6 +145,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.likeCount.setText("" + collection.likecount);
             holder.extra.setText(collection.productcount+" Products");
             holder.itemView.setTag(position);
+            holder.like.setTag(collection);
             holder.image.getLayoutParams().height = (int) (collection.image_a_r*cardWidth);
             L.d("OOOOO","ar: "+collection.image_a_r+" "+holder.image.getLayoutParams().height+" "+holder.image.getWidth());
         }

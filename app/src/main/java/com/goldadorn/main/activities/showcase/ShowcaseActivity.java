@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
@@ -135,14 +136,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mToolBar.getLayoutParams().height = mCollapsedHeight;
         mHandler = new Handler();
 
-        final int tabStart = mStartHeight - getResources().getDimensionPixelSize(R.dimen.tab_height) +
-                getResources().getDimensionPixelSize(R.dimen.shadow_height);
+        final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
+                R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setAdapter(mShowCaseAdapter =
+                new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
@@ -159,14 +162,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     mOverlay.getLayoutParams().height = mStartHeight + verticalOffset;
                     mRecyclerView.getLayoutParams().height = mStartHeight + verticalOffset;
                     int p = (int) (((maxPad * 0.25f * verticalOffset) / maxHeight) - pad);
-                    mShowCaseAdapter.setDimens(dm.widthPixels + 2 * p, mStartHeight + verticalOffset);
+                    mShowCaseAdapter.setDimens(dm.widthPixels + 2 * p,
+                            mStartHeight + verticalOffset);
                     mRecyclerView.getLayoutManager().offsetChildrenHorizontal(-p);
                     mRecyclerView.setPadding(-p, 0, -p, 0);
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-//                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mTabLayout.getLayoutParams();
-//                    lp.leftMargin = lp.rightMargin = -p;
+                    //                    FrameLayout.LayoutParams lp = (FrameLayout
+                    // .LayoutParams) mTabLayout.getLayoutParams();
+                    //                    lp.leftMargin = lp.rightMargin = -p;
                     mTabViewHolder.setSides(-p);
 
                     mHandler.postDelayed(new Runnable() {
@@ -187,8 +192,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition--;
-                if (mCurrentPosition < 0)
-                    mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
+                if (mCurrentPosition < 0) mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -196,8 +200,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition++;
-                if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1)
-                    mCurrentPosition = 0;
+                if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1) mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -206,18 +209,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
 
-//        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+        //        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         configureUI(mUIState);
-        UIController.getDesigners(mContext, new TimelineResponse(), new IResultListener<TimelineResponse>() {
-            @Override
-            public void onResult(TimelineResponse result) {
-                mProgressFrame.setVisibility(View.GONE);
-                mUser = mShowCaseAdapter.getUser(0);
-            }
-        });
+        UIController.getDesigners(mContext, new TimelineResponse(),
+                new IResultListener<TimelineResponse>() {
+                    @Override
+                    public void onResult(TimelineResponse result) {
+                        mProgressFrame.setVisibility(View.GONE);
+                        mUser = mShowCaseAdapter.getUser(0);
+                    }
+                });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-//        Intent in = new Intent(mContext,PaymentTestActivity.class);
-//        startActivity(in);
+        //        Intent in = new Intent(mContext,PaymentTestActivity.class);
+        //        startActivity(in);
     }
 
     private void initTabs() {
@@ -264,15 +268,16 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mUserChangeListeners.remove(listener);
     }
 
-    private RecyclerView.OnScrollListener mPageChangeListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            mUser = mShowCaseAdapter.getUser(mCurrentPosition);
-            bindOverlay(mUser);
-            for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
-        }
-    };
+    private RecyclerView.OnScrollListener mPageChangeListener =
+            new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    mUser = mShowCaseAdapter.getUser(mCurrentPosition);
+                    bindOverlay(mUser);
+                    for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
+                }
+            };
 
     private void configureUI(int uiState) {
         Fragment f = null;
@@ -296,7 +301,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         }
         if (f != null) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, f);
             fragmentTransaction.commit();
         }
@@ -308,7 +314,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null, null, null);
+            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null,
+                    null, null);
         }
 
         @Override
@@ -332,11 +339,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private void bindOverlay(User user) {
         mOverlayVH.mBrandName.setText(user.name);
         mOverlayVH.mLikesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
-        mOverlayVH.mFollowersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
-        mOverlayVH.mFollowingCount.setText(String.format(Locale.getDefault(), "%d", user.following_cnt));
+        mOverlayVH.mFollowersCount.setText(
+                String.format(Locale.getDefault(), "%d", user.followers_cnt));
+        mOverlayVH.mFollowingCount.setText(
+                String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
-        mOverlayVH.setBadges(user.trending,user.featured);
+        mOverlayVH.setBadges(user.trending, user.featured);
 
 
     }
@@ -354,8 +363,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public User getUser(int position) {
-            if (cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null, cursor);
+            if (cursor.moveToPosition(position)) return UserInfoCache.extractFromCursor(null,
+                    cursor);
             else {
                 User user = new User(2, User.TYPE_DESIGNER);
                 user.name = "Kiran BH";
@@ -371,7 +380,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(
+                    getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
             };
             return vh;
         }
@@ -403,8 +413,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Bind(R.id.brand_name)
         TextView mBrandName;
-//        @Bind(R.id.brand_description)
-//        TextView mBrandDescription;
+        //        @Bind(R.id.brand_description)
+        //        TextView mBrandDescription;
 
         @Bind(R.id.layout_1)
         View layout1;
@@ -441,13 +451,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             mFollowButton.setOnClickListener(this);
         }
 
-        public void setBadges(boolean trending,boolean featured){
-            mFeatured.setVisibility(featured?View.VISIBLE:View.GONE);
-            mTrending.setVisibility(trending?View.VISIBLE:View.GONE);
+        public void setBadges(boolean trending, boolean featured) {
+            mFeatured.setVisibility(featured ? View.VISIBLE : View.GONE);
+            mTrending.setVisibility(trending ? View.VISIBLE : View.GONE);
         }
 
         public void setVisisbility(int visibility) {
-//            mBrandDescription.setVisibility(visibility);
+            //            mBrandDescription.setVisibility(visibility);
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
@@ -457,12 +467,22 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         @Override
         public void onClick(View v) {
             int id = v.getId();
+            Context context = v.getContext();
             User user = (User) v.getTag();
-            if(id==R.id.likeButton){
+            if (id == R.id.likeButton) {
+                Toast.makeText(v.getContext(), "like click!", Toast.LENGTH_SHORT).show();
                 //// TODO: 30/3/16 like click
-            }else if(id==R.id.followButton){
+            } else if (id == R.id.followButton) {
+                String current = ((IconicsButton) v).getText().toString();
+
+                ((IconicsButton) v).setText(current.equals(
+                        context.getResources().getString(R.string.icon_follow_user)) ?
+                        context.getResources().getString(R.string.icon_un_follow_user) :
+                        context.getResources().getString(R.string.icon_follow_user));
+                Toast.makeText(v.getContext(), "follow click!", Toast.LENGTH_SHORT).show();
                 // TODO: 30/3/16 follow click
-            }else if(id==R.id.shareButton){
+            } else if (id == R.id.shareButton) {
+                Toast.makeText(v.getContext(), "share click!", Toast.LENGTH_SHORT).show();
                 //// TODO: 30/3/16 share click
             }
         }
