@@ -9,6 +9,8 @@ import android.content.Context;
         import android.provider.DocumentsContract;
         import android.provider.MediaStore;
 
+import com.goldadorn.main.server.ApiFactory;
+
 /**
  * Created by bhavinpadhiyar on 2/23/16.
  */
@@ -152,5 +154,12 @@ public class ImageFilePath
      */
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    public static String getImageUrlForCollection(long collid){
+        return ApiFactory.IMAGE_URL_HOST+"collections/"+collid+"/"+collid+".jpg";
+    }
+    public static String getImageUrlForProduct(int productid){
+        return ApiFactory.IMAGE_URL_HOST+"products/"+productid+"/"+productid+".jpg";
     }
 }

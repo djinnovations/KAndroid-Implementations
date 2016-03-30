@@ -7,6 +7,7 @@ import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
+import com.goldadorn.main.utils.ImageFilePath;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,13 +30,9 @@ public class DbHelper {
                     cv.put(Tables.Products.NAME, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
                     cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
                     cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
-                    String url = productObj.optString(Constants.JsonConstants.PRODUCTPIC);
-                    if (url != null) {
-                        url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
-                        cv.put(Tables.Products.IMAGEURL, url);
-                        cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
+                    cv.put(Tables.Products.IMAGEURL, ImageFilePath.getImageUrlForProduct(productObj.optInt(Constants.JsonConstants.PRODUCTID)));
+                    cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
 
-                    }
                     cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
                     int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                     if (updatecount == 0)
@@ -133,12 +130,8 @@ public class DbHelper {
                             ContentValues collcv = new ContentValues();
                             collcv.put(Tables.Collections.USER_ID, userId);
                             collcv.put(Tables.Collections.NAME, collObj.optString(Constants.JsonConstants.COLLECTIONTITLE, null));
-                            String urlimage = collObj.optString(Constants.JsonConstants.COLLECTIONIMAGE, null);
-                            if (urlimage != null) {
-                                urlimage = urlimage.replace("../", ApiFactory.IMAGE_URL_HOST);
-                                collcv.put(Tables.Collections.IMAGEURL, urlimage);
-                                collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
-                            }
+                            collcv.put(Tables.Collections.IMAGEURL, ImageFilePath.getImageUrlForCollection(collObj.optLong(Constants.JsonConstants.COLLECTION_ID)));
+                            collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
