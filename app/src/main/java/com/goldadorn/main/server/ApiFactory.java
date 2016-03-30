@@ -37,6 +37,8 @@ public class ApiFactory extends ExtractResponse {
     private static final int CART_DETAIL_TYPE = 8;
     private static final int ADD_CART_TYPE = 9;
     private static final int REMOVE_CART_TYPE = 10;
+    private static final int LIKE_TYPE = 11;
+    private static final int UNLIKE_TYPE = 12;
 
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -60,7 +62,14 @@ public class ApiFactory extends ExtractResponse {
             }
             case ADD_CART_TYPE: {
                 builder.appendPath("addproductstocart");
-
+                break;
+            }
+            case LIKE_TYPE: {
+                builder.appendPath("like");
+                break;
+            }
+            case UNLIKE_TYPE: {
+                builder.appendPath("unlike");
                 break;
             }
             case REMOVE_CART_TYPE: {
@@ -283,7 +292,7 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productToAdd.id);
-            ProductDetail productDetail= (ProductDetail) response.productToAdd;
+            ProductDetail productDetail = (ProductDetail) response.productToAdd;
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
@@ -321,7 +330,7 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productToAdd.id);
-            ProductDetail productDetail= (ProductDetail) response.productToAdd;
+            ProductDetail productDetail = (ProductDetail) response.productToAdd;
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
@@ -427,6 +436,81 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("removeFromCart " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void like(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = LIKE_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = LIKE_TYPE;
+
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            if (response.productId != -1) {
+                jsonObject.put("product", response.productId);
+                jsonObject.put("collection", response.collectionId);
+                jsonObject.put("designer", response.userId);
+            } else if (response.collectionId != -1) {
+                jsonObject.put("collection", response.collectionId);
+                jsonObject.put("designer", response.userId);
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("like " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+    protected static void unLike(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = LIKE_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = LIKE_TYPE;
+
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            if (response.productId != -1) {
+                jsonObject.put("product", response.productId);
+                jsonObject.put("collection", response.collectionId);
+                jsonObject.put("designer", response.userId);
+            } else if (response.collectionId != -1) {
+                jsonObject.put("collection", response.collectionId);
+                jsonObject.put("designer", response.userId);
+            }
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("unLike " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

@@ -160,6 +160,29 @@ public class Api {
         }
     }
 
+    public static void like(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.like(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    public static void unLike(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.unLike(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     /**
      * this function will handle all the exceptions related to http calls to server. the exception
      * message will be extracted and exception type will be saved in response class.
