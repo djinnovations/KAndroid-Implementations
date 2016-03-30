@@ -313,7 +313,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Collection collection = getCollection(position);
             ImageView image  = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(collection.imageUrl).placeholder(R.drawable.designer).into(image);
+            Picasso.with(mContext).load(collection.getImageUrl()).placeholder(R.drawable.designer).into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
             image.requestLayout();

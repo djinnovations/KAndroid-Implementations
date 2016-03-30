@@ -16,7 +16,6 @@ public class ProductDetail extends Product {
     public String code;
     public double type;
     public float price;
-    public float aspectratio;
     public String widthUnit;
     public float weight;
     public String sizeUnit;
@@ -59,7 +58,7 @@ public class ProductDetail extends Product {
         p.description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
         p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
         p.unitPrice = productInfo.optDouble(Constants.JsonConstants.COSTUNITS, -1f);
-        p.aspectratio = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
+        p.image_a_r = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
         p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
         p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
         p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);

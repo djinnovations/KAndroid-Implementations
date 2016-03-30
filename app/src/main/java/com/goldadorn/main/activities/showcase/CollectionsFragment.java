@@ -129,7 +129,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         @Override
         public void onBindViewHolder(final CollectionHolder holder, int position) {
             final Collection collection = getCollection(position);
-            Picasso.with(context).load(collection.imageUrl).placeholder(IMAGES[(int) (Math.random()*100%IMAGES.length)]).fit().into(holder.image);
+            Picasso.with(context).load(collection.getImageUrl()).placeholder(IMAGES[(int) (Math.random()*100%IMAGES.length)]).fit().into(holder.image);
             holder.name.setText(collection.name);
             holder.description.setText(collection.description);
             holder.likeCount.setText("" + collection.likecount);
