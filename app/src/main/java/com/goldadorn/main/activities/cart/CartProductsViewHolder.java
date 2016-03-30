@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -96,6 +97,9 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText.removeTextChangedListener(this);
             quantityText.setText(product.quantity + "");
             quantityText.addTextChangedListener(this);
+
+            Picasso.with(image.getContext()).load(product.getImageUrl()).placeholder(R.mipmap.ic_launcher).fit().into(image);
+
 
             SpannableStringBuilder sbr = new SpannableStringBuilder(product.currency + ". " + (product.unitPrice * product.quantity));
             int start = sbr.length();
