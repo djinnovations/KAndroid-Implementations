@@ -269,7 +269,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.mId);
+            jsonObject.put("prodId", response.productDetail.id);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, response.productDetail.mPrimaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.mPrimaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.mPrimaryMetalColor);
@@ -306,7 +306,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productDetail.mId);
+            jsonObject.put("prodId", response.productDetail.id);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, response.productDetail.mPrimaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, response.productDetail.mPrimaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, response.productDetail.mPrimaryMetalColor);
