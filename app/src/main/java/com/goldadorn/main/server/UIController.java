@@ -107,4 +107,34 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
+    public static void addToCart(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.addToCart(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+    public static void removeFromCart(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.removeFromCart(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
 }
