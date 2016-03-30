@@ -234,7 +234,7 @@ public class ProductActivity extends BaseDrawerActivity {
         View layout2;
         @Bind(R.id.layout_3)
         View layout3;
-        @Bind(R.id.layout_4)
+        @Bind(R.id.layout_product_actions)
         View layout4;
 
 

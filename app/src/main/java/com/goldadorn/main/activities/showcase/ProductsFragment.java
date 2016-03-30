@@ -90,21 +90,22 @@ public class ProductsFragment extends Fragment {
         cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(int position) {
+                Log.i("MainActivity", "card was swiped right, position in adapter: " + position);
+                if (mToast != null)
+                    mToast.cancel();
+                mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked", Toast.LENGTH_LONG);
+                mToast.show();
+
+            }
+
+            @Override
+            public void cardSwipedRight(int position) {
                 if (mToast != null)
                     mToast.cancel();
                 mToast = Toast.makeText(getActivity(), "Product " + position + " liked", Toast.LENGTH_LONG);
                 mToast.show();
 
                 Log.i("MainActivity", "card was swiped left, position in adapter: " + position);
-            }
-
-            @Override
-            public void cardSwipedRight(int position) {
-                Log.i("MainActivity", "card was swiped right, position in adapter: " + position);
-                if (mToast != null)
-                    mToast.cancel();
-                mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked", Toast.LENGTH_LONG);
-                mToast.show();
             }
 
             @Override

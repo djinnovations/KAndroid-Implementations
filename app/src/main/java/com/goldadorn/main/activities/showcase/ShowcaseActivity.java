@@ -399,8 +399,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Bind(R.id.brand_name)
         TextView mBrandName;
-        @Bind(R.id.brand_description)
-        TextView mBrandDescription;
+//        @Bind(R.id.brand_description)
+//        TextView mBrandDescription;
 
         @Bind(R.id.layout_1)
         View layout1;
@@ -427,7 +427,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public void setVisisbility(int visibility) {
-            mBrandDescription.setVisibility(visibility);
+//            mBrandDescription.setVisibility(visibility);
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);

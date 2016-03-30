@@ -115,38 +115,9 @@
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-    <LinearLayout
-        android:id="@+id/layout_4"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/shareButton"
-            style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
-            android:text="@string/icon_share_post"/>
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/likeDislikeButton"
-            style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
-            android:text="@string/icon_liked_post"/>
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/commentButton"
-            style="@style/ShowcaseButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
-            android:text="@string/icon_comment_post"/>
-    </LinearLayout>
+    <include layout="@layout/layout_product_actions" />
+
+
     <LinearLayout
         android:id="@+id/layout_3"
         android:orientation="vertical"

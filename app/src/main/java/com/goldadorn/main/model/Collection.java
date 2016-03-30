@@ -28,6 +28,8 @@ public class Collection implements Serializable {
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
+        if(t.image_a_r==0)
+            t.image_a_r=1;
         t.productcount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_PRODUCTS));
         return t;
     }

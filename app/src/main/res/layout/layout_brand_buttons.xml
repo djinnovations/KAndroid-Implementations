@@ -52,6 +52,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
+        android:visibility="gone"
         android:paddingBottom="12dp"
         android:text="Small Text"
         android:textColor="@android:color/white"

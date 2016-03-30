@@ -13,32 +13,35 @@
         android:orientation="horizontal">
 
         <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/likeButton"
+            android:id="@+id/dislikeButton"
             style="@style/ShowcaseButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="@dimen/padding_default_4x"
+            android:layout_marginRight="@dimen/padding_default_half"
             android:text="@string/icon_heart_dislike"/>
 
         <com.daprlabs.cardstack.SwipeDeck
             android:id="@+id/swipe_deck"
             android:layout_width="0dp"
-            android:layout_height="215dp"
+            android:layout_height="260dp"
             android:layout_weight="1"
-            android:padding="20dp"
-            swipedeck:card_spacing="10dp"
-            swipedeck:max_visible="3"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            swipedeck:deck_max_visible="3"
+            swipedeck:card_spacing="8dp"
             swipedeck:render_above="true"
             swipedeck:rotation_degrees="15"/>
 
         <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/dislikeButton"
+            android:id="@+id/likeButton"
             style="@style/ShowcaseButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_marginRight="12dp"
-            android:layout_marginLeft="@dimen/padding_default_4x"
+            android:layout_marginLeft="@dimen/padding_default_half"
             android:text="@string/icon_heart_like"/>
 
     </com.daprlabs.cardstack.SwipeLinearLayout>
