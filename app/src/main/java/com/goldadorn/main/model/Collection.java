@@ -13,7 +13,7 @@ public class Collection implements Serializable {
     public final int id;
     public String name, description, imageUrl;
     public int userId;
-    public float image_a_r = -1;
+    public float image_a_r = 1;
     public int likecount = 0,productcount = 0;
 
     public Collection(int id) {
