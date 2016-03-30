@@ -8,8 +8,8 @@ import com.goldadorn.main.utils.ImageFilePath;
 public class Product {
     public final int id;
     public String name, description;
-    public double unitPrice;
-    public static final String currency = " RS";
+    public float unitPrice;
+    public String currency = " RS";
     public float image_a_r = 1;
 
     public int quantity, maxQuantity = 10;
@@ -18,7 +18,7 @@ public class Product {
         this.id = id;
     }
 
-    public double getTotalPrice() {
+    public float getTotalPrice() {
         return unitPrice * quantity;
     }
 

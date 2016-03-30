@@ -15,7 +15,6 @@ public class ProductDetail extends Product {
 
     public String code;
     public double type;
-    public float price;
     public String widthUnit;
     public float weight;
     public String sizeUnit;
@@ -57,8 +56,9 @@ public class ProductDetail extends Product {
         p.name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
         p.description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
         p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
-        p.unitPrice = productInfo.optDouble(Constants.JsonConstants.COSTUNITS, -1f);
         p.image_a_r = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
+        p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        p.unitPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
         p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
         p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
         p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
@@ -85,8 +85,11 @@ public class ProductDetail extends Product {
                 p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
             }
         }
-        p.price = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
+        p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        p.unitPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
         p.size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
+
+        p.quantity=1;
         return p;
     }
 
