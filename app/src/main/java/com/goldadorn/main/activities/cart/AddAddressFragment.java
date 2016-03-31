@@ -95,8 +95,14 @@ public class AddAddressFragment extends Fragment {
             t.setErrorEnabled(false);
             t.getEditText().addTextChangedListener(mTextWatcher);
         }
+        mPinCodeInput.getEditText().addTextChangedListener(mPinCodeWatcher);
 
         mDoneButton.setOnClickListener(mClick);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -105,8 +111,33 @@ public class AddAddressFragment extends Fragment {
         for (TextInputLayout t : mInputs) {
             t.getEditText().removeTextChangedListener(mTextWatcher);
         }
+        mPinCodeInput.getEditText().removeTextChangedListener(mPinCodeWatcher);
     }
 
+    private TextWatcher mPinCodeWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            mPinCodeInput.setErrorEnabled(false);
+            if (s.length() > 0) {
+                try {
+                    double d = Double.parseDouble(s.toString());
+                } catch (NumberFormatException nfe) {
+                    mPinCodeInput.setError("Not a valid pincode");
+                    mPinCodeInput.setErrorEnabled(true);
+                }
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
