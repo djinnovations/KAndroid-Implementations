@@ -127,23 +127,32 @@ public class ProductsFragment extends Fragment {
 
         cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
-            public void cardSwipedLeft(int position) {
-                Log.i("MainActivity", "card was swiped right, position in adapter: " + position);
-                if (mToast != null) mToast.cancel();
-                mToast = Toast.makeText(getActivity(), "Product " + position + " dis-liked",
-                        Toast.LENGTH_LONG);
-                mToast.show();
+            public void cardSwipedLeft(final int position) {
+                UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false, new
+                        IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " dis-liked":"failed",
+                                        Toast.LENGTH_LONG);
+                                mToast.show();
+                            }
+                        });
                 refreshLayouts(position);
             }
 
             @Override
-            public void cardSwipedRight(int position) {
-                if (mToast != null) mToast.cancel();
-                mToast = Toast.makeText(getActivity(), "Product " + position + " liked",
-                        Toast.LENGTH_LONG);
-                mToast.show();
-
-                Log.i("MainActivity", "card was swiped left, position in adapter: " + position);
+            public void cardSwipedRight(final int position) {
+                UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), true, new
+                        IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " liked":"failed",
+                                        Toast.LENGTH_LONG);
+                                mToast.show();
+                            }
+                        });
                 refreshLayouts(position);
             }
 
