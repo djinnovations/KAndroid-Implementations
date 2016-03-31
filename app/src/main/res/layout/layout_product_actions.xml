@@ -10,28 +10,28 @@
               android:orientation="horizontal"
               android:visibility="invisible">
 
-    <com.mikepenz.iconics.view.IconicsButton
+    <ImageView
         android:id="@+id/shareButton"
-        style="@style/ShowcaseButton"
-        android:layout_width="@dimen/circle_button_height"
-        android:layout_height="@dimen/circle_button_height"
+        style="@style/RoundButton"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
         android:layout_marginLeft="@dimen/padding_default"
-        android:text="@string/icon_share_post"/>
+        android:src="@drawable/ic_b_share"/>
 
-    <com.mikepenz.iconics.view.IconicsButton
+    <ImageView
         android:id="@+id/buyNoBuyButton"
-        style="@style/ShowcaseButton"
-        android:layout_width="@dimen/circle_button_height"
-        android:layout_height="@dimen/circle_button_height"
+        style="@style/RoundButton"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
-        android:text="@string/icon_liked_post"/>
+        android:src="@drawable/ic_b_opinionpoll"/>
 
-    <com.mikepenz.iconics.view.IconicsButton
+    <ImageView
         android:id="@+id/wishlistButton"
-        style="@style/ShowcaseButton"
-        android:layout_width="@dimen/circle_button_height"
-        android:layout_height="@dimen/circle_button_height"
+        style="@style/RoundButton"
+        android:layout_width="@dimen/circle_button_small_height"
+        android:layout_height="@dimen/circle_button_small_height"
         android:layout_marginRight="@dimen/padding_default"
-        android:text="@string/icon_comment_post"/>
+        android:src="@drawable/ic_b_wishlist"/>
 </LinearLayout>

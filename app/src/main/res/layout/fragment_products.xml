@@ -5,46 +5,72 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.daprlabs.cardstack.SwipeLinearLayout
-        xmlns:swipedeck="http://schemas.android.com/apk/res-auto"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/dislikeButton"
-            style="@style/ShowcaseButton"
-            android:layout_width="@dimen/circle_button_small_height"
-            android:layout_height="@dimen/circle_button_small_height"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="@dimen/padding_default_half"
-            android:text="@string/icon_heart_dislike"/>
+        <com.daprlabs.cardstack.SwipeLinearLayout
+            android:id="@+id/cards_data"
+            xmlns:swipedeck="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-        <com.daprlabs.cardstack.SwipeDeck
-            android:id="@+id/swipe_deck"
-            android:layout_width="0dp"
-            android:layout_height="260dp"
-            android:layout_weight="1"
-            android:paddingBottom="24dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="24dp"
-            swipedeck:card_spacing="8dp"
-            swipedeck:deck_max_visible="3"
-            swipedeck:render_above="true"
-            swipedeck:rotation_degrees="15"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/dislikeButton"
+                style="@style/ShowcaseButton"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="@dimen/padding_default_half"
+                android:text="@string/icon_heart_dislike"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/likeButton"
-            style="@style/ShowcaseButton"
-            android:layout_width="@dimen/circle_button_small_height"
-            android:layout_height="@dimen/circle_button_small_height"
-            android:layout_marginLeft="@dimen/padding_default_half"
-            android:layout_marginRight="12dp"
-            android:text="@string/icon_heart_like"/>
+            <com.daprlabs.cardstack.SwipeDeck
+                android:id="@+id/swipe_deck"
+                android:layout_width="0dp"
+                android:layout_height="260dp"
+                android:layout_weight="1"
+                android:paddingBottom="24dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="24dp"
+                swipedeck:card_spacing="8dp"
+                swipedeck:deck_max_visible="3"
+                swipedeck:render_above="true"
+                swipedeck:rotation_degrees="15"/>
 
-    </com.daprlabs.cardstack.SwipeLinearLayout>
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
+                style="@style/ShowcaseButton"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:layout_marginLeft="@dimen/padding_default_half"
+                android:layout_marginRight="12dp"
+                android:text="@string/icon_heart_like"/>
+
+        </com.daprlabs.cardstack.SwipeLinearLayout>
+
+        <FrameLayout
+            android:id="@+id/cards_end"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="260dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="16dp"
+                android:layout_gravity="center"
+                android:textSize="24sp"
+                android:drawableTop="@drawable/ic_action_autorenew"
+                android:textStyle="italic"
+                android:gravity="center"
+                android:text="That's all folks!"
+                android:textColor="@color/colorPrimary"
+                />
+        </FrameLayout>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/product_name"
@@ -72,7 +98,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginTop="16dp"
-        android:text="About produtc/Buy"/>
+        android:text="About product / Buy"/>
 
 
 </LinearLayout>

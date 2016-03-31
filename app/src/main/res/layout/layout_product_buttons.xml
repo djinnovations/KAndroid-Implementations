@@ -1,171 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:elevation="0dp"
-              android:gravity="center"
-              android:orientation="vertical"
-              android:padding="12dp"
-              android:paddingBottom="@dimen/tab_height"
-              app:elevation="0dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:paddingBottom="70dp">
+
 
     <LinearLayout
-        android:id="@+id/layout_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="56dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/likes_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:textColor="@android:color/black"
-            android:padding="8dp"
-            android:text="64"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="14sp"/>
-
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/likeButton"
-            style="@style/circleSmallButton"
-            android:layout_width="@dimen/circle_button_tiny_height"
-            android:layout_height="@dimen/circle_button_tiny_height"
-            android:text="@string/icon_heart_like"/>
-    </LinearLayout>
-
-    <ImageButton
-        android:id="@+id/product_actions_open"
-        style="@style/circleSmallButton"
-        android:layout_width="@dimen/circle_button_tiny_height"
-        android:layout_height="@dimen/circle_button_tiny_height"
-        android:layout_gravity="right"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:src="@drawable/add"
-        android:textAlignment="center"
-        android:textStyle="bold"/>
-
-    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <android.support.v4.view.ViewPager
-            android:id="@+id/view_pager"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:elevation="0dp">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_gravity="center_horizontal"
-            android:clipToPadding="false"
-            android:elevation="0dp"
-            app:elevation="0dp"
-            />
+            android:paddingTop="56dp"
+            android:layout_weight="1"
+            android:layout_height="0dp">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:clipToPadding="false"
+                android:elevation="0dp"
+                app:elevation="0dp"
+                />
 
 
-        <include layout="@layout/layout_product_actions"/>
+            <include layout="@layout/layout_product_actions"/>
 
-    </FrameLayout>
+        </FrameLayout>
 
-    <com.viewpagerindicator.CirclePageIndicator
-        android:id="@+id/indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:fillColor="@android:color/black"
-        app:pageColor="@android:color/darker_gray"
-        android:layout_marginTop="@dimen/padding_default"
-        app:radius="4dp"/>
-
-    <TextView
-        android:id="@+id/product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingBottom="8dp"
-        android:textColor="@android:color/black"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingTop="8dp"
-        android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-    <LinearLayout
-        android:id="@+id/layout_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="12dp">
-
-        <TextView
-            android:id="@+id/product_owner_name"
+        <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/padding_default"
+            app:fillColor="@android:color/black"
+            app:pageColor="@android:color/darker_gray"
+            app:radius="4dp"/>
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="8dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="8dp"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"/>
+
+        <LinearLayout
+            android:id="@+id/layout_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp">
+
+            <TextView
+                android:id="@+id/product_owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:paddingRight="8dp"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="italic"/>
+
+            <ImageView
+                android:id="@+id/followButton"
+                style="@style/RoundButton"
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:src="@drawable/ic_b_follow"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/product_collection_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
             android:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="italic"/>
+            android:textSize="12sp"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
-            android:id="@+id/followButton"
-            style="@style/ShowcaseButton"
-            android:layout_width="@dimen/circle_button_tiny_height"
-            android:layout_height="@dimen/circle_button_tiny_height"
-            android:text="@string/icon_liked_post"/>
+        <TextView
+            android:id="@+id/product_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="8dp"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@android:color/black"
+            android:textSize="19sp"/>
+
+
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/product_collection_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="sans-serif-light"
-        android:paddingRight="8dp"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/black"
-        android:textSize="12sp"/>
+        android:layout_marginTop="56dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/product_cost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="sans-serif-light"
-        android:paddingRight="8dp"
-        android:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/black"
-        android:textSize="19sp"/>
+        <LinearLayout
+            android:id="@+id/layout_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingRight="12dp">
 
+            <TextView
+                android:id="@+id/likes_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="64"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"/>
+
+            <ImageView
+                android:id="@+id/likeButton"
+                style="@style/RoundButton"
+                android:textSize="5sp"
+                android:src="@drawable/ic_b_like"
+                android:layout_width="@dimen/shadow_height"
+                android:layout_height="@dimen/shadow_height"
+                android:text="@string/icon_heart_like"/>
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/product_actions_open"
+            style="@style/circleSmallButton"
+            android:layout_width="@dimen/shadow_height"
+            android:layout_height="@dimen/shadow_height"
+            android:layout_gravity="right"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:src="@drawable/add"
+            android:textAlignment="center"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layout_3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="12dp"
         android:gravity="right"
         android:orientation="vertical">
 
         <com.mikepenz.iconics.view.IconicsButton
             android:id="@+id/cartButton"
             style="@style/ShowcaseButton"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
             android:text="@string/icon_cart"/>
 
         <TextView
             android:id="@+id/product_collection_name_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="right"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
             android:paddingTop="8dp"
@@ -179,14 +201,14 @@
             android:id="@+id/product_cost_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="right"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
             android:text="Rs. 000"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/black"
-            android:textSize="19sp"
+            android:textSize="16sp"
             android:visibility="gone"/>
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
