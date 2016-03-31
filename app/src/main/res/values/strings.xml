@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Goldadorn</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -85,6 +85,8 @@
 
     <string name="font_name_edit_text">din-regular.ttf</string>
     <string name="font_name_text_normal">din-regular.ttf</string>
+    <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07" id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm" id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g example="5.55 grams" id="weight">%s</xliff:g></string>
+    <string name="product_information">Product Information</string>
 
 
 </resources>

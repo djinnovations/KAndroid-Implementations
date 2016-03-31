@@ -10,9 +10,11 @@
     >
 
     <LinearLayout
+        android:id="@+id/owner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:gravity="center_vertical"
         android:layout_marginRight="16dp"
         android:orientation="horizontal"
         android:paddingBottom="12dp">
@@ -70,7 +72,6 @@
         android:textSize="14sp"/>
 
     <include
-
         android:id="@+id/description"
         layout="@layout/layout_cutomize_title"/>
 
@@ -101,7 +102,7 @@
         android:fontFamily="sans-serif-light"
         android:lineSpacingMultiplier="1.2"
         android:paddingRight="12dp"
-        android:text="Product Code\n1001EA1115S9O2G2M07\n\nHeight\t\t\t\t\t\t\tWidth\n25.99 mm\t\t\t\t\t11.44 mm\n\nProduct Weight[Approx.]\n4.578 grams"
+        android:text="@string/product_desc"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         android:textSize="14sp"/>

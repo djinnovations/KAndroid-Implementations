@@ -36,10 +36,12 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductSummary;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -48,11 +50,14 @@ import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
+import java.util.Locale;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends BaseDrawerActivity {
-//    private final static int UISTATE_CUSTOMIZE = 0;
+    //    private final static int UISTATE_CUSTOMIZE = 0;
     private final static int UISTATE_PRODUCT = 0;
     private final static int UISTATE_SOCIAL = 1;
     private static final String TAG = ProductActivity.class.getName();
@@ -91,7 +96,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private int mCollapsedHeight;
     private ProductPagerAdapter mProductAdapter;
     private int mVerticalOffset = 0;
-    private Product mProduct;
+    Product mProduct;
     private Handler mHandler = new Handler();
     private TabViewHolder mTabViewHolder;
     private ViewPager.OnPageChangeListener mPageChangeListener =
@@ -100,7 +105,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 @Override
                 public void onPageScrolled(int position, float positionOffset,
-                                           int positionOffsetPixels) {
+                        int positionOffsetPixels) {
 
                 }
 
@@ -114,6 +119,10 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 }
             };
+    ProductSummary mProductSummary;
+    private CollectionCallBack mCollectionCallBack=new CollectionCallBack();
+    User mUser;
+    Collection mCollection;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -133,7 +142,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (d != null) {
             d.setColorFilter(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
                             getColor(R.color.colorPrimary) : getResources().getColor(R.color
-                            .colorPrimary),
+                    .colorPrimary),
                     PorterDuff.Mode.SRC_IN);
             mToolBar.setNavigationIcon(d);
         }
@@ -141,7 +150,14 @@ public class ProductActivity extends BaseDrawerActivity {
         Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (b != null) {
             mProduct = (Product) b.getSerializable(EXTRA_PRODUCT);
+            if(mProduct==null){
+                finish();
+                return;
+            }
         }
+        ArrayList<String> data = new ArrayList<>(1);
+        data.add(mProduct.getImageUrl());
+
 
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout, mAppBarLayout);
@@ -150,16 +166,17 @@ public class ProductActivity extends BaseDrawerActivity {
         mStartHeight = (int) (.8f * dm.heightPixels);
         mCollapsedHeight = (int) (.4f * dm.heightPixels);
 
+
+        mOverlayVH.pager.setAdapter(
+                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), data));
+        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
+
         mPagerDummy.getLayoutParams().height = mStartHeight;
         mBrandButtonsLayout.getLayoutParams().height = mStartHeight;
         mToolBar.getLayoutParams().height = mCollapsedHeight;
 
         final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
                 R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
-
-        mOverlayVH.pager.setAdapter(
-                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager()));
-        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
 
         mTabLayout.animate().setDuration(0).y(tabStart);
 
@@ -194,18 +211,38 @@ public class ProductActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
+        bindOverlay();
 
-        configureUI(UISTATE_PRODUCT);
-        ProductResponse response= new ProductResponse();
-        response.productId=mProduct.id;
-        UIController.getProductBasicInfo(mContext, response, new IResultListener<ProductResponse>() {
-            @Override
-            public void onResult(ProductResponse result) {
-                if (result.success) {
-                    ProductSummary summary = result.summary;
-                }
-            }
-        });
+        ProductResponse response = new ProductResponse();
+        response.productId = mProduct.id;
+        UIController.getProductBasicInfo(mContext, response,
+                new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        if (result.success) {
+                            mProductSummary = result.summary;
+                            configureUI(UISTATE_PRODUCT);
+                            mProductAdapter.changeData(mProductSummary.images);
+                        }
+                    }
+                });
+
+        getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(),null,mCollectionCallBack);
+    }
+
+    private void bindOverlay() {
+        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+        mOverlayVH.mProductName.setText(mProduct.name);
+        mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
+        if (mUser != null) {
+            mOverlayVH.mProductOwner.setText(mUser.getName());
+        }else{
+            mOverlayVH.mProductOwner.setText("");
+            mOverlayVH.followButton.setVisibility(View.GONE);
+        }
+        mOverlayVH.mProductCost.setText(mProduct.getDisplayPrice());
+        mOverlayVH.mProductCost2.setText(mProduct.getDisplayPrice());
+        mTabViewHolder.setCounts(-1,-1);
     }
 
     @Override
@@ -219,8 +256,8 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        mTabViewHolder.initTabs( getString(R.string.products),
-                getString(R.string.social),null, new TabViewHolder.TabClickListener() {
+        mTabViewHolder.initTabs(getString(R.string.product_information), getString(R.string.social), null,
+                new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
                         configureUI(position);
@@ -240,6 +277,12 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.indicator.setOnPageChangeListener(null);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getSupportLoaderManager().destroyLoader(mCollectionCallBack.hashCode());
+    }
+
     private void configureUI(int uiState) {
         Fragment f = null;
         int id = R.id.frame_content;
@@ -252,37 +295,48 @@ public class ProductActivity extends BaseDrawerActivity {
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(ProductInfoFragment.EXTRA_PRODUCT_SUMMARY, mProductSummary);
+            f.setArguments(bundle);
         } else {
             f = new CustomizeFragment();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(id, f);
+            fragmentTransaction.replace(id, f,""+uiState);
             fragmentTransaction.commit();
         }
     }
 
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {
-        Cursor cursor = null;
 
-        public ProductPagerAdapter(FragmentManager fm) {
+        private ArrayList<String> images;
+
+        public ProductPagerAdapter(FragmentManager fm, ArrayList<String> data) {
             super(fm);
+            images = data;
         }
 
 
         @Override
         public int getCount() {
-            return 8;
+            return images != null ? images.size() : 0;
         }
 
         @Override
         public Fragment getItem(int position) {
             ShowcaseFragment f = new ShowcaseFragment();
             Bundle b = new Bundle(1);
-            b.putInt(ShowcaseFragment.EXTRA_CATEGORY_POSITION, position);
+            b.putString(ShowcaseFragment.EXTRA_IMAGE_URL,
+                    images != null ? images.get(position) : "");
             f.setArguments(b);
             return f;
+        }
+
+        public void changeData(ArrayList<String> data) {
+            images = data;
+            notifyDataSetChanged();
         }
 
     }
@@ -350,6 +404,7 @@ public class ProductActivity extends BaseDrawerActivity {
             productActionsToggle.setOnClickListener(this);
             like.setOnClickListener(this);
             cartButton.setOnClickListener(this);
+            followButton.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -399,12 +454,13 @@ public class ProductActivity extends BaseDrawerActivity {
                 }
             } else if (v == like) {
                 v.setEnabled(false);
-                UIController.like(v.getContext(), mProduct, !v.isSelected(),
+                final boolean isLiked = v.isSelected();
+                UIController.like(v.getContext(), mProduct, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success);
+                                v.setSelected(result.success?!isLiked:isLiked);
                             }
                         });
             } else if (v == shareButton) {
@@ -427,16 +483,30 @@ public class ProductActivity extends BaseDrawerActivity {
                                                 "Adding to cart failed.", Toast.LENGTH_LONG).show();
                             }
                         });
+            }else if(v==followButton){
+                v.setEnabled(false);
+                final boolean isFollowing = v.isSelected();
+                UIController.follow(mContext, mUser, !isFollowing, new IResultListener<LikeResponse>() {
+
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        v.setEnabled(true);
+                        v.setSelected(result.success?!isFollowing:isFollowing);
+                    }
+                });
             }
         }
     }
-    private class CollectionCallBack implements LoaderManager.LoaderCallbacks<ObjectAsyncLoader.Result> {
+
+    private class CollectionCallBack implements
+            LoaderManager.LoaderCallbacks<ObjectAsyncLoader.Result> {
         @Override
         public Loader<ObjectAsyncLoader.Result> onCreateLoader(int id, Bundle args) {
             return new ObjectAsyncLoader(mContext) {
                 @Override
                 protected void registerContentObserver(ContentObserver observer) {
-                    getContentResolver().registerContentObserver(Tables.Collections.CONTENT_URI, true, observer);
+                    getContentResolver().registerContentObserver(Tables.Collections.CONTENT_URI,
+                            true, observer);
                 }
 
                 @Override
@@ -446,11 +516,13 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 @Override
                 public Result loadInBackground() {
-                    Result result= new Result();
-                    Cursor c= getContentResolver().query(Tables.Collections.CONTENT_URI,null, Tables.Collections._ID+" = ?", new String[]{String.valueOf(mProduct.collectionId)},null);
-                    if(c!=null){
-                        if(c.moveToFirst()){
-                            result.object= Collection.extractFromCursor(c);
+                    Result result = new Result();
+                    Cursor c = getContentResolver().query(Tables.Collections.CONTENT_URI, null,
+                            Tables.Collections._ID + " = ?",
+                            new String[]{String.valueOf(mProduct.collectionId)}, null);
+                    if (c != null) {
+                        if (c.moveToFirst()) {
+                            result.object = Collection.extractFromCursor(c);
                         }
                         c.close();
                     }
@@ -460,8 +532,19 @@ public class ProductActivity extends BaseDrawerActivity {
         }
 
         @Override
-        public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader, ObjectAsyncLoader.Result data) {
-            Collection collection= (Collection) data.object;
+        public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader,
+                ObjectAsyncLoader.Result data) {
+            mCollection = (Collection) data.object;
+            if(mCollection!=null){
+                ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(""+UISTATE_PRODUCT);
+                if(f!=null)
+                    f.bindCollectionUI(mCollection);
+                mOverlayVH.mProductCollection.setText(mCollection.name);
+                mOverlayVH.mProductCollection2.setText(mCollection.name);
+            }else{
+                mOverlayVH.mProductCollection.setText("");
+                mOverlayVH.mProductCollection2.setText("");
+            }
 
         }
 
