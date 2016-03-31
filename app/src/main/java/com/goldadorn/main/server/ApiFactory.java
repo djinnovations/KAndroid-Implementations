@@ -54,60 +54,82 @@ public class ApiFactory extends ExtractResponse {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http");
         builder.authority(HOST_NAME);
-        builder.appendPath("goldadorn_dev");
-        builder.appendPath("rest");
         switch (urlBuilder.mUrlType) {
             case PRODUCT_SHOWCASE_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getdesigners");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
             case ADD_CART_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("addproductstocart");
                 break;
             }
             case LIKE_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
                 builder.appendPath("like");
                 break;
             }
             case FOLLOW_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
                 builder.appendPath("follow");
                 break;
             }
             case UNLIKE_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
                 builder.appendPath("unlike");
                 break;
             }
             case REMOVE_CART_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("removeproductsfromcart");
                 break;
             }
             case CART_DETAIL_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getcartdetails");
                 builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
             case GETDESIGNERS_SOCIAL_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
                 builder.appendPath("getdesignerssocial");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
             case PRODUCT_BASIC_INFO_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getproductbasicinfo");
                 builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
                 break;
             }
             case PRODUCT_CUSTOMIZATION_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getproductcustomization");
                 builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
                 break;
             }
             case PRODUCT_PRICE_CUSTOMIZATION_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getpriceforcustomizedproduct");
                 break;
             }
             case PRODUCTS_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
                 builder.appendPath("getproducts");
                 if (((ProductResponse) urlBuilder.mResponse).collectionId != -1) {
                     builder.appendPath("c");
@@ -121,6 +143,8 @@ public class ApiFactory extends ExtractResponse {
                 break;
             }
             case PRODUCTS_SOCIAL_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
                 builder.appendPath("getproductssocial");
                 if (((ProductResponse) urlBuilder.mResponse).collectionId != -1) {
                     builder.appendPath("c");
