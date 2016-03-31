@@ -29,4 +29,7 @@
     <dimen name="tab_top_margin">16dp</dimen>
     <dimen name="tab_height">88dp</dimen>
     <dimen name="shadow_height">24dp</dimen>
+    <dimen name="buttonBorderWidth">.5dip</dimen>
+    <dimen name="buttonRadius">0dp</dimen>
+    <dimen name="menuButtonHeight">100dp</dimen>
 </resources>

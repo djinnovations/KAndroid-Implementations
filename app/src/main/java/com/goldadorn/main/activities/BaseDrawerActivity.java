@@ -16,11 +16,14 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.NavigationDataObject;
-import com.goldadorn.main.model.User;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Vijith Menon on 06.03.16.
@@ -42,7 +45,33 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         setupToolbar();
         bindViews();
         setupHeader();
+
+        setupMenu();
     }
+
+    @OnClick({ R.id.nav_home, R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us })
+    public void pickDoor(View door) {
+        int id = door.getId();
+        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(id);
+        if(navigationDataObject !=null)
+            action(navigationDataObject);
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+
+    @Bind({ R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,R.id.labelHome,R.id.labelFeed,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart })
+    List<View> views;
+    public void setupMenu()
+    {
+        View[] viewList = new View[views.size()];
+        for (int i = 0; i < views.size(); i++) {
+            viewList[i]=views.get(i);
+        }
+        TypefaceHelper.setFont(viewList);
+    }
+
 
 
     @Override
@@ -121,24 +150,23 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                 }
             }
         });
-        User user = getApp().getUser();
-        if(user!=null) {
-            userName.setText(user.getName());
-            ImageView userImage = (ImageView) headerLayout.findViewById(R.id.userImage);
-            userImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NavigationDataObject navigationDataObject =
-                            (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_settings);
-                    if (navigationDataObject != null) {
-                        action(navigationDataObject);
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                    }
+        TypefaceHelper.setFont(userName);
+        userName.setText(getApp().getUser().getName());
+        ImageView userImage = (ImageView)headerLayout.findViewById(R.id.userImage);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_settings);
+                if(navigationDataObject !=null) {
+                    action(navigationDataObject);
+                    drawerLayout.closeDrawer(GravityCompat.START);
                 }
-            });
-            Picasso.with(this).load(user.getImageUrl()).placeholder(R.drawable
-                    .vector_image_place_holder_profile).into(userImage);
-        }
+            }
+        });
+        Picasso.with(this)
+               .load(getApp().getUser().getImageUrl())
+               .placeholder(R.drawable.vector_image_place_holder_profile_dark)
+               .into(userImage);
 
     }
 

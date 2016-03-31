@@ -80,6 +80,17 @@
         <item name="android:background">@drawable/social_button_bg</item>
     </style>
 
+    <style name="menuButton" parent="@android:style/Widget.Button">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@drawable/social_login_button_text_color</item>
+        <item name="android:background">@drawable/social_button_bg</item>
+    </style>
+
+    <style name="menuButtonLabel">
+        <item name="android:textColor">@color/socialLoginButtonNormalStart</item>
+    </style>
+
+
     <style name="linkButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@drawable/link_button_text_color</item>
