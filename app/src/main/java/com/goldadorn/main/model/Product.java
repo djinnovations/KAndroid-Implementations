@@ -12,7 +12,7 @@ public class Product {
     public final int id;
     public int userId, collectionId;
     public String name, description;
-    public float unitPrice;
+    public long unitPrice;
     public String currency = " RS";
     public float image_a_r = 1;
 
@@ -23,7 +23,7 @@ public class Product {
         this.id = id;
     }
 
-    public float getTotalPrice() {
+    public long getTotalPrice() {
         return unitPrice * quantity;
     }
 
@@ -49,7 +49,7 @@ public class Product {
         t.name = cursor.getString(cursor.getColumnIndex(Tables.Products.NAME));
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Products.DESCRIPTION));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES));
-        t.unitPrice = cursor.getFloat(cursor.getColumnIndex(Tables.Products.PRICE));
+        t.unitPrice = cursor.getLong(cursor.getColumnIndex(Tables.Products.PRICE));
         t.currency = cursor.getString(cursor.getColumnIndex(Tables.Products.CURRENCY));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)

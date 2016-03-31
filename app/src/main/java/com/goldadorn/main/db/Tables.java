@@ -198,7 +198,7 @@ public class Tables {
                 Products.DESCRIPTION + " TEXT," +
                 Products.IMAGEURL + " TEXT," +
                 Products.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
-                Products.PRICE + " REAL," +
+                Products.PRICE + " INTEGER," +
                 Products.CURRENCY + " TEXT," +
                 Products.BASIC_INFO + " TEXT," +
                 Products.CUSTOMIZATION_INFO + " TEXT," +
