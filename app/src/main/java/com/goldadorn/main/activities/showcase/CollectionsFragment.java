@@ -16,11 +16,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.utils.L;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -110,12 +114,24 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             }
         };
         private View.OnClickListener mLikeClick = new View.OnClickListener() {
-            public int mCount = 0;
 
             @Override
-            public void onClick(View v) {
-                Collection collection = (Collection) v.getTag();
-                v.setSelected(mCount++%2==0);
+            public void onClick(final View v) {
+                try {
+                    v.setEnabled(false);
+                    Collection collection = (Collection) v.getTag();
+                    UIController.like(v.getContext(), collection, !v.isSelected(), new
+                            IResultListener<LikeResponse>() {
+                                @Override
+                                public void onResult(LikeResponse result) {
+                                    v.setEnabled(true);
+                                    v.setSelected(result.success);
+                                }
+                            });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(v.getContext(),"Something wrong happened!",Toast.LENGTH_SHORT).show();
+                }
             }
         };
 

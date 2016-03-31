@@ -31,11 +31,14 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
@@ -281,6 +284,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 String.format(Locale.getDefault(), "%d", collection.likecount));
         mOverlayViewHolder.extra.setText("");
         mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
+        mOverlayViewHolder.like.setTag(collection);
 
         mTabViewHolder.setCounts(collection.productcount, -1);
 
@@ -393,7 +397,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         }
     }
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder {
+    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.collection_name)
         TextView name;
@@ -433,6 +437,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public OverlayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            like.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -446,5 +451,20 @@ public class CollectionsActivity extends BaseDrawerActivity {
                     Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         }
 
+        @Override
+        public void onClick(final View v) {
+            if(v==like){
+                v.setEnabled(false);
+                Collection collection = (Collection) v.getTag();
+                UIController.like(v.getContext(), collection, !v.isSelected(), new
+                        IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success);
+                            }
+                        });
+            }
+        }
     }
 }
