@@ -169,9 +169,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-                    //                    FrameLayout.LayoutParams lp = (FrameLayout
-                    // .LayoutParams) mTabLayout.getLayoutParams();
-                    //                    lp.leftMargin = lp.rightMargin = -p;
                     mTabViewHolder.setSides(-p);
 
                     mHandler.postDelayed(new Runnable() {

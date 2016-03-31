@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
@@ -28,8 +29,10 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -102,6 +105,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
     private TabViewHolder mTabViewHolder;
+    private Handler mHandler = new Handler();
 
     public static Intent getLaunchIntent(Context context, Collection collection) {
         Intent intent = new Intent(context, CollectionsActivity.class);
@@ -132,6 +136,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
             mCollection = (Collection) b.getSerializable(EXTRA_COLLECTION);
         }
 
+        final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
+                R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
         final int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, dm);
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
@@ -141,7 +147,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
-        mTabLayout.animate().setDuration(0).y(mStartHeight-getResources().getDimensionPixelSize(R.dimen.tab_height));
+        mTabLayout.animate().setDuration(0).y(tabStart);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -161,8 +167,15 @@ public class CollectionsActivity extends BaseDrawerActivity {
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-                    FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)mTabLayout.getLayoutParams();
-                    lp.leftMargin = lp.rightMargin = -p;
+                    mTabViewHolder.setSides(-p);
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mVerticalOffset == 0) {
+                                mTabLayout.animate().setDuration(0).y(tabStart);
+                            }
+                        }
+                    }, 180);
                 }
                 mVerticalOffset = verticalOffset;
             }
@@ -253,12 +266,15 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
-        mOverlayViewHolder.ownerName.setText(Integer.toString(collection.userId));
+        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId,true);
+        mOverlayViewHolder.ownerName.setText(user!=null?user.getName():"");
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
-        mOverlayViewHolder.extra.setText(Integer.toString(collection.id));
+        mOverlayViewHolder.extra.setText("");
+        mOverlayViewHolder.setBadges(collection.isFeatured,collection.isTrending);
 
         mTabViewHolder.setCounts(collection.productcount,-1);
+
     }
 
     private void configureUI(int uiState) {
@@ -397,6 +413,11 @@ public class CollectionsActivity extends BaseDrawerActivity {
         IconicsButton like;
         @Bind(R.id.shareButton)
         IconicsButton share;
+
+        public void setBadges(boolean featured,boolean trending){
+            mFeatured.setVisibility(featured?View.VISIBLE:View.GONE);
+            mTrending.setVisibility(trending?View.VISIBLE:View.GONE);
+        }
 
         public OverlayViewHolder(View itemView) {
             super(itemView);

@@ -16,6 +16,7 @@ public class Collection implements Serializable {
     public String name, description;
     public float image_a_r = 1;
     public int likecount = 0, productcount = 0;
+    public boolean isTrending,isFeatured;
 
     public Collection(int id) {
         this.id = id;

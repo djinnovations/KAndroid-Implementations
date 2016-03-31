@@ -3,6 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:gravity="center_horizontal|bottom"
+              android:paddingTop="56dp"
+              android:paddingBottom="@dimen/tab_height"
               android:layout_weight="1"
               android:orientation="vertical">
 
@@ -19,14 +21,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:visibility="gone"
+            android:src="@drawable/ic_featured"/>
 
         <ImageView
             android:id="@+id/badge_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:visibility="gone"
+            android:src="@drawable/ic_trending"/>
 
     </LinearLayout>
 
@@ -38,6 +42,7 @@
         android:paddingBottom="8dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
+        android:gravity="center"
         android:paddingTop="8dp"
         android:textColor="@android:color/white"
         android:text="Large Text"
@@ -59,6 +64,7 @@
             android:textStyle="italic"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
+            android:gravity="center"
             android:text="Small Text"
             android:textSize="15sp"
             android:textColor="@android:color/white"
@@ -79,6 +85,7 @@
         android:fontFamily="sans-serif-light"
         android:textSize="12sp"
         android:paddingRight="8dp"
+        android:gravity="center"
         android:textColor="@android:color/white"
         android:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -88,6 +95,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
+        android:gravity="center"
         android:textSize="13sp"
         android:paddingRight="8dp"
         android:textColor="@android:color/white"

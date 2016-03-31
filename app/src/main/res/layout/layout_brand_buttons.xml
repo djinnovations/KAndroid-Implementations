@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:visibility="invisible"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_featured"/>
 
         <ImageView
             android:id="@+id/badge_2"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:visibility="invisible"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/ic_trending"/>
 
     </LinearLayout>
 

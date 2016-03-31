@@ -110,7 +110,6 @@
             android:elevation="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/tab_height"
             app:elevation="5dp">
 
             <ImageView
@@ -150,9 +149,7 @@
         android:id="@+id/tabs"
         layout="@layout/layout_tab"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/tab_height"
-        android:layout_marginLeft="24dp"
-        android:layout_marginRight="24dp"/>
+        android:layout_height="@dimen/tab_height"/>
 
     <FrameLayout
         android:id="@+id/progress_frame"
