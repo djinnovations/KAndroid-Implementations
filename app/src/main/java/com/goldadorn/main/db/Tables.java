@@ -104,7 +104,8 @@ public class Tables {
         public static final String DESCRIPTION = "description";
         public static final String IMAGEURL = "imageurl";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
-        public static final String BADGES = "badges";
+        public static final String TRENDING = "trending";
+        public static final String FEATURED = "featured";
 
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_FOLLOWERS = "followers";
@@ -180,8 +181,8 @@ public class Tables {
                 Users.DESCRIPTION + " TEXT," +
                 Users.IMAGEURL + " TEXT," +
                 Users.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
-                Users.BADGES + " TEXT," +
                 Users.TYPE + " INTEGER DEFAULT 0," +
+                Users.TRENDING + " INTEGER DEFAULT 0," + Users.FEATURED + " INTEGER DEFAULT 0," +
                 Users.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWERS + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWING + " INTEGER DEFAULT 0," +

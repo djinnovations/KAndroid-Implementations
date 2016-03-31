@@ -7,7 +7,6 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.goldadorn.main.db.Tables.Users;
@@ -23,7 +22,7 @@ public class UserInfoCache {
     public static final String USER_INFO_SERVICE = "userinfocache";
     public static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
             Users.IMAGEURL, Users.TYPE, Users.COUNT_LIKES, Users.COUNT_FOLLOWING,
-            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.BADGES, Users.DATAVERSION};
+            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED, Users.DATAVERSION};
     private static final String[] PROJECTION_CACHE_CHECK = new String[]{Users.DATAVERSION};
     private static final int INDEX_ID = 0;
     private static final int INDEX_NAME = 1;
@@ -35,8 +34,9 @@ public class UserInfoCache {
     private static final int INDEX_COUNT_FOLLOWERS = 7;
     private static final int INDEX_COUNT_COLLECTION = 8;
     private static final int INDEX_COUNT_PRODUCT = 9;
-    private static final int INDEX_BADGE_DUMP = 10;
-    private static final int INDEX_DATAVERSION = 11;
+    private static final int INDEX_TRENDING = 10;
+    private static final int INDEX_FEATURED = 11;
+    private static final int INDEX_DATAVERSION = 12;
 
     protected Context mContext;
     private PreLoader mPreload;
@@ -81,7 +81,8 @@ public class UserInfoCache {
                     cv.put(Users.NAME, user.getName());
                     cv.put(Users.DESCRIPTION, user.description);
                     cv.put(Users.IMAGEURL, user.imageUrl);
-                    cv.put(Users.BADGES, user.badgesJson);
+                    cv.put(Users.TRENDING, user.trending);
+                    cv.put(Users.FEATURED, user.featured);
                     cv.put(Users.COUNT_FOLLOWERS, user.followers_cnt);
                     cv.put(Users.COUNT_FOLLOWING, user.following_cnt);
                     cv.put(Users.COUNT_LIKES, user.likes_cnt);
@@ -370,7 +371,8 @@ public class UserInfoCache {
         info.following_cnt = cursor.getInt(INDEX_COUNT_FOLLOWING);
         info.collections_cnt = cursor.getInt(INDEX_COUNT_COLLECTION);
         info.products_cnt = cursor.getInt(INDEX_COUNT_PRODUCT);
-        info.badgesJson = cursor.getString(INDEX_BADGE_DUMP);
+        info.trending = cursor.getInt(INDEX_TRENDING)==1;
+        info.featured = cursor.getInt(INDEX_FEATURED)==1;
         info.dataVersion = cursor.getLong(INDEX_DATAVERSION);
         return info;
     }
