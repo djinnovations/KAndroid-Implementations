@@ -5,6 +5,9 @@ import android.os.Handler;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.model.Collection;
+import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 
@@ -60,6 +63,7 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
+
     public static void getProductCustomization(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
@@ -107,6 +111,7 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
+
     public static void addToCart(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
@@ -122,6 +127,7 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
+
     public static void removeFromCart(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
@@ -137,7 +143,30 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
-    public static void like(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+
+    public static void like(Context context, Object model, boolean like, IResultListener<ProductResponse> listener) {
+        ProductResponse response = new ProductResponse();
+        if (model instanceof Product) {
+            Product p = (Product) model;
+            response.productId = p.id;
+            response.collectionId = p.collectionId;
+            response.userId = p.userId;
+        } else if (model instanceof Collection) {
+            Collection p = (Collection) model;
+            response.productId = p.id;
+            response.userId = p.userId;
+        } else if (model instanceof User) {
+            User p = (User) model;
+            response.productId = p.id;
+        }
+        if (like) {
+            like(context, response, listener);
+        } else
+            unLike(context, response, listener);
+
+    }
+
+    private static void like(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
@@ -152,7 +181,8 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
-    public static void unLike(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+
+    private static void unLike(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
