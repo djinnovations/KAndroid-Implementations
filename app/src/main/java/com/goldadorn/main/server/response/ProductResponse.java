@@ -2,6 +2,7 @@ package com.goldadorn.main.server.response;
 
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductDetail;
+import com.goldadorn.main.model.ProductSummary;
 
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class ProductResponse extends BasicResponse {
     public int collectionId = -1;
     public int productId = -1;
     public Product productToAdd;
+    public ProductSummary summary;
 
     //for get cart api
     public final ArrayList<ProductDetail> productArray= new ArrayList<>();

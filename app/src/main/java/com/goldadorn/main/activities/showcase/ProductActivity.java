@@ -33,6 +33,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.ProductSummary;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -90,7 +91,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 @Override
                 public void onPageScrolled(int position, float positionOffset,
-                        int positionOffsetPixels) {
+                                           int positionOffsetPixels) {
 
                 }
 
@@ -123,7 +124,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (d != null) {
             d.setColorFilter(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
                             getColor(R.color.colorPrimary) : getResources().getColor(R.color
-                    .colorPrimary),
+                            .colorPrimary),
                     PorterDuff.Mode.SRC_IN);
             mToolBar.setNavigationIcon(d);
         }
@@ -186,12 +187,14 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
         configureUI(UISTATE_CUSTOMIZE);
-        ProductResponse response= new ProductResponse();
-        response.productId=mProduct.id;
+        ProductResponse response = new ProductResponse();
+        response.productId = mProduct.id;
         UIController.getProductBasicInfo(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
-
+                if (result.success) {
+                    ProductSummary summary = result.summary;
+                }
             }
         });
     }
