@@ -45,13 +45,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends BaseDrawerActivity {
-    private final static int UISTATE_CUSTOMIZE = 0;
-    private final static int UISTATE_PRODUCT = 1;
-    private final static int UISTATE_SOCIAL = 2;
+//    private final static int UISTATE_CUSTOMIZE = 0;
+    private final static int UISTATE_PRODUCT = 0;
+    private final static int UISTATE_SOCIAL = 1;
     private static final String TAG = ProductActivity.class.getName();
     public static final String EXTRA_PRODUCT = "product";
 
-    private int mUIState = UISTATE_CUSTOMIZE;
+    private int mUIState = UISTATE_PRODUCT;
 
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
@@ -62,6 +62,9 @@ public class ProductActivity extends BaseDrawerActivity {
     Toolbar mToolBar;
     @Bind(R.id.tabs)
     View mTabLayout;
+
+    @Bind(R.id.frame_no_scroll_dummy)
+    View mFrameNoScrollDummy;
 
     @Bind(R.id.container_designer_overlay)
     FrameLayout mBrandButtonsLayout;
@@ -137,7 +140,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout, mAppBarLayout);
         initTabs();
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
-        mStartHeight = (int) (.9f * dm.heightPixels);
+        mStartHeight = (int) (.8f * dm.heightPixels);
         mCollapsedHeight = (int) (.4f * dm.heightPixels);
 
         mPagerDummy.getLayoutParams().height = mStartHeight;
@@ -185,7 +188,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
 
 
-        configureUI(UISTATE_CUSTOMIZE);
+        configureUI(UISTATE_PRODUCT);
         ProductResponse response= new ProductResponse();
         response.productId=mProduct.id;
         UIController.getProductBasicInfo(mContext, response, new IResultListener<ProductResponse>() {
@@ -207,8 +210,8 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        mTabViewHolder.initTabs(getString(R.string.customize), getString(R.string.products),
-                getString(R.string.social), new TabViewHolder.TabClickListener() {
+        mTabViewHolder.initTabs( getString(R.string.products),
+                getString(R.string.social),null, new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
                         configureUI(position);
@@ -230,8 +233,14 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private void configureUI(int uiState) {
         Fragment f = null;
+        int id = R.id.frame_content;
+        mFrame.setVisibility(View.VISIBLE);
+        mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
+            id = R.id.frame_no_scroll_dummy;
             f = new SocialFeedFragment();
+            mFrame.setVisibility(View.INVISIBLE);
+            mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
         } else {
@@ -240,7 +249,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (f != null) {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame_content, f);
+            fragmentTransaction.replace(id, f);
             fragmentTransaction.commit();
         }
     }
