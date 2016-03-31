@@ -186,6 +186,29 @@ public class Api {
         }
     }
 
+    public static void follow(Context context, LikeResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.follow(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    public static void unFollow(Context context, LikeResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.unFollow(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     /**
      * this function will handle all the exceptions related to http calls to server. the exception
      * message will be extracted and exception type will be saved in response class.
