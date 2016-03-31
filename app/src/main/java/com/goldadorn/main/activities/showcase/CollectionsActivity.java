@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
@@ -49,6 +50,7 @@ import butterknife.ButterKnife;
 public class CollectionsActivity extends BaseDrawerActivity {
     private final static String TAG = CollectionsActivity.class.getSimpleName();
 
+    private final static String EXTRA_DESIGNER = "designer";
     private final static String EXTRA_COLLECTION = "collection";
     private final static int UISTATE_PRODUCT = 0;
     private final static int UISTATE_SOCIAL = 1;
@@ -269,7 +271,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
-        User user = null;
+        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId,true);
         mOverlayViewHolder.ownerName.setText(user!=null?user.getName():"");
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(
