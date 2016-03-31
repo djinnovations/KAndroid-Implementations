@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.model.Address;
 import com.goldadorn.main.model.Product;
@@ -191,7 +192,8 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
                         Toast.makeText(mContext, "Please Select or Add an address", Toast.LENGTH_SHORT).show();
                     }
                 } else if (mUIState == UISTATE_FINAL) {
-                    Intent in = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                    Intent in = new Intent(mContext, MainActivity.class);
+                    in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(in);
                     finish();
                 }
