@@ -131,7 +131,9 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void removeFromCart(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+    public static void removeFromCart(final Context context, Product product, final IResultListener<ProductResponse> listener) {
+        final ProductResponse response = new ProductResponse();
+        response.productToAdd = product;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
