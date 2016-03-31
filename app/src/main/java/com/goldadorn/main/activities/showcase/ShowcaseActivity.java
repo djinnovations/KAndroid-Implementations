@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -453,11 +454,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public void setVisisbility(int visibility) {
-            //            mBrandDescription.setVisibility(visibility);
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
-
+            ((LinearLayout)this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
+                    Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         }
 
         @Override

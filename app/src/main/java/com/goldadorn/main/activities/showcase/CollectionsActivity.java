@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
@@ -141,9 +142,10 @@ public class CollectionsActivity extends BaseDrawerActivity {
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mRecyclerView.setAdapter(
-                mCollectionAdapter = new CollectionsPagerAdapter(mContext,dm.widthPixels-2*pad,mStartHeight));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false));
+        mRecyclerView.setAdapter(mCollectionAdapter =
+                new CollectionsPagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
+        mRecyclerView.setLayoutManager(
+                new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
@@ -152,17 +154,19 @@ public class CollectionsActivity extends BaseDrawerActivity {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (mVerticalOffset != verticalOffset) {
+
                     Log.d(TAG, "offset : " + verticalOffset);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
-                    mOverlayViewHolder.setVisisbility(visibility);
-                    mOverlay.getLayoutParams().height = mStartHeight+verticalOffset;
-                    mRecyclerView.getLayoutParams().height = mStartHeight+verticalOffset;
                     topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
-                    int p= (int) (((maxPad*0.25f*verticalOffset)/maxHeight)-pad);
-                    mCollectionAdapter.setDimens(dm.widthPixels+2*p,mStartHeight+verticalOffset);
+                    mOverlayViewHolder.setVisisbility(visibility);
+                    mOverlay.getLayoutParams().height = mStartHeight + verticalOffset;
+                    mRecyclerView.getLayoutParams().height = mStartHeight + verticalOffset;
+                    int p = (int) (((maxPad * 0.25f * verticalOffset) / maxHeight) - pad);
+                    mCollectionAdapter.setDimens(dm.widthPixels + 2 * p,
+                            mStartHeight + verticalOffset);
                     mRecyclerView.getLayoutManager().offsetChildrenHorizontal(-p);
-                    mRecyclerView.setPadding(-p,0,-p,0);
+                    mRecyclerView.setPadding(-p, 0, -p, 0);
                     mRecyclerView.scrollToPosition(mCurrentPosition);
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
@@ -183,8 +187,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition--;
-                if(mCurrentPosition<0)
-                    mCurrentPosition =mCollectionAdapter.getItemCount() - 1;
+                if (mCurrentPosition < 0) mCurrentPosition = mCollectionAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -192,8 +195,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             @Override
             public void onClick(View v) {
                 mCurrentPosition++;
-                if(mCurrentPosition>mCollectionAdapter.getItemCount()-1)
-                    mCurrentPosition =0;
+                if (mCurrentPosition > mCollectionAdapter.getItemCount() - 1) mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
             }
         });
@@ -208,13 +210,14 @@ public class CollectionsActivity extends BaseDrawerActivity {
     }
 
     private void initTabs() {
-        mTabViewHolder = new TabViewHolder(mContext,mTabLayout);
-        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null, new TabViewHolder.TabClickListener() {
-            @Override
-            public void onTabClick(int position) {
-                configureUI(position);
-            }
-        });
+        mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
+        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null,
+                new TabViewHolder.TabClickListener() {
+                    @Override
+                    public void onTabClick(int position) {
+                        configureUI(position);
+                    }
+                });
     }
 
     @Override
@@ -251,16 +254,17 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mCollectionChangeListeners.remove(listener);
     }
 
-    private RecyclerView.OnScrollListener mPageChangeListener = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            mCollection = mCollectionAdapter.getCollection(mCurrentPosition);
-            bindOverlay(mCollection);
-            for (CollectionChangeListener l : mCollectionChangeListeners)
-                l.onCollectionChange(mCollection);
-        }
-    };
+    private RecyclerView.OnScrollListener mPageChangeListener =
+            new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    mCollection = mCollectionAdapter.getCollection(mCurrentPosition);
+                    bindOverlay(mCollection);
+                    for (CollectionChangeListener l : mCollectionChangeListeners)
+                        l.onCollectionChange(mCollection);
+                }
+            };
 
 
     private void bindOverlay(Collection collection) {
@@ -268,11 +272,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
         User user = null;
         mOverlayViewHolder.ownerName.setText(user!=null?user.getName():"");
         mOverlayViewHolder.description.setText(collection.description);
-        mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+        mOverlayViewHolder.likesCount.setText(
+                String.format(Locale.getDefault(), "%d", collection.likecount));
         mOverlayViewHolder.extra.setText("");
-        mOverlayViewHolder.setBadges(collection.isFeatured,collection.isTrending);
+        mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
 
-        mTabViewHolder.setCounts(collection.productcount,-1);
+        mTabViewHolder.setCounts(collection.productcount, -1);
 
     }
 
@@ -306,7 +311,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         Cursor cursor = null;
         private int width;
 
-        public CollectionsPagerAdapter(Context context,int width,int height) {
+        public CollectionsPagerAdapter(Context context, int width, int height) {
             this.context = context;
             this.width = width;
             this.height = height;
@@ -319,7 +324,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image,parent,false)) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(
+                    getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
             };
             return vh;
         }
@@ -327,8 +333,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Collection collection = getCollection(position);
-            ImageView image  = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(collection.getImageUrl()).placeholder(R.drawable.designer).into(image);
+            ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
+            Picasso.with(mContext).load(collection.getImageUrl()).placeholder(R.drawable.designer)
+                   .into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
             image.requestLayout();
@@ -339,7 +346,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
-        public void setDimens(int width,int height){
+        public void setDimens(int width, int height) {
             this.width = width;
             this.height = height;
             notifyDataSetChanged();
@@ -369,7 +376,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             this.cursor = data;
             mCollectionAdapter.changeCursor(data);
             if (data.getCount() > 0) {
-                mPageChangeListener.onScrolled(mRecyclerView,0,0);
+                mPageChangeListener.onScrolled(mRecyclerView, 0, 0);
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }
 
@@ -413,9 +420,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
         @Bind(R.id.shareButton)
         IconicsButton share;
 
-        public void setBadges(boolean featured,boolean trending){
-            mFeatured.setVisibility(featured?View.VISIBLE:View.GONE);
-            mTrending.setVisibility(trending?View.VISIBLE:View.GONE);
+        public void setBadges(boolean featured, boolean trending) {
+            mFeatured.setVisibility(featured ? View.VISIBLE : View.GONE);
+            mTrending.setVisibility(trending ? View.VISIBLE : View.GONE);
         }
 
         public OverlayViewHolder(View itemView) {
@@ -430,6 +437,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
+            ((LinearLayout)this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
+                    Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         }
 
     }
