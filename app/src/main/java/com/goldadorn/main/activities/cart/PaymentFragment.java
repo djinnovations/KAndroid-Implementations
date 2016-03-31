@@ -86,7 +86,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
-        mPayUHelper = new PayUHelper(mCartData.getBillableAmount(), new IResultListener<Bundle>() {
+        mPayUHelper = new PayUHelper(getActivity(), mCartData.getBillableAmount(), new IResultListener<Bundle>() {
             @Override
             public void onResult(Bundle bundle) {
                 mPayuBundle = bundle;

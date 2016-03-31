@@ -1,9 +1,11 @@
 package com.goldadorn.main.activities.cart;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.payu.india.Extras.PayUChecksum;
 import com.payu.india.Extras.PayUSdkDetails;
@@ -50,7 +52,7 @@ import java.util.Iterator;
     private String cardBin;
     private IResultListener<Bundle> mInitListner;
 
-    PayUHelper(float amount,IResultListener<Bundle> initListner) {
+    PayUHelper(Context context, float amount, IResultListener<Bundle> initListner) {
         PayUSdkDetails payUSdkDetails = new PayUSdkDetails();
         Log.d("PayUSdkDetails", "Build No: " + payUSdkDetails.getSdkBuildNumber() + "\n Build Type: " + payUSdkDetails.getSdkBuildType() + " \n Build Flavor: " + payUSdkDetails.getSdkFlavor() + "\n Application Id: " + payUSdkDetails.getSdkApplicationId() + "\n Version Code: " + payUSdkDetails.getSdkVersionCode() + "\n Version Name: " + payUSdkDetails.getSdkVersionName());
         mInitListner = initListner;
@@ -59,13 +61,14 @@ import java.util.Iterator;
 
         mPaymentParams.setKey(key = merchantKey);
         mPaymentParams.setAmount(String.valueOf(amount));
-        mPaymentParams.setProductInfo("myproduct");
-        mPaymentParams.setFirstName("firstname");
-        mPaymentParams.setEmail("me@itsmeonly.com");
+        mPaymentParams.setProductInfo("Goldadron");
+        String name = ((Application)context.getApplicationContext()).getUser().getName();
+        mPaymentParams.setFirstName(name);
+        mPaymentParams.setEmail("soni94@gmail.com");
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
         mPaymentParams.setSurl("https://payu.herokuapp.com/success");
         mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
-        mPaymentParams.setUserCredentials(merchantKey+":payutest@payu.in");
+        mPaymentParams.setUserCredentials(merchantKey+":soni94@gmail.com");
         mPaymentParams.setUdf1("udf1");
         mPaymentParams.setUdf2("udf2");
         mPaymentParams.setUdf3("udf3");
