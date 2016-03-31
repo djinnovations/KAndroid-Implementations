@@ -80,29 +80,32 @@ public class DbHelper {
 
     public static void writeDesignersSocial(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
-            JSONArray userlist = new JSONArray(response.responseContent);
-            if (userlist.length() != 0) {
-                for (int i = 0; i < userlist.length(); i++) {
-                    JSONObject userObj = userlist.getJSONObject(i);
-                    ContentValues usercv = new ContentValues();
-                    long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
-                    usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
-                    usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
-                    usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
-                    context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
-                    if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
-                        JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
-                        for (int j = 0; j < collarray.length(); j++) {
-                            JSONObject collObj = collarray.getJSONObject(j);
-                            ContentValues collcv = new ContentValues();
-                            collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
-                            collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                            context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+            JSONObject dataObj = new JSONObject(response.responseContent);
+            if(dataObj.has(Constants.JsonConstants.DESIGNERS)) {
+                JSONArray userlist = dataObj.getJSONArray(Constants.JsonConstants.DESIGNERS);
+                if (userlist.length() != 0) {
+                    for (int i = 0; i < userlist.length(); i++) {
+                        JSONObject userObj = userlist.getJSONObject(i);
+                        ContentValues usercv = new ContentValues();
+                        long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
+                        usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
+                        usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
+                        usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
+                        context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
+                        if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
+                            JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
+                            for (int j = 0; j < collarray.length(); j++) {
+                                JSONObject collObj = collarray.getJSONObject(j);
+                                ContentValues collcv = new ContentValues();
+                                collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
+                                collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
+                                context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                            }
                         }
                     }
+                    context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI, null);
+                    context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI, null);
                 }
-                context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI,null);
-                context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI,null);
             }
         }
     }
