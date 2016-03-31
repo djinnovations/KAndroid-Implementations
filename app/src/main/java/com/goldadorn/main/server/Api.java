@@ -161,6 +161,18 @@ public class Api {
         }
     }
 
+    public static void notifyPayment(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.notifyPayment(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     public static void like(Context context, LikeResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);

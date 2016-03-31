@@ -41,7 +41,7 @@ public class ApiFactory extends ExtractResponse {
     private static final int LIKE_TYPE = 11;
     private static final int UNLIKE_TYPE = 12;
     private static final int FOLLOW_TYPE = 13;
-
+    private static final int NOTIFY_PAYMENT_TYPE = 14;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -66,6 +66,12 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
                 builder.appendPath("addproductstocart");
+                break;
+            }
+            case NOTIFY_PAYMENT_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("notifypaymentstatus");
                 break;
             }
             case LIKE_TYPE: {
@@ -466,6 +472,38 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("removeFromCart " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void notifyPayment(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = NOTIFY_PAYMENT_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = NOTIFY_PAYMENT_TYPE;
+
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("prodId", response.productToAdd.id);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("notifyPayment " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

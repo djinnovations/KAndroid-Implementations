@@ -147,6 +147,22 @@ public class UIController {
         new Thread(runnable).start();
     }
 
+    public static void notifyPayment(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.notifyPayment(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+
     public static void like(final Context context, Object model, final boolean like, final IResultListener<LikeResponse> listener) {
         final LikeResponse response = new LikeResponse();
         if (model instanceof Product) {
