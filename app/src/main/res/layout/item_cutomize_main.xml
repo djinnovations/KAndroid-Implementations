@@ -28,7 +28,6 @@
         android:id="@+id/image"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:src="@drawable/im8"
         android:layout_width="@dimen/circle_button_small1_height"
         android:layout_height="@dimen/circle_button_small1_height"/>
 

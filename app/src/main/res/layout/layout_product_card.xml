@@ -52,8 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
-                android:scaleType="centerInside"
-                android:src="@drawable/eric"/>
+                android:scaleType="centerInside"/>
 
             <include
                 layout="@layout/layout_product_actions"/>
