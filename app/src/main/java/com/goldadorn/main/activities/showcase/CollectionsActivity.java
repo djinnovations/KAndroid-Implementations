@@ -29,7 +29,6 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
@@ -266,7 +265,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
-        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId,true);
+        User user = null;
         mOverlayViewHolder.ownerName.setText(user!=null?user.getName():"");
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));

@@ -39,6 +39,7 @@ public class DbHelper {
                     if (updatecount == 0)
                         context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
                 }
+                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI,null);
             }
         }
     }
@@ -54,6 +55,7 @@ public class DbHelper {
                     cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                     context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                 }
+                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI,null);
             }
         }
     }
@@ -87,7 +89,7 @@ public class DbHelper {
                     usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
                     usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
                     usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
-                    context.getContentResolver().update(Tables.Users.CONTENT_URI, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
+                    context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
                     if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
                         JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
                         for (int j = 0; j < collarray.length(); j++) {
@@ -95,11 +97,13 @@ public class DbHelper {
                             ContentValues collcv = new ContentValues();
                             collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
                             collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                            context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                            context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
 
                         }
                     }
                 }
+                context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI,null);
+                context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI,null);
             }
         }
     }
@@ -121,9 +125,9 @@ public class DbHelper {
                     }
                     usercv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT, 0));
                     usercv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT, 0));
-                    int updatecnt = context.getContentResolver().update(Tables.Users.CONTENT_URI, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
+                    int updatecnt = context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
                     if (updatecnt == 0)
-                        context.getContentResolver().insert(Tables.Users.CONTENT_URI, usercv);
+                        context.getContentResolver().insert(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv);
 
 
                     if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
@@ -138,15 +142,16 @@ public class DbHelper {
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
-                            int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                            int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
                             if (updatecollcnt == 0)
-                                context.getContentResolver().insert(Tables.Collections.CONTENT_URI, collcv);
-
+                                context.getContentResolver().insert(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv);
                         }
                     }
                 }
-
+                context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI,null);
+                context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI,null);
             }
+
 
         }
     }
