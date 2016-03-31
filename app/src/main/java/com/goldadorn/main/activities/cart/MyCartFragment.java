@@ -3,9 +3,7 @@ package com.goldadorn.main.activities.cart;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +56,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         int start = sbr.length();
         sbr.append("\n").append("(quantity * unit price)");
         int end = sbr.length();
-        sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
 
 
