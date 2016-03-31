@@ -45,6 +45,7 @@ public class Constants {
         public static final String LIKECOUNT = "likeCount";
         public static final String PRODUCTPIC = "productPic";
         public static final String PRODUCTPRICE = "productPrice";
+        public static final String PRODUCTPRICEUNITS = "productPriceUnits";
         public static final String MAKINGCHARGES = "makingCharges";
         public static final String MAKINGCHARGESUNITS = "makingChargesUnits";
         public static final String PRIMARYMETAL = "primaryMetal";

@@ -61,10 +61,10 @@ public class ProductDetail extends Product {
         p.unitPrice =  productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
         p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
-        p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
         p.height = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
         p.width = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
         p.size = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
+        p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
         return p;
     }
 
