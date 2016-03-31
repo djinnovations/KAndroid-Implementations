@@ -102,6 +102,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
 
             SpannableStringBuilder sbr = new SpannableStringBuilder(product.currency + ". " + (product.unitPrice * product.quantity));
+            sbr.append("/-");
             int start = sbr.length();
             sbr.append("\n").append("(").append(product.quantity + " * " + product.unitPrice).append(")");
             int end = sbr.length();

@@ -29,7 +29,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     ArrayList<Product> mCart = new ArrayList<>(5);
     View mShippingContainer, mTaxContainer, mTotalContainer;
     LinearLayout mContainer_header_row;
-    float mCostShipping = 0.0f, mCostTax = 420.00f, mCostTotal;
+    long mCostShipping = 0, mCostTax = 0, mCostTotal;
 
     @Nullable
     @Override
@@ -76,7 +76,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     private void bindCostUi() {
-        mCostTotal = 0.0f;
+        mCostTotal = 0;
         int totalUnits = 0;
         String currency = null;
         for (Product p : mCart) {
@@ -86,9 +86,9 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         }
         mCostTotal = mCostTotal + mCostShipping + mCostTax;
         int t = totalUnits > 0 ? 1 : 0;
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + mCostTax * t);
-        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(currency + ". " + mCostShipping * t);
-        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + mCostTotal * t);
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
+        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostShipping * t) + "/-");
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");
     }
 
     private void onCartChanged() {

@@ -58,7 +58,7 @@ public class ProductDetail extends Product {
         p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
         p.image_a_r = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
         p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
-        p.unitPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
+        p.unitPrice =  productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
         p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
         p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
@@ -86,7 +86,7 @@ public class ProductDetail extends Product {
             }
         }
         p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
-        p.unitPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRODUCTPRICE);
+        p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
 
         p.quantity=1;

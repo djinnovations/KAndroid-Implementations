@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.cart;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
@@ -79,7 +80,7 @@ public class AddAddressFragment extends Fragment {
             mStreetInput.getEditText().setText(mAddressToEdit.street);
             mCityInput.getEditText().setText(mAddressToEdit.city);
             mStateInput.getEditText().setText(mAddressToEdit.state);
-            mPinCodeInput.getEditText().setText(mAddressToEdit.pincode+"");
+            mPinCodeInput.getEditText().setText(mAddressToEdit.pincode + "");
             mPhoneNumberInput.getEditText().setText(mAddressToEdit.phoneNumber);
         }
 
@@ -132,7 +133,6 @@ public class AddAddressFragment extends Fragment {
         @Override
         public void onClick(View v) {
             ContentValues cv = new ContentValues();
-            cv.put(Tables.Addresses._ID, System.currentTimeMillis());
             for (TextInputLayout t : mInputs) {
                 String text = t.getEditText().getText().toString();
                 if (!TextUtils.isEmpty(text)) {
@@ -150,8 +150,17 @@ public class AddAddressFragment extends Fragment {
             int cnt = 0;
             if (id != -1)
                 cnt = getContext().getContentResolver().update(Tables.Addresses.CONTENT_URI, cv, Tables.Addresses._ID + " = ?", new String[]{String.valueOf(id)});
-            if (cnt == 0)
+            if (cnt == 0) {
+                int newId = 1;
+                Cursor c = getContext().getContentResolver().query(Tables.Addresses.CONTENT_URI, new String[]{Tables.Addresses._ID}, null, null, Tables.Addresses._ID + " desc");
+                if (c != null) {
+                    if (c.moveToFirst())
+                        id = c.getInt(0) + 1;
+                    c.close();
+                }
+                cv.put(Tables.Addresses._ID, newId);
                 getContext().getContentResolver().insert(Tables.Addresses.CONTENT_URI, cv);
+            }
             getActivity().onBackPressed();
         }
     };
