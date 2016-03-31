@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -272,7 +273,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId,true);
-        mOverlayViewHolder.ownerName.setText(user!=null?user.getName():"");
+        String t = user!=null?user.getName():"";
+        mOverlayViewHolder.ownerName.setText(t);
+        mOverlayViewHolder.followButton.setVisibility(TextUtils.isEmpty(t)?View.GONE:View.VISIBLE);
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(
                 String.format(Locale.getDefault(), "%d", collection.likecount));
