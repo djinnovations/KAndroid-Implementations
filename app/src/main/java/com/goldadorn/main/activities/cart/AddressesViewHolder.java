@@ -30,7 +30,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
     }
 
     private AddressHolder createItem(Address address) {
-        AddressHolder vh = new AddressHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_cart_address, null, false));
+        AddressHolder vh = new AddressHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout.item_cart_address, container, false));
         vh.address = address;
         container.addView(vh.itemView);
         vh.checkBox.setOnCheckedChangeListener(mCheckListener);

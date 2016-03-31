@@ -537,6 +537,7 @@ public class ApiFactory extends ExtractResponse {
                 jsonObject.put("collection", response.collectionId);
                 jsonObject.put("designer", response.userId);
             }
+            L.d("LIKE JSON "+jsonObject.toString());
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
@@ -575,6 +576,7 @@ public class ApiFactory extends ExtractResponse {
                 jsonObject.put("collection", response.collectionId);
                 jsonObject.put("designer", response.userId);
             }
+            L.d("UNLIKE JSON "+jsonObject.toString());
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();

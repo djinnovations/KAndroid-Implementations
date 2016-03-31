@@ -20,7 +20,7 @@ import java.util.Map;
 public class ServerRequest {
 
     public static Response doPostRequest(Context context, String url, HashMap<String, String> nameValuePairs, RequestBody requestBody) throws IOException {
-
+        L.d("doPostRequest "+url);
         Headers.Builder headers = new Headers.Builder();
         try {
             if (nameValuePairs != null) {
@@ -46,6 +46,7 @@ public class ServerRequest {
     }
 
     public static Response doPutRequest(Context context, String url, HashMap<String, String> nameValuePairs, RequestBody requestBody) throws IOException {
+        L.d("doPutRequest "+url);
         Headers.Builder headers = new Headers.Builder();
         try {
             if (nameValuePairs != null) {
