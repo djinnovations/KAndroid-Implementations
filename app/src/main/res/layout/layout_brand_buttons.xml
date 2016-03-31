@@ -4,7 +4,6 @@
               android:layout_height="match_parent"
               android:gravity="bottom"
               android:paddingTop="56dp"
-              android:paddingBottom="@dimen/tab_height"
               android:layout_weight="1"
               android:orientation="vertical">
 
@@ -100,7 +99,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="8dp"
+        android:layout_marginBottom="@dimen/tab_height"
         >
 
         <LinearLayout
