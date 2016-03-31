@@ -5,10 +5,12 @@ import android.database.Cursor;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.utils.ImageFilePath;
 
+import java.io.Serializable;
+
 /**
  * Created by Kiran BH on 06/03/16.
  */
-public class Product {
+public class Product implements Serializable {
     public final int id;
     public int userId, collectionId;
     public String name, description;

@@ -37,6 +37,7 @@ import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -342,6 +343,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlayVH.mFollowingCount.setText(
                 String.format(Locale.getDefault(), "%d", user.following_cnt));
 
+        mOverlayVH.mFollowButton.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
 
@@ -462,22 +464,21 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             int id = v.getId();
             Context context = v.getContext();
-            User user = (User) v.getTag();
             if (id == R.id.likeButton) {
-                Toast.makeText(v.getContext(), "like click!", Toast.LENGTH_SHORT).show();
-                //// TODO: 30/3/16 like click
             } else if (id == R.id.followButton) {
-                String current = ((IconicsButton) v).getText().toString();
+                v.setEnabled(false);
+                User user = (User) v.getTag();
+                UIController.follow(context, user, !v.isSelected(), new IResultListener<LikeResponse>() {
 
-                ((IconicsButton) v).setText(current.equals(
-                        context.getResources().getString(R.string.icon_follow_user)) ?
-                        context.getResources().getString(R.string.icon_un_follow_user) :
-                        context.getResources().getString(R.string.icon_follow_user));
-                Toast.makeText(v.getContext(), "follow click!", Toast.LENGTH_SHORT).show();
-                // TODO: 30/3/16 follow click
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        v.setEnabled(true);
+                        v.setSelected(result.success);
+                    }
+                });
             } else if (id == R.id.shareButton) {
                 Toast.makeText(v.getContext(), "share click!", Toast.LENGTH_SHORT).show();
                 //// TODO: 30/3/16 share click

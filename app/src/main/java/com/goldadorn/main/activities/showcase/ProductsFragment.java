@@ -21,11 +21,13 @@ import android.widget.Toast;
 
 import com.daprlabs.cardstack.SwipeDeck;
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -46,6 +48,7 @@ public class ProductsFragment extends Fragment {
     public static final int MODE_COLLECTION = 0;
     public static final int MODE_USER = 1;
     private final static boolean DEBUG = true;
+    private static final int PRODUCT = 999999999;
 
     @Bind(R.id.swipe_deck)
     SwipeDeck cardStack;
@@ -71,11 +74,11 @@ public class ProductsFragment extends Fragment {
     private View.OnClickListener mBuyClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //todo kiran go to product info page
-            goToProductPage(v.getContext());
+            goToProductPage(v.getContext(),mProduct);
         }
     };
     private SwipeDeckAdapter mSwipeDeckAdapter;
+    private Product mProduct;
 
     public static ProductsFragment newInstance(int mode, User user, Collection collection) {
         ProductsFragment f = new ProductsFragment();
@@ -176,6 +179,7 @@ public class ProductsFragment extends Fragment {
 
 
     private void setData(Product product) {
+        mProduct = product;
         if(product!=null){
             name.setText(product.name);
             price.setText(product.getDisplayPrice());
@@ -239,10 +243,13 @@ public class ProductsFragment extends Fragment {
 
             } else holder = (ProductViewHolder) convertView.getTag();
 
+
             Product product = getItem(position);
+            convertView.setTag(PRODUCT,product);
 
             holder.productActionsToggle.setTag(holder);
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
+            holder.like.setTag(product);
 
             Picasso.with(context).load(product.getImageUrl()).into(holder.image);
 
@@ -250,11 +257,19 @@ public class ProductsFragment extends Fragment {
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             int id = v.getId();
             if (id == R.id.likeButton) {
-                //todo like click
-                Toast.makeText(v.getContext(), "Like click!", Toast.LENGTH_SHORT).show();
+                v.setEnabled(false);
+                Product product = (Product) v.getTag();
+                UIController.like(v.getContext(), product, !v.isSelected(), new IResultListener<LikeResponse>() {
+
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        v.setEnabled(true);
+                        v.setSelected(result.success);
+                    }
+                });
             } else if (id == R.id.product_actions_open) {
                 ProductViewHolder holder = (ProductViewHolder) v.getTag();
                 boolean isVisible = holder.productActions.getVisibility() == View.VISIBLE;
@@ -275,7 +290,8 @@ public class ProductsFragment extends Fragment {
                 //todo wishlist click
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
             } else {
-                goToProductPage(v.getContext());
+                Product product = (Product) v.getTag(PRODUCT);
+                goToProductPage(v.getContext(),product);
             }
         }
 
@@ -313,8 +329,8 @@ public class ProductsFragment extends Fragment {
         }
     }
 
-    private void goToProductPage(Context context) {
-        startActivity(ProductActivity.getLaunchIntent(context));
+    private void goToProductPage(Context context,Product product) {
+        startActivity(ProductActivity.getLaunchIntent(context,product));
     }
 
     private UserChangeListener mUserChangeListener = new UserChangeListener() {

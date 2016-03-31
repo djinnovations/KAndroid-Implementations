@@ -31,8 +31,13 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -44,6 +49,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private final static int UISTATE_PRODUCT = 1;
     private final static int UISTATE_SOCIAL = 2;
     private static final String TAG = ProductActivity.class.getName();
+    public static final String EXTRA_PRODUCT = "product";
 
     private int mUIState = UISTATE_CUSTOMIZE;
 
@@ -75,6 +81,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private int mCollapsedHeight;
     private ProductPagerAdapter mProductAdapter;
     private int mVerticalOffset = 0;
+    private Product mProduct;
     private Handler mHandler = new Handler();
     private TabViewHolder mTabViewHolder;
     private ViewPager.OnPageChangeListener mPageChangeListener =
@@ -98,8 +105,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 }
             };
 
-    public static Intent getLaunchIntent(Context context) {
+    public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
+        intent.putExtra(EXTRA_PRODUCT, product);
         return intent;
     }
 
@@ -118,6 +126,11 @@ public class ProductActivity extends BaseDrawerActivity {
                     .colorPrimary),
                     PorterDuff.Mode.SRC_IN);
             mToolBar.setNavigationIcon(d);
+        }
+
+        Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
+        if (b != null) {
+            mProduct = (Product) b.getSerializable(EXTRA_PRODUCT);
         }
 
         mContext = this;
@@ -248,7 +261,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     }
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final AppBarLayout appBarLayout;
         @Bind(R.id.likes_count)
@@ -310,6 +323,7 @@ public class ProductActivity extends BaseDrawerActivity {
             ButterKnife.bind(this, itemView);
             productActionsToggle.setOnClickListener(this);
             like.setOnClickListener(this);
+            cartButton.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -327,7 +341,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (v == productActionsToggle) {
                 boolean visible = productActions.getVisibility() == View.VISIBLE;
                 if (visible) {
@@ -358,8 +372,15 @@ public class ProductActivity extends BaseDrawerActivity {
                     pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
             } else if (v == like) {
-                //todo like click
-                Toast.makeText(v.getContext(), "like click", Toast.LENGTH_SHORT).show();
+                v.setEnabled(false);
+                UIController.like(v.getContext(), mProduct, !v.isSelected(),
+                        new IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success);
+                            }
+                        });
             } else if (v == shareButton) {
                 //todo like click
                 Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
@@ -369,6 +390,17 @@ public class ProductActivity extends BaseDrawerActivity {
             } else if (v == wishlistButton) {
                 //todo wishlist click
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
+            } else if (v == cartButton) {
+                UIController.addToCart(v.getContext(), mProduct,
+                        new IResultListener<ProductResponse>() {
+
+                            @Override
+                            public void onResult(ProductResponse result) {
+                                Toast.makeText(v.getContext(),
+                                        result.success ? "Added to cart successfully!" :
+                                                "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         }
     }
