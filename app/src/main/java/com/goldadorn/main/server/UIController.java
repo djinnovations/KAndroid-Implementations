@@ -184,10 +184,7 @@ public class UIController {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                if (follow)
-                    Api.follow(context, response, 0);
-                else
-                    Api.unFollow(context, response, 0);
+                Api.follow(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

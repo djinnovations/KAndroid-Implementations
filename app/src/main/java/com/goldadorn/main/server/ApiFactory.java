@@ -41,7 +41,6 @@ public class ApiFactory extends ExtractResponse {
     private static final int LIKE_TYPE = 11;
     private static final int UNLIKE_TYPE = 12;
     private static final int FOLLOW_TYPE = 13;
-    private static final int UNFOLLOW_TYPE = 14;
 
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -73,10 +72,6 @@ public class ApiFactory extends ExtractResponse {
             }
             case FOLLOW_TYPE: {
                 builder.appendPath("follow");
-                break;
-            }
-            case UNFOLLOW_TYPE: {
-                builder.appendPath("unfollow");
                 break;
             }
             case UNLIKE_TYPE: {
@@ -561,34 +556,4 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void unFollow(Context context, LikeResponse response) throws IOException, JSONException {
-        if (response.mCookies == null || response.mCookies.isEmpty()) {
-            response.responseCode = BasicResponse.FORBIDDEN;
-            response.success = false;
-            return;
-        }
-        if (NetworkUtilities.isConnected(context)) {
-            UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = UNFOLLOW_TYPE;
-
-            urlBuilder.mResponse = response;
-            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
-            paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = UNFOLLOW_TYPE;
-
-
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("follow", response.userId);
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
-            response.responseCode = httpResponse.code();
-            response.responseContent = httpResponse.body().string();
-            L.d("unFollow " + "Code :" + response.responseCode + " content", response.responseContent.toString());
-            extractBasicResponse(context, response);
-        } else {
-            response.success = false;
-            response.responseCode = BasicResponse.IO_EXE;
-        }
-    }
 }
