@@ -22,6 +22,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -120,7 +121,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 }
             };
     ProductSummary mProductSummary;
-    private CollectionCallBack mCollectionCallBack=new CollectionCallBack();
+    private CollectionCallBack mCollectionCallBack = new CollectionCallBack();
     User mUser;
     Collection mCollection;
 
@@ -150,7 +151,7 @@ public class ProductActivity extends BaseDrawerActivity {
         Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (b != null) {
             mProduct = (Product) b.getSerializable(EXTRA_PRODUCT);
-            if(mProduct==null){
+            if (mProduct == null) {
                 finish();
                 return;
             }
@@ -227,7 +228,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     }
                 });
 
-        getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(),null,mCollectionCallBack);
+        getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
+                mCollectionCallBack);
     }
 
     private void bindOverlay() {
@@ -236,13 +238,13 @@ public class ProductActivity extends BaseDrawerActivity {
         mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
         if (mUser != null) {
             mOverlayVH.mProductOwner.setText(mUser.getName());
-        }else{
+        } else {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
         mOverlayVH.mProductCost.setText(mProduct.getDisplayPrice());
         mOverlayVH.mProductCost2.setText(mProduct.getDisplayPrice());
-        mTabViewHolder.setCounts(-1,-1);
+        mTabViewHolder.setCounts(-1, -1);
     }
 
     @Override
@@ -256,7 +258,12 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        mTabViewHolder.initTabs(getString(R.string.product_information), getString(R.string.social), null,
+        String social = getString(R.string.social).toLowerCase();
+        if (mProduct != null && !TextUtils.isEmpty(mProduct.name)) {
+            social += "@";
+            social += mProduct.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.initTabs(getString(R.string.product_information), social, null,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
@@ -304,7 +311,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (f != null) {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(id, f,""+uiState);
+            fragmentTransaction.replace(id, f, "" + uiState);
             fragmentTransaction.commit();
         }
     }
@@ -460,7 +467,7 @@ public class ProductActivity extends BaseDrawerActivity {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success?!isLiked:isLiked);
+                                v.setSelected(result.success ? !isLiked : isLiked);
                             }
                         });
             } else if (v == shareButton) {
@@ -483,17 +490,18 @@ public class ProductActivity extends BaseDrawerActivity {
                                                 "Adding to cart failed.", Toast.LENGTH_LONG).show();
                             }
                         });
-            }else if(v==followButton){
+            } else if (v == followButton) {
                 v.setEnabled(false);
                 final boolean isFollowing = v.isSelected();
-                UIController.follow(mContext, mUser, !isFollowing, new IResultListener<LikeResponse>() {
+                UIController.follow(mContext, mUser, !isFollowing,
+                        new IResultListener<LikeResponse>() {
 
-                    @Override
-                    public void onResult(LikeResponse result) {
-                        v.setEnabled(true);
-                        v.setSelected(result.success?!isFollowing:isFollowing);
-                    }
-                });
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success ? !isFollowing : isFollowing);
+                            }
+                        });
             }
         }
     }
@@ -535,13 +543,14 @@ public class ProductActivity extends BaseDrawerActivity {
         public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader,
                 ObjectAsyncLoader.Result data) {
             mCollection = (Collection) data.object;
-            if(mCollection!=null){
-                ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(""+UISTATE_PRODUCT);
-                if(f!=null)
-                    f.bindCollectionUI(mCollection);
+            if (mCollection != null) {
+                ProductInfoFragment f =
+                        (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(
+                                "" + UISTATE_PRODUCT);
+                if (f != null) f.bindCollectionUI(mCollection);
                 mOverlayVH.mProductCollection.setText(mCollection.name);
                 mOverlayVH.mProductCollection2.setText(mCollection.name);
-            }else{
+            } else {
                 mOverlayVH.mProductCollection.setText("");
                 mOverlayVH.mProductCollection2.setText("");
             }

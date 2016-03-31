@@ -126,7 +126,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);
-        initTabs();
         final DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
         mCollapsedHeight = (int) (.25f * dm.heightPixels);
@@ -213,11 +212,18 @@ public class CollectionsActivity extends BaseDrawerActivity {
         configureUI(mUIState);
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null,
                 mCollectionCallback);
+
+        initTabs();
     }
 
     private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null,
+        String social = getString(R.string.social).toLowerCase();
+        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
+            social += "@";
+            social += mCollection.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.initTabs(getString(R.string.products), social, null,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
@@ -275,10 +281,11 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
-        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId,true);
-        String t = user!=null?user.getName():"";
+        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId, true);
+        String t = user != null ? user.getName() : "";
         mOverlayViewHolder.ownerName.setText(t);
-        mOverlayViewHolder.followButton.setVisibility(TextUtils.isEmpty(t)?View.GONE:View.VISIBLE);
+        mOverlayViewHolder.followButton.setVisibility(
+                TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(
                 String.format(Locale.getDefault(), "%d", collection.likecount));
@@ -343,8 +350,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Collection collection = getCollection(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(collection.getImageUrl())
-                   .into(image);
+            Picasso.with(mContext).load(collection.getImageUrl()).into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
             image.requestLayout();
@@ -447,17 +453,17 @@ public class CollectionsActivity extends BaseDrawerActivity {
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
-            ((LinearLayout)this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
+            ((LinearLayout) this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
                     Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         }
 
         @Override
         public void onClick(final View v) {
-            if(v==like){
+            if (v == like) {
                 v.setEnabled(false);
                 Collection collection = (Collection) v.getTag();
-                UIController.like(v.getContext(), collection, !v.isSelected(), new
-                        IResultListener<LikeResponse>() {
+                UIController.like(v.getContext(), collection, !v.isSelected(),
+                        new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
