@@ -387,7 +387,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(user.imageUrl).placeholder(R.drawable.designer).into(image);
+            Picasso.with(mContext).load(user.imageUrl).into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
             image.requestLayout();

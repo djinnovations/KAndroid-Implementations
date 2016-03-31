@@ -101,10 +101,6 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
         private Cursor cursor;
         Context context;
-        int[] IMAGES =
-                {R.drawable.im1, R.drawable.im2, R.drawable.im3, R.drawable.im4, R.drawable.im5,
-                        R.drawable.im6, R.drawable.im7, R.drawable.im8, R.drawable.im9,
-                        R.drawable.im10};
         private int cardWidth;
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
@@ -155,7 +151,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         @Override
         public void onBindViewHolder(final CollectionHolder holder, int position) {
             final Collection collection = getCollection(position);
-            Picasso.with(context).load(collection.getImageUrl()).placeholder(IMAGES[(int) (Math.random()*100%IMAGES.length)]).fit().into(holder.image);
+            Picasso.with(context).load(collection.getImageUrl()).fit().into(holder.image);
             holder.name.setText(collection.name);
             holder.description.setText(collection.description);
             holder.likeCount.setText("" + collection.likecount);
