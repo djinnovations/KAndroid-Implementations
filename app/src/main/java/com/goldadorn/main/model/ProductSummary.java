@@ -13,8 +13,8 @@ public class ProductSummary implements Serializable {
     public String sizeUnit, weightUnits;
     public float size, height, width;
     public float weight;
-    public int imageCount
-    ArrayList<String> images = new ArrayList<>();
+    public int imageCount;
+    public ArrayList<String> images = new ArrayList<>();
     public String productType;
 
     public ProductSummary(int id) {
@@ -32,6 +32,6 @@ public class ProductSummary implements Serializable {
         p.weightUnits = obj.getString("widthUnits");
         p.imageCount = obj.getInt("productNumImages");
         p.productType = obj.getString("productType");
-        return p
+        return p;
     }
 }

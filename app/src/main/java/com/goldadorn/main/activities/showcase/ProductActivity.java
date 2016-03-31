@@ -3,6 +3,7 @@ package com.goldadorn.main.activities.showcase;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -16,6 +17,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +35,9 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.assist.ObjectAsyncLoader;
+import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductSummary;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
@@ -422,6 +428,46 @@ public class ProductActivity extends BaseDrawerActivity {
                             }
                         });
             }
+        }
+    }
+    private class CollectionCallBack implements LoaderManager.LoaderCallbacks<ObjectAsyncLoader.Result> {
+        @Override
+        public Loader<ObjectAsyncLoader.Result> onCreateLoader(int id, Bundle args) {
+            return new ObjectAsyncLoader(mContext) {
+                @Override
+                protected void registerContentObserver(ContentObserver observer) {
+                    getContentResolver().registerContentObserver(Tables.Collections.CONTENT_URI, true, observer);
+                }
+
+                @Override
+                protected void unRegisterContentObserver(ContentObserver observer) {
+                    getContentResolver().unregisterContentObserver(observer);
+                }
+
+                @Override
+                public Result loadInBackground() {
+                    Result result= new Result();
+                    Cursor c= getContentResolver().query(Tables.Collections.CONTENT_URI,null, Tables.Collections._ID+" = ?", new String[]{String.valueOf(mProduct.collectionId)},null);
+                    if(c!=null){
+                        if(c.moveToFirst()){
+                            result.object= Collection.extractFromCursor(c);
+                        }
+                        c.close();
+                    }
+                    return result;
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader, ObjectAsyncLoader.Result data) {
+            Collection collection= (Collection) data.object;
+
+        }
+
+        @Override
+        public void onLoaderReset(Loader<ObjectAsyncLoader.Result> loader) {
+
         }
     }
 }
