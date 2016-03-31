@@ -55,7 +55,7 @@ public class ApiFactory extends ExtractResponse {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http");
         builder.authority(HOST_NAME);
-        builder.appendPath("goldadorn_prod");
+        builder.appendPath("goldadorn_dev");
         builder.appendPath("rest");
         switch (urlBuilder.mUrlType) {
             case PRODUCT_SHOWCASE_TYPE: {
