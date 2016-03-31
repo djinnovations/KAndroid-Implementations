@@ -24,6 +24,7 @@ package com.goldadorn.main.activities;
     import com.goldadorn.main.R;
     import com.goldadorn.main.icons.IconsUtils;
     import com.goldadorn.main.model.LoginResult;
+    import com.goldadorn.main.utils.TypefaceHelper;
     import com.goldadorn.main.utils.URLHelper;
     import com.goldadorn.main.utils.IDUtils;
     import com.goldadorn.main.utils.NetworkResultValidator;
@@ -292,6 +293,8 @@ package com.goldadorn.main.activities;
             policyText.setText(Html.fromHtml(getResources().getString(R.string.creatingAnAccount)));
 
             genderRadioGroup.check(R.id.femaleRadioButton);
+
+            TypefaceHelper.setFont(userName, password,name, loginAccount, createAccount);
         }
 
         private class LoginTextWatcher implements TextWatcher {

@@ -174,7 +174,7 @@ public class UIController {
             response.userId = p.userId;
         } else if (model instanceof Collection) {
             Collection p = (Collection) model;
-            response.productId = p.id;
+            response.collectionId = p.id;
             response.userId = p.userId;
         } else {
             throw new IllegalArgumentException("Undefined model to like");

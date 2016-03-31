@@ -12,15 +12,15 @@
 
     <color name="semiTransparentWindow">#556c533e</color>
 
-    <color name="bgGradientEnd">#dfd8c8</color>
+    <color name="bgGradientEnd">#ffffff</color>
     <color name="bgGradientStart">#ffffff</color>
 
-    <color name="fabButtonNormal">@color/colorAccent</color>
-    <color name="fabButtonPressed">@color/colorPrimary</color>
+    <color name="fabButtonNormal">@color/colorPrimary</color>
+    <color name="fabButtonPressed">@color/colorAccent</color>
 
-    <color name="fabMenuButtonNormal">@color/colorAccent</color>
-    <color name="fabMenuButtonPress">@color/colorPrimary</color>
-    <color name="fabMenuButtonSelected">@color/colorAccent</color>
+    <color name="fabMenuButtonNormal">@color/colorPrimary</color>
+    <color name="fabMenuButtonPress">@color/colorAccent</color>
+    <color name="fabMenuButtonSelected">@color/colorPrimary</color>
     <color name="fabButtonIcon">#ffffff</color>
     <color name="fabItemLabel">#000000</color>
 
@@ -34,9 +34,9 @@
     <color name="buttonPressEnd">#34281d</color>
     <color name="buttonPressTextColor">#ffffff</color>
 
-    <color name="buttonNormalBorder">@color/colorPrimary</color>
-    <color name="buttonNormalStart">@color/colorPrimary</color>
-    <color name="buttonNormalEnd">@color/colorPrimary</color>
+    <color name="buttonNormalBorder">#5d5143</color>
+    <color name="buttonNormalStart">#8e7358</color>
+    <color name="buttonNormalEnd">#6c533e</color>
     <color name="buttonNormalTextColor">#ffffff</color>
 
     <color name="buttonDisableBorder">@color/colorPrimaryDark</color>
@@ -85,6 +85,8 @@
     <color name="darkDisable">#bb333333</color>
     <color name="overlay">#9f444444</color>
     <color name="disabled_grey">#cccccc</color>
+    <color name="headerColor">#7c624b</color>
+    <color name="menuIconColor">#ffffff</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

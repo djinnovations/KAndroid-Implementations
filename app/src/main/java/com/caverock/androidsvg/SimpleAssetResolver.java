@@ -68,7 +68,7 @@ public class SimpleAssetResolver extends SVGExternalFileResolver
 
 
    /**
-    * Attempt to find the specified font in the "assets" folder and return a Typeface object.
+    * Attempt to find the specified font in the "assets" folder and return a TypefaceHelper object.
     * For the font name "Foo", first the file "Foo.ttf" will be tried and if that fails, "Foo.otf".
     */
    @Override

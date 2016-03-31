@@ -365,6 +365,7 @@ public class ProductsFragment extends Fragment {
             response.userId = mUser.id;
         } else {
             response.collectionId = mCollection.id;
+            response.userId=mCollection.userId;
         }
         UIController.getProducts(getContext(), response, null);
     }

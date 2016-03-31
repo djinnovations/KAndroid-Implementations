@@ -34,16 +34,16 @@ public abstract class SVGExternalFileResolver
    /**
     * Called by renderer to resolve font references in &lt;text&gt; elements.
     * <p>
-    * Return a {@code Typeface} instance, or null if you want the renderer to ignore
+    * Return a {@code TypefaceHelper} instance, or null if you want the renderer to ignore
     * this font and use the default Android font instead.
     * <p>
-    * Note that AndroidSVG does not attempt to cache Typeface references.  If you want
+    * Note that AndroidSVG does not attempt to cache TypefaceHelper references.  If you want
     * them cached, for speed or memory reasons, you should do so yourself.
     * 
     * @param fontFamily Font family as specified in a font-family style attribute.
     * @param fontWeight Font weight as specified in a font-weight style attribute.
     * @param fontStyle  Font style as specified in a font-style style attribute.
-    * @return an Android Typeface instance, or null
+    * @return an Android TypefaceHelper instance, or null
     */
    public Typeface  resolveFont(String fontFamily, int fontWeight, String fontStyle)
    {

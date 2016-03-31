@@ -78,10 +78,13 @@
     <string name="products">Products</string>
     <string name="social">Social</string>
     <string name="total">Total</string>
-    <string name="product">Product</string>
-    <string name="quantity">Quantity</string>
-    <string name="price">Price</string>
-    <string name="customize">Customize</string>
+    <string name="product">product</string>
+    <string name="quantity">quantity</string>
+    <string name="price">price</string>
+    <string name="customize">customize</string>
+
+    <string name="font_name_edit_text">din-regular.ttf</string>
+    <string name="font_name_text_normal">din-regular.ttf</string>
 
 
 </resources>
