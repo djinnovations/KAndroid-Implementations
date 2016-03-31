@@ -186,8 +186,9 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
         configureUI(UISTATE_CUSTOMIZE);
-
-        UIController.getProductBasicInfo(mContext, new ProductResponse(), new IResultListener<ProductResponse>() {
+        ProductResponse response= new ProductResponse();
+        response.productId=mProduct.id;
+        UIController.getProductBasicInfo(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
 
