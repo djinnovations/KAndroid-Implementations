@@ -15,12 +15,12 @@
     <color name="bgGradientEnd">#ffffff</color>
     <color name="bgGradientStart">#ffffff</color>
 
-    <color name="fabButtonNormal">@color/colorAccent</color>
-    <color name="fabButtonPressed">@color/colorPrimary</color>
+    <color name="fabButtonNormal">@color/colorPrimary</color>
+    <color name="fabButtonPressed">@color/colorAccent</color>
 
-    <color name="fabMenuButtonNormal">@color/colorAccent</color>
-    <color name="fabMenuButtonPress">@color/colorPrimary</color>
-    <color name="fabMenuButtonSelected">@color/colorAccent</color>
+    <color name="fabMenuButtonNormal">@color/colorPrimary</color>
+    <color name="fabMenuButtonPress">@color/colorAccent</color>
+    <color name="fabMenuButtonSelected">@color/colorPrimary</color>
     <color name="fabButtonIcon">#ffffff</color>
     <color name="fabItemLabel">#000000</color>
 
