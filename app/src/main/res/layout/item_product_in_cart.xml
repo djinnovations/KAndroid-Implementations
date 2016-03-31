@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/cb_errorRed"
+    android:layout_marginTop="@dimen/padding_default"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -20,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:fontFamily="sans-serif-light"
+            android:gravity="center"
             tools:text="Product Name"/>
 
         <ImageView
@@ -42,9 +45,9 @@
             android:layout_width="48dp"
             android:layout_height="32dp"
             android:background="@color/disabled_grey"
-            android:inputType="numberDecimal"
             android:fontFamily="sans-serif-light"
             android:gravity="center"
+            android:inputType="numberDecimal"
             tools:text="1"/>
 
         <ImageButton
