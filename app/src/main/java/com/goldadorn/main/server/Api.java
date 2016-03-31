@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDiskIOException;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
@@ -160,7 +161,7 @@ public class Api {
         }
     }
 
-    public static void like(Context context, ProductResponse response, int retryCount) {
+    public static void like(Context context, LikeResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.like(context, response);
@@ -172,12 +173,12 @@ public class Api {
             e.printStackTrace();
         }
     }
-    public static void unLike(Context context, ProductResponse response, int retryCount) {
+    public static void unLike(Context context, LikeResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.unLike(context, response);
             if (response.success && response.responseContent != null) {
-                DbHelper.writeunLike(context,response);
+                DbHelper.writeUnLike(context,response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

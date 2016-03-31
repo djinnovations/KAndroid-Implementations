@@ -7,6 +7,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.ProductDetail;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
@@ -443,7 +444,7 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void like(Context context, ProductResponse response) throws IOException, JSONException {
+    protected static void like(Context context, LikeResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -480,7 +481,7 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = BasicResponse.IO_EXE;
         }
     }
-    protected static void unLike(Context context, ProductResponse response) throws IOException, JSONException {
+    protected static void unLike(Context context, LikeResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;

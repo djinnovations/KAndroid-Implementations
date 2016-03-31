@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.server.ApiFactory;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.ImageFilePath;
@@ -150,7 +151,7 @@ public class DbHelper {
         }
     }
 
-    public static void writeLike(Context context, ProductResponse response) {
+    public static void writeLike(Context context, LikeResponse response) {
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
             cv.put(Tables.Products.IS_LIKED, 1);
@@ -161,7 +162,7 @@ public class DbHelper {
         }
     }
 
-    public static void writeunLike(Context context, ProductResponse response) {
+    public static void writeUnLike(Context context, LikeResponse response) {
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
             cv.put(Tables.Products.IS_LIKED, 0);

@@ -7,7 +7,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
-import com.goldadorn.main.model.User;
+import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 
@@ -144,8 +144,8 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void like(Context context, Object model, boolean like, IResultListener<ProductResponse> listener) {
-        ProductResponse response = new ProductResponse();
+    public static void like(Context context, Object model, boolean like, IResultListener<LikeResponse> listener) {
+        LikeResponse response = new LikeResponse();
         if (model instanceof Product) {
             Product p = (Product) model;
             response.productId = p.id;
@@ -155,9 +155,8 @@ public class UIController {
             Collection p = (Collection) model;
             response.productId = p.id;
             response.userId = p.userId;
-        } else if (model instanceof User) {
-            User p = (User) model;
-            response.productId = p.id;
+        } else {
+            throw new IllegalArgumentException("Undefined model to like");
         }
         if (like) {
             like(context, response, listener);
@@ -166,7 +165,7 @@ public class UIController {
 
     }
 
-    private static void like(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+    private static void like(final Context context, final LikeResponse response, final IResultListener<LikeResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
@@ -182,7 +181,7 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    private static void unLike(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+    private static void unLike(final Context context, final LikeResponse response, final IResultListener<LikeResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
