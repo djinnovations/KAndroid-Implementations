@@ -11,4 +11,5 @@
 
     <item name="tag_error" type="id"/>
     <item name="tag_collom" type="id"/>
+    <item name="tag_progress" type="id"/>
 </resources>

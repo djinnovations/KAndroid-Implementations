@@ -160,6 +160,10 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
+                String result=data.getStringExtra("result");
+                if(result.equals(mPaymentParams.getSurl())){
+                    mCartData.setPaymentDone(true);
+                }
                 new AlertDialog.Builder(getContext())
                         .setCancelable(false)
                         .setMessage(data.getStringExtra("result"))

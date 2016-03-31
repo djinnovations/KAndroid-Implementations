@@ -36,6 +36,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     public static final int UISTATE_PAYMENT = 2;
     public static final int UISTATE_FINAL = 3;
     public static final int UISTATE_OVERLAY_ADD_ADDRESS = 10;
+    private static final int TAG_PROGRESS = R.id.tag_progress;
     private int mUIState = UISTATE_CART;
     private int mMainUiState = UISTATE_CART;
     Context mContext;
@@ -168,16 +169,29 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     }
 
     private void bindProgress(int index) {
-        for (int i = 0; i < mContainerProgressImage.getChildCount(); i++)
-            ((ImageView) mContainerProgressImage.getChildAt(i).findViewById(R.id.image)).setImageResource(index >= i ? R.drawable.bg_thumb : R.drawable.bg_thumb_n);
+        for (int i = 0; i < mContainerProgressImage.getChildCount(); i++) {
+            ImageView iv = ((ImageView) mContainerProgressImage.getChildAt(i).findViewById(R.id.image));
+            if (index >= i) {
+                iv.setImageResource(R.drawable.bg_thumb);
+                iv.setTag(TAG_PROGRESS, true);
+            } else {
+                iv.setImageResource(R.drawable.bg_thumb_n);
+                iv.setTag(TAG_PROGRESS, false);
+            }
+
+        }
     }
 
     private View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.image) {
-                int uistate = (int) v.getTag();
-                configureUI(uistate);
+                boolean complete = (boolean) v.getTag(TAG_PROGRESS);
+                if (complete) {
+                    int uistate = (int) v.getTag();
+                    if (uistate != UISTATE_FINAL)
+                        configureUI(uistate);
+                }
             } else {
                 if (mUIState == UISTATE_CART) {
                     if (getBillableAmount() > 0)
@@ -221,6 +235,9 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     @Override
     public void setPaymentDone(boolean done) {
         mPaymentSuccess = done;
+        if (done) {
+            configureUI(UISTATE_FINAL);
+        }
     }
 
     @Override
