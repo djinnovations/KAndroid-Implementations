@@ -68,7 +68,7 @@ import java.util.Iterator;
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
         mPaymentParams.setSurl("https://payu.herokuapp.com/success");
         mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
-        mPaymentParams.setUserCredentials(merchantKey+":soni94@gmail.com");
+        mPaymentParams.setUserCredentials(merchantKey+":"+((Application)context.getApplicationContext()).getUser().id);
         mPaymentParams.setUdf1("udf1");
         mPaymentParams.setUdf2("udf2");
         mPaymentParams.setUdf3("udf3");
