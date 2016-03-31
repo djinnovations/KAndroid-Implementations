@@ -17,7 +17,7 @@ public class Product {
     public float image_a_r = 1;
 
     public int quantity, maxQuantity = 10;
-    private int likecount;
+    public int likecount;
 
     public Product(int id) {
         this.id = id;

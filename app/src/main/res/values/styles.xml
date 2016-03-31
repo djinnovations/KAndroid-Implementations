@@ -52,6 +52,11 @@
         <item name="android:clickable">true</item>
     </style>
 
+    <style name="RoundButton">
+        <item name="android:padding">2dp</item>
+        <item name="android:background">@drawable/btn_round</item>
+    </style>
+
 
     <style name="circleButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">16sp</item>

@@ -1,9 +1,13 @@
 package com.goldadorn.main.activities.showcase;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
@@ -21,7 +25,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +58,7 @@ public class ProductActivity extends BaseDrawerActivity {
     View mTabLayout;
 
     @Bind(R.id.container_designer_overlay)
-    LinearLayout mBrandButtonsLayout;
+    FrameLayout mBrandButtonsLayout;
 
     @Bind(R.id.frame_content)
     FrameLayout mFrame;
@@ -99,13 +103,25 @@ public class ProductActivity extends BaseDrawerActivity {
         return intent;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         drawerLayout.setBackgroundColor(Color.WHITE);
+        BitmapDrawable d = (BitmapDrawable) (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
+                getDrawable(R.drawable.ic_menu_black_24dp) : getResources().getDrawable(
+                R.drawable.ic_menu_black_24dp));
+        if (d != null) {
+            d.setColorFilter(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                            getColor(R.color.colorPrimary) : getResources().getColor(R.color
+                    .colorPrimary),
+                    PorterDuff.Mode.SRC_IN);
+            mToolBar.setNavigationIcon(d);
+        }
+
         mContext = this;
-        mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
+        mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout, mAppBarLayout);
         initTabs();
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.9f * dm.heightPixels);
@@ -117,7 +133,6 @@ public class ProductActivity extends BaseDrawerActivity {
 
         final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
                 R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
-
 
         mOverlayVH.pager.setAdapter(
                 mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager()));
@@ -131,9 +146,11 @@ public class ProductActivity extends BaseDrawerActivity {
                 if (mVerticalOffset != verticalOffset) {
                     Log.d(TAG, "offset : " + verticalOffset);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
-                    int visibility = change ? View.VISIBLE : View.GONE;
-                    mBrandButtonsLayout.getLayoutParams().height =
-                            change ? mStartHeight : mCollapsedHeight;
+                    final int visibility = change ? View.VISIBLE : View.GONE;
+                    FrameLayout.LayoutParams lp =
+                            (FrameLayout.LayoutParams) mBrandButtonsLayout.getLayoutParams();
+                    lp.height = change ? mStartHeight : mCollapsedHeight;
+                    mBrandButtonsLayout.setLayoutParams(lp);
                     mOverlayVH.setVisisbility(visibility);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mHandler.postDelayed(new Runnable() {
@@ -141,6 +158,8 @@ public class ProductActivity extends BaseDrawerActivity {
                         public void run() {
                             if (mVerticalOffset == 0) {
                                 mTabLayout.animate().setDuration(0).y(tabStart);
+                                mOverlayVH.setProductActions(false);
+                                mOverlayVH.setVisisbility(visibility);
                             }
                         }
                     }, 180);
@@ -160,6 +179,8 @@ public class ProductActivity extends BaseDrawerActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean value = super.onCreateOptionsMenu(menu);
         menu.findItem(R.id.nav_my_overflow).setVisible(false);
+        menu.findItem(R.id.nav_my_notifications).setIcon(R.drawable.vector_icon_bell_dark);
+        menu.findItem(R.id.nav_my_search).setIcon(R.drawable.vector_icon_search_dark);
         return value;
     }
 
@@ -229,21 +250,22 @@ public class ProductActivity extends BaseDrawerActivity {
 
     static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private final AppBarLayout appBarLayout;
         @Bind(R.id.likes_count)
         TextView likesCount;
         @Bind(R.id.likeButton)
-        IconicsButton like;
+        ImageView like;
 
         @Bind(R.id.product_actions_open)
         ImageButton productActionsToggle;
         @Bind(R.id.layout_product_actions)
         View productActions;
         @Bind(R.id.shareButton)
-        IconicsButton shareButton;
+        ImageView shareButton;
         @Bind(R.id.buyNoBuyButton)
-        IconicsButton buyNoBuyButton;
+        ImageView buyNoBuyButton;
         @Bind(R.id.wishlistButton)
-        IconicsButton wishlistButton;
+        ImageView wishlistButton;
 
         @Bind(R.id.view_pager)
         ViewPager pager;
@@ -255,7 +277,7 @@ public class ProductActivity extends BaseDrawerActivity {
         @Bind(R.id.product_owner_name)
         TextView mProductOwner;
         @Bind(R.id.followButton)
-        IconicsButton followButton;
+        ImageView followButton;
 
         @Bind(R.id.product_collection_name)
         TextView mProductCollection;
@@ -276,25 +298,32 @@ public class ProductActivity extends BaseDrawerActivity {
         @Bind(R.id.cartButton)
         IconicsButton cartButton;
 
-        public OverlayViewHolder(View itemView) {
+        public void setProductActions(boolean productActions) {
+            isProductActions = productActions;
+        }
+
+        boolean isProductActions = false;
+
+        public OverlayViewHolder(View itemView, AppBarLayout appBarLayout) {
             super(itemView);
+            this.appBarLayout = appBarLayout;
             ButterKnife.bind(this, itemView);
             productActionsToggle.setOnClickListener(this);
             like.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
-            int oppositeVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
-            layout1.setVisibility(visibility);
-            layout2.setVisibility(visibility);
-            layout3.setVisibility(visibility);
-            productActions.setVisibility(visibility);
-            mProductCollection.setVisibility(visibility);
-            mProductCollection2.setVisibility(visibility);
-            mProductOwner.setVisibility(visibility);
-            pager.setVisibility(visibility);
-            indicator.setVisibility(visibility);
-            productActionsToggle.setVisibility(visibility);
+            if (!isProductActions) {
+                int oppositeVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
+                layout1.setVisibility(visibility);
+                layout2.setVisibility(visibility);
+                layout3.setVisibility(visibility);
+                mProductCollection.setVisibility(visibility);
+                mProductOwner.setVisibility(visibility);
+                pager.setVisibility(visibility);
+                indicator.setVisibility(visibility);
+                productActionsToggle.setVisibility(visibility);
+            }
         }
 
         @Override
@@ -302,24 +331,44 @@ public class ProductActivity extends BaseDrawerActivity {
             if (v == productActionsToggle) {
                 boolean visible = productActions.getVisibility() == View.VISIBLE;
                 if (visible) {
+                    appBarLayout.setExpanded(true);
                     productActions.setVisibility(View.GONE);
                     productActionsToggle.setImageResource(R.drawable.add);
+                    mProductCollection2.setVisibility(View.GONE);
+                    mProductCost2.setVisibility(View.GONE);
+                    mProductName.setVisibility(View.VISIBLE);
+                    layout1.setVisibility(View.VISIBLE);
+                    layout2.setVisibility(View.VISIBLE);
+                    mProductCollection.setVisibility(View.VISIBLE);
+                    mProductCost.setVisibility(View.VISIBLE);
+                    pager.animate().setDuration(0).scaleY(1f).scaleX(1f);
+
                 } else {
+                    isProductActions = true;
+                    appBarLayout.setExpanded(false);
                     productActions.setVisibility(View.VISIBLE);
                     productActionsToggle.setImageResource(R.drawable.close);
+                    mProductCollection2.setVisibility(View.VISIBLE);
+                    mProductCost2.setVisibility(View.VISIBLE);
+                    mProductName.setVisibility(View.GONE);
+                    layout1.setVisibility(View.GONE);
+                    layout2.setVisibility(View.GONE);
+                    mProductCollection.setVisibility(View.GONE);
+                    mProductCost.setVisibility(View.GONE);
+                    pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
             } else if (v == like) {
                 //todo like click
                 Toast.makeText(v.getContext(), "like click", Toast.LENGTH_SHORT).show();
-            }else if(v==shareButton){
+            } else if (v == shareButton) {
                 //todo like click
-                Toast.makeText(v.getContext(),"Share click!",Toast.LENGTH_SHORT).show();
-            }else if(v==buyNoBuyButton){
+                Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
+            } else if (v == buyNoBuyButton) {
                 //todo buy no buy click
-                Toast.makeText(v.getContext(),"Buy No buy click!",Toast.LENGTH_SHORT).show();
-            }else if(v==wishlistButton){
+                Toast.makeText(v.getContext(), "Buy No buy click!", Toast.LENGTH_SHORT).show();
+            } else if (v == wishlistButton) {
                 //todo wishlist click
-                Toast.makeText(v.getContext(),"wishlist click!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
             }
         }
     }
