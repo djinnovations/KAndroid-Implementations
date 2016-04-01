@@ -609,6 +609,7 @@ public class ApiFactory extends ExtractResponse {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("follow", response.userId);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("follow body "+jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
