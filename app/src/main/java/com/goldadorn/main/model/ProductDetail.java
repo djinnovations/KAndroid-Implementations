@@ -85,7 +85,7 @@ public class ProductDetail extends Product {
                 p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
             }
         }
-        p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
+        p.currency = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
         p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
 
