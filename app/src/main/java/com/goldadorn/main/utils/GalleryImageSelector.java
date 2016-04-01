@@ -60,7 +60,7 @@ public class GalleryImageSelector extends ImageSelector
         };
         return items;
     }
-/*
+
     public void openStandardPopup()
     {
         final Item[] items = getOptions();
@@ -75,10 +75,11 @@ public class GalleryImageSelector extends ImageSelector
         builder.setView(view);
         final AlertDialog alertDialog = builder.show();
 
-        final View ourCollections =view.findViewById(R.id.ourCollections);
+        final View ourCollections =view.findViewById(R.id.collection);
         final View camera =view.findViewById(R.id.camera);
         final View gallery =view.findViewById(R.id.gallery);
-
+        View text =view.findViewById(R.id.text);
+        TypefaceHelper.setFont(text);
         View.OnClickListener onClick = new View.OnClickListener(){
 
             public void onClick(View v) {
@@ -101,7 +102,7 @@ public class GalleryImageSelector extends ImageSelector
         //float px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 400, activity.getResources().getDisplayMetrics());
         //alertDialog.getWindow().setLayout(Math.round(px),Math.round(px));
     }
-    */
+
 
     public void onOptionSelect(int which) {
         if (which == PICK_SERVER_GALLERY) {

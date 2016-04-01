@@ -6,10 +6,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.goldadorn.main.R;
@@ -18,9 +21,12 @@ import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.fragments.BaseFragment;
+import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.nshmura.recyclertablayout.RecyclerTabLayout;
 import com.rey.material.widget.ProgressView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +51,13 @@ public class ServerFolderActivity extends BaseActivity{
 
     private ImageSelectorFragment mActivePage;
 
+    @Bind(R.id.indicator)
+    View indicator;
 
+    public View getPageIndicator()
+    {
+        return indicator;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +68,7 @@ public class ServerFolderActivity extends BaseActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String title = getPageTitle();
-        setTitle(title + "");
+        setTitle("");
 
         int iconSize = 4;
         Drawable icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_check, R.color.white, iconSize);
@@ -68,14 +80,10 @@ public class ServerFolderActivity extends BaseActivity{
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
 
 
-        //final View mainHolder = findViewById(R.id.mainHolder);
-
-        //final ProgressView progressBar = (ProgressView)findViewById(R.id.progressBar);
-
-
 
 
     }
+
 
     protected String getPageTitle() {
         return "Select from our collections";

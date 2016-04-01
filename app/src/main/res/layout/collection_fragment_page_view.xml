@@ -13,9 +13,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RecyclerFragment">
 
+
     <android.support.design.widget.TabLayout
         android:background="@color/tabBGColor"
         android:id="@+id/indicator"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:tabGravity="fill"
@@ -24,6 +26,7 @@
         app:tabSelectedTextColor="@color/colorPrimary"
         app:tabIndicatorHeight="5dp"
         app:tabMode="scrollable"/>
+
     <View
         android:layout_width="match_parent"
         android:id="@+id/disableApp"

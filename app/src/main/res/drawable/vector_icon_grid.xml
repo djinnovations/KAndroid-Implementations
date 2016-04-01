@@ -1,7 +1,7 @@
 <vector android:height="16dp" android:viewportHeight="408.0"
     android:viewportWidth="408.0" android:width="16dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#FFFFFF" android:pathData="M170,19.8c0,-9.4 -7.7,-17 -17,-17H17c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V19.8zM34,36.8h102v102H34V36.8z"/>
-    <path android:fillColor="#FFFFFF" android:pathData="M408,19.8c0,-9.4 -7.7,-17 -17,-17H255c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V19.8zM272,36.8h102v102H272V36.8z"/>
-    <path android:fillColor="#FFFFFF" android:pathData="M170,252.2c0,-9.4 -7.7,-17 -17,-17H17c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V252.2zM34,269.2h102v102H34V269.2z"/>
-    <path android:fillColor="#FFFFFF" android:pathData="M408,252.2c0,-9.4 -7.7,-17 -17,-17H255c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V252.2zM272,269.2h102v102H272V269.2z"/>
+    <path android:fillColor="@color/toolbarIconColor" android:pathData="M170,19.8c0,-9.4 -7.7,-17 -17,-17H17c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V19.8zM34,36.8h102v102H34V36.8z"/>
+    <path android:fillColor="@color/toolbarIconColor" android:pathData="M408,19.8c0,-9.4 -7.7,-17 -17,-17H255c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V19.8zM272,36.8h102v102H272V36.8z"/>
+    <path android:fillColor="@color/toolbarIconColor" android:pathData="M170,252.2c0,-9.4 -7.7,-17 -17,-17H17c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V252.2zM34,269.2h102v102H34V269.2z"/>
+    <path android:fillColor="@color/toolbarIconColor" android:pathData="M408,252.2c0,-9.4 -7.7,-17 -17,-17H255c-9.4,0 -17,7.7 -17,17v136c0,9.4 7.7,17 17,17h136c9.4,0 17,-7.7 17,-17V252.2zM272,269.2h102v102H272V269.2z"/>
 </vector>

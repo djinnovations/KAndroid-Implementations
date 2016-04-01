@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 3/2/16.
@@ -183,6 +184,7 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
             public ItemHolder(View itemView)
             {
                 super(itemView);
+                ButterKnife.bind(this, itemView);
             }
             public void updateItemView(Object item,View view,int position)
             {
@@ -240,6 +242,7 @@ public class GaleryGrid extends BaseProfileRecyclerView implements DefaultProjec
             public ItemHolder(View itemView)
             {
                 super(itemView);
+                ButterKnife.bind(this,itemView);
             }
             public void updateItemView(Object item,View view,int position)
             {

@@ -57,34 +57,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Image:"
+            android:text="Add Image:"
             />
         <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
             android:cropToPadding="true"
-            android:background="@drawable/image_palce_holder_background"
+            android:background="@drawable/image_palce_holder_background_dark_border"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="4dp">
 
-                <View
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/vector_icon_upload_image"/>
+            <ImageView
 
-                <TextView
-                    android:layout_centerInParent="true"
-                    android:paddingTop="70dp"
-                    android:textColor="@color/colorPrimary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:text="Upload Image"/>
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="130dp"
-                    android:layout_margin="1dp"
-                    android:id="@+id/previewIamge"
-                    android:scaleType="centerCrop"/>
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:padding="10dp"
+                android:background="@drawable/feed_fotter_button_bg"
+                android:src="@drawable/vector_icon_upload_image"/>
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="1dp"
+                android:id="@+id/previewIamge"
+                android:scaleType="centerCrop"/>
 
     </RelativeLayout>
     </LinearLayout>
