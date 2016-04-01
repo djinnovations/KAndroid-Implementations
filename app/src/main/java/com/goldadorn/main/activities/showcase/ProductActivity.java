@@ -58,13 +58,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends BaseDrawerActivity {
-    //    private final static int UISTATE_CUSTOMIZE = 0;
-    private final static int UISTATE_PRODUCT = 0;
-    private final static int UISTATE_SOCIAL = 1;
+        private final static int UISTATE_CUSTOMIZE = 0;
+    private final static int UISTATE_PRODUCT = 1;
+    private final static int UISTATE_SOCIAL = 2;
     private static final String TAG = ProductActivity.class.getName();
     public static final String EXTRA_PRODUCT = "product";
 
-    private int mUIState = UISTATE_PRODUCT;
+    private int mUIState = UISTATE_CUSTOMIZE;
 
     @Bind(R.id.app_bar)
     AppBarLayout mAppBarLayout;
@@ -222,7 +222,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     public void onResult(ProductResponse result) {
                         if (result.success) {
                             mProductSummary = result.summary;
-                            configureUI(UISTATE_PRODUCT);
+                            configureUI(UISTATE_CUSTOMIZE);
                             mProductAdapter.changeData(mProductSummary.images);
                         }
                     }
@@ -263,7 +263,7 @@ public class ProductActivity extends BaseDrawerActivity {
             social += "@";
             social += mProduct.name.toLowerCase().replace(" ", "");
         }
-        mTabViewHolder.initTabs(getString(R.string.product_information), social, null,
+        mTabViewHolder.initTabs(getString(R.string.customize),getString(R.string.product_information), social,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
