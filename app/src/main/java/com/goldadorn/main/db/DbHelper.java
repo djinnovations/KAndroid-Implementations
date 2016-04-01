@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.constants.Constants;
-import com.goldadorn.main.model.ProductSummary;
+import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -70,7 +70,7 @@ public class DbHelper {
             JSONObject productObj = new JSONObject(response.responseContent);
             ContentValues cv = new ContentValues();
             cv.put(Tables.Products.BASIC_INFO, productObj.toString());
-            response.summary = ProductSummary.extractFromJson(productObj);
+            response.summary = ProductInfo.extractFromJson(productObj);
             context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID) + ""});
         }
     }
