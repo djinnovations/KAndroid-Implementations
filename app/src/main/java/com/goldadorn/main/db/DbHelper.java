@@ -154,6 +154,7 @@ public class DbHelper {
                             collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));
+                            collcv.put(Tables.Collections.CATEGORY, collObj.optString(Constants.JsonConstants.COLLECTIONCATEGORY, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
                             int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
                             if (updatecollcnt == 0)

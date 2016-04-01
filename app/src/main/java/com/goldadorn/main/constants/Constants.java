@@ -26,6 +26,7 @@ public class Constants {
         public static final String COLLECTIONLIST = "collectionList";
         public static final String COLLECTIONTITLE = "collectionTitle";
         public static final String COLLECTIONDESC = "collectionDesc";
+        public static final String COLLECTIONCATEGORY = "collectionCategory";
         public static final String DESCRIPTION = "description";
         public static final String DESIGNERS = "designers";
         public static final String COLLECTIONIMAGE = "collectionImage";
