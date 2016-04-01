@@ -41,7 +41,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
-import com.goldadorn.main.model.ProductSummary;
+import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -58,7 +58,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends BaseDrawerActivity {
-        private final static int UISTATE_CUSTOMIZE = 0;
+    private final static int UISTATE_CUSTOMIZE = 0;
     private final static int UISTATE_PRODUCT = 1;
     private final static int UISTATE_SOCIAL = 2;
     private static final String TAG = ProductActivity.class.getName();
@@ -106,7 +106,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 @Override
                 public void onPageScrolled(int position, float positionOffset,
-                        int positionOffsetPixels) {
+                                           int positionOffsetPixels) {
 
                 }
 
@@ -120,10 +120,10 @@ public class ProductActivity extends BaseDrawerActivity {
 
                 }
             };
-    ProductSummary mProductSummary;
     private CollectionCallBack mCollectionCallBack = new CollectionCallBack();
     User mUser;
     Collection mCollection;
+    public ProductInfo mProductInfo;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -143,7 +143,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (d != null) {
             d.setColorFilter(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
                             getColor(R.color.colorPrimary) : getResources().getColor(R.color
-                    .colorPrimary),
+                            .colorPrimary),
                     PorterDuff.Mode.SRC_IN);
             mToolBar.setNavigationIcon(d);
         }
@@ -221,12 +221,23 @@ public class ProductActivity extends BaseDrawerActivity {
                     @Override
                     public void onResult(ProductResponse result) {
                         if (result.success) {
-                            mProductSummary = result.summary;
-                            configureUI(UISTATE_CUSTOMIZE);
-                            mProductAdapter.changeData(mProductSummary.images);
+                            mProductInfo = result.summary;
+                            mProductAdapter.changeData(mProductInfo.images);
+                            ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                            if (f != null)
+                                f.bindProductInfo(mProductInfo);
+
                         }
                     }
                 });
+        UIController.getProductCustomization(mContext, response, new IResultListener<ProductResponse>() {
+            @Override
+            public void onResult(ProductResponse result) {
+                if (result.success) {
+                    configureUI(UISTATE_CUSTOMIZE);
+                }
+            }
+        });
 
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
@@ -237,7 +248,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.mProductName.setText(mProduct.name);
         mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
         if (mUser != null) {
-            mOverlayVH.mProductOwner.setText("By "+mUser.getName());
+            mOverlayVH.mProductOwner.setText("By " + mUser.getName());
         } else {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
@@ -263,7 +274,7 @@ public class ProductActivity extends BaseDrawerActivity {
             social += "@";
             social += mProduct.name.toLowerCase().replace(" ", "");
         }
-        mTabViewHolder.initTabs(getString(R.string.customize),getString(R.string.product_information), social,
+        mTabViewHolder.initTabs(getString(R.string.customize), getString(R.string.product_information), social,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
@@ -302,9 +313,6 @@ public class ProductActivity extends BaseDrawerActivity {
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(ProductInfoFragment.EXTRA_PRODUCT_SUMMARY, mProductSummary);
-            f.setArguments(bundle);
         } else {
             f = new CustomizeFragment();
         }
@@ -541,7 +549,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         @Override
         public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader,
-                ObjectAsyncLoader.Result data) {
+                                   ObjectAsyncLoader.Result data) {
             mCollection = (Collection) data.object;
             if (mCollection != null) {
                 ProductInfoFragment f =

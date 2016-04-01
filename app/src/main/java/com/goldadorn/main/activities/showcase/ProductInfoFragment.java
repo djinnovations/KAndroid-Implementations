@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +15,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
-import com.goldadorn.main.model.ProductSummary;
+import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -26,14 +27,6 @@ import butterknife.ButterKnife;
  * Created by Vijith Menon on 18/3/16.
  */
 public class ProductInfoFragment extends Fragment {
-    private final static String TAG = ProductInfoFragment.class.getSimpleName();
-    private final static boolean DEBUG = true;
-    public static final String EXTRA_PRODUCT_SUMMARY = "product_summary";
-    private static final String EXTRA_PRODUCT_OWNER = "product_owner";
-    private static final String EXTRA_PRODUCT_COLLECTION = "product_collection";
-    private static final String EXTRA_PRODUCT = "product";
-    private ProductSummary mProductSummary;
-
     @Bind(R.id.product_owner_name)
     TextView mProductOwnerName;
     @Bind(R.id.followButton)
@@ -49,26 +42,24 @@ public class ProductInfoFragment extends Fragment {
 
 
     private User mUser;
-    private Collection mCollection;
     private Product mProduct;
 
+    ProductActivity mProductActivity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-        ProductActivity activity = (ProductActivity) getActivity();
-        mProductSummary =  activity.mProductSummary;
-        mProduct = activity.mProduct;
-        mUser = activity.mUser;
-        mCollection = activity.mCollection;
+                             @Nullable Bundle savedInstanceState) {
+        mProductActivity = (ProductActivity) getActivity();
+        mProduct = mProductActivity.mProduct;
+        mUser = mProductActivity.mUser;
         return inflater.inflate(R.layout.fragment_product_info, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         ((TextView) view.findViewById(R.id.collection_style).findViewById(R.id.title)).setText(
                 "Collection Style");
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
@@ -96,19 +87,22 @@ public class ProductInfoFragment extends Fragment {
         } else {
             view.findViewById(R.id.owner_layout).setVisibility(View.GONE);
         }
-        bindCollectionUI(mCollection);
+        bindCollectionUI(mProductActivity.mCollection);
+        bindProductInfo(mProductActivity.mProductInfo);
         mdescription.setText(mProduct.description);
-
-        mProductDetail.setText(getString(R.string.product_desc, mProductSummary.code,
-                mProductSummary.getDisplayHeight(), mProductSummary.getDisplayWidth(),
-                mProductSummary.getDisplayWeight()));
-
     }
 
-    public void bindCollectionUI(Collection collection){
+    @SuppressLint("StringFormatInvalid")
+    public void bindProductInfo(ProductInfo summary) {
+        mProductDetail.setText(getString(R.string.product_desc, summary.code,
+                summary.getDisplayHeight(), summary.getDisplayWidth(),
+                summary.getDisplayWeight()));
+    }
+
+    public void bindCollectionUI(Collection collection) {
         if (collection != null) {
             mCollectionName.setText(collection.name);
-            mCollectionStyle.setText(mCollection.category);
+            mCollectionStyle.setText(collection.category);
         } else {
             mCollectionName.setVisibility(View.GONE);
             mCollectionStyle.setText("");
