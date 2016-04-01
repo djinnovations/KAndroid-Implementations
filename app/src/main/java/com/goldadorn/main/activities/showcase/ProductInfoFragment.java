@@ -98,7 +98,6 @@ public class ProductInfoFragment extends Fragment {
         }
         bindCollectionUI(mCollection);
         mdescription.setText(mProduct.description);
-        mCollectionStyle.setText(mProductSummary.productType);
 
         mProductDetail.setText(getString(R.string.product_desc, mProductSummary.code,
                 mProductSummary.getDisplayHeight(), mProductSummary.getDisplayWidth(),
@@ -109,8 +108,10 @@ public class ProductInfoFragment extends Fragment {
     public void bindCollectionUI(Collection collection){
         if (collection != null) {
             mCollectionName.setText(collection.name);
+            mCollectionStyle.setText(mCollection.category);
         } else {
             mCollectionName.setVisibility(View.GONE);
+            mCollectionStyle.setText("");
         }
     }
 }

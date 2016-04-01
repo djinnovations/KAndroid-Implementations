@@ -12,6 +12,7 @@ import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
@@ -527,19 +528,18 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = LIKE_TYPE;
 
 
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
+            FormEncodingBuilder builder = new FormEncodingBuilder();
             if (response.productId != -1) {
-                jsonObject.put("product", response.productId);
-                jsonObject.put("collection", response.collectionId);
-                jsonObject.put("designer", response.userId);
+                builder.add("product", response.productId + "");
+                builder.add("collection", response.collectionId + "");
+                builder.add("designer", response.userId + "");
             } else if (response.collectionId != -1) {
-                jsonObject.put("collection", response.collectionId);
-                jsonObject.put("designer", response.userId);
+                builder.add("collection", response.collectionId + "");
+                builder.add("designer", response.userId + "");
             }
-            L.d("LIKE JSON "+jsonObject.toString());
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            L.d("LIKE JSON " + builder.toString());
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("like " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -566,19 +566,17 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = LIKE_TYPE;
 
 
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
+            FormEncodingBuilder builder = new FormEncodingBuilder();
             if (response.productId != -1) {
-                jsonObject.put("product", response.productId);
-                jsonObject.put("collection", response.collectionId);
-                jsonObject.put("designer", response.userId);
+                builder.add("product", response.productId + "");
+                builder.add("collection", response.collectionId + "");
+                builder.add("designer", response.userId + "");
             } else if (response.collectionId != -1) {
-                jsonObject.put("collection", response.collectionId);
-                jsonObject.put("designer", response.userId);
+                builder.add("collection", response.collectionId + "");
+                builder.add("designer", response.userId + "");
             }
-            L.d("UNLIKE JSON "+jsonObject.toString());
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            L.d("LIKE JSON " + builder.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("unLike " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -605,11 +603,10 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = FOLLOW_TYPE;
 
 
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("follow", response.userId);
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            FormEncodingBuilder builder = new FormEncodingBuilder();
+            builder.add("follow", response.userId + "");
+            L.d("follow body " + builder.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("follow " + "Code :" + response.responseCode + " content", response.responseContent.toString());

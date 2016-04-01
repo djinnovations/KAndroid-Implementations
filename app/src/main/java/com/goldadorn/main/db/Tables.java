@@ -72,6 +72,7 @@ public class Tables {
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
         public static final String IMAGEURL = "imageurl";
+        public static final String CATEGORY = "category";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String COUNT_LIKES = "likes";
         public static final String COUNT_PRODUCTS = "products";
@@ -213,6 +214,7 @@ public class Tables {
                 Collections.USER_ID + " INTEGER DEFAULT -1," +
                 Collections.NAME + " TEXT," +
                 Collections.DESCRIPTION + " TEXT," +
+                Collections.CATEGORY + " TEXT," +
                 Collections.IMAGEURL + " TEXT," +
                 Collections.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
