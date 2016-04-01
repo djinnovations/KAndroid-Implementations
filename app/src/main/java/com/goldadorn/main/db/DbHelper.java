@@ -92,6 +92,14 @@ public class DbHelper {
                         ContentValues usercv = new ContentValues();
                         long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
                         usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
+                        usercv.put(Tables.Users.NAME, userObj.optString(Constants.JsonConstants.USERNAME));
+                        usercv.put(Tables.Users.FEATURED, userObj.optInt(Constants.JsonConstants.ISFEATURED));
+                        usercv.put(Tables.Users.TRENDING, userObj.optString(Constants.JsonConstants.ISTRENDIND));
+                        String url = userObj.optString(Constants.JsonConstants.USERPIC, null);
+                        if (url != null) {
+                            url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
+                            usercv.put(Tables.Users.IMAGEURL, url);
+                        }
                         usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
                         usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
                         context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});

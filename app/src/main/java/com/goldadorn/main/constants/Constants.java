@@ -10,6 +10,8 @@ public class Constants {
 
     public class JsonConstants {
         public static final String USERNAME = "userName";
+        public static final String ISFEATURED = "isFeatured";
+        public static final String ISTRENDIND = "isTrending";
         public static final String USERID = "userId";
         public static final String TYPE = "type";
         public static final String COLLECTION_ID = "collectionId";
