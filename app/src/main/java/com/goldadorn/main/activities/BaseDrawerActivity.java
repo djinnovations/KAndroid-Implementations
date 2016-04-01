@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -84,6 +85,18 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     protected void bindViews() {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        UserInfoCache.getInstance(this).start();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        UserInfoCache.getInstance(this).stop();
     }
 
     protected void setupToolbar() {

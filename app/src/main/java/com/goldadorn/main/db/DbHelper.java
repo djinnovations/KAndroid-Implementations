@@ -3,8 +3,10 @@ package com.goldadorn.main.db;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.ProductSummary;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -41,7 +43,7 @@ public class DbHelper {
                     if (updatecount == 0)
                         context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
                 }
-                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI,null);
+                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
         }
     }
@@ -57,7 +59,7 @@ public class DbHelper {
                     cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                     context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                 }
-                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI,null);
+                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
         }
     }
@@ -67,7 +69,7 @@ public class DbHelper {
             JSONObject productObj = new JSONObject(response.responseContent);
             ContentValues cv = new ContentValues();
             cv.put(Tables.Products.BASIC_INFO, productObj.toString());
-            response.summary= ProductSummary.extractFromJson(productObj);
+            response.summary = ProductSummary.extractFromJson(productObj);
             context.getContentResolver().update(Tables.Products.CONTENT_URI, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID) + ""});
         }
     }
@@ -84,25 +86,26 @@ public class DbHelper {
     public static void writeDesignersSocial(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject dataObj = new JSONObject(response.responseContent);
-            if(dataObj.has(Constants.JsonConstants.DESIGNERS)) {
+            if (dataObj.has(Constants.JsonConstants.DESIGNERS)) {
                 JSONArray userlist = dataObj.getJSONArray(Constants.JsonConstants.DESIGNERS);
                 if (userlist.length() != 0) {
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
-                        ContentValues usercv = new ContentValues();
-                        long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
-                        usercv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0));
-                        usercv.put(Tables.Users.NAME, userObj.optString(Constants.JsonConstants.USERNAME));
-                        usercv.put(Tables.Users.FEATURED, userObj.optInt(Constants.JsonConstants.ISFEATURED));
-                        usercv.put(Tables.Users.TRENDING, userObj.optString(Constants.JsonConstants.ISTRENDIND));
+                        int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
+                        User user = UserInfoCache.getInstance(context).getUserInfo(userId, true);
+                        if (user == null) user = new User(userId,User.TYPE_DESIGNER);
+                        user.name = userObj.optString(Constants.JsonConstants.USERNAME);
+                        user.featured = userObj.optInt(Constants.JsonConstants.ISFEATURED) == 1;
+                        user.trending = userObj.optInt(Constants.JsonConstants.ISTRENDIND) == 1;
+                        user.likes_cnt = userObj.optInt(Constants.JsonConstants.TOTALLIKES, 0);
+                        user.followers_cnt = userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0);
+                        user.following_cnt = userObj.optInt(Constants.JsonConstants.FOLLOWING, 0);
                         String url = userObj.optString(Constants.JsonConstants.USERPIC, null);
                         if (url != null) {
                             url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
-                            usercv.put(Tables.Users.IMAGEURL, url);
                         }
-                        usercv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS, 0));
-                        usercv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING, 0));
-                        context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
+                        user.imageUrl = url;
+                        UserInfoCache.updateCacheAndDb(context, user);
                         if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
                             JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
                             for (int j = 0; j < collarray.length(); j++) {
@@ -162,8 +165,8 @@ public class DbHelper {
                         }
                     }
                 }
-                context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI,null);
-                context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI,null);
+                context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI, null);
+                context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI, null);
             }
 
 
