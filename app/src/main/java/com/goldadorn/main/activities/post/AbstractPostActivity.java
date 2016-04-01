@@ -152,8 +152,10 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
         int maxImageSize = getResources().getInteger(R.integer.maxUploadSize);
         viewCreted(people,maxImageSize);
+        setTitle(getPageTitle());
     }
 
+    protected abstract String getPageTitle();
 
 
     @Override

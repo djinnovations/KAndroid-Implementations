@@ -2,20 +2,30 @@ package com.goldadorn.main.modules.home;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.StaticDataManger;
 import com.kimeeo.library.listDataView.viewPager.fragmentPager.BaseHorizontalFragmentViewPager;
 import com.kimeeo.library.model.IFragmentData;
+import com.nshmura.recyclertablayout.RecyclerTabLayout;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class HomePage extends BaseHorizontalFragmentViewPager
 {
@@ -53,7 +63,17 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         BaseActivity baseActivity =(BaseActivity)getActivity();
         return baseActivity.getApp();
     }
-
+    protected View createIndicator(View rootView)
+    {
+        View indicator = rootView.findViewById(R.id.indicator);
+        if(getActivity() instanceof MainActivity && ((MainActivity)getActivity()).getPageIndicator()!=null)
+        {
+            if(indicator!=null)
+                indicator.setVisibility(View.GONE);
+            return ((MainActivity)getActivity()).getPageIndicator();
+        }
+        return indicator;
+    }
     protected DataManager createDataManager()
     {
         DataManager dataManger =new StaticDataManger(getActivity());
@@ -83,4 +103,75 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         return super.getItemTitle(position,navigationObject);
     }
 
+    protected RecyclerTabLayout.Adapter<?> getRecyclerViewTabProvider(ViewPager viewPager) {
+        return new TabIndicatorRecyclerViewAdapter(viewPager,getDataManager());
+    }
+    private void gotoData(Object data) {
+        if(getDataManager()!=null && data!=null)
+        {
+            for (int i = 0; i < getDataManager().size(); i++) {
+                if(getDataManager().get(i)==data)
+                {
+                    gotoItem(i,false);
+                    break;
+                }
+            }
+        }
+    }
+
+    public class TabIndicatorRecyclerViewAdapter extends com.kimeeo.library.listDataView.viewPager.TabIndicatorRecyclerViewAdapter {
+
+        public TabIndicatorRecyclerViewAdapter(ViewPager viewPager, DataManager dataManager) {
+            super(viewPager,dataManager);
+        }
+        protected  ViewHolder getViewHolder(View view)
+        {
+            return new MyViewHolder(view);
+        }
+        protected View getView(ViewGroup parent)
+        {
+            return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_tab_view, parent, false);
+        }
+        public int getItemCount() {
+            return getDataManager().size();
+        }
+
+
+        public class MyViewHolder extends ViewHolder {
+
+            @Bind(R.id.textView)
+            public TextView textView;
+
+            @Bind(R.id.selected)
+            public View selected;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        gotoData(data);
+                    }
+                });
+
+                TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary),textView);
+            }
+            NavigationDataObject data;
+            public void updatedSelectedItem(Object o) {
+                data=(NavigationDataObject) o;
+                textView.setText(data.getName());
+                textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
+                selected.setVisibility(View.VISIBLE);
+            }
+            public void updatedNormalItem(Object o)
+            {
+                data=(NavigationDataObject) o;
+                textView.setText(data.getName());
+                textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
+                selected.setVisibility(View.GONE);
+            }
+        }
+    }
 }

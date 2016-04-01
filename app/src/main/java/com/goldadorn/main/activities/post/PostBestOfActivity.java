@@ -21,6 +21,10 @@ public class PostBestOfActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
     private GalleryImageSelector imageSelector2;
     private GalleryImageSelector imageSelector3;
+    protected String getPageTitle()
+    {
+        return "Best of Three";
+    }
     protected List<File> getFiles()
     {
         boolean isAdded=false;

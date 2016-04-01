@@ -3,17 +3,23 @@ package com.goldadorn.main.activities.post;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.activities.MainActivity;
+import com.goldadorn.main.activities.ServerFolderActivity;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
@@ -22,6 +28,7 @@ import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.viewPager.fragmentPager.BaseHorizontalFragmentViewPager;
 import com.kimeeo.library.listDataView.viewPager.viewPager.HorizontalViewPager;
 import com.kimeeo.library.model.IFragmentData;
+import com.nshmura.recyclertablayout.RecyclerTabLayout;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -29,6 +36,9 @@ import org.apache.http.cookie.Cookie;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 3/2/16.
@@ -60,7 +70,8 @@ public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager imple
             @Override
             public void run() {
                 try {
-                    getRootView().findViewById(R.id.indicator).setVisibility(View.VISIBLE);
+                    //getRootView().findViewById(R.id.indicator).setVisibility(View.VISIBLE);
+
                     getRootView().findViewById(R.id.viewPager).setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.GONE);
                 }catch(Exception e)
@@ -154,6 +165,110 @@ public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager imple
         public void setData(Object data)
         {
             this.data1=this;
+        }
+    }
+
+
+    protected View createIndicator(View rootView)
+    {
+        View indicator = rootView.findViewById(R.id.indicator);
+        if(getActivity() instanceof ServerFolderActivity && ((ServerFolderActivity)getActivity()).getPageIndicator()!=null)
+        {
+            if(indicator!=null)
+                indicator.setVisibility(View.GONE);
+            return ((ServerFolderActivity)getActivity()).getPageIndicator();
+        }
+        return indicator;
+    }
+
+
+
+
+    protected RecyclerTabLayout.Adapter<?> getRecyclerViewTabProvider(ViewPager viewPager) {
+        return new TabIndicatorRecyclerViewAdapter(viewPager,getDataManager());
+    }
+
+    private void gotoData(Object data) {
+        if(getDataManager()!=null && data!=null)
+        {
+            for (int i = 0; i < getDataManager().size(); i++) {
+                if(getDataManager().get(i)==data)
+                {
+                    gotoItem(i,false);
+                    break;
+                }
+            }
+        }
+    }
+
+    public class TabIndicatorRecyclerViewAdapter extends com.kimeeo.library.listDataView.viewPager.TabIndicatorRecyclerViewAdapter {
+
+        public TabIndicatorRecyclerViewAdapter(ViewPager viewPager, DataManager dataManager) {
+            super(viewPager,dataManager);
+        }
+        protected  ViewHolder getViewHolder(View view)
+        {
+            return new MyViewHolder(view);
+        }
+        protected View getView(ViewGroup parent)
+        {
+            return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_tab_view, parent, false);
+        }
+        public int getItemCount() {
+            return getDataManager().size();
+        }
+
+
+        public class MyViewHolder extends ViewHolder {
+
+            @Bind(R.id.textView)
+            public TextView textView;
+
+            @Bind(R.id.selected)
+            public View selected;
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+                ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        gotoData(data);
+                    }
+                });
+                TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary), textView);
+            }
+
+
+
+            ServerFolderObject data;
+            public void updatedNormalItem(Object o)
+            {
+                if(o instanceof ServerFolderObject) {
+                    data = (ServerFolderObject) o;
+                    textView.setText(data.getName());
+                    textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
+                    selected.setVisibility(View.GONE);
+                }
+            }
+            public void updatedSelectedItem(Object o) {
+                if(o instanceof ServerFolderObject) {
+                    data = (ServerFolderObject) o;
+                    textView.setText(data.getName());
+                    textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
+                    selected.setVisibility(View.VISIBLE);
+                }
+            }
+            public void hide() {
+                itemView.setVisibility(View.GONE);
+            }
+
+            public void show() {
+                itemView.setVisibility(View.VISIBLE);
+            }
+
+
         }
     }
 }

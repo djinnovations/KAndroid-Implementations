@@ -19,7 +19,10 @@ import butterknife.Bind;
  */
 public class PostPollActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
-
+    protected String getPageTitle()
+    {
+        return "Buy or Not buy";
+    }
     protected List<File> getFiles()
     {
         if(imageSelector1.isValid()) {

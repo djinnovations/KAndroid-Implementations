@@ -4,17 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/layoutParent"
+    android:background="@color/appBGColor"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activities.MainActivity">
-<LinearLayout
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent" android:orientation="vertical">
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/appBarLayout"
         android:theme="@style/AppTheme.AppBarOverlay"><RelativeLayout
         android:layout_width="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:layout_height="?attr/actionBarSize">
 
         <android.support.v7.widget.Toolbar
@@ -22,14 +27,16 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/toolbarStyle"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
 
-        <View
-            android:layout_width="match_parent"
-            android:id="@+id/disableApp"
-            android:visibility="gone"
-            android:background="@color/darkDisable"
-            android:layout_height="?attr/actionBarSize"/>
+
+
+        </android.support.v7.widget.Toolbar>
+
+
+
     </RelativeLayout>
         <ProgressBar
             android:id="@+id/progressBar"
@@ -40,7 +47,32 @@
             android:visibility="gone"
             android:progressDrawable="@drawable/drawable_progress_webview" />
     </android.support.design.widget.AppBarLayout>
-    <include layout="@layout/fragment_holder" />
-</LinearLayout>
+
+    <com.nshmura.recyclertablayout.RecyclerTabLayout
+        android:id="@+id/indicator"
+        android:layout_width="190dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="50dp"
+        android:elevation="10dp"
+        app:rtl_tabIndicatorColor="#ff000000"
+        app:rtl_tabIndicatorHeight="0dp"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:id="@+id/disableApp"
+        android:visibility="gone"
+        android:background="@color/darkDisable"
+        android:elevation="11dp"
+        android:layout_height="68dp"/>
+
+
+
+    <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

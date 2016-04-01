@@ -3,28 +3,44 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/ourCollections"/>
+    <TextView
+        android:layout_width="wrap_content"
+
+        android:text="Take Photo. Select from Gallery or Select from our product collections"
+        android:textSize="15sp"
+        android:gravity="center_horizontal"
+        android:layout_margin="20dp"
+        android:id="@+id/text"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
-        android:layout_below="@+id/ourCollections"
-        android:layout_width="match_parent"
+        android:layout_marginBottom="30dp"
+        android:layout_below="@+id/text"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/camera"/>
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        android:id="@+id/gallery"/>
+        <ImageButton
+            android:layout_width="65dp"
+            style="@style/circleButton"
+            android:id="@+id/camera"
+            android:src="@drawable/vector_icon_camera"
+            android:layout_height="65dp" />
+        <ImageButton
+            style="@style/circleButton"
+            android:layout_width="65dp"
+            android:id="@+id/gallery"
+            android:src="@drawable/vector_icon_gallery"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="65dp" />
+        <ImageButton
+            style="@style/circleButton"
+            android:layout_width="65dp"
+            android:id="@+id/collection"
+            android:src="@drawable/vector_icon_filter"
+            android:layout_height="65dp" />
     </LinearLayout>
 </RelativeLayout>
