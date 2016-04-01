@@ -38,18 +38,18 @@
 
         <RelativeLayout tools:background="#66ffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
             <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_feed"
+                android:id="@+id/nav_timeline"
                 android:layout_width="@dimen/circle_button_small1_height"
                 android:layout_height="@dimen/circle_button_small1_height"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_feeds"
+                android:src="@drawable/vector_icon_time_line"
                 android:layout_centerHorizontal="true" />
             <TextView
-                android:id="@+id/labelFeed"
+                android:id="@+id/labelTimeLine"
                 style="@style/menuButtonLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/socialFeeds"
+                android:text="@string/timeline"
                 android:gravity="center_horizontal"
                 android:textSize="16sp"
                 android:layout_marginBottom="15dp"
@@ -130,8 +130,28 @@
 
 
 
-        <RelativeLayout tools:background="#66ffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-
+        <RelativeLayout tools:background="#66ffcc"
+            android:visibility="invisible"
+            android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
+            <ImageButton style="@style/menuButton"
+                android:id="@+id/nav_feed"
+                android:layout_width="@dimen/circle_button_small1_height"
+                android:layout_height="@dimen/circle_button_small1_height"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/vector_icon_feeds"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:id="@+id/labelFeed"
+                style="@style/menuButtonLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/socialFeeds"
+                android:gravity="center_horizontal"
+                android:textSize="16sp"
+                android:layout_marginBottom="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
     </LinearLayout>
 

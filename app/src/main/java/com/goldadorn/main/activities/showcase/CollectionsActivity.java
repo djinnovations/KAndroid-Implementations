@@ -281,7 +281,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId, true);
-        String t = user != null ? user.getName() : "";
+        String t = user != null ?"By "+ user.getName() : "";
         mOverlayViewHolder.ownerName.setText(t);
         mOverlayViewHolder.followButton.setVisibility(
                 TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);

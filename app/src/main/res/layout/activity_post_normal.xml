@@ -18,7 +18,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:theme="@style/toolbarStyle"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -47,7 +47,7 @@
 
         <EditText
             android:id="@+id/details"
-            android:hint="Enter Details"
+            android:hint="Say something about this post"
             android:maxHeight="100dp"
             android:maxLines="10"
             android:layout_width="match_parent"
@@ -89,23 +89,17 @@
     </RelativeLayout>
     </LinearLayout>
     </ScrollView>
-        <RelativeLayout
+        <Button
+            android:layout_margin="@dimen/padding_default_2x"
+            android:id="@+id/postNow"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="Publish"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"
             android:layout_width="match_parent"
-            android:background="@color/colorAccent"
-            android:layout_height="wrap_content">
+            android:minHeight="45dp"
+            android:layout_height="wrap_content" />
 
-            <com.mikepenz.iconics.view.IconicsButton
-                android:id="@+id/postNow"
-                android:gravity="center_horizontal|center_vertical"
-                style="@style/linkWhiteButton"
-                android:text="POST {faw-paper_plane}"
-                android:textSize="20sp"
-                android:layout_centerInParent="true"
-                android:layout_width="match_parent"
-                android:minHeight="45dp"
-                android:layout_height="wrap_content" />
-
-        </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
 
