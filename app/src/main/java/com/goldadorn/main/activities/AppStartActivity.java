@@ -73,7 +73,9 @@ public class AppStartActivity extends BaseActivity {
     private void initMixpanel() {
         String token = "7990b395d94157c30ca2d2e3a0e08a69";
         MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, token);
-        mixpanelAPI.getPeople().identify(String.valueOf(((Application) this.getApplicationContext()).getUser().id));
+        User user=((Application) this.getApplicationContext()).getUser();
+        if(user!=null)
+        mixpanelAPI.getPeople().identify(String.valueOf(user.id));
     }
 
     private void kickStart() {
