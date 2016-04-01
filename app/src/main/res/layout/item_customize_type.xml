@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:gravity="center_vertical"
               android:padding="16dp"
@@ -10,6 +11,14 @@
         android:id="@+id/image"
         android:background="@drawable/btn_check"
         android:checked="true"
+        android:text="Plattinum"
+        android:singleLine="true"
+        android:scrollHorizontally="true"
+        android:maxLength="3"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
         android:layout_width="@dimen/circle_button_small1_height"
         android:layout_height="@dimen/circle_button_small1_height"/>
 
@@ -19,5 +28,5 @@
         android:text="New Text"
         android:layout_weight="1"
         android:padding="8dp"
-        android:id="@+id/textView8"/>
+        android:id="@+id/name"/>
 </LinearLayout>
