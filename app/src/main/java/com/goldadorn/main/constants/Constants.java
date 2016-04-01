@@ -64,6 +64,7 @@ public class Constants {
         public static final String CENTERSTONE = "CenterStone";
         public static final String ACCENTSTONE = "AccentStone";
         public static final String GEMSTONE = "gemStone";
+        public static final String PRODUCTDESC = "productDesc";
     }
 
 }

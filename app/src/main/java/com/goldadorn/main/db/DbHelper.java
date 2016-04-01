@@ -32,6 +32,7 @@ public class DbHelper {
                     cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCTID));
 //                    cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                     cv.put(Tables.Products.NAME, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
+                    cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTDESC));
                     cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
                     cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
                     cv.put(Tables.Products.IMAGEURL, ImageFilePath.getImageUrlForProduct(productObj.optInt(Constants.JsonConstants.PRODUCTID)));
