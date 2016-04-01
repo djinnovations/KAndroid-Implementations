@@ -23,6 +23,7 @@ import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
@@ -162,6 +163,7 @@ public class CommentsView extends DefaultVerticalListView
         postCommentHelper = new PostCommentHelper(getActivity(), getApp().getCookies(),postUpdateResult);
         details.addTextChangedListener(new DataTextWatcher(details));
         details.setBackgroundColor(Color.parseColor("#00000000"));
+        TypefaceHelper.setFont(details);
     }
 
     public int getListItemViewType(int position,Object item)
@@ -238,6 +240,7 @@ public class CommentsView extends DefaultVerticalListView
         {
             comment =(Comment)item;
             userName.setText(comment.getUserName());
+            TypefaceHelper.setFont(userName,details,time);
 
             time.setText(comment.getRedableDate());
 

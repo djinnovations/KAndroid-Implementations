@@ -89,6 +89,7 @@
     <color name="menuIconColor">#ffffff</color>
     <color name="feedCardBGColor">#ffffff</color>
     <color name="feedFotterDivColor">#cfcfcf</color>
+    <color name="avtarBorderColor">#cfcfcf</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

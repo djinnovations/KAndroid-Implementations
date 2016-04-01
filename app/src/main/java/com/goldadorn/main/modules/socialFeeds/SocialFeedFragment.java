@@ -1256,7 +1256,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
             Picasso.with(getContext())
                     .load(socialPost.getUserPic())
                     .tag(getContext())
-                    .placeholder(R.drawable.vector_image_place_holder_profile)
+                    .placeholder(R.drawable.vector_image_place_holder_profile_dark)
                     .resize(100,100)
                     .into(userImage);
             updatePostView(socialPost, view, position);

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:background="@color/white"
     android:padding="@dimen/padding_default"
     android:layout_height="wrap_content">
 
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="@color/feedFotterDivColor"/>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <EditText
         android:layout_weight="1"
         android:layout_width="0dp"
@@ -26,5 +33,5 @@
         android:layout_height="@dimen/circle_button_height"
         android:id="@+id/send"/>
 
-
+    </LinearLayout>
 </LinearLayout>

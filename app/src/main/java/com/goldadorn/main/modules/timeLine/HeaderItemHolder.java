@@ -200,7 +200,7 @@ public class HeaderItemHolder{
                 followLink.setText("Unfollow");
         }
 
-
+        //people.setBackgroundPic("http://whatatimeline.com/covers/1330597507de0/balloons-sunset-view-facebook-cover.jpg");
         if(people.getBackgroundPic()!=null && people.getBackgroundPic().equals("")==false)
             Picasso.with(context).load(people.getBackgroundPic()).into(coverImage);
 

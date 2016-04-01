@@ -15,7 +15,12 @@
         android:id="@+id/coverImage"
         android:scaleType="centerCrop"/>
 
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/sliding_up_panel_above_shadow"
+        />
     <LinearLayout
         android:orientation="vertical"
         android:layout_marginTop="-15dp"
@@ -44,6 +49,11 @@
                 <TextView
                     android:layout_gravity="center_horizontal"
                     android:text="Following"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="2"
+                    android:shadowColor="#66000000"
+                    android:textColor="#ffffff"
                     android:id="@+id/countFollowingLabel"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
@@ -51,7 +61,11 @@
                 <TextView
                     android:id="@+id/countFollowing"
                     android:textSize="20sp"
-
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="2"
+                    android:shadowColor="#66000000"
+                    android:textColor="#ffffff"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -86,11 +100,21 @@
                 <TextView
                     android:layout_gravity="center_horizontal"
                     android:text="Followers"
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="2"
+                    android:shadowColor="#66000000"
+                    android:textColor="#ffffff"
                     android:id="@+id/countFollowersLabel"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
+                    android:shadowDx="0"
+                    android:shadowDy="0"
+                    android:shadowRadius="2"
+                    android:shadowColor="#66000000"
+                    android:textColor="#ffffff"
                     android:id="@+id/countFollowers"
                     android:textSize="20sp"
                     android:layout_gravity="center_horizontal"
@@ -105,6 +129,11 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:id="@+id/userName"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"
+            android:shadowColor="#66000000"
+            android:textColor="#ffffff"
             android:layout_height="wrap_content"
             tools:text="User Name"
             android:textSize="20sp"/>
@@ -113,6 +142,11 @@
             android:text="Designer"
             android:id="@+id/designer"
             android:textSize="14sp"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="4"
+            android:shadowColor="#66000000"
+            android:textColor="#ffffff"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"/>
@@ -122,6 +156,10 @@
         <TextView
             style="@style/linkWhiteButton"
             android:text="Follow"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"
+            android:shadowColor="#66000000"
             android:id="@+id/followLink"
             android:textSize="18sp"
             android:layout_marginTop="@dimen/padding_default_half"
