@@ -39,7 +39,6 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
-import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -410,7 +409,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
         @Bind(R.id.collection_owner_name)
         TextView ownerName;
         @Bind(R.id.followButton)
-        IconicsButton followButton;
+        ImageView followButton;
         @Bind(R.id.collection_description)
         TextView description;
         @Bind(R.id.collection_extra_description)
@@ -431,9 +430,9 @@ public class CollectionsActivity extends BaseDrawerActivity {
         @Bind(R.id.likes_count)
         TextView likesCount;
         @Bind(R.id.likeButton)
-        IconicsButton like;
+        ImageView like;
         @Bind(R.id.shareButton)
-        IconicsButton share;
+        ImageView share;
 
         public void setBadges(boolean featured, boolean trending) {
             mFeatured.setVisibility(featured ? View.VISIBLE : View.GONE);
@@ -462,12 +461,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
             if (v == like) {
                 v.setEnabled(false);
                 Collection collection = (Collection) v.getTag();
-                UIController.like(v.getContext(), collection, !v.isSelected(),
+                final boolean isLiked = v.isSelected();
+                UIController.like(v.getContext(), collection, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success);
+                                v.setSelected(result.success != isLiked);
                             }
                         });
             }

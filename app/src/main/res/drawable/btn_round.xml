@@ -5,5 +5,11 @@
             <gradient android:type="radial" android:gradientRadius="100%" android:startColor="#bf03bf" android:centerColor="#33bf03bf" android:endColor="#00ff00ff" />
         </shape>
     </item>
+    <item android:state_pressed="true" >
+        <shape android:shape="oval" >
+            <padding android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp" />
+            <solid android:color="@color/colorPrimary"/>
+        </shape>
+    </item>
 
 </selector>

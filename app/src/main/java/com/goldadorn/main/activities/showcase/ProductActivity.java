@@ -237,7 +237,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.mProductName.setText(mProduct.name);
         mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
         if (mUser != null) {
-            mOverlayVH.mProductOwner.setText(mUser.getName());
+            mOverlayVH.mProductOwner.setText("By "+mUser.getName());
         } else {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);

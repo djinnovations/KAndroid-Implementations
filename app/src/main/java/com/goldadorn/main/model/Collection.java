@@ -13,7 +13,7 @@ import java.io.Serializable;
 public class Collection implements Serializable {
     public final int id;
     public int userId;
-    public String name, description;
+    public String name, description, category;
     public float image_a_r = 1;
     public int likecount = 0, productcount = 0;
     public boolean isTrending,isFeatured;
@@ -29,6 +29,7 @@ public class Collection implements Serializable {
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
+        t.category = cursor.getString(cursor.getColumnIndex(Tables.Collections.CATEGORY));
         if (t.image_a_r == 0)
             t.image_a_r = 1;
         t.productcount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_PRODUCTS));

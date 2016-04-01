@@ -16,6 +16,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -39,7 +40,6 @@ import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
-import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -125,7 +125,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
-        initTabs();
+        mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
 
         final DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
@@ -216,6 +216,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     public void onResult(TimelineResponse result) {
                         mProgressFrame.setVisibility(View.GONE);
                         mUser = mShowCaseAdapter.getUser(0);
+                        initTabs();
                     }
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -224,9 +225,13 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
     private void initTabs() {
-        mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
+        String social = getString(R.string.social).toLowerCase();
+        if (mUser != null && !TextUtils.isEmpty(mUser.name)) {
+            social += "@";
+            social += mUser.name.toLowerCase().replace(" ", "");
+        }
         mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products),
-                getString(R.string.social), new TabViewHolder.TabClickListener() {
+                social, new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
                         configureUI(position);
@@ -435,11 +440,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         TextView mFollowingCount;
 
         @Bind(R.id.likeButton)
-        IconicsButton mLikeButton;
+        ImageView mLikeButton;
         @Bind(R.id.followButton)
-        IconicsButton mFollowButton;
+        ImageView mFollowButton;
         @Bind(R.id.shareButton)
-        IconicsButton mShareButton;
+        ImageView mShareButton;
 
         public OverlayViewHolder(View itemView) {
             super(itemView);

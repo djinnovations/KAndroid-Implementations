@@ -25,9 +25,10 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
-import com.goldadorn.main.utils.L;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
+
+import java.util.Locale;
 
 /**
  * Created by Kiran BH on 10/03/16.
@@ -116,12 +117,13 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                 try {
                     v.setEnabled(false);
                     Collection collection = (Collection) v.getTag();
-                    UIController.like(v.getContext(), collection, !v.isSelected(), new
+                    final boolean isLiked = v.isSelected();
+                    UIController.like(v.getContext(), collection, !isLiked, new
                             IResultListener<LikeResponse>() {
                                 @Override
                                 public void onResult(LikeResponse result) {
                                     v.setEnabled(true);
-                                    v.setSelected(result.success);
+                                    v.setSelected(result.success != isLiked);
                                 }
                             });
                 } catch (Exception e) {
@@ -153,13 +155,12 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             final Collection collection = getCollection(position);
             Picasso.with(context).load(collection.getImageUrl()).fit().into(holder.image);
             holder.name.setText(collection.name);
-            holder.description.setText(collection.description);
-            holder.likeCount.setText("" + collection.likecount);
-            holder.extra.setText(collection.productcount+" Products");
+            holder.description.setText(collection.category);
+            holder.likeCount.setText(String.format(Locale.getDefault(),"%d",collection.likecount));
+            holder.extra.setText(String.format(Locale.getDefault(),"%d Products",collection.productcount));
             holder.itemView.setTag(position);
             holder.like.setTag(collection);
             holder.image.getLayoutParams().height = (int) (collection.image_a_r*cardWidth);
-            L.d("OOOOO","ar: "+collection.image_a_r+" "+holder.image.getLayoutParams().height+" "+holder.image.getWidth());
         }
 
 

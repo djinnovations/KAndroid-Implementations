@@ -41,7 +41,6 @@
         android:paddingBottom="12dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
-        android:hint="Designer name"
         android:gravity="center"
         android:paddingTop="12dp"
         android:text="Large Text"
@@ -68,29 +67,29 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <com.mikepenz.iconics.view.IconicsButton
+        <ImageView
             android:id="@+id/likeButton"
-            style="@style/ShowcaseButton.White"
+            style="@style/RoundButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"
-            android:text="@string/icon_liked_post"/>
+            android:src="@drawable/ic_w_like"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
+        <ImageView
             android:id="@+id/followButton"
-            style="@style/ShowcaseButton.White"
+            style="@style/RoundButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"
-            android:text="@string/icon_follow_user"/>
+            android:src="@drawable/ic_w_follow"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
+        <ImageView
             android:id="@+id/shareButton"
-            style="@style/ShowcaseButton.White"
+            style="@style/RoundButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="@dimen/padding_default_2x"
-            android:text="@string/icon_share_post"/>
+            android:src="@drawable/ic_w_share"/>
 
     </LinearLayout>
 
