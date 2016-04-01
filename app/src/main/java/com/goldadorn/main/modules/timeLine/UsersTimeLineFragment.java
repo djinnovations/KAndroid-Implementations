@@ -90,8 +90,10 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
         {
             super(context,delegate,cookies);
         }
+           /*
         protected void dataIn(BaseDataParser value) {
             super.dataIn(value);
+
             if(value instanceof TimelineFeedResult)
             {
                 People userInfo=((TimelineFeedResult)value).userinfo;
@@ -107,8 +109,9 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
 
                 }
             }
-        }
 
+        }
+ */
     }
 
     /*
@@ -145,11 +148,11 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
             return params;
         }catch (Exception e){}
         return null;
-
     }
     public void onViewCreated(View view) {
         super.onViewCreated(view);
         getFloatingActionsMenu().setVisibility(View.GONE);
+        getFabBackImage().setVisibility(View.GONE);
         followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
     }
     protected void configDataManager(DataManager dataManager) {
@@ -158,7 +161,7 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
             setUser(userData);
             dataManager.setRefreshItemPos(1);
             dataManager.setRefreshEnabled(true);
-            dataManager.add(userData);
+        //    dataManager.add(userData);
         }
     }
     protected People crateUser()

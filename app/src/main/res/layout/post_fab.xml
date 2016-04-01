@@ -13,6 +13,7 @@
 
     <ImageView
         android:layout_marginBottom="-5dp"
+        android:id="@+id/fabBackImage"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"

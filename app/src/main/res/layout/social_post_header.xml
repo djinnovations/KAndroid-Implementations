@@ -3,13 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="@dimen/padding_default"
+    android:layout_marginTop="@dimen/padding_default"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="wrap_content">
 
         <org.github.images.CircularImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/padding_default"
             tools:background="#cccccc"
             android:id="@+id/userImage"
             android:layout_alignParentLeft="true"
@@ -44,7 +45,7 @@
 
 
         <com.mikepenz.iconics.view.IconicsButton
-            style="@style/circleButton"
+            style="@style/postFotterButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:text="@string/icon_follow_user"
             android:layout_height="@dimen/circle_button_small_height"
@@ -69,4 +70,11 @@
             android:layout_alignStart="@+id/userImage" />
 
 
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:id="@+id/divTop"
+        android:background="@color/feedFotterDivColor"/>
 </RelativeLayout>

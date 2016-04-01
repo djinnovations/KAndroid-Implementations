@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/26/16.
@@ -159,6 +160,7 @@ public class VotersView extends FreeFlowLayout implements DefaultProjectDataMana
         public LikeItemHolder(View itemView)
         {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
         }

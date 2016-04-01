@@ -5,6 +5,8 @@
     android:id="@+id/card_view"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="@dimen/padding_default"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/feedCardCornerRadius"
     android:layout_gravity="center"
     android:elevation="10dp"
 
@@ -16,6 +18,7 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:background="@color/feedCardBGColor"
     android:layout_height="match_parent">
 
     <include layout="@layout/social_post_header"/>
@@ -64,8 +67,8 @@
                 tools:visibility="visible"
                 android:background="@drawable/vector_icons_buy_now"
                 android:layout_margin="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
 
 
             <com.mikepenz.iconics.view.IconicsButton
@@ -120,8 +123,8 @@
                 tools:visibility="visible"
                 android:background="@drawable/vector_icons_buy_now"
                 android:layout_margin="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
 
 
             <com.mikepenz.iconics.view.IconicsButton
@@ -176,8 +179,8 @@
                 tools:visibility="visible"
                 android:background="@drawable/vector_icons_buy_now"
                 android:layout_margin="0dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:layout_width="25dp"
+                android:layout_height="25dp"/>
 
 
             <com.mikepenz.iconics.view.IconicsButton

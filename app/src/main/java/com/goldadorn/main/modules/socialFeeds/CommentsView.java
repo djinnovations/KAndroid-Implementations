@@ -230,6 +230,7 @@ public class CommentsView extends DefaultVerticalListView
         public CommentItemHolder(View itemView)
         {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
         }

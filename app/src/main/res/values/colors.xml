@@ -87,6 +87,8 @@
     <color name="disabled_grey">#cccccc</color>
     <color name="headerColor">#7c624b</color>
     <color name="menuIconColor">#ffffff</color>
+    <color name="feedCardBGColor">#ffffff</color>
+    <color name="feedFotterDivColor">#cfcfcf</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

@@ -70,9 +70,9 @@
     </style>
 
     <style name="postFotterButton" parent="@android:style/Widget.Button">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@drawable/post_fotter_button_text_color</item>
-        <item name="android:background">@drawable/link_button_bg</item>
+        <item name="android:background">@drawable/feed_fotter_button_bg</item>
     </style>
     <style name="socialLoginButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">26sp</item>

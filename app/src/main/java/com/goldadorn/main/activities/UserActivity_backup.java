@@ -1,46 +1,31 @@
 package com.goldadorn.main.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
-import com.goldadorn.main.modules.timeLine.HeaderItemHolder;
 import com.goldadorn.main.modules.timeLine.MyTimeLineFragment;
 import com.goldadorn.main.modules.timeLine.UsersTimeLineFragment;
 import com.goldadorn.main.utils.IDUtils;
-import com.goldadorn.main.utils.URLHelper;
-import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.fragments.BaseFragment;
-import com.kimeeo.library.listDataView.dataManagers.PageData;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
  */
-public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetChangedListener{
-    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
-
-    TextView titleText;
-
+public class UserActivity_backup extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_activity);
+        setContentView(R.layout.activity_open_web);
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -68,11 +53,11 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         people.setIsDesigner(isDesigner);
         people.setIsFollowing(isFollowing);
 
-        //setTitle(name + "");
-        titleText= (TextView) findViewById(R.id.titleText);
-        titleText.setText(name);
-        setTitle("");
+        setTitle(title + "");
         FragmentManager fragmentManager = getSupportFragmentManager();
+
+
+
         NavigationDataObject navigationObject;
         if(isSelf)
             navigationObject= new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, MyTimeLineFragment.class);
@@ -82,42 +67,7 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
 
         BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
-
-        new HeaderItemHolder(this,getApp(),findViewById(R.id.userHeader),people);
-
-        AppBarLayout mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
-        mAppBarLayout.addOnOffsetChangedListener(this);
-        startAlphaAnimation(titleText, 0, View.INVISIBLE);
-
-
     }
-
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-        handleAlphaOnTitle(percentage);
-    }
-
-    private void handleAlphaOnTitle(float percentage) {
-        if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
-            startAlphaAnimation(titleText, 0, View.VISIBLE);
-
-        } else {
-            startAlphaAnimation(titleText, 0, View.INVISIBLE);
-
-        }
-    }
-
-
-    public static void startAlphaAnimation (View v, long duration, int visibility) {
-        AlphaAnimation alphaAnimation = (visibility == View.VISIBLE)? new AlphaAnimation(0f, 1f): new AlphaAnimation(1f, 0f);
-        alphaAnimation.setDuration(duration);
-        alphaAnimation.setFillAfter(true);
-        v.startAnimation(alphaAnimation);
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

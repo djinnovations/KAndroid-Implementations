@@ -45,6 +45,7 @@ import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.ImageLoaderUtils;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
@@ -303,6 +304,13 @@ public class SocialFeedFragment extends DefaultVerticalListView
     @Bind(R.id.disableApp)
     View disableAppCover;
 
+    @Bind(R.id.fabBackImage)
+    View fabBackImage;
+
+    public View getFabBackImage()
+    {
+        return  fabBackImage;
+    }
 
     @Override
     public void garbageCollectorCall()
@@ -668,12 +676,13 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
+            TypefaceHelper.setFont(notBuyLabel, buyLabel);
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
             pollLabel.setVisibility(View.VISIBLE);
             votePostButton.setVisibility(View.VISIBLE);
-            pollLabel.setText(getActivity().getString(R.string.voteCountLabel) + item.getVoteCount() + "");
+            pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
 
             if(item.getImg1()!=null && item.getImg1().url.trim().equals("")==false)
             {
@@ -832,14 +841,16 @@ public class SocialFeedFragment extends DefaultVerticalListView
             option3Image.setOnClickListener(itemClick);
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
+
+            TypefaceHelper.setFont(option1Label, option2Label, option3Label);
+
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
 
             pollLabel.setVisibility(View.VISIBLE);
             votePostButton.setVisibility(View.VISIBLE);
-            pollLabel.setText(getActivity().getString(R.string.voteCountLabel) + item.getVoteCount() + "");
-
+            pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             detailsHolder.setVisibility(View.VISIBLE);
 
             Boolean isVoted = isVoted(item,false);
@@ -1171,7 +1182,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         socialPost.setLikeCount(socialPost.getLikeCount()-1);
                     else
                         socialPost.setLikeCount(socialPost.getLikeCount() + 1);
-                    likesLabel.setText(getActivity().getString(R.string.likesCountLabel) + socialPost.getLikeCount() + "");
+                    likesLabel.setText(socialPost.getLikeCount()+getActivity().getString(R.string.likesCountLabel));
 
                     socialPost.setIsLiked(isLiked);
                     if(socialPost.getIsLiked()==1) {
@@ -1206,7 +1217,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         public PostItemHolder(View itemView)
         {
             super(itemView);
-
+            ButterKnife.bind(this,itemView);
             String appPlayStoreURL=getString(R.string.palyStoreBasicURL)+ getActivity().getPackageName();
             shareActionData=new NavigationDataObject(IDUtils.generateViewId(), NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE, appPlayStoreURL);
 
@@ -1222,6 +1233,10 @@ public class SocialFeedFragment extends DefaultVerticalListView
             sharePostButton.setOnClickListener(itemClick);
             commentPostButton.setOnClickListener(itemClick);
 
+            TypefaceHelper.setFont(userName, age, details,recomandationLabel);
+
+            TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary),likesLabel,pollLabel,commentsLabel,shareLabel);
+
         }
         final public void updateItemView(Object item,View view, int position) {
             socialPost =(SocialPost)item;
@@ -1233,9 +1248,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setVisibility(View.GONE);
             details.setText(socialPost.getDescription());
 
-            commentsLabel.setText(getActivity().getString(R.string.commentCountLabel)+socialPost.getCommentCount()+"");
-            likesLabel.setText(getActivity().getString(R.string.likesCountLabel) + socialPost.getLikeCount() + "");
-            shareLabel.setText(getActivity().getString(R.string.shareCOuntLabel) + 12 + "");
+            commentsLabel.setText(socialPost.getCommentCount()+ getActivity().getString(R.string.commentCountLabel));
+            likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));
+
+
+            shareLabel.setText(socialPost.getShareCount() + getActivity().getString(R.string.shareCOuntLabel));
             Picasso.with(getContext())
                     .load(socialPost.getUserPic())
                     .tag(getContext())

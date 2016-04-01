@@ -57,6 +57,20 @@ public class TypefaceHelper {
         }
     }
 
+    public static void setFont(String fontName,View... views) {
+        View view;
+
+        for (int i = 0; i < views.length; i++) {
+            view = views[i];
+            if(view instanceof TextView)
+                setFont((TextView)view,fontName);
+            else if(view instanceof EditText)
+                setFont((EditText)view,fontName);
+            else if(view instanceof Button)
+                setFont((Button)view,fontName);
+        }
+    }
+
 
     private static Typeface getTypeFace(Context context,String fontName) {
         Typeface typeface = map.get(fontName);

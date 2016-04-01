@@ -15,6 +15,7 @@ import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
@@ -23,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/19/16.
@@ -124,6 +126,15 @@ public class FindPeopleFragment extends DefaultVerticalListView
         @Bind(R.id.countFollowers)
         TextView countFollowers;
 
+        @Bind(R.id.countFollowingLabel)
+        TextView countFollowingLabel;
+
+        @Bind(R.id.countFollowersTitle)
+        TextView countFollowersTitle;
+
+
+
+
         @Bind(R.id.followButton)
         Button followButton;
 
@@ -162,9 +173,13 @@ public class FindPeopleFragment extends DefaultVerticalListView
         public PeopleItemHolder(View itemView)
         {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
             followButton.setOnClickListener(itemClick);
+
+            TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), designer, countFollowing, countFollowers);
+            TypefaceHelper.setFont(userName,countFollowingLabel,countFollowersTitle);
         }
         public void updateItemView(Object item,View view,int position)
         {

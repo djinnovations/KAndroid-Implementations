@@ -30,6 +30,7 @@ import com.squareup.picasso.Picasso;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/26/16.
@@ -176,6 +177,7 @@ public class SimpleImageArray extends HorizontalViewPager
         public PageView(View itemView)
         {
             super(itemView);
+            ButterKnife.bind(this, itemView);
         }
 
         public void updateItemView(Object item,View view,int position)

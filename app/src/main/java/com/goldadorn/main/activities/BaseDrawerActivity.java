@@ -51,8 +51,28 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
     @OnClick({ R.id.nav_home, R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us })
-    public void pickDoor(View door) {
-        int id = door.getId();
+    public void menuButtonClick(View view) {
+        int id = view.getId();
+        menuAction(id);
+    }
+
+    @OnClick({ R.id.labelHome,R.id.labelFeed,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart })
+    public void menuLabelClick(View view) {
+        int id = view.getId();
+        if(id == R.id.labelHome)
+            id =R.id.nav_home;
+        else if(id == R.id.labelFeed)
+            id =R.id.nav_feed;
+        else if(id == R.id.labelShowcase)
+            id =R.id.nav_showcase;
+        else if(id == R.id.labelCollection)
+            id =R.id.nav_collections;
+        else if(id == R.id.labelCart)
+            id =R.id.nav_cart;
+        menuAction(id);
+    }
+
+    private void menuAction(int id) {
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(id);
         if(navigationDataObject !=null)
             action(navigationDataObject);

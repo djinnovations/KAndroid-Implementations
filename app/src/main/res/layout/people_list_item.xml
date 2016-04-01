@@ -12,8 +12,8 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_marginTop="@dimen/padding_default"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         tools:background="#cccccc"
         android:id="@+id/userImage"
         android:layout_alignParentLeft="true"
@@ -23,31 +23,41 @@
         app:shadow="false"
         android:layout_centerHorizontal="true"/>
 
-    <TextView
+    <LinearLayout
+        tools:background="#cccccc"
+        android:orientation="vertical"
         android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:text="User Name"
-        android:id="@+id/userName"
-        android:maxLines="2"
+        android:layout_centerVertical="true"
         android:layout_alignTop="@+id/userImage"
         android:layout_toRightOf="@+id/userImage"
         android:layout_toEndOf="@+id/userImage"
         android:layout_toLeftOf="@+id/followingPort"
-        android:layout_toStartOf="@+id/followingPort" />
+        android:layout_toStartOf="@+id/followingPort">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text=""
-        tools:text="Desginer"
-        android:id="@+id/designer"
-        android:textSize="10sp"
-        android:layout_below="@+id/userName"
-        android:layout_alignLeft="@+id/userName"
-        android:layout_alignStart="@+id/userName" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="User Name"
+            android:id="@+id/userName"
+            android:maxLines="2"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            tools:text="Desginer"
+            android:id="@+id/designer"
+            android:textSize="10sp"/>
+
+    </LinearLayout>
+
+
 
 
     <LinearLayout
@@ -62,16 +72,18 @@
         android:layout_toLeftOf="@+id/followersPort"
         android:layout_toStartOf="@+id/followersPort">
         <TextView
-            android:id="@+id/countFollowing"
             android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/countFollowingLabel"
             android:text="Following"
             android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/countFollowing"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -86,22 +98,24 @@
         android:layout_toLeftOf="@+id/followButton"
         android:layout_toStartOf="@+id/followButton">
         <TextView
-            android:id="@+id/countFollowers"
             android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/countFollowersTitle"
             android:text="Followers"
             android:textSize="11sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/countFollowers"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
     <com.mikepenz.iconics.view.IconicsButton
         android:layout_alignParentRight="true"
-        style="@style/circleButton"
-        android:layout_marginRight="@dimen/padding_default_2x"
+        style="@style/postFotterButton"
+        android:layout_marginRight="@dimen/padding_default"
         android:layout_width="@dimen/circle_button_small_height"
         android:text="@string/icon_follow_user"
         android:layout_centerVertical="true"

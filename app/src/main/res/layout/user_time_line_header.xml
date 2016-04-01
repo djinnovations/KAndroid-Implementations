@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_view"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="@dimen/padding_default"
-    android:layout_gravity="center"
-    android:elevation="10dp"
-
+    android:background="@drawable/side_nav_bar"
+    android:id="@+id/userHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:background="@drawable/side_nav_bar"
-        android:layout_height="190dp">
     <ImageView
-        android:src="@drawable/header_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/coverImage"
         android:scaleType="centerCrop"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#44ffffff"
-        />
 
     <LinearLayout
         android:orientation="vertical"
+        android:layout_marginTop="-15dp"
         android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -56,6 +44,7 @@
                 <TextView
                     android:layout_gravity="center_horizontal"
                     android:text="Following"
+                    android:id="@+id/countFollowingLabel"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -97,6 +86,7 @@
                 <TextView
                     android:layout_gravity="center_horizontal"
                     android:text="Followers"
+                    android:id="@+id/countFollowersLabel"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -130,10 +120,10 @@
 
 
         <TextView
-            style="@style/linkButton"
+            style="@style/linkWhiteButton"
             android:text="Follow"
             android:id="@+id/followLink"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:layout_marginTop="@dimen/padding_default_half"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,13 +133,4 @@
 
 
 
-
-
-
-
-
-
-    </RelativeLayout>
-
-
-</android.support.v7.widget.CardView>
+</RelativeLayout>

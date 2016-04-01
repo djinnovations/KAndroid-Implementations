@@ -24,5 +24,6 @@ public class MyTimeLineFragment extends UsersTimeLineFragment {
     public void onViewCreated(View view) {
         super.onViewCreated(view);
         getFloatingActionsMenu().setVisibility(View.GONE);
+        getFabBackImage().setVisibility(View.GONE);
     }
 }

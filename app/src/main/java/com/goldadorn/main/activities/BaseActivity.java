@@ -19,6 +19,7 @@ import com.goldadorn.main.utils.URLHelper;
 import com.hitherejoe.tabby.CustomTabActivityHelper;
 import com.hitherejoe.tabby.WebViewActivity;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.actions.OpenCharomeTab;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.model.BaseApplication;
 
@@ -187,10 +188,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 data.put("TITLE", navigationDataObject.getName());
                 //action.launchActivity(target, null, data, false);
 
-                Action action1 =new Action(this,true, new String[]{url},null,null,true);
-                action1.setWebActivity(target);
 
-
+                OpenCharomeTab action1 =new OpenCharomeTab(this);
+                action1.setWebActivityClass(target);
 
                 final Class targetWeb=target;
                 CustomTabActivityHelper.CustomTabFallback customTabFallback = new CustomTabActivityHelper.CustomTabFallback()
@@ -203,7 +203,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }
                 };
                 action1.setCustomTabFallback(customTabFallback);
-                action1.openChromeTab(url);
+                action1.perform(url);
                 return true;
             }
 

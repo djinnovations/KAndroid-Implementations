@@ -175,6 +175,7 @@ public class LikesView extends FreeFlowLayout implements DefaultProjectDataManag
         public LikeItemHolder(View itemView)
         {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
         }

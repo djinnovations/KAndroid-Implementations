@@ -53,6 +53,7 @@ public class SocialPost extends ServerError implements IParseableObject {
      */
 
     private int isFollowing;
+    private Integer shareCount;
 
     public boolean isSelf() {
         return isSelf;
@@ -179,7 +180,7 @@ public class SocialPost extends ServerError implements IParseableObject {
 
         userPic = URLHelper.parseImageURL(userPic);
 
-        //String oldData = image1;
+        String oldData = image1;
         if(image1!=null && image1.trim().equals("")==false)
             image1= URLHelper.parseImageURL(image1);
         else
@@ -218,7 +219,7 @@ public class SocialPost extends ServerError implements IParseableObject {
 
 
 
-        //recommendation1=recommendation2=recommendation3=oldData;
+        recommendation1=recommendation2=recommendation3=recommendation4=oldData;
 
         recommendation = new ArrayList<>();
         recommendation1= URLHelper.parseImageURL(recommendation1);
@@ -513,5 +514,13 @@ public class SocialPost extends ServerError implements IParseableObject {
 
     public int getIsFollowing() {
         return isFollowing;
+    }
+
+    public Integer getShareCount() {
+        return shareCount;
+    }
+
+    public void setShareCount(Integer shareCount) {
+        this.shareCount = shareCount;
     }
 }
