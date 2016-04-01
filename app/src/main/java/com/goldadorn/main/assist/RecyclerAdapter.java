@@ -1,8 +1,10 @@
-package com.goldadorn.main.activities.showcase;
+package com.goldadorn.main.assist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+
+import com.goldadorn.main.activities.showcase.IEnabler;
 
 /**
  * Created by Kiran BH on 24/04/15.
@@ -27,7 +29,7 @@ public abstract class RecyclerAdapter<T extends ViewHolder> extends RecyclerView
         return (T) mFactory.onCreateViewHolder(parent, viewType);
     }
 
-    public abstract void onNewViewHolder(T holder);
+    public  void onNewViewHolder(T holder){};
 
     @Override
     public void setEnabled(boolean enable) {

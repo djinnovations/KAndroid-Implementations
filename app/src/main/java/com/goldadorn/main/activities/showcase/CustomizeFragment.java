@@ -15,6 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.MergeRecycleAdapter;
+import com.goldadorn.main.assist.RecyclerAdapter;
+import com.goldadorn.main.assist.SingleItemAdapter;
+import com.goldadorn.main.assist.ViewHolder;
 import com.rey.material.widget.CircleCheckedTextView;
 
 import java.util.ArrayList;
@@ -48,9 +52,8 @@ public class CustomizeFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
-
         mAdapter.addAdapter(new PBAdapter(getActivity()));
-        mAdapter.addAdapter(new TitleAdapter(getActivity(),"Customize"));
+        mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(new CustomizeMainAdapter(getActivity()));
         mAdapter.addAdapter(new SeparatorAdapter(getActivity()));
         mAdapter.addAdapter(new CustomizeMainAdapter(getActivity()));
@@ -71,6 +74,20 @@ public class CustomizeFragment extends Fragment {
         mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
+    }
+
+    private RecyclerAdapter<ViewHolder> getTitleAdapter(final String title){
+     return new SingleItemAdapter(getContext(),true,0,ViewHolderFactory.TYPE.VHT_TITLE).setViewBinder(new SingleItemAdapter.IViewBinder() {
+         @Override
+         public void onNewView(int id, RecyclerView.ViewHolder holder) {
+
+         }
+
+         @Override
+         public void onBindView(int id, RecyclerView.ViewHolder holder) {
+             ((TextView)holder.itemView.findViewById(R.id.title)).setText(title);
+         }
+     });
     }
 
     class PBAdapter extends RecyclerAdapter<PBViewHolder> {
@@ -99,38 +116,6 @@ public class CustomizeFragment extends Fragment {
         @Override
         public int getItemCount() {
             return 1;
-        }
-    }
-
-
-
-    class TitleAdapter extends RecyclerAdapter<ViewHolder> {
-
-        String title;
-
-        public TitleAdapter(Context context,String title) {
-            super(context,true);
-            this.title = title;
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            ((TextView)holder.itemView.findViewById(R.id.title)).setText(title);
-        }
-
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-            return ViewHolderFactory.TYPE.VHT_TITLE;
-        }
-
-        @Override
-        public void onNewViewHolder(ViewHolder holder) {
-
         }
     }
 

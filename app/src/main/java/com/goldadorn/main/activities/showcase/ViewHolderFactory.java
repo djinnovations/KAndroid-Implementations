@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.MergeRecycleAdapter;
+import com.goldadorn.main.assist.ViewHolder;
 
 /**
  * Created by Kiran BH on 15/04/15.
  */
-public class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
+class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
     private final LayoutInflater inflater;
 
     public ViewHolderFactory(Context context) {
@@ -25,7 +27,7 @@ public class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory
         ViewHolder vh;
         switch (viewType) {
             case TYPE.VHT_PB:
-                vh =new PBViewHolder(inflater.inflate(R.layout.layout_price_breakdown, parent, false));
+                vh = new PBViewHolder(inflater.inflate(R.layout.layout_price_breakdown, parent, false));
                 break;
             case TYPE.VHT_C_BUTTON:
                 vh = new ViewHolder(inflater.inflate(R.layout.item_customize_button, parent, false));

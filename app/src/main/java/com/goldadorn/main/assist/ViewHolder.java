@@ -1,4 +1,4 @@
-package com.goldadorn.main.activities.showcase;
+package com.goldadorn.main.assist;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
