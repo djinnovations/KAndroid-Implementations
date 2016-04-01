@@ -14,15 +14,16 @@ import android.widget.Toast;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.LoginResult;
-import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -66,6 +67,13 @@ public class AppStartActivity extends BaseActivity {
             else
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
+        initMixpanel();
+    }
+
+    private void initMixpanel() {
+        String token = "7990b395d94157c30ca2d2e3a0e08a69";
+        MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, token);
+        mixpanelAPI.getPeople().identify(String.valueOf(((Application) this.getApplicationContext()).getUser().id));
     }
 
     private void kickStart() {
