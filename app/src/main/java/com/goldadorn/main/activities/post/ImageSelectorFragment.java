@@ -188,6 +188,18 @@ public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager imple
         return new TabIndicatorRecyclerViewAdapter(viewPager,getDataManager());
     }
 
+    private void gotoData(Object data) {
+        if(getDataManager()!=null && data!=null)
+        {
+            for (int i = 0; i < getDataManager().size(); i++) {
+                if(getDataManager().get(i)==data)
+                {
+                    gotoItem(i,false);
+                    break;
+                }
+            }
+        }
+    }
 
     public class TabIndicatorRecyclerViewAdapter extends com.kimeeo.library.listDataView.viewPager.TabIndicatorRecyclerViewAdapter {
 
@@ -218,25 +230,45 @@ public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager imple
             public MyViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(new View.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        gotoData(data);
+                    }
+                });
                 TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary), textView);
             }
-            public void updatedSelectedItem(Object o) {
-                if(o instanceof ServerFolderObject) {
-                    ServerFolderObject data = (ServerFolderObject) o;
-                    textView.setText(data.getName());
-                    textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
-                    selected.setVisibility(View.VISIBLE);
-                }
-            }
+
+
+
+            ServerFolderObject data;
             public void updatedNormalItem(Object o)
             {
                 if(o instanceof ServerFolderObject) {
-                    ServerFolderObject data = (ServerFolderObject) o;
+                    data = (ServerFolderObject) o;
                     textView.setText(data.getName());
                     textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
                     selected.setVisibility(View.GONE);
                 }
             }
+            public void updatedSelectedItem(Object o) {
+                if(o instanceof ServerFolderObject) {
+                    data = (ServerFolderObject) o;
+                    textView.setText(data.getName());
+                    textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
+                    selected.setVisibility(View.VISIBLE);
+                }
+            }
+            public void hide() {
+                itemView.setVisibility(View.GONE);
+            }
+
+            public void show() {
+                itemView.setVisibility(View.VISIBLE);
+            }
+
+
         }
     }
 }

@@ -14,6 +14,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
@@ -105,7 +106,18 @@ public class HomePage extends BaseHorizontalFragmentViewPager
     protected RecyclerTabLayout.Adapter<?> getRecyclerViewTabProvider(ViewPager viewPager) {
         return new TabIndicatorRecyclerViewAdapter(viewPager,getDataManager());
     }
-
+    private void gotoData(Object data) {
+        if(getDataManager()!=null && data!=null)
+        {
+            for (int i = 0; i < getDataManager().size(); i++) {
+                if(getDataManager().get(i)==data)
+                {
+                    gotoItem(i,false);
+                    break;
+                }
+            }
+        }
+    }
 
     public class TabIndicatorRecyclerViewAdapter extends com.kimeeo.library.listDataView.viewPager.TabIndicatorRecyclerViewAdapter {
 
@@ -136,17 +148,26 @@ public class HomePage extends BaseHorizontalFragmentViewPager
             public MyViewHolder(View itemView) {
                 super(itemView);
                 ButterKnife.bind(this, itemView);
+                itemView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        gotoData(data);
+                    }
+                });
+
                 TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary),textView);
             }
+            NavigationDataObject data;
             public void updatedSelectedItem(Object o) {
-                NavigationDataObject data = (NavigationDataObject) o;
+                data=(NavigationDataObject) o;
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
                 selected.setVisibility(View.VISIBLE);
             }
             public void updatedNormalItem(Object o)
             {
-                NavigationDataObject data = (NavigationDataObject) o;
+                data=(NavigationDataObject) o;
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
                 selected.setVisibility(View.GONE);

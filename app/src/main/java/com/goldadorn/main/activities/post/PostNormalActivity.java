@@ -19,7 +19,10 @@ import butterknife.Bind;
  */
 public class PostNormalActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
-
+    protected String getPageTitle()
+    {
+        return "Post";
+    }
     protected List<File> getFiles()
     {
         if(imageSelector1.isValid()) {
