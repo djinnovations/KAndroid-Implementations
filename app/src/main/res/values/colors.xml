@@ -5,7 +5,7 @@
     <color name="colorPrimaryAlpha">#55866c52</color>
     <color name="tabBGColor">#ffffff</color>
 
-
+    <color name="toolbarBG">#ffffff</color>
     <color name="votedColor">#C41334</color>
 
     <color name="colorPrimaryDark">#6c533e</color>
@@ -90,6 +90,8 @@
     <color name="feedCardBGColor">#ffffff</color>
     <color name="feedFotterDivColor">#cfcfcf</color>
     <color name="avtarBorderColor">#cfcfcf</color>
+    <color name="toolbarIconColor">@color/colorPrimary</color>
+    <color name="toolbarTextColor">@color/colorPrimary</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

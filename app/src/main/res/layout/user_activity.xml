@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="250dp"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/toolbarBG"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
 
@@ -34,18 +34,16 @@
                 android:gravity="top"
                 android:minHeight="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
+                android:background="#00000000"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/titleContainer">
                 <TextView
                     android:layout_gravity="center_vertical"
                     android:id="@+id/titleText"
                     android:textSize="16sp"
+                    android:textColor="@color/toolbarTextColor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                </LinearLayout>
+
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -57,7 +55,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
         <FrameLayout
-
             android:id="@+id/mainHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

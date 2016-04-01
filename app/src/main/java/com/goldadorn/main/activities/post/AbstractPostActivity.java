@@ -23,6 +23,7 @@ import com.goldadorn.main.model.People;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.ImageSelector;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
@@ -41,6 +42,8 @@ import butterknife.OnClick;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 
+import javax.xml.validation.TypeInfoProvider;
+
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
@@ -55,6 +58,9 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     @Bind(R.id.layoutParent)
     ViewGroup layoutParent;
+
+    @Bind(R.id.postNow)
+    View postNow;
 
     @OnClick(R.id.postNow)
     void onPostNow() {
@@ -115,6 +121,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
         super.onCreate(savedInstanceState);
         setContentView(getmainResID());
         ButterKnife.bind(this);
+        TypefaceHelper.setFont(details,postNow);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
