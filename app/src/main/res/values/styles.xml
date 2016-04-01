@@ -4,7 +4,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
+        <item name="android:windowBackground">@color/appBGColor</item>
         <item name="colorControlNormal">@color/toolbarIconColor</item>
         <item name="android:titleTextStyle">@style/Toolbar.TitleText</item>
         <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
@@ -149,7 +149,7 @@
     </style>
 
     <style name="appackground">
-        <item name="android:background">@drawable/app_start_bg</item>
+        <item name="android:background">@color/appBGColor</item>
     </style>
 
     <style name="Toolbar.Button" parent="@android:style/Widget.Button">
@@ -200,6 +200,5 @@
     </style>
 
 
-
-
+    <color name="appBGColor">#ffffff</color>
 </resources>

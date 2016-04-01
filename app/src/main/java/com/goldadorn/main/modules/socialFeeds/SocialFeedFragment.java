@@ -633,6 +633,9 @@ public class SocialFeedFragment extends DefaultVerticalListView
         @Bind(R.id.buyNow)
         View buyNow;
 
+        @Bind(R.id.voteToView)
+        TextView voteToView;
+
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == buy) {
@@ -642,6 +645,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         YoYo.with(Techniques.Landing).duration(300).playOn(buy);
                         buy.setSelected(true);
                         notBuy.setSelected(false);
+                        voteToView.setVisibility(View.GONE);
                         voteAPost(socialPost, position);
                     }
                 }
@@ -652,6 +656,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         YoYo.with(Techniques.Landing).duration(300).playOn(notBuy);
                         buy.setSelected(false);
                         notBuy.setSelected(true);
+                        voteToView.setVisibility(View.GONE);
                         voteAPost(socialPost, position);
                     }
 
@@ -676,7 +681,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
-            TypefaceHelper.setFont(notBuyLabel, buyLabel);
+            TypefaceHelper.setFont(notBuyLabel, buyLabel,voteToView);
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
@@ -703,13 +708,14 @@ public class SocialFeedFragment extends DefaultVerticalListView
             {
                 buyLabel.setText("Buy: "+item.getYesPercent()+"%");
                 notBuyLabel.setText("Not Buy: " + item.getNoPercent() + "%");
+                voteToView.setVisibility(View.GONE);
             }
             else
             {
                 buyLabel.setText("Buy");
                 notBuyLabel.setText("Not Buy");
+                voteToView.setVisibility(View.VISIBLE);
             }
-
 
 
             if(item.getIsVoted()==0)
@@ -774,6 +780,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
         @Bind(R.id.buyNow3)
         View buyNow3;
 
+        @Bind(R.id.voteToView)
+        TextView voteToView;
+
+
+
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == option1Button) {
@@ -785,6 +796,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option1Button.setSelected(true);
                         option2Button.setSelected(false);
                         option3Button.setSelected(false);
+                        voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
                     }
                 }
@@ -797,6 +809,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option1Button.setSelected(false);
                         option2Button.setSelected(true);
                         option3Button.setSelected(false);
+                        voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
                     }
                 }
@@ -809,6 +822,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option1Button.setSelected(false);
                         option2Button.setSelected(false);
                         option3Button.setSelected(true);
+                        voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
                     }
                 }
@@ -842,7 +856,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
 
-            TypefaceHelper.setFont(option1Label, option2Label, option3Label);
+            TypefaceHelper.setFont(option1Label, option2Label, option3Label,voteToView);
 
         }
         public void updatePostView(SocialPost item,View view,int position)
@@ -918,6 +932,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setSelected(false);
                 option2Button.setSelected(false);
                 option3Button.setSelected(false);
+                voteToView.setVisibility(View.VISIBLE);
             }
             else if (item.getIsVoted()==1)
             {
@@ -927,7 +942,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setSelected(true);
                 option2Button.setSelected(false);
                 option3Button.setSelected(false);
-
+                voteToView.setVisibility(View.GONE);
             }
             else if (item.getIsVoted()==2)
             {
@@ -937,6 +952,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setSelected(false);
                 option2Button.setSelected(true);
                 option3Button.setSelected(false);
+                voteToView.setVisibility(View.GONE);
 
             }
             else if (item.getIsVoted()==3)
@@ -947,6 +963,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setSelected(false);
                 option2Button.setSelected(false);
                 option3Button.setSelected(true);
+                voteToView.setVisibility(View.GONE);
             }
 
         }

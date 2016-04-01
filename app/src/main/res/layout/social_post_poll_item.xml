@@ -49,6 +49,7 @@
             android:layout_height="25dp"/>
 
         <LinearLayout
+            android:id="@+id/options"
             android:layout_below="@+id/image"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -116,7 +117,16 @@
 
         </LinearLayout>
 
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:text="Vote to View a Result"
+            android:id="@+id/voteToView"
+            android:textSize="11sp"
+            android:layout_marginTop="-24dp"
+            android:layout_below="@+id/options"/>
     </RelativeLayout>
 
     <include layout="@layout/social_post_footer"/>

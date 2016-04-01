@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.view.View;
@@ -53,6 +54,15 @@ public class MainActivity extends BaseDrawerActivity  {
     ProgressBar progressBar;
     @Bind(R.id.layoutParent)
     ViewGroup layoutParent;
+
+    @Bind(R.id.indicator)
+    View indicator;
+
+    public View getPageIndicator()
+    {
+        return indicator;
+    }
+
     private boolean uploadInProgress;
     private WeakReference<SocialFeedFragment> socialPostHost;
     private boolean backEntry;
@@ -271,7 +281,8 @@ public class MainActivity extends BaseDrawerActivity  {
             if(!isAdded) {
                 BaseFragment view = BaseFragment.newInstance(navigationDataObject);
                 if (view != null) {
-                    setTitle(navigationDataObject.getTitle());
+                    //setTitle(navigationDataObject.getTitle());
+                    setTitle("");
                     FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.container, view);
                     ft.commit();
