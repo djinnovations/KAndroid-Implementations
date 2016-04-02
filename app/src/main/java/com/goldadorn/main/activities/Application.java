@@ -190,6 +190,7 @@ public class Application extends BaseApplication {
         Iconics.registerFont(new GoldadornIconFont());
         Iconics.registerFont(new HeartIconFont());
         configMainMenu();
+        getDefaultTracker();
         Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(
                 mTracker,
                 Thread.getDefaultUncaughtExceptionHandler(),
