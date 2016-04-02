@@ -238,7 +238,7 @@ public class ProductActivity extends BaseDrawerActivity {
             public void onResult(ProductResponse result) {
                 if (result.success) {
                     mProductOptions = result.options;
-                    ProductOptionsFragment f = (ProductOptionsFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                    ProductOptionsFragment f = (ProductOptionsFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
                     if (f != null)
                         f.bindProductOptions(mProductOptions);
                 }

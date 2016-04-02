@@ -150,7 +150,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
-        mTabLayout.animate().setDuration(0).y(tabStart);
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
