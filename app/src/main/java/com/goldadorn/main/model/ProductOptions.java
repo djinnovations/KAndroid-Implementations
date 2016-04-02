@@ -11,8 +11,9 @@ import java.util.HashMap;
 /**
  * Created by nithinjohn on 22/03/16.
  */
-public class ProductDetail extends Product {
+public class ProductOptions {
 
+    private final int id;
     ///customization variables
     public float makeingCharge;
     public String makeingChargeUnit;
@@ -28,18 +29,15 @@ public class ProductDetail extends Product {
     HashMap<String, ArrayList<String>> accentStones;
     HashMap<String, ArrayList<String>> gemStones;
 
-    public ProductDetail(int id) {
-        super(id);
+    public ProductOptions(int id) {
+        this.id=id;
     }
 
 
-    public static ProductDetail extractCustomization(JSONObject productInfo) throws JSONException {
-        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
+    public static ProductOptions extractCustomization(JSONObject productInfo) throws JSONException {
+        ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
         p.makeingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
         p.makeingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
-        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-        p.primaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
         p.primaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
         p.primaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
         p.stonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
