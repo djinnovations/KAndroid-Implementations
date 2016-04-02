@@ -150,6 +150,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
+        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
+
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -208,7 +210,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
 
         //        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
-        initTabs();
         configureUI(mUIState);
         UIController.getDesigners(mContext, new TimelineResponse(),
                 new IResultListener<TimelineResponse>() {
@@ -227,14 +228,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         //        startActivity(in);
     }
 
-    private void initTabs() {
-        String social = getString(R.string.social).toLowerCase();
-        if (mUser != null && !TextUtils.isEmpty(mUser.name)) {
-            social += "@";
-            social += mUser.name.toLowerCase().replace(" ", "");
-        }
-        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), social, mTabClickListener);
-    }
 
     TabViewHolder.TabClickListener mTabClickListener = new TabViewHolder.TabClickListener() {
         @Override
@@ -271,7 +264,12 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private void onUserChange(User user) {
         mUser = user;
         bindOverlay(user);
-        initTabs();
+        String social = getString(R.string.social).toLowerCase();
+        if (user != null && !TextUtils.isEmpty(user.name)) {
+            social += "@";
+            social += user.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.tabName3.setText(social);
         for (UserChangeListener l : mUserChangeListeners)
             l.onUserChange(user);
     }
