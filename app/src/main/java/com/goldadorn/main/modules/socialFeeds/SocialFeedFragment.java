@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -629,6 +630,19 @@ public class SocialFeedFragment extends DefaultVerticalListView
         TextView buyLabel;
 
 
+        @Bind(R.id.stackBar)
+        LinearLayout stackBar;
+
+
+        @Bind(R.id.stack1)
+        TextView stack1;
+
+        @Bind(R.id.stack2)
+        TextView stack2;
+
+
+
+
 
         @Bind(R.id.buyNow)
         View buyNow;
@@ -709,31 +723,46 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 buyLabel.setText("Buy: "+item.getYesPercent()+"%");
                 notBuyLabel.setText("Not Buy: " + item.getNoPercent() + "%");
                 voteToView.setVisibility(View.GONE);
+
+
+
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getNoPercent().toString()));
+
+                stack1.setLayoutParams(param);
+
+                param = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getYesPercent().toString()) );
+                stack2.setLayoutParams(param);
+                stackBar.setVisibility(View.VISIBLE);
             }
             else
             {
                 buyLabel.setText("Buy");
                 notBuyLabel.setText("Not Buy");
                 voteToView.setVisibility(View.VISIBLE);
+                stackBar.setVisibility(View.GONE);
             }
 
 
             if(item.getIsVoted()==0)
             {
-                buy.setText("{hea_heart_out_line}");
-                notBuy.setText("{hea_broken_heart_out_line}");
+                buy.setText("{hea_heart_fill}");
+                notBuy.setText("{hea_broken_heart_fill}");
                 buy.setSelected(false);
                 notBuy.setSelected(false);
             }
             else if(item.getIsVoted()==1)
             {
                 buy.setText("{hea_heart_fill}");
-                notBuy.setText("{hea_broken_heart_out_line}");
+                notBuy.setText("{hea_broken_heart_fill}");
                 buy.setSelected(true);
                 notBuy.setSelected(false);
             }
             else if (item.getIsVoted() == 2) {
-                buy.setText("{hea_heart_out_line}");
+                buy.setText("{hea_heart_fill}");
                 notBuy.setText("{hea_broken_heart_fill}");
                 buy.setSelected(false);
                 notBuy.setSelected(true);
@@ -783,7 +812,18 @@ public class SocialFeedFragment extends DefaultVerticalListView
         @Bind(R.id.voteToView)
         TextView voteToView;
 
+        @Bind(R.id.stackBar)
+        LinearLayout stackBar;
 
+
+        @Bind(R.id.stack1)
+        TextView stack1;
+
+        @Bind(R.id.stack2)
+        TextView stack2;
+
+        @Bind(R.id.stack3)
+        TextView stack3;
 
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
@@ -923,47 +963,76 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
 
 
+            if(item.getIsVoted()!=0)
+            {
+                LinearLayout.LayoutParams param;
+
+                param = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent1().toString()));
+                stack1.setLayoutParams(param);
+
+                param = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent2().toString()));
+                stack2.setLayoutParams(param);
+
+
+                param = new LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent3().toString()));
+                stack3.setLayoutParams(param);
+
+                stackBar.setWeightSum(100);
+            }
+
+
             if(item.getIsVoted()==0)
             {
-                option1Button.setText("{hea_heart_out_line}");
-                option2Button.setText("{hea_heart_out_line}");
-                option3Button.setText("{hea_heart_out_line}");
+
+                option1Button.setText("{hea_heart_fill}");
+                option2Button.setText("{hea_heart_fill}");
+                option3Button.setText("{hea_heart_fill}");
+
+
 
                 option1Button.setSelected(false);
                 option2Button.setSelected(false);
                 option3Button.setSelected(false);
                 voteToView.setVisibility(View.VISIBLE);
+                stackBar.setVisibility(View.GONE);
+
+
             }
             else if (item.getIsVoted()==1)
             {
                 option1Button.setText("{hea_heart_fill}");
-                option2Button.setText("{hea_heart_out_line}");
-                option3Button.setText("{hea_heart_out_line}");
+                option2Button.setText("{hea_heart_fill}");
+                option3Button.setText("{hea_heart_fill}");
                 option1Button.setSelected(true);
                 option2Button.setSelected(false);
                 option3Button.setSelected(false);
                 voteToView.setVisibility(View.GONE);
+                stackBar.setVisibility(View.VISIBLE);
+
+
             }
             else if (item.getIsVoted()==2)
             {
-                option1Button.setText("{hea_heart_out_line}");
+                option1Button.setText("{hea_heart_fill}");
                 option2Button.setText("{hea_heart_fill}");
-                option3Button.setText("{hea_heart_out_line}");
+                option3Button.setText("{hea_heart_fill}");
                 option1Button.setSelected(false);
                 option2Button.setSelected(true);
                 option3Button.setSelected(false);
                 voteToView.setVisibility(View.GONE);
+                stackBar.setVisibility(View.VISIBLE);
 
             }
             else if (item.getIsVoted()==3)
             {
-                option1Button.setText("{hea_heart_out_line}");
-                option2Button.setText("{hea_heart_out_line}");
+                option1Button.setText("{hea_heart_fill}");
+                option2Button.setText("{hea_heart_fill}");
                 option3Button.setText("{hea_heart_fill}");
                 option1Button.setSelected(false);
                 option2Button.setSelected(false);
                 option3Button.setSelected(true);
                 voteToView.setVisibility(View.GONE);
+                stackBar.setVisibility(View.VISIBLE);
             }
 
         }

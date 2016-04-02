@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/details"
         android:maxHeight="150dp"
-        android:hint="Enter your comments"/>
+        android:hint="Write a comment"/>
 
     <com.mikepenz.iconics.view.IconicsButton
         style="@style/linkButton"

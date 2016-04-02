@@ -33,6 +33,7 @@ import com.goldadorn.main.modules.socialFeeds.CommentDividerDecoration;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -56,7 +57,7 @@ import butterknife.OnClick;
 /**
  * Created by bhavinpadhiyar on 2/26/16.
  */
-public class LikesView extends FreeFlowLayout implements DefaultProjectDataManager.IDataManagerDelegate
+public class LikesView extends DefaultVerticalListView implements DefaultProjectDataManager.IDataManagerDelegate
 {
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
@@ -67,7 +68,9 @@ public class LikesView extends FreeFlowLayout implements DefaultProjectDataManag
             return (MainActivity)getActivity();
         return null;
     }
-
+    protected RecyclerView.ItemDecoration createItemDecoration() {
+        return new CommentDividerDecoration(this.getActivity());
+    }
     public String getRefreshDataURL(PageData pageData)
     {
         return null;
@@ -178,6 +181,7 @@ public class LikesView extends FreeFlowLayout implements DefaultProjectDataManag
             ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
+            TypefaceHelper.setFont(userName);
         }
         public void updateItemView(Object item,View view,int position)
         {

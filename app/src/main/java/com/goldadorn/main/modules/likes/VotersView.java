@@ -19,8 +19,10 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
+import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.socialFeeds.CommentDividerDecoration;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
@@ -40,7 +42,7 @@ import butterknife.ButterKnife;
 /**
  * Created by bhavinpadhiyar on 2/26/16.
  */
-public class VotersView extends FreeFlowLayout implements DefaultProjectDataManager.IDataManagerDelegate
+public class VotersView extends DefaultVerticalListView implements DefaultProjectDataManager.IDataManagerDelegate
 {
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
@@ -50,6 +52,9 @@ public class VotersView extends FreeFlowLayout implements DefaultProjectDataMana
         if(getActivity() instanceof MainActivity)
             return (MainActivity)getActivity();
         return null;
+    }
+    protected RecyclerView.ItemDecoration createItemDecoration() {
+        return new CommentDividerDecoration(this.getActivity());
     }
 
     public String getRefreshDataURL(PageData pageData)
@@ -163,6 +168,7 @@ public class VotersView extends FreeFlowLayout implements DefaultProjectDataMana
             ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
+            TypefaceHelper.setFont(userName);
         }
         public void updateItemView(Object item,View view,int position)
         {

@@ -14,6 +14,8 @@
         android:layout_height=".5dp"
         tools:layout_height="5dp"
         android:layout_marginBottom="@dimen/padding_default_half"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:layout_marginRight="@dimen/padding_default_half"
         tools:background="#000000"
         android:id="@+id/divTop"
         android:background="@color/feedFotterDivColor"/>

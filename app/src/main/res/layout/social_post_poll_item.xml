@@ -69,13 +69,15 @@
             android:id="@+id/linearLayout">
 
         <com.mikepenz.iconics.view.IconicsButton
-            style="@style/voteLinkButton"
+            style="@style/circleSmallButton"
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/image"
             android:text="{hea_heart_out_line}"
-            android:layout_width="60dp"
-            android:textSize="40sp"
-            android:layout_height="60dp"
+            android:textSize="24sp"
+            android:layout_marginTop="@dimen/padding_default"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_width="@dimen/circle_button_small1_height"
+            android:layout_height="@dimen/circle_button_small1_height"
             android:id="@+id/buy"/>
         <TextView
             android:id="@+id/buyLabel"
@@ -100,13 +102,15 @@
             android:layout_marginRight="@dimen/padding_default_4x">
 
             <com.mikepenz.iconics.view.IconicsButton
-                style="@style/voteLinkButton"
+                style="@style/circleSmallButton"
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/image"
                 android:text="{hea_broken_heart_out_line}"
-                android:textSize="40sp"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:textSize="24sp"
+                android:layout_marginTop="@dimen/padding_default"
+                android:layout_marginBottom="@dimen/padding_default"
+                android:layout_width="@dimen/circle_button_small1_height"
+                android:layout_height="@dimen/circle_button_small1_height"
                 android:id="@+id/notBuy"/>
             <TextView
                 android:id="@+id/notBuyLabel"
@@ -117,6 +121,36 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/stackBar"
+            android:visibility="gone"
+            android:layout_below="@+id/options"
+            tools:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="10dp" android:weightSum="100">
+            <TextView
+                android:layout_weight="50"
+                android:background="@color/staceColor1"
+                android:layout_width="0dp"
+                android:text="buy"
+                android:textSize="7sp"
+                android:textColor="#ffffff"
+                android:paddingLeft="3dp"
+                android:id="@+id/stack1"
+                android:layout_gravity="center"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/stack2"
+                android:background="@color/staceColor2"
+                android:layout_weight="50"
+                android:text="not buy"
+                android:textColor="#ffffff"
+                android:paddingLeft="3dp"
+                android:textSize="7sp"
+                android:layout_width="0dp"
+                android:layout_gravity="center"
+                android:layout_height="match_parent" />
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

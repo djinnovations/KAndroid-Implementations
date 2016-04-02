@@ -28,6 +28,7 @@ import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.viewPager.fragmentPager.BaseHorizontalFragmentViewPager;
 import com.kimeeo.library.listDataView.viewPager.viewPager.HorizontalViewPager;
 import com.kimeeo.library.model.IFragmentData;
+import com.mixpanel.android.util.StringUtils;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 import com.rey.material.widget.ProgressView;
 
@@ -146,7 +147,10 @@ public class ImageSelectorFragment extends BaseHorizontalFragmentViewPager imple
     {
         if(navigationObject instanceof IFragmentData)
         {
-            return ((IFragmentData)navigationObject).getName();
+            String name =((IFragmentData) navigationObject).getName();
+            String s1 = name.substring(0, 1).toUpperCase();
+            String nameCapitalized = s1 + name.substring(1).toLowerCase();
+            return nameCapitalized;
         }
         return super.getItemTitle(position,navigationObject);
     }

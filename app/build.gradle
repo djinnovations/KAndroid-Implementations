@@ -103,4 +103,6 @@ dependencies {
     compile(name: 'CustomBrowser-release', ext: 'aar')
     compile(name: 'PayU-release', ext: 'aar')
     compile project(':payu_ui')
+
+    compile 'com.flaviofaria:kenburnsview:1.0.7'
 }

@@ -94,6 +94,9 @@
     <color name="avtarBorderColor">#cfcfcf</color>
     <color name="toolbarIconColor">@color/colorPrimary</color>
     <color name="toolbarTextColor">@color/colorPrimary</color>
+    <color name="staceColor1">#c21838</color>
+    <color name="staceColor2">#3276b4</color>
+    <color name="staceColor3">#fdbf2d</color>
 
     <array name="progressColors">
         <item>#FF3F8AF8</item>

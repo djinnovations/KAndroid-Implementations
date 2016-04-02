@@ -42,9 +42,11 @@ public class ServerFolderObject implements IFragmentData,IParseableObject
     {
         if(name!=null && isDir())
         {
-            String name1 =name.substring(name.lastIndexOf("/")+1,name.length());
+            String name1 =name.substring(name.lastIndexOf("/") + 1, name.length());
             name1 = name1.replaceAll("_"," ");
-            return name1.toUpperCase();
+            String s1 = name1.substring(0, 1).toUpperCase();
+            String nameCapitalized = s1 + name1.substring(1).toLowerCase();
+            return nameCapitalized;
         }
         return "";
     }

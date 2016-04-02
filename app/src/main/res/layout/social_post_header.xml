@@ -46,9 +46,9 @@
 
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/postFotterButton"
-            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_width="@dimen/circle_button_tiny_height"
             android:text="@string/icon_follow_user"
-            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_tiny_height"
             android:id="@+id/followButton"
             android:layout_marginTop="5dp"
             android:layout_marginRight="@dimen/padding_default"
@@ -76,5 +76,7 @@
         android:layout_width="match_parent"
         android:layout_height=".5dp"
         android:id="@+id/divTop"
+        android:layout_marginLeft="@dimen/padding_default_half"
+        android:layout_marginRight="@dimen/padding_default_half"
         android:background="@color/feedFotterDivColor"/>
 </RelativeLayout>

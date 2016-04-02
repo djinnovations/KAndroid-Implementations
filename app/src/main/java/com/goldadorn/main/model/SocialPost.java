@@ -219,7 +219,7 @@ public class SocialPost extends ServerError implements IParseableObject {
 
 
 
-        recommendation1=recommendation2=recommendation3=recommendation4=oldData;
+        //recommendation1=recommendation2=recommendation3=recommendation4=oldData;
 
         recommendation = new ArrayList<>();
         recommendation1= URLHelper.parseImageURL(recommendation1);

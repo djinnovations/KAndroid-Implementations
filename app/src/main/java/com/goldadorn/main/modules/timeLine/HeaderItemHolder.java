@@ -180,7 +180,7 @@ public class HeaderItemHolder{
 
         if(people.getIsDesigner()==1) {
             designer.setText("Designer");
-            designer.setVisibility(View.VISIBLE);
+            designer.setVisibility(View.GONE);
         }
         else
         {
@@ -204,9 +204,10 @@ public class HeaderItemHolder{
         if(people.getBackgroundPic()!=null && people.getBackgroundPic().equals("")==false)
             Picasso.with(context).load(people.getBackgroundPic()).into(coverImage);
 
+        //people.setProfilePic("http://whatatimeline.com/covers/1330597507de0/balloons-sunset-view-facebook-cover.jpg");
         Picasso.with(context)
                 .load(people.getProfilePic())
-                .placeholder(R.drawable.vector_image_place_holder_profile)
+                .placeholder(R.drawable.vector_image_place_holder_profile_dark)
                 .tag(context)
                 .resize(100, 100)
                 .into(userImage);
