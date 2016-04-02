@@ -37,6 +37,8 @@ public class ProductCustomiseFragment extends Fragment {
     Context mContext;
     private CustomizeMainAdapter mCustomizeAdapter;
     private ProductActivity mProductActivity;
+    private SingleItemAdapter mPriceAdapter;
+    private ProductOptions mProductOption;
 
     @Nullable
     @Override
@@ -54,7 +56,7 @@ public class ProductCustomiseFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
-        mAdapter.addAdapter(new PBAdapter(getActivity()));
+        mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
         mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
@@ -82,39 +84,36 @@ public class ProductCustomiseFragment extends Fragment {
 
     public void bindProductOptions(ProductOptions options) {
         if (options != null) {
+            mProductOption = options;
             mCustomizeAdapter.changeData(options.customisationOptions);
+            if (options.priceBreakDown.size() > 0) {
+                mPriceAdapter.setEnabled(true);
+                mPriceAdapter.notifyDataSetChanged();
+            } else {
+                mPriceAdapter.setEnabled(false);
+            }
         }
     }
 
-    class PBAdapter extends RecyclerAdapter<PBViewHolder> {
-
-        private final Context context;
-
-        public PBAdapter(Context context) {
-            super(context, true);
-            this.context = context;
-        }
-
+    private SingleItemAdapter.IViewBinder<PBViewHolder> mPriceBinder = new SingleItemAdapter.IViewBinder<PBViewHolder>() {
         @Override
-        public void onNewViewHolder(PBViewHolder holder) {
+        public void onNewView(int id, PBViewHolder holder) {
 
         }
 
         @Override
-        public void onBindViewHolder(PBViewHolder holder, int position) {
+        public void onBindView(int id, PBViewHolder holder) {
+            ArrayList<Map.Entry<String, Float>> p = mProductOption.priceBreakDown;
+            String priceUnit = mProductOption.priceUnit;
+            float total = 0;
+            for (Map.Entry<String, Float> entry : p) {
+                String name = entry.getKey();
+                Float price = entry.getValue();
+                total = total + price;
+            }
 
         }
-
-        @Override
-        public int getItemViewType(int position) {
-            return ViewHolderFactory.TYPE.VHT_PB;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
-    }
+    };
 
 
     private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, String>> {
