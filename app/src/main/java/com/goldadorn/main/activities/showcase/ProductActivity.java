@@ -129,6 +129,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
+        product.id=68;
         intent.putExtra(EXTRA_PRODUCT, product);
         return intent;
     }
@@ -218,6 +219,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         ProductResponse response = new ProductResponse();
         response.productId = 68;
+        response.product=mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override

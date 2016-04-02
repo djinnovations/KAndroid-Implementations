@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Created by Kiran BH on 06/03/16.
  */
 public class Product implements Serializable {
-    public final int id;
+    public  int id;
     public int userId, collectionId;
     public String name, description;
     public long unitPrice;

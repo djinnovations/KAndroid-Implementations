@@ -329,12 +329,12 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.product.id);
-            Product productDetail = response.product;
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, productDetail.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, productDetail.accentStoneSelected);
+            Product product = response.product;
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
+            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
@@ -366,13 +366,13 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.product.id);
-            Product productOptions = response.product;
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productOptions.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productOptions.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productOptions.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, productOptions.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, productOptions.accentStoneSelected);
+            jsonObject.put("prodId", response.productId);
+            Product product = response.product;
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
+            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
+            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
+            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
