@@ -101,7 +101,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             Picasso.with(image.getContext()).load(product.getImageUrl()).placeholder(R.mipmap.ic_launcher).fit().into(image);
 
 
-            SpannableStringBuilder sbr = new SpannableStringBuilder(product.currency + ". " + (product.unitPrice * product.quantity));
+            SpannableStringBuilder sbr = new SpannableStringBuilder(product.priceUnit + ". " + (product.unitPrice * product.quantity));
             sbr.append("/-");
             int start = sbr.length();
             sbr.append("\n").append("(").append(product.quantity + " * " + product.unitPrice).append(")");

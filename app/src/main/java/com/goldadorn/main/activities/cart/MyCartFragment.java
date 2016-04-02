@@ -82,7 +82,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         for (Product p : mCart) {
             mCostTotal = mCostTotal + p.getTotalPrice();
             totalUnits = totalUnits + p.quantity;
-            currency = p.currency;
+            currency = p.priceUnit;
         }
         mCostTotal = mCostTotal + mCostShipping + mCostTax;
         int t = totalUnits > 0 ? 1 : 0;

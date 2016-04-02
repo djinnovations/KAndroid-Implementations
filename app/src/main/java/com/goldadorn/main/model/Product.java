@@ -15,7 +15,7 @@ public class Product implements Serializable {
     public int userId, collectionId;
     public String name, description;
     public long unitPrice;
-    public String currency = " RS";
+    public String priceUnit = " RS";
     public float image_a_r = 1;
 
     public int quantity, maxQuantity = 10;
@@ -30,7 +30,7 @@ public class Product implements Serializable {
     }
 
     public String getDisplayPrice() {
-        return currency + ". " + unitPrice;
+        return priceUnit + ". " + unitPrice;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Product implements Serializable {
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Products.DESCRIPTION));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES));
         t.unitPrice = cursor.getLong(cursor.getColumnIndex(Tables.Products.PRICE));
-        t.currency = cursor.getString(cursor.getColumnIndex(Tables.Products.CURRENCY));
+        t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)
             t.image_a_r = 1;

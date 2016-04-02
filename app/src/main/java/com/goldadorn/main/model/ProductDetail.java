@@ -2,7 +2,6 @@ package com.goldadorn.main.model;
 
 import com.goldadorn.main.constants.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,15 +12,6 @@ import java.util.HashMap;
  * Created by nithinjohn on 22/03/16.
  */
 public class ProductDetail extends Product {
-
-    public String code;
-    public double type;
-    public String widthUnit;
-    public float weight;
-    public String sizeUnit;
-    public float height;
-    public float width;
-    public float size;
 
     ///customization variables
     public float makeingCharge;
@@ -46,52 +36,10 @@ public class ProductDetail extends Product {
     public final HashMap<String, String> accentStoneSelected = new HashMap<>();
     public final HashMap<String, String> gemStoneSelected = new HashMap<>();
 
-    public ArrayList<StoneDetail> stonesDetails = new ArrayList<>();
-
     public ProductDetail(int id) {
         super(id);
     }
 
-
-    public ProductDetail extractBasicInfo(JSONObject productInfo) throws JSONException {
-        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
-        p.code = productInfo.optString(Constants.JsonConstants.PRODUCTCODE);
-        p.name = productInfo.optString(Constants.JsonConstants.PRODUCTNAME);
-        p.description = productInfo.optString(Constants.JsonConstants.DESCRIPTION);
-        p.type = productInfo.optDouble(Constants.JsonConstants.TYPE);
-        p.image_a_r = (float) productInfo.optDouble(Constants.JsonConstants.ASPECTRATIO);
-        p.currency = productInfo.optString(Constants.JsonConstants.COSTUNITS);
-        p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
-        p.widthUnit = productInfo.optString(Constants.JsonConstants.WIDTHUNITS);
-        p.weight = (float) productInfo.optDouble(Constants.JsonConstants.WEIGHT);
-        p.height = (float) productInfo.optDouble(Constants.JsonConstants.HEIGHT);
-        p.width = (float) productInfo.optDouble(Constants.JsonConstants.WIDTH);
-        p.size = (float) productInfo.optDouble(Constants.JsonConstants.SIZE);
-        p.sizeUnit = productInfo.optString(Constants.JsonConstants.SIZEUNITS);
-        if (productInfo.has(Constants.JsonConstants.PROSTONEDETAILS)) {
-            JSONArray stonedetailsarray = productInfo.getJSONArray(Constants.JsonConstants.PROSTONEDETAILS);
-            for (int i = 0; i < stonedetailsarray.length(); i++) {
-                JSONObject stoneobj = stonedetailsarray.getJSONObject(i);
-                StoneDetail stoneDetail = new StoneDetail();
-                stoneDetail.stoneFactor = stoneobj.optString("stoneFactor");
-                stoneDetail.type = stoneobj.optString("stoneType");
-                stoneDetail.number = stoneobj.optInt("stoneNum");
-                stoneDetail.price = (float) stoneobj.optDouble("stoneRate");
-                stoneDetail.weight = (float) stoneobj.optDouble("stoneWeight");
-                stoneDetail.color = stoneobj.optString("stoneColor");
-                stoneDetail.clarity = stoneobj.optString("stoneClarity");
-                stoneDetail.shape = stoneobj.optString("stoneShape");
-                stoneDetail.size = stoneobj.optInt("stoneSize");
-                stoneDetail.seting = stoneobj.optString("stoneSeting");
-                stoneDetail.weightunit = stoneobj.optString("stoneWeightUnit");
-                stoneDetail.rateunit = stoneobj.optString("stoneRateUnit");
-                stoneDetail.sizeunit = stoneobj.optString("stoneSizeUnit");
-                stoneDetail.stonecut = stoneobj.optString("stoneCut");
-                p.stonesDetails.add(stoneDetail);
-            }
-        }
-        return p;
-    }
 
     public static ProductDetail extractGetCartProductList(JSONObject productInfo) {
         ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
@@ -110,9 +58,8 @@ public class ProductDetail extends Product {
                 p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
             }
         }
-        p.currency = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
+        p.priceUnit = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
         p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
-        p.size = productInfo.optInt(Constants.JsonConstants.PRODUCTSIZE);
 
         p.quantity = 1;
         return p;

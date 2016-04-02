@@ -39,7 +39,7 @@ public class DbHelper {
                     cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
 
                     cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
-                    cv.put(Tables.Products.CURRENCY, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
+                    cv.put(Tables.Products.PRICEUNIT, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
                     int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                     if (updatecount == 0)
                         context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
