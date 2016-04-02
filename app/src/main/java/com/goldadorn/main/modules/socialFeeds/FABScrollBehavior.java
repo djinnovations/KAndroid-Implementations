@@ -30,7 +30,7 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
 
         if(dyConsumed > 0 && child.getVisibility() == View.VISIBLE)
         {
-            YoYo.with(Techniques.FadeOutDown).duration(500).withListener(new Animator.AnimatorListener()
+            YoYo.with(Techniques.FadeOutDown).duration(300).withListener(new Animator.AnimatorListener()
             {
 
                 @Override
@@ -58,7 +58,7 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
         else if(dyConsumed < 0 && child.getVisibility() == View.GONE)
         {
             child.setVisibility(View.VISIBLE);
-            YoYo.with(Techniques.FadeInUp).duration(500).playOn(child);
+            YoYo.with(Techniques.FadeInUp).duration(300).playOn(child);
         }
     }
 }
