@@ -218,7 +218,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         ProductResponse response = new ProductResponse();
         response.productId = 68;
-        response.product=mProduct;
+        response.product = mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override
@@ -237,7 +237,7 @@ public class ProductActivity extends BaseDrawerActivity {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success) {
-                    mProductOptions=result.options;
+                    mProductOptions = result.options;
                     ProductOptionsFragment f = (ProductOptionsFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                     if (f != null)
                         f.bindProductOptions(mProductOptions);
@@ -247,6 +247,12 @@ public class ProductActivity extends BaseDrawerActivity {
         configureUI(UISTATE_CUSTOMIZE);
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
+    }
+
+    public void addCustomisation(String key, String value) {
+        Toast.makeText(mContext,key+" : "+value,Toast.LENGTH_SHORT).show();
+        mProduct.addCustomisation(key, value);
+        // call api for updated price
     }
 
     private void bindOverlay() {

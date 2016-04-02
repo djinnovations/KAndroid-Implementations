@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
@@ -41,7 +42,7 @@ public class ProductOptionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mContext = getContext();
-        mProductActivity= (ProductActivity) getActivity();
+        mProductActivity = (ProductActivity) getActivity();
         return inflater.inflate(R.layout.fragment_customize, container, false);
     }
 
@@ -80,10 +81,8 @@ public class ProductOptionsFragment extends Fragment {
 
     public void bindProductOptions(ProductOptions options) {
         if (options != null) {
-            mCustomizeAdapter.changeData(options.getOptionsList());
+            mCustomizeAdapter.changeData(options.customisationOptions);
         }
-
-
     }
 
     class PBAdapter extends RecyclerAdapter<PBViewHolder> {
@@ -116,7 +115,8 @@ public class ProductOptionsFragment extends Fragment {
         }
     }
 
-    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> {
+
+    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, String>> {
 
         List<Map.Entry<String, ArrayList<String>>> options;
 
@@ -132,8 +132,8 @@ public class ProductOptionsFragment extends Fragment {
         @Override
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
             Map.Entry<String, ArrayList<String>> option = options.get(position);
-            holder.populateExtraLayout(option.getValue());
-            holder.name.setText(option.getKey());
+            holder.setOptionSelectedListener(this);
+            holder.bindUI(option);
         }
 
         @Override
@@ -144,6 +144,11 @@ public class ProductOptionsFragment extends Fragment {
         public void changeData(List<Map.Entry<String, ArrayList<String>>> optionsList) {
             options = optionsList;
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void onResult(Map.Entry<String, String> result) {
+            mProductActivity.addCustomisation(result.getKey(), result.getValue());
         }
     }
 
