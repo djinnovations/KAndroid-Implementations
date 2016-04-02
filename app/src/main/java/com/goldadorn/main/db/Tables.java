@@ -38,7 +38,7 @@ public class Tables {
         public static final String IMAGEURL = "imageurl";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String PRICE = "price";
-        public static final String CURRENCY = "currency";
+        public static final String PRICEUNIT = "currency";
         public static final String IS_LIKED = "isliked";
         public static final String DESCRIPTION = "description";
         public static final String COUNT_LIKES = "likes";
@@ -200,7 +200,7 @@ public class Tables {
                 Products.IMAGEURL + " TEXT," +
                 Products.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Products.PRICE + " INTEGER," +
-                Products.CURRENCY + " TEXT," +
+                Products.PRICEUNIT + " TEXT," +
                 Products.BASIC_INFO + " TEXT," +
                 Products.CUSTOMIZATION_INFO + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +

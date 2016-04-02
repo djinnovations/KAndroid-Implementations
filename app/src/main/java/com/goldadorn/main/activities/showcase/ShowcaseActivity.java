@@ -367,8 +367,9 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
 
         public User getUser(int position) {
-            if (cursor.moveToPosition(position)) return UserInfoCache.extractFromCursor(null,
-                    cursor);
+            if (cursor != null && cursor.moveToPosition(position))
+                return UserInfoCache.extractFromCursor(null,
+                        cursor);
             else {
                 User user = new User(2, User.TYPE_DESIGNER);
                 user.name = "Kiran BH";
@@ -464,7 +465,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             layout1.setVisibility(visibility);
             layout2.setVisibility(visibility);
             layout3.setVisibility(visibility);
-            ((LinearLayout)this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
+            ((LinearLayout) this.itemView).setGravity(visibility == View.GONE ? Gravity.TOP :
                     Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         }
 

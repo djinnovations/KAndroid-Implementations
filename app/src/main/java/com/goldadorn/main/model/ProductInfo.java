@@ -2,6 +2,7 @@ package com.goldadorn.main.model;
 
 import com.goldadorn.main.constants.Constants;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +19,7 @@ public class ProductInfo implements Serializable {
     public int imageCount;
     public ArrayList<String> images = new ArrayList<>();
     public String productType;
+    private ArrayList<StoneDetail> stonesDetails= new ArrayList<>();
 
     public ProductInfo(int id) {
         this.id = id;
@@ -35,6 +37,28 @@ public class ProductInfo implements Serializable {
         p.imageCount = obj.getInt("productNumImages");
         p.productType = obj.getString("productType");
         p.code = obj.getString("productCode");
+        if (obj.has(Constants.JsonConstants.PROSTONEDETAILS)) {
+            JSONArray stonedetailsarray = obj.getJSONArray(Constants.JsonConstants.PROSTONEDETAILS);
+            for (int i = 0; i < stonedetailsarray.length(); i++) {
+                JSONObject stoneobj = stonedetailsarray.getJSONObject(i);
+                StoneDetail stoneDetail = new StoneDetail();
+                stoneDetail.stoneFactor = stoneobj.optString("stoneFactor");
+                stoneDetail.type = stoneobj.optString("stoneType");
+                stoneDetail.number = stoneobj.optInt("stoneNum");
+                stoneDetail.price = (float) stoneobj.optDouble("stoneRate");
+                stoneDetail.weight = (float) stoneobj.optDouble("stoneWeight");
+                stoneDetail.color = stoneobj.optString("stoneColor");
+                stoneDetail.clarity = stoneobj.optString("stoneClarity");
+                stoneDetail.shape = stoneobj.optString("stoneShape");
+                stoneDetail.size = stoneobj.optInt("stoneSize");
+                stoneDetail.seting = stoneobj.optString("stoneSeting");
+                stoneDetail.weightunit = stoneobj.optString("stoneWeightUnit");
+                stoneDetail.rateunit = stoneobj.optString("stoneRateUnit");
+                stoneDetail.sizeunit = stoneobj.optString("stoneSizeUnit");
+                stoneDetail.stonecut = stoneobj.optString("stoneCut");
+                p.stonesDetails.add(stoneDetail);
+            }
+        }
         return p;
     }
 

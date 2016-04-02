@@ -324,6 +324,19 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
+    public void addToCart() {
+        UIController.addToCart(mContext, mProduct,
+                new IResultListener<ProductResponse>() {
+
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        Toast.makeText(mContext,
+                                result.success ? "Added to cart successfully!" :
+                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<String> images;
@@ -488,16 +501,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo wishlist click
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
             } else if (v == cartButton) {
-                UIController.addToCart(v.getContext(), mProduct,
-                        new IResultListener<ProductResponse>() {
-
-                            @Override
-                            public void onResult(ProductResponse result) {
-                                Toast.makeText(v.getContext(),
-                                        result.success ? "Added to cart successfully!" :
-                                                "Adding to cart failed.", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                addToCart();
             } else if (v == followButton) {
                 v.setEnabled(false);
                 final boolean isFollowing = v.isSelected();
