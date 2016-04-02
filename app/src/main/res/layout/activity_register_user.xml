@@ -9,6 +9,7 @@
     android:id="@+id/layoutParent"
     tools:context=".activities.AppStartActivity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -87,6 +88,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/labelGender"
                 android:text="@string/labelGender"
                 />
         <RadioGroup
@@ -154,6 +156,7 @@
                 android:layout_marginLeft="@dimen/padding_default_2x"
                 android:layout_marginRight="@dimen/padding_default_2x"
                 android:layout_width="wrap_content"
+                android:id="@+id/orLabel"
                 android:layout_height="wrap_content" android:text="@string/orRegisterWithSocial" />
             <View
                 android:layout_width="0dp"
@@ -173,28 +176,30 @@
                 style="@style/socialLoginButton"
                 android:layout_marginLeft="@dimen/padding_default_2x"
                 android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_height"
+                android:layout_width="@dimen/circle_button_small_height"
                 android:text="@string/icon_facebook"
-                android:layout_height="@dimen/circle_button_height"
+                android:layout_height="@dimen/circle_button_small_height"
                 android:id="@+id/loginWithFacebookButton"/>
 
             <com.mikepenz.iconics.view.IconicsButton
                 style="@style/socialLoginButton"
                 android:layout_marginLeft="@dimen/padding_default_2x"
                 android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_height"
-                android:layout_height="@dimen/circle_button_height"
-                android:text="@string/icon_google_plus"
-                android:id="@+id/loginWithGoogleButton"/>
-
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:text="@string/icon_twitter"
+                android:id="@+id/loginWithTwitterButton"/>
+            
             <com.mikepenz.iconics.view.IconicsButton
                 style="@style/socialLoginButton"
                 android:layout_marginLeft="@dimen/padding_default_2x"
                 android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_height"
-                android:layout_height="@dimen/circle_button_height"
-                android:text="@string/icon_twitter"
-                android:id="@+id/loginWithTwitterButton"/>
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:text="@string/icon_google_plus"
+                android:id="@+id/loginWithGoogleButton"/>
+
+   
         </LinearLayout>
 
         <Button
@@ -204,7 +209,7 @@
             android:layout_gravity="center_horizontal"
             style="@style/linkButton"
             android:id="@+id/loginAccount"
-            android:layout_height="wrap_content" android:text="@string/loginButton"/>
+            android:layout_height="wrap_content" android:text="@string/loginLink"/>
 
         <TextView
             android:layout_marginTop="@dimen/padding_default_2x"

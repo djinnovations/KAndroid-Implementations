@@ -69,6 +69,11 @@ package com.goldadorn.main.activities;
         @Bind(R.id.userName)
         EditText userName;
 
+        @Bind(R.id.labelGender)
+        TextView labelGender;
+
+
+
         @Bind(R.id.password)
         EditText password;
 
@@ -101,6 +106,8 @@ package com.goldadorn.main.activities;
         @Bind(R.id.femaleRadioButton)
         RadioButton femaleRadioButton;
 
+        @Bind(R.id.orLabel)
+        TextView orLabel;
 
 
 
@@ -294,7 +301,7 @@ package com.goldadorn.main.activities;
 
             genderRadioGroup.check(R.id.femaleRadioButton);
 
-            TypefaceHelper.setFont(userName, password,name, loginAccount, createAccount);
+            TypefaceHelper.setFont(orLabel,femaleRadioButton,maleRadioButton,labelGender,inputLayoutName,inputLayoutPassword,inputLayoutUserName,userName, password,name, loginAccount, createAccount);
         }
 
         private class LoginTextWatcher implements TextWatcher {

@@ -5,7 +5,14 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/appBGColor</item>
-        <item name="colorControlNormal">@color/toolbarIconColor</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/controlColor</item>
+        <item name="colorControlActivated">@color/controlColor</item>
+        <item name="colorControlHighlight">@color/controlColor</item>
+
         <item name="android:titleTextStyle">@style/Toolbar.TitleText</item>
         <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -20,7 +27,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:buttonStyle">@style/button</item>
-        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/controlColor</item>
+        <item name="colorControlActivated">@color/controlColor</item>
+        <item name="colorControlHighlight">@color/controlColor</item>
         <item name="android:actionBarStyle">@style/toolbarStyle</item>
 
     </style>
@@ -106,7 +115,7 @@
         <item name="android:background">@drawable/feed_fotter_button_bg</item>
     </style>
     <style name="socialLoginButton" parent="@android:style/Widget.Button">
-        <item name="android:textSize">26sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@drawable/social_login_button_text_color</item>
         <item name="android:background">@drawable/social_button_bg</item>
     </style>

@@ -2,9 +2,11 @@ package com.goldadorn.main.utils;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -25,10 +27,21 @@ public class TypefaceHelper {
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
+    public static void setFont(TextInputLayout text,String fontName) {
+        Typeface typeface = getTypeFace(text.getContext(),fontName);
+        text.setTypeface(typeface);
+    }
     public static void setFont(Button text,String fontName) {
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
+    public static void setFont(RadioButton text,String fontName) {
+        Typeface typeface = getTypeFace(text.getContext(),fontName);
+        text.setTypeface(typeface);
+    }
+
+
+
 
     public static void setFont(EditText text) {
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_edit_text));
@@ -37,7 +50,18 @@ public class TypefaceHelper {
     public static void setFont(TextView text) {
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
+
     }
+    public static void setFont(TextInputLayout text) {
+        Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
+        text.setTypeface(typeface);
+    }
+
+    public static void setFont(RadioButton text) {
+        Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
+        text.setTypeface(typeface);
+    }
+
     public static void setFont(Button text) {
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
@@ -54,6 +78,13 @@ public class TypefaceHelper {
                 setFont((EditText)view);
             else if(view instanceof Button)
                 setFont((Button)view);
+            else if(view instanceof TextInputLayout)
+                setFont((TextInputLayout)view);
+            else if(view instanceof RadioButton)
+                setFont((RadioButton)view);
+
+
+
         }
     }
 
@@ -68,6 +99,10 @@ public class TypefaceHelper {
                 setFont((EditText)view,fontName);
             else if(view instanceof Button)
                 setFont((Button)view,fontName);
+            else if(view instanceof TextInputLayout)
+                setFont((TextInputLayout)view,fontName);
+            else if(view instanceof RadioButton)
+                setFont((RadioButton)view,fontName);
         }
     }
 

@@ -3,8 +3,10 @@ package com.goldadorn.main.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.actions.Action;
 
 import butterknife.Bind;
@@ -28,6 +30,10 @@ public class LandingPageActivity extends BaseActivity {
 
     @Bind(R.id.loginWithTwitterButton)
     Button loginWithTwitterButton;
+
+    @Bind(R.id.orLabel)
+    TextView orLabel;
+
 
 
     @OnClick(R.id.createAccount) void onClickCreateAccount()
@@ -61,5 +67,6 @@ public class LandingPageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_app_landing_page);
         ButterKnife.bind(this);
+        TypefaceHelper.setFont(loginAccount,createAccount,orLabel);
     }
 }

@@ -9,6 +9,7 @@
     android:id="@+id/layoutParent"
     tools:context=".activities.AppStartActivity">
 
+
     <LinearLayout
 
         android:layout_width="match_parent"
@@ -112,6 +113,7 @@
                 android:layout_marginLeft="@dimen/padding_default_2x"
                 android:layout_marginRight="@dimen/padding_default_2x"
                 android:layout_width="wrap_content"
+                android:id="@+id/orLabel"
                 android:layout_height="wrap_content" android:text="@string/orSocialLogin" />
             <View
                 android:layout_width="0dp"
@@ -131,28 +133,30 @@
             style="@style/socialLoginButton"
             android:layout_marginLeft="@dimen/padding_default_2x"
             android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
+            android:layout_width="@dimen/circle_button_small_height"
             android:text="@string/icon_facebook"
-            android:layout_height="@dimen/circle_button_height"
+            android:layout_height="@dimen/circle_button_small_height"
             android:id="@+id/loginWithFacebookButton"/>
 
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/socialLoginButton"
             android:layout_marginLeft="@dimen/padding_default_2x"
             android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
-            android:text="@string/icon_google_plus"
-            android:id="@+id/loginWithGoogleButton"/>
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:text="@string/icon_twitter"
+            android:id="@+id/loginWithTwitterButton"/>
 
         <com.mikepenz.iconics.view.IconicsButton
             style="@style/socialLoginButton"
             android:layout_marginLeft="@dimen/padding_default_2x"
             android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_height"
-            android:layout_height="@dimen/circle_button_height"
-            android:text="@string/icon_twitter"
-            android:id="@+id/loginWithTwitterButton"/>
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:text="@string/icon_google_plus"
+            android:id="@+id/loginWithGoogleButton"/>
+
+
     </LinearLayout>
 
 
@@ -162,8 +166,9 @@
             android:layout_width="wrap_content"
             android:layout_gravity="center_horizontal"
             style="@style/linkButton"
+            android:maxLines="2"
             android:id="@+id/createAccount"
-            android:layout_height="wrap_content" android:text="@string/createAccountButton"/>
+            android:layout_height="wrap_content" android:text="@string/createAccountLink"/>
 
 
 

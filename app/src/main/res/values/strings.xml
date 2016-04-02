@@ -7,23 +7,26 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_app_start">AppStart</string>
     <string name="loadinApp">Loading...</string>
-    <string name="createAccountButton">Create an Account</string>
+    <string name="createAccountButton">Create Account</string>
+    <string name="createAccountLink">Not Signed Up?\nCreate An Account Now</string>
     <string name="loginButton">Login</string>
+    <string name="loginLink">Signed Up Already? Login Now</string>
+
     <string name="orLabel">OR</string>
     <string name="orSocialLogin">login with</string>
     <string name="orRegisterWithSocial">Register With</string>
     <string name="title_activity_register_user">RegisterUserActivity</string>
-    <string name="hint_email">Enter your email ID</string>
-    <string name="hint_passord">Enter your password</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_passord">Password</string>
 
     <string name="err_msg_email">Enter valid email address</string>
     <string name="err_msg_password">Enter valid password</string>
     <string name="err_msg_name">Enter valid name</string>
-    <string name="forgotPassword">Forgot Password</string>
+    <string name="forgotPassword">Forgot Password?</string>
     <string name="hint_name">Enter Your Name</string>
     <string name="labelMale">Male</string>
     <string name="labelFemale">Female</string>
-    <string name="labelGender">Gender</string>
+    <string name="labelGender">Gender:</string>
     <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a
         href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a
         href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a

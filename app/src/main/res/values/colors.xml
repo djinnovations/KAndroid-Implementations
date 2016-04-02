@@ -3,6 +3,8 @@
     <color name="colorAccent">#b39d47</color>
     <color name="colorPrimary">#866c52</color>
     <color name="colorPrimaryAlpha">#55866c52</color>
+    <color name="controlColor">#000000</color>
+
     <color name="tabBGColor">#cecece</color>
 
     <color name="toolbarBG">#ffffff</color>

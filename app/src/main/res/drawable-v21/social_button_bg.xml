@@ -6,14 +6,14 @@
     <item android:state_pressed="true">
         <shape android:shape="oval">
             <padding android:bottom="3dp" android:right="3dp" android:top="3dp" android:left="3dp"/>
-            <stroke android:width="1dip" android:color="@color/socialLoginButtonPressBorder" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/socialLoginButtonPressBorder" />
             <gradient  android:angle="@integer/buttonGradientAngle"  android:startColor="@color/socialLoginButtonPressStart" android:endColor="@color/socialLoginButtonPressEnd"  />
         </shape>
     </item>
     <item android:state_enabled="true" android:state_selected="true">
         <shape android:shape="oval">
             <padding android:bottom="3dp" android:right="3dp" android:top="3dp" android:left="3dp"/>
-            <stroke android:width="1dip" android:color="@color/votedColor" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/votedColor" />
             <gradient  android:angle="@integer/buttonGradientAngle"  android:startColor="@color/votedColor" android:endColor="@color/votedColor"  />
         </shape>
     </item>
@@ -21,14 +21,14 @@
     <item android:state_focused="true">
         <shape android:shape="oval"  >
             <padding android:bottom="3dp" android:right="3dp" android:top="3dp" android:left="3dp"/>
-            <stroke android:width="1dip" android:color="@color/socialLoginButtonPressBorder" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/socialLoginButtonPressBorder" />
             <gradient  android:angle="@integer/buttonGradientAngle"  android:startColor="@color/socialLoginButtonPressStart" android:endColor="@color/socialLoginButtonPressEnd"  />
         </shape>
     </item>
     <item >
         <shape android:shape="oval"  >
             <padding android:bottom="3dp" android:right="3dp" android:top="3dp" android:left="3dp"/>
-            <stroke android:width="1dip" android:color="@color/socialLoginButtonNormalBorder" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/socialLoginButtonNormalBorder" />
             <gradient  android:angle="@integer/buttonGradientAngle"  android:startColor="@color/socialLoginButtonNormalStart" android:endColor="@color/socialLoginButtonNormalEnd"  />
         </shape>
     </item>

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
@@ -73,6 +74,10 @@ public class LoginPageActivity extends BaseActivity {
 
     @Bind(R.id.userName)
     EditText userName;
+
+    @Bind(R.id.orLabel)
+    TextView orLabel;
+
 
     @Bind(R.id.password)
     EditText password;
@@ -251,7 +256,7 @@ public class LoginPageActivity extends BaseActivity {
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
 
-        TypefaceHelper.setFont(userName,password,loginAccount,createAccount);
+        TypefaceHelper.setFont(inputLayoutUserName,inputLayoutPassword,userName,password,loginAccount,createAccount,forgotPasswordButton,orLabel);
 
 //        Intent in = new Intent(this, CartManagerActivity.class);
 //        startActivity(in);
