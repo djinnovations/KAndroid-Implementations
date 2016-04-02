@@ -16,12 +16,13 @@ import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.model.ProductOptions;
 
 /**
  * Created by Vijith Menon on 18/3/16.
  */
-public class CustomizeFragment extends Fragment {
-    private final static String TAG = CustomizeFragment.class.getSimpleName();
+public class ProductOptionsFragment extends Fragment {
+    private final static String TAG = ProductOptionsFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
 
@@ -66,6 +67,10 @@ public class CustomizeFragment extends Fragment {
                 ((TextView) holder.itemView.findViewById(R.id.title)).setText(title);
             }
         });
+    }
+
+    public void bindProductOptions(ProductOptions options) {
+
     }
 
     class PBAdapter extends RecyclerAdapter<PBViewHolder> {
