@@ -27,8 +27,8 @@ import java.util.Map;
 /**
  * Created by Vijith Menon on 18/3/16.
  */
-public class ProductOptionsFragment extends Fragment {
-    private final static String TAG = ProductOptionsFragment.class.getSimpleName();
+public class ProductCustomiseFragment extends Fragment {
+    private final static String TAG = ProductCustomiseFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
 

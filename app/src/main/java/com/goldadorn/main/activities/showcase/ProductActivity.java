@@ -238,7 +238,7 @@ public class ProductActivity extends BaseDrawerActivity {
             public void onResult(ProductResponse result) {
                 if (result.success) {
                     mProductOptions = result.options;
-                    ProductOptionsFragment f = (ProductOptionsFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
+                    ProductCustomiseFragment f = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
                     if (f != null)
                         f.bindProductOptions(mProductOptions);
                 }
@@ -326,7 +326,7 @@ public class ProductActivity extends BaseDrawerActivity {
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
         } else {
-            f = new ProductOptionsFragment();
+            f = new ProductCustomiseFragment();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
