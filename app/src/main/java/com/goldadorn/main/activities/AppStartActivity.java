@@ -2,16 +2,19 @@ package com.goldadorn.main.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidquery.callback.AjaxStatus;
+import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
@@ -27,12 +30,15 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 public class AppStartActivity extends BaseActivity {
 
@@ -68,6 +74,11 @@ public class AppStartActivity extends BaseActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
         initMixpanel();
+        initFacebookSdk();
+    }
+
+    private void initFacebookSdk() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     private void initMixpanel() {
@@ -77,6 +88,36 @@ public class AppStartActivity extends BaseActivity {
             MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, token);
             mixpanelAPI.getPeople().identify(String.valueOf(((Application) this.getApplicationContext()).getUser().id));
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        checkbranchio();
+    }
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        checkbranchio();
+    }
+
+    private void checkbranchio() {
+        Branch branch = Branch.getInstance(getApplicationContext());
+
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                } else {
+                    Log.i("MyApp", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
     }
 
     private void kickStart() {
