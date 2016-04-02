@@ -5,6 +5,7 @@ import android.net.Uri;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductDetail;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -329,7 +330,7 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productToAdd.id);
-            ProductDetail productDetail = (ProductDetail) response.productToAdd;
+            Product productDetail = response.productToAdd;
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);

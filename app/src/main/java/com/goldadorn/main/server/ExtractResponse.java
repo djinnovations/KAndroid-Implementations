@@ -2,13 +2,12 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 
-import com.goldadorn.main.model.ProductDetail;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by nithinjohn on 12/03/16.
@@ -34,23 +33,12 @@ public class ExtractResponse {
             response.success = false;
     }
 
-    protected static ProductDetail extractProductCustomizationDetail(String jsonString) {
-        if (jsonString != null) {
-            try {
-                JSONObject productObj = new JSONObject(jsonString);
-                return ProductDetail.extractCustomization(productObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     protected static void extractGetCart(ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONArray productArray = new JSONArray(response.responseContent);
             for (int i = 0; i < productArray.length(); i++) {
-                response.productArray.add(ProductDetail.extractGetCartProductList(productArray.getJSONObject(i)));
+                response.productArray.add(Product.extractGetCartProductList(productArray.getJSONObject(i)));
 
             }
 

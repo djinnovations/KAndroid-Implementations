@@ -16,54 +16,22 @@ public class ProductDetail extends Product {
     ///customization variables
     public float makeingCharge;
     public String makeingChargeUnit;
-    public String primaryMetal;
-    public String primaryMetalColor;
-    public float primaryMetalPurity;
     public float primaryMetalPrice;
     public String primaryMetalPriceUnits;
     public float stonePrice;
     public String stonePriceUnit;
+
     ArrayList<String> metalList;
     ArrayList<Integer> metalPurityList;
     ArrayList<Integer> metalColorList;
     ArrayList<String> centerStone;
-
     HashMap<String, ArrayList<String>> accentStones;
     HashMap<String, ArrayList<String>> gemStones;
-
-
-    public String centerStoneSelected;
-    public final HashMap<String, String> accentStoneSelected = new HashMap<>();
-    public final HashMap<String, String> gemStoneSelected = new HashMap<>();
 
     public ProductDetail(int id) {
         super(id);
     }
 
-
-    public static ProductDetail extractGetCartProductList(JSONObject productInfo) {
-        ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
-        p.name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
-        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-        p.primaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
-        p.centerStoneSelected = productInfo.optString(Constants.JsonConstants.CENTERSTONE);
-        for (int i = 0; i < 11; i++) {
-            if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
-                p.accentStoneSelected.put(Constants.JsonConstants.ACCENTSTONE + i, productInfo.optString(Constants.JsonConstants.ACCENTSTONE + i));
-            }
-        }
-        for (int i = 0; i < 11; i++) {
-            if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
-                p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
-            }
-        }
-        p.priceUnit = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
-        p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
-
-        p.quantity = 1;
-        return p;
-    }
 
     public static ProductDetail extractCustomization(JSONObject productInfo) throws JSONException {
         ProductDetail p = new ProductDetail(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
@@ -119,7 +87,6 @@ public class ProductDetail extends Product {
             }
         }
         return p;
-
     }
 
 }
