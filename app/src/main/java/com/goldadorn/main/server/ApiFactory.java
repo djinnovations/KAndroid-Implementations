@@ -369,22 +369,10 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mContext = context;
             paramsBuilder.mApiType = PRODUCT_CUSTOMIZATION_TYPE;
 
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productId);
-//            Product product = response.product;
-//            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
-//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
-//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
-//            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
-//            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
-
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
-            L.d("getPriceForCustomization " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            L.d("getProductCustomization " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

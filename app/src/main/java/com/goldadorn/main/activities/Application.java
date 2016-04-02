@@ -19,6 +19,9 @@ import com.goldadorn.main.modules.search.HashTagFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.AsyncRunnableTask;
 import com.goldadorn.main.utils.URLHelper;
+import com.google.android.gms.analytics.ExceptionReporter;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.model.BaseApplication;
@@ -72,6 +75,7 @@ public class Application extends BaseApplication {
         URLHelper.getInstance().setCookies(cookies);
     }
 
+
     @Override
     public Object getSystemService(String name) {
         if (UserInfoCache.USER_INFO_SERVICE.equals(name)) {
@@ -81,6 +85,7 @@ public class Application extends BaseApplication {
         }
         return super.getSystemService(name);
     }
+
 
     public URLHelper getUrlHelper() {
         return URLHelper.getInstance();
@@ -163,6 +168,20 @@ public class Application extends BaseApplication {
     private void addItem(Map<Integer, IFragmentData> menu, int id, String actionType) {
         menu.put(id, new NavigationDataObject(id, actionType));
     }
+    private Tracker mTracker;
+
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+    synchronized public Tracker getDefaultTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.global_tracker);
+        }
+        return mTracker;
+    }
 
     public void configApplication() {
         Mint.initAndStartSession(this, "9bccadcc");
@@ -171,6 +190,14 @@ public class Application extends BaseApplication {
         Iconics.registerFont(new GoldadornIconFont());
         Iconics.registerFont(new HeartIconFont());
         configMainMenu();
+        getDefaultTracker();
+        Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(
+                mTracker,
+                Thread.getDefaultUncaughtExceptionHandler(),
+                this);
+
+// Make myHandler the new default uncaught exception handler.
+        Thread.setDefaultUncaughtExceptionHandler(myHandler);
     }
 
     private void logUser(User user) {
@@ -217,6 +244,7 @@ public class Application extends BaseApplication {
     public void postWork(Runnable runnable) {
         new AsyncRunnableTask(runnable).execute(AsyncTask.SERIAL_EXECUTOR);
     }
+
     public Handler getUIHandler() {
         return mUIHandler;
     }
