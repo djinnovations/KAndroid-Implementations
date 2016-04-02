@@ -6,11 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ProductInfo implements Serializable {
+public class ProductInfo  {
     public final int id;
     public String code;
     public String sizeUnit, weightUnits;

@@ -16,24 +16,32 @@ import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.model.ProductOptions;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vijith Menon on 18/3/16.
  */
-public class CustomizeFragment extends Fragment {
-    private final static String TAG = CustomizeFragment.class.getSimpleName();
+public class ProductOptionsFragment extends Fragment {
+    private final static String TAG = ProductOptionsFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
 
     RecyclerView mRecyclerView;
     MergeRecycleAdapter mAdapter;
     Context mContext;
+    private CustomizeMainAdapter mCustomizeAdapter;
+    private ProductActivity mProductActivity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mContext = getContext();
+        mProductActivity= (ProductActivity) getActivity();
         return inflater.inflate(R.layout.fragment_customize, container, false);
     }
 
@@ -46,11 +54,13 @@ public class CustomizeFragment extends Fragment {
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
         mAdapter.addAdapter(new PBAdapter(getActivity()));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
-        mAdapter.addAdapter(new CustomizeMainAdapter(getActivity()));
+        mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
         mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
         mAdapter.addAdapter(new SingleItemAdapter(mContext, true, 0, ViewHolderFactory.TYPE.VHT_C_SEPARATOR));
         mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
+
+        bindProductOptions(mProductActivity.mProductOptions);
 
     }
 
@@ -66,6 +76,14 @@ public class CustomizeFragment extends Fragment {
                 ((TextView) holder.itemView.findViewById(R.id.title)).setText(title);
             }
         });
+    }
+
+    public void bindProductOptions(ProductOptions options) {
+        if (options != null) {
+            mCustomizeAdapter.changeData(options.getOptionsList());
+        }
+
+
     }
 
     class PBAdapter extends RecyclerAdapter<PBViewHolder> {
@@ -98,13 +116,12 @@ public class CustomizeFragment extends Fragment {
         }
     }
 
-    class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> {
+    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> {
 
-        private final Context context;
+        List<Map.Entry<String, ArrayList<String>>> options;
 
         public CustomizeMainAdapter(Context context) {
             super(context, true);
-            this.context = context;
         }
 
         @Override
@@ -114,12 +131,19 @@ public class CustomizeFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
-
+            Map.Entry<String, ArrayList<String>> option = options.get(position);
+            holder.populateExtraLayout(option.getValue());
+            holder.name.setText(option.getKey());
         }
 
         @Override
         public int getItemCount() {
-            return 5;
+            return options == null ? 0 : options.size();
+        }
+
+        public void changeData(List<Map.Entry<String, ArrayList<String>>> optionsList) {
+            options = optionsList;
+            notifyDataSetChanged();
         }
     }
 
@@ -175,7 +199,7 @@ public class CustomizeFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    ((ProductActivity)getActivity()).addToCart();
+                    ((ProductActivity) getActivity()).addToCart();
                     //// TODO: 30/3/16 kiran add to cart click
                 }
             });

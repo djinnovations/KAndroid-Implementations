@@ -222,16 +222,13 @@ public class Api {
     private static void extractException(final Context context, BasicResponse response, Exception e) {
         if (e instanceof UnknownHostException) {
             response.responseCode = BasicResponse.IO_EXE;
-            response.success = false;
         } else if (e instanceof SQLiteDiskIOException) {
             response.responseCode = BasicResponse.IO_EXE;
-            response.success = false;
         } else if (e instanceof IOException) {
             response.responseCode = BasicResponse.IO_EXE;
-            response.success = false;
         } else if (e instanceof JSONException) {
             response.responseCode = BasicResponse.JSON_EXE;
-            response.success = false;
         }
+        response.success=false;
     }
 }

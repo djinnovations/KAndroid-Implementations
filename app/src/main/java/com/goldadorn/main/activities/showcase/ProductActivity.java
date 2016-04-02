@@ -42,6 +42,7 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
+import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -124,6 +125,7 @@ public class ProductActivity extends BaseDrawerActivity {
     User mUser;
     Collection mCollection;
     public ProductInfo mProductInfo;
+    public ProductOptions mProductOptions;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -215,13 +217,14 @@ public class ProductActivity extends BaseDrawerActivity {
         bindOverlay();
 
         ProductResponse response = new ProductResponse();
-        response.productId = mProduct.id;
+        response.productId = 68;
+        response.product=mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
                         if (result.success) {
-                            mProductInfo = result.summary;
+                            mProductInfo = result.info;
                             mProductAdapter.changeData(mProductInfo.images);
                             ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             if (f != null)
@@ -230,15 +233,18 @@ public class ProductActivity extends BaseDrawerActivity {
                         }
                     }
                 });
-        UIController.getProductCustomization(mContext, response, new IResultListener<ProductResponse>() {
+        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success) {
-                    configureUI(UISTATE_CUSTOMIZE);
+                    mProductOptions=result.options;
+                    ProductOptionsFragment f = (ProductOptionsFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                    if (f != null)
+                        f.bindProductOptions(mProductOptions);
                 }
             }
         });
-
+        configureUI(UISTATE_CUSTOMIZE);
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
     }
@@ -314,7 +320,7 @@ public class ProductActivity extends BaseDrawerActivity {
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
         } else {
-            f = new CustomizeFragment();
+            f = new ProductOptionsFragment();
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
