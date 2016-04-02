@@ -65,7 +65,7 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void getProductCustomization(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
+    public static void getProductOptions(final Context context, final ProductResponse response, final IResultListener<ProductResponse> listener) {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

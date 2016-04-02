@@ -29,7 +29,7 @@ public class Product implements Serializable {
     //customise variable
     public String primaryMetal;
     public String primaryMetalColor;
-    public float primaryMetalPurity;
+    public String primaryMetalPurity;
     public String centerStoneSelected;
     public final HashMap<String, String> accentStoneSelected = new HashMap<>();
     public final HashMap<String, String> gemStoneSelected = new HashMap<>();
@@ -76,7 +76,7 @@ public class Product implements Serializable {
         p.name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
         p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
         p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-        p.primaryMetalPurity = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPURITY);
+        p.primaryMetalPurity = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY);
         p.centerStoneSelected = productInfo.optString(Constants.JsonConstants.CENTERSTONE);
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {

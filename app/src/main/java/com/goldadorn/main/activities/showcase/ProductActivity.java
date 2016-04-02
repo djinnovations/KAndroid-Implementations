@@ -217,7 +217,7 @@ public class ProductActivity extends BaseDrawerActivity {
         bindOverlay();
 
         ProductResponse response = new ProductResponse();
-        response.productId = mProduct.id;
+        response.productId = 68;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override
@@ -232,7 +232,7 @@ public class ProductActivity extends BaseDrawerActivity {
                         }
                     }
                 });
-        UIController.getProductCustomization(mContext, response, new IResultListener<ProductResponse>() {
+        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success) {
