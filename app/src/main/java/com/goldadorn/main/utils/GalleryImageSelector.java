@@ -151,11 +151,17 @@ public class GalleryImageSelector extends ImageSelector
         super.imageLoaded(bitmap,file,method);
         if(method!=PICK_SERVER_GALLERY)
             path=null;
+
+        if(triger!=null)
+            triger.setVisibility(View.VISIBLE);
     }
 
     private void showPreview(String preview) {
         if(holder!=null)
             Picasso.with(activity).load(preview).into(holder);
+
+        if(triger!=null)
+            triger.setVisibility(View.VISIBLE);
     }
 
     public Bitmap decodeFile(String filePath) {

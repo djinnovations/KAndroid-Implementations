@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.post;
 
+import android.view.View;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
@@ -77,9 +78,13 @@ public class PostNormalActivity extends AbstractPostActivity {
     @Bind(R.id.previewIamge)
     ImageView previewIamge;
 
+    @Bind(R.id.trigger)
+    View trigger;
+
+
     protected void viewCreted(People people,int maxImageSize)
     {
-        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge);
+        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge,trigger);
         imageSelector1.setMaxSize(maxImageSize);
     }
 }

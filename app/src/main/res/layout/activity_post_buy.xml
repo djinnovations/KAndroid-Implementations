@@ -81,6 +81,20 @@
                 android:id="@+id/previewIamge"
                 android:scaleType="centerCrop"/>
 
+            <ImageButton
+                style="@style/circleButton"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:id="@+id/trigger"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:src="@drawable/vecor_icon_pencil"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                />
+
         </RelativeLayout>
     </LinearLayout>
     </ScrollView>

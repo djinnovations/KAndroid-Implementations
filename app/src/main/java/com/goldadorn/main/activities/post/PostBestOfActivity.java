@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.post;
 
+import android.view.View;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
@@ -136,15 +137,24 @@ public class PostBestOfActivity extends AbstractPostActivity {
     @Bind(R.id.previewIamge3)
     ImageView previewIamge3;
 
+    @Bind(R.id.trigger1)
+    View trigger1;
+
+    @Bind(R.id.trigger2)
+    View trigger2;
+
+    @Bind(R.id.trigger3)
+    View trigger3;
+
 
     protected void viewCreted(People people,int maxImageSize)
     {
         details.setText("Guys, which one is the best of these 3? #BOT");
-        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge1);
+        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge1,trigger1);
         imageSelector1.setMaxSize(maxImageSize);
-        imageSelector2 =  new GalleryImageSelector(this,this,previewIamge2);
+        imageSelector2 =  new GalleryImageSelector(this,this,previewIamge2,trigger2);
         imageSelector2.setMaxSize(maxImageSize);
-        imageSelector3 =  new GalleryImageSelector(this,this,previewIamge3);
+        imageSelector3 =  new GalleryImageSelector(this,this,previewIamge3,trigger3);
         imageSelector3.setMaxSize(maxImageSize);
     }
 }

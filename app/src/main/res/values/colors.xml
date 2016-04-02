@@ -84,7 +84,7 @@
     <color name="linkButtonTextWhiteNormalColor">#ffffff</color>
     <color name="whiteLight">#33ffffff</color>
 
-    <color name="darkDisable">#bb333333</color>
+    <color name="darkDisable">#bbffffff</color>
     <color name="overlay">#9f444444</color>
     <color name="disabled_grey">#cccccc</color>
     <color name="headerColor">#7c624b</color>
