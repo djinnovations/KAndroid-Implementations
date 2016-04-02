@@ -39,7 +39,7 @@ class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
                 vh = new ViewHolder(inflater.inflate(R.layout.layout_cutomize_title, parent, false));
                 break;
             case TYPE.VHT_C_MAIN:
-                vh = new ViewHolder(inflater.inflate(R.layout.item_cutomize_main, parent, false));
+                vh = new CustomizeMainHolder(inflater.inflate(R.layout.item_cutomize_main, parent, false));
                 break;
             case TYPE.VHT_C_SEPARATOR:
                 vh = new ViewHolder(inflater.inflate(R.layout.layout_cutomize_separator, parent, false));

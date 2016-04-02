@@ -94,6 +94,7 @@ public class ProductInfoFragment extends Fragment {
 
     @SuppressLint("StringFormatInvalid")
     public void bindProductInfo(ProductInfo summary) {
+        if(summary!=null)
         mProductDetail.setText(getString(R.string.product_desc, summary.code,
                 summary.getDisplayHeight(), summary.getDisplayWidth(),
                 summary.getDisplayWeight()));

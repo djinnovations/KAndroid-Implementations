@@ -34,18 +34,6 @@ public class ExtractResponse {
             response.success = false;
     }
 
-    protected static ProductDetail extractProductBasicInfo(String jsonstring) {
-        if (jsonstring != null) {
-            try {
-                JSONObject productObj = new JSONObject(jsonstring);
-                return  ProductDetail.extractBasicInfo(productObj);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
     protected static ProductDetail extractProductCustomizationDetail(String jsonString) {
         if (jsonString != null) {
             try {
