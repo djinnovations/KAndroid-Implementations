@@ -252,7 +252,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean value = super.onCreateOptionsMenu(menu);
-        menu.findItem(R.id.nav_my_overflow).setVisible(false);
+        //menu.findItem(R.id.nav_my_overflow).setVisible(false);
         return value;
     }
 

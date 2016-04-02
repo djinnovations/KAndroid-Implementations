@@ -221,11 +221,108 @@
         android:text="@string/contactUs"
         style="@style/linkButton"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20dp"
         android:textSize="16sp"
         android:gravity="left|center_vertical"
         android:layout_width="match_parent"
         android:layout_height="40dp"/>
+
+
+
+
+        <Button
+            android:id="@+id/nav_my_profile"
+            android:text="@string/myProfile"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+        <Button
+            android:id="@+id/nav_order_tracking"
+            android:text="@string/orderTracking"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
+        <Button
+            android:id="@+id/nav_about_us"
+            android:text="@string/aboutUS"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
+        <Button
+            android:id="@+id/nav_faqs"
+            android:text="@string/faqs"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
+        <Button
+            android:id="@+id/nav_shipping_and_return"
+            android:text="@string/shippingAndReturnPolicy"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+
+        <Button
+            android:id="@+id/nav_privacy_policy"
+            android:text="@string/privacyPolicy"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+        <Button
+            android:id="@+id/nav_terms_conditions"
+            android:text="@string/termsAndConditions"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+        <Button
+            android:id="@+id/nav_settings"
+            android:text="@string/settings"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
+
+        <Button
+            android:id="@+id/nav_logout"
+            android:text="@string/logout"
+            style="@style/linkButton"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="16sp"
+            android:gravity="left|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"/>
 
     </LinearLayout>
 

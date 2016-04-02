@@ -2,25 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/nav_my_notifications"
-        android:icon="@drawable/vector_icon_bell"
-        android:orderInCategory="100"
-        android:title=""
-        app:showAsAction="always"/>
-
-    <item
         android:id="@+id/nav_my_search"
         android:icon="@drawable/vector_icon_search"
         android:orderInCategory="100"
         android:title=""
         app:showAsAction="always|collapseActionView"/>
 
+    <item
+        android:id="@+id/nav_my_notifications"
+        android:icon="@drawable/vector_icon_bell"
+        android:orderInCategory="100"
+        android:title=""
+        app:showAsAction="always"/>
+
+
+
     <!--
     app:actionViewClass="android.support.v7.widget.SearchView"
     -->
 
 
-
+    <!--
     <item
         android:id="@+id/nav_my_overflow"
         android:icon="@drawable/vector_icon_overflow"
@@ -96,4 +98,5 @@
                 app:showAsAction="never"/>
         </menu>
     </item>
+    -->
 </menu>

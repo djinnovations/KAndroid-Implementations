@@ -261,7 +261,7 @@ public class ProductActivity extends BaseDrawerActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean value = super.onCreateOptionsMenu(menu);
-        menu.findItem(R.id.nav_my_overflow).setVisible(false);
+        //menu.findItem(R.id.nav_my_overflow).setVisible(false);
         menu.findItem(R.id.nav_my_notifications).setIcon(R.drawable.vector_icon_bell_dark);
         menu.findItem(R.id.nav_my_search).setIcon(R.drawable.vector_icon_search_dark);
         return value;
