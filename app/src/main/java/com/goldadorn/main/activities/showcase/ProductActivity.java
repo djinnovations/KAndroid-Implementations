@@ -42,6 +42,7 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
+import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -124,6 +125,7 @@ public class ProductActivity extends BaseDrawerActivity {
     User mUser;
     Collection mCollection;
     public ProductInfo mProductInfo;
+    public ProductOptions mProductOptions;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -221,7 +223,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     @Override
                     public void onResult(ProductResponse result) {
                         if (result.success) {
-                            mProductInfo = result.summary;
+                            mProductInfo = result.info;
                             mProductAdapter.changeData(mProductInfo.images);
                             ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             if (f != null)
@@ -234,11 +236,11 @@ public class ProductActivity extends BaseDrawerActivity {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success) {
-                    configureUI(UISTATE_CUSTOMIZE);
+                    mProductOptions=result.options;
                 }
             }
         });
-
+        configureUI(UISTATE_CUSTOMIZE);
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
     }
