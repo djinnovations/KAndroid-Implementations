@@ -26,12 +26,12 @@ public class ProductOptions {
     public float stonePrice;
     public String stonePriceUnit;
 
-    ArrayList<String> metalList;
-    ArrayList<String> metalPurityList;
-    ArrayList<String> metalColorList;
-    ArrayList<String> centerStone;
-    HashMap<String, ArrayList<String>> accentStones;
-    HashMap<String, ArrayList<String>> gemStones;
+    private ArrayList<String> metalList = new ArrayList<>();
+    private ArrayList<String> metalPurityList = new ArrayList<>();
+    private ArrayList<String> metalColorList = new ArrayList<>();
+    private ArrayList<String> centerStone = new ArrayList<>();
+    private HashMap<String, ArrayList<String>> accentStones = new HashMap<>();
+    private HashMap<String, ArrayList<String>> gemStones = new HashMap<>();
 
     public ProductOptions(int id) {
         this.id = id;
@@ -48,28 +48,24 @@ public class ProductOptions {
         p.stonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
         if (productInfo.has(Constants.JsonConstants.METALLIST)) {
             JSONArray ja = productInfo.getJSONArray(Constants.JsonConstants.METALLIST);
-            p.metalList = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 p.metalList.add(ja.getString(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.METALPURITYLIST)) {
             JSONArray ja = productInfo.getJSONArray(Constants.JsonConstants.METALLIST);
-            p.metalPurityList = new ArrayList<>();
             for (int i = 0; i < productInfo.getJSONArray(Constants.JsonConstants.METALPURITYLIST).length(); i++) {
                 p.metalPurityList.add(productInfo.getJSONArray(Constants.JsonConstants.METALPURITYLIST).getString(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.METALCOLORLIST)) {
             JSONArray ja = productInfo.getJSONArray(Constants.JsonConstants.METALCOLORLIST);
-            p.metalColorList = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 p.metalColorList.add(ja.getString(i));
             }
         }
         if (productInfo.has(Constants.JsonConstants.CENTERSTONE)) {
             JSONArray ja = productInfo.getJSONArray(Constants.JsonConstants.CENTERSTONE);
-            p.centerStone = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 p.centerStone.add(ja.getString(i));
             }

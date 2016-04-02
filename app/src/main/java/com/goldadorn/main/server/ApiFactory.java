@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by nithinjohn on 12/03/16.
@@ -330,11 +331,15 @@ public class ApiFactory extends ExtractResponse {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.product.id);
             Product product = response.product;
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
+            for (Map.Entry<String, String> entry : product.customisations.entrySet()) {
+                jsonObject.put(entry.getKey(),entry.getValue());
+            }
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
+//            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
+//            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
+
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
