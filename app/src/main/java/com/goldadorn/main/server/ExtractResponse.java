@@ -38,7 +38,11 @@ public class ExtractResponse {
         if (jsonstring != null) {
             try {
                 JSONObject productObj = new JSONObject(jsonstring);
-                return  ProductDetail.extractBasicInfo(productObj);
+                //TODO was gevving error
+                // BHAVIN PADHIYAR
+                // SO REMOVED templorary
+                //return  ProductDetail.extractBasicInfo(productObj);
+                return null;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

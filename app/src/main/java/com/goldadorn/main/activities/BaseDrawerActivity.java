@@ -51,11 +51,25 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         setupMenu();
     }
 
-    @OnClick({ R.id.nav_home,R.id.nav_shop_by, R.id.nav_timeline,R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us })
+    @OnClick({ R.id.nav_home,R.id.nav_shop_by, R.id.nav_timeline,R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,
+            R.id.nav_my_profile,
+            R.id.nav_order_tracking,
+            R.id.nav_about_us,
+            R.id.nav_faqs,
+            R.id.nav_shipping_and_return,
+            R.id.nav_privacy_policy,
+            R.id.nav_terms_conditions,
+            R.id.nav_settings,
+            R.id.nav_logout
+    })
     public void menuButtonClick(View view) {
         int id = view.getId();
         menuAction(id);
     }
+
+
+
+
 
 
 
@@ -87,7 +101,16 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @Bind({ R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,R.id.labelHome,R.id.labelFeed,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart,R.id.labelshopBy })
+    @Bind({ R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,R.id.labelHome,R.id.labelFeed,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart,R.id.labelshopBy,
+            R.id.nav_my_profile,
+            R.id.nav_order_tracking,
+            R.id.nav_about_us,
+            R.id.nav_faqs,
+            R.id.nav_shipping_and_return,
+            R.id.nav_privacy_policy,
+            R.id.nav_terms_conditions,
+            R.id.nav_settings,
+            R.id.nav_logout})
     List<View> views;
     public void setupMenu()
     {

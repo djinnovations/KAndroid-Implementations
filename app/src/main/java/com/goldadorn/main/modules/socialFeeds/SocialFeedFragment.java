@@ -1265,7 +1265,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setVisibility(View.GONE);
             details.setText(socialPost.getDescription());
 
-            commentsLabel.setText(socialPost.getCommentCount()+ getActivity().getString(R.string.commentCountLabel));
+            commentsLabel.setText(socialPost.getCommentCount()+" ");
             likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));
 
 
