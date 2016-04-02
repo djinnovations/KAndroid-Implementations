@@ -357,22 +357,22 @@ public class ApiFactory extends ExtractResponse {
         }
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = PRODUCT_PRICE_CUSTOMIZATION_TYPE;
+            urlBuilder.mUrlType = PRODUCT_CUSTOMIZATION_TYPE;
 
             urlBuilder.mResponse = response;
             ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
             paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = PRODUCT_PRICE_CUSTOMIZATION_TYPE;
+            paramsBuilder.mApiType = PRODUCT_CUSTOMIZATION_TYPE;
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productId);
-            Product product = response.product;
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
-            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
-            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
-            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
+//            Product product = response.product;
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
+//            jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, product.primaryMetalColor);
+//            jsonObject.put(Constants.JsonConstants.CENTERSTONE, product.centerStoneSelected);
+//            jsonObject.put(Constants.JsonConstants.ACCENTSTONE, product.accentStoneSelected);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 

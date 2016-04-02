@@ -129,7 +129,6 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
-        product.id=68;
         intent.putExtra(EXTRA_PRODUCT, product);
         return intent;
     }
