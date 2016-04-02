@@ -209,14 +209,18 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
 
         //        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
+        initTabs();
         configureUI(mUIState);
         UIController.getDesigners(mContext, new TimelineResponse(),
                 new IResultListener<TimelineResponse>() {
                     @Override
                     public void onResult(TimelineResponse result) {
                         mProgressFrame.setVisibility(View.GONE);
-                        mUser = mShowCaseAdapter.getUser(0);
-                        initTabs();
+                        if (mUser == null) {
+                            User user = mShowCaseAdapter.getUser(0);
+                            if (user != null)
+                                onUserChange(user);
+                        }
                     }
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
@@ -230,14 +234,15 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             social += "@";
             social += mUser.name.toLowerCase().replace(" ", "");
         }
-        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products),
-                social, new TabViewHolder.TabClickListener() {
-                    @Override
-                    public void onTabClick(int position) {
-                        configureUI(position);
-                    }
-                });
+        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), social, mTabClickListener);
     }
+
+    TabViewHolder.TabClickListener mTabClickListener = new TabViewHolder.TabClickListener() {
+        @Override
+        public void onTabClick(int position) {
+            configureUI(position);
+        }
+    };
 
     @Override
     public void onStart() {
@@ -264,6 +269,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         return value;
     }
 
+    private void onUserChange(User user) {
+        mUser = user;
+        bindOverlay(user);
+        initTabs();
+        for (UserChangeListener l : mUserChangeListeners)
+            l.onUserChange(user);
+    }
+
     public void registerUserChangeListener(UserChangeListener listener) {
         if (!mUserChangeListeners.contains(listener)) mUserChangeListeners.add(listener);
     }
@@ -277,9 +290,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    mUser = mShowCaseAdapter.getUser(mCurrentPosition);
-                    bindOverlay(mUser);
-                    for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
+                    onUserChange(mShowCaseAdapter.getUser(mCurrentPosition));
                 }
             };
 
@@ -370,12 +381,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             if (cursor != null && cursor.moveToPosition(position))
                 return UserInfoCache.extractFromCursor(null,
                         cursor);
-            else {
-                User user = new User(2, User.TYPE_DESIGNER);
-                user.name = "Kiran BH";
-                user.imageUrl = "/kiran";
-                return user;
-            }
+            return null;
         }
 
         public void changeCursor(Cursor cursor) {
