@@ -328,8 +328,8 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productToAdd.id);
-            Product productDetail = response.productToAdd;
+            jsonObject.put("prodId", response.product.id);
+            Product productDetail = response.product;
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productDetail.primaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productDetail.primaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productDetail.primaryMetalColor);
@@ -366,7 +366,8 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            Product productOptions = response.productToAdd;
+            jsonObject.put("prodId", response.product.id);
+            Product productOptions = response.product;
             jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, productOptions.primaryMetal);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, productOptions.primaryMetalPurity);
             jsonObject.put(Constants.JsonConstants.PRIMARYMETALCOLOR, productOptions.primaryMetalColor);
@@ -433,7 +434,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productToAdd.id);
+            jsonObject.put("prodId", response.product.id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -465,7 +466,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productToAdd.id);
+            jsonObject.put("prodId", response.product.id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -497,7 +498,7 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.productToAdd.id);
+            jsonObject.put("prodId", response.product.id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
