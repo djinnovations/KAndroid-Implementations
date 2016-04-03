@@ -359,6 +359,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlayVH.mFollowButton.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
+        mOverlayVH.mLikeButton.setEnabled(!user.isLiked);
 
     }
 
@@ -376,8 +377,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public User getUser(int position) {
             if (cursor != null && cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null,
-                        cursor);
+                return UserInfoCache.extractFromCursor(null,cursor);
             return null;
         }
 

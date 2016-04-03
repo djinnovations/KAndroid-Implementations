@@ -113,6 +113,7 @@ public class Tables {
         public static final String COUNT_FOLLOWING = "following";
         public static final String COUNT_COLLECTIONS = "collections";
         public static final String COUNT_PRODUCTS = "products";
+        public static String ISLIKED = "isliked";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" +
@@ -129,6 +130,7 @@ public class Tables {
                 "/" + TABLENAME +
                 "?" + PARAMETER_NOTIFY +
                 "=false");
+
 
         /**
          * The content:// style URL for a given row, identified by its id.

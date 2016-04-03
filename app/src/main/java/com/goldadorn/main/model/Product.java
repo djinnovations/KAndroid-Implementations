@@ -28,6 +28,7 @@ public class Product implements Serializable {
 
     //customise variable
     public final HashMap<String, String> customisations = new HashMap<>();
+    private boolean isLiked;
 //    public String primaryMetal;
 //    public String primaryMetalColor;
 //    public String primaryMetalPurity;
@@ -74,6 +75,7 @@ public class Product implements Serializable {
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES));
         t.unitPrice = cursor.getLong(cursor.getColumnIndex(Tables.Products.PRICE));
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
+        t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED))==1;
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)
             t.image_a_r = 1;
