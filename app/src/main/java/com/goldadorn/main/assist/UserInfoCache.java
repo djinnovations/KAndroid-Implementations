@@ -22,7 +22,7 @@ public class UserInfoCache {
     public static final String USER_INFO_SERVICE = "userinfocache";
     public static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
             Users.IMAGEURL, Users.TYPE, Users.COUNT_LIKES, Users.COUNT_FOLLOWING,
-            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED,Users.ISLIKED, Users.DATAVERSION};
+            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED,Users.IS_LIKED, Users.DATAVERSION};
     private static final String[] PROJECTION_CACHE_CHECK = new String[]{Users.DATAVERSION};
     private static final int INDEX_ID = 0;
     private static final int INDEX_NAME = 1;

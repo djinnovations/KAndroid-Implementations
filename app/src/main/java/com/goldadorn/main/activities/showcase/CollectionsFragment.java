@@ -41,6 +41,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private CollectionCallback mCollectionCallback = new CollectionCallback();
     private User mUser;
+
     public static CollectionsFragment newInstance(User user) {
         CollectionsFragment f = new CollectionsFragment();
         Bundle b = new Bundle();
@@ -52,7 +53,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mUser = (User) b.getSerializable(EXTRA_DATA);
@@ -128,7 +129,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                             });
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(v.getContext(),"Something wrong happened!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Something wrong happened!", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -136,14 +137,14 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         public CollectionsAdapter(Context context) {
             this.context = context;
             Resources res = context.getResources();
-            cardWidth = res.getDisplayMetrics().widthPixels/2-
-                    3*res.getDimensionPixelSize(R.dimen.griditem_margin);
+            cardWidth = res.getDisplayMetrics().widthPixels / 2 -
+                    3 * res.getDimensionPixelSize(R.dimen.griditem_margin);
         }
 
         @Override
         public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(
-                    R.layout.layout_showcase_brand_item, parent,false);
+                    R.layout.layout_showcase_brand_item, parent, false);
             CollectionHolder rcv = new CollectionHolder(layoutView);
             rcv.itemView.setOnClickListener(mCollectionClick);
             rcv.like.setOnClickListener(mLikeClick);
@@ -156,11 +157,12 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             Picasso.with(context).load(collection.getImageUrl()).fit().into(holder.image);
             holder.name.setText(collection.name);
             holder.description.setText(collection.category);
-            holder.likeCount.setText(String.format(Locale.getDefault(),"%d",collection.likecount));
-            holder.extra.setText(String.format(Locale.getDefault(),"%d Products",collection.productcount));
+            holder.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+            holder.extra.setText(String.format(Locale.getDefault(), "%d Products", collection.productcount));
             holder.itemView.setTag(position);
+            holder.like.setSelected(collection.isLiked);
             holder.like.setTag(collection);
-            holder.image.getLayoutParams().height = (int) (collection.image_a_r*cardWidth);
+            holder.image.getLayoutParams().height = (int) (collection.image_a_r * cardWidth);
         }
 
 

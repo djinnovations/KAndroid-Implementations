@@ -357,6 +357,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         mOverlayVH.mFollowButton.setTag(user);
+        mOverlayVH.mLikeButton.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
         mOverlayVH.mLikeButton.setSelected(user.isLiked);
@@ -377,7 +378,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public User getUser(int position) {
             if (cursor != null && cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null,cursor);
+                return UserInfoCache.extractFromCursor(null, cursor);
             return null;
         }
 
@@ -477,15 +478,27 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             int id = v.getId();
             Context context = v.getContext();
             if (id == R.id.likeButton) {
-            } else if (id == R.id.followButton) {
                 v.setEnabled(false);
                 User user = (User) v.getTag();
-                UIController.follow(context, user, !v.isSelected(), new IResultListener<LikeResponse>() {
+                final boolean isLiked = v.isSelected();
+                UIController.like(context, user, !isLiked, new IResultListener<LikeResponse>() {
 
                     @Override
                     public void onResult(LikeResponse result) {
                         v.setEnabled(true);
-                        v.setSelected(result.success);
+                        v.setSelected(result.success != isLiked);
+                    }
+                });
+            } else if (id == R.id.followButton) {
+                v.setEnabled(false);
+                User user = (User) v.getTag();
+                final boolean isFollowing = v.isSelected();
+                UIController.follow(context, user, !isFollowing, new IResultListener<LikeResponse>() {
+
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        v.setEnabled(true);
+                        v.setSelected(result.success != isFollowing);
                     }
                 });
             } else if (id == R.id.shareButton) {

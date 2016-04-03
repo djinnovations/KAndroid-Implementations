@@ -50,19 +50,19 @@ public class ProductsFragment extends Fragment {
     private static final int PRODUCT = 999999999;
 
     @Bind(R.id.swipe_deck)
-    SwipeDeck cardStack;
+    SwipeDeck mCardStack;
 
     @Bind(R.id.product_price)
-    TextView price;
+    TextView mPriceText;
     @Bind(R.id.product_name)
-    TextView name;
+    TextView mNameText;
     @Bind(R.id.cards_data)
-    View data;
+    View mDataView;
     @Bind(R.id.cards_end)
-    View end;
+    View mEndView;
 
     @Bind(R.id.buyButton)
-    Button buyButton;
+    Button mBuyButton;
 
     Toast mToast;
 
@@ -73,7 +73,7 @@ public class ProductsFragment extends Fragment {
     private View.OnClickListener mBuyClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            goToProductPage(v.getContext(),mProduct);
+            goToProductPage(v.getContext(), mProduct);
         }
     };
     private SwipeDeckAdapter mSwipeDeckAdapter;
@@ -91,7 +91,7 @@ public class ProductsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -105,19 +105,19 @@ public class ProductsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        end.setOnClickListener(new View.OnClickListener() {
+        mEndView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardStack.setAdapter(mSwipeDeckAdapter);
-                data.setVisibility(View.VISIBLE);
-                end.setVisibility(View.GONE);
+                mCardStack.setAdapter(mSwipeDeckAdapter);
+                mDataView.setVisibility(View.VISIBLE);
+                mEndView.setVisibility(View.GONE);
             }
         });
 
         mSwipeDeckAdapter = new SwipeDeckAdapter(getActivity());
-        cardStack.setAdapter(mSwipeDeckAdapter);
+        mCardStack.setAdapter(mSwipeDeckAdapter);
 
-        cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
+        mCardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
             @Override
             public void cardSwipedLeft(final int position) {
                 UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false, new
@@ -125,7 +125,7 @@ public class ProductsFragment extends Fragment {
                             @Override
                             public void onResult(LikeResponse result) {
                                 if (mToast != null) mToast.cancel();
-                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " dis-liked":"failed",
+                                mToast = Toast.makeText(getActivity(), result.success ? "Product " + position + " dis-liked" : "failed",
                                         Toast.LENGTH_LONG);
                                 mToast.show();
                             }
@@ -140,7 +140,7 @@ public class ProductsFragment extends Fragment {
                             @Override
                             public void onResult(LikeResponse result) {
                                 if (mToast != null) mToast.cancel();
-                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " liked":"failed",
+                                mToast = Toast.makeText(getActivity(), result.success ? "Product " + position + " liked" : "failed",
                                         Toast.LENGTH_LONG);
                                 mToast.show();
                             }
@@ -165,24 +165,24 @@ public class ProductsFragment extends Fragment {
         getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
         refreshData();
 
-        buyButton.setOnClickListener(mBuyClick);
+        mBuyButton.setOnClickListener(mBuyClick);
     }
 
     private void refreshLayouts(int position) {
-        if(position<mSwipeDeckAdapter.getCount()-1) {
+        if (position < mSwipeDeckAdapter.getCount() - 1) {
             setData(mSwipeDeckAdapter.getItem(position + 1));
-        }else{
-            end.setVisibility(View.VISIBLE);
-            data.setVisibility(View.GONE);
+        } else {
+            mEndView.setVisibility(View.VISIBLE);
+            mDataView.setVisibility(View.GONE);
         }
     }
 
 
     private void setData(Product product) {
         mProduct = product;
-        if(product!=null){
-            name.setText(product.name);
-            price.setText(product.getDisplayPrice());
+        if (product != null) {
+            mNameText.setText(product.name);
+            mPriceText.setText(product.getDisplayPrice());
         }
     }
 
@@ -229,8 +229,8 @@ public class ProductsFragment extends Fragment {
             ProductViewHolder holder;
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
-                                                             .inflate(R.layout.layout_product_card,
-                                                                     parent, false));
+                        .inflate(R.layout.layout_product_card,
+                                parent, false));
                 convertView = holder.itemview;
                 convertView.setTag(holder);
                 convertView.setOnClickListener(this);
@@ -245,7 +245,7 @@ public class ProductsFragment extends Fragment {
 
 
             Product product = getItem(position);
-            convertView.setTag(PRODUCT,product);
+            convertView.setTag(PRODUCT, product);
 
             holder.productActionsToggle.setTag(holder);
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
@@ -291,7 +291,7 @@ public class ProductsFragment extends Fragment {
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
             } else {
                 Product product = (Product) v.getTag(PRODUCT);
-                goToProductPage(v.getContext(),product);
+                goToProductPage(v.getContext(), product);
             }
         }
 
@@ -329,8 +329,8 @@ public class ProductsFragment extends Fragment {
         }
     }
 
-    private void goToProductPage(Context context,Product product) {
-        startActivity(ProductActivity.getLaunchIntent(context,product));
+    private void goToProductPage(Context context, Product product) {
+        startActivity(ProductActivity.getLaunchIntent(context, product));
     }
 
     private UserChangeListener mUserChangeListener = new UserChangeListener() {
@@ -356,7 +356,7 @@ public class ProductsFragment extends Fragment {
             response.userId = mUser.id;
         } else {
             response.collectionId = mCollection.id;
-            response.userId=mCollection.userId;
+            response.userId = mCollection.userId;
         }
         UIController.getProducts(getContext(), response, null);
     }
