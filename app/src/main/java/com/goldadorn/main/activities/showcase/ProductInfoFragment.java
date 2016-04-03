@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.showcase;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -110,6 +111,7 @@ public class ProductInfoFragment extends Fragment {
 //            StoneDetail det = new StoneDetail();
 //            det.type = "a";
 //            det.stoneFactor = "1";
+//            det.rateunit = "Kiran";
 //            rows.add(det);
 //            det = new StoneDetail();
 //            det.type = "a";
@@ -132,6 +134,7 @@ public class ProductInfoFragment extends Fragment {
             } else {
                 mTableContainer.setVisibility(View.VISIBLE);
                 TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
+                head.itemView.setBackgroundColor(Color.RED);
                 head.component.setText("Component");
                 head.rate.setText("Rate");
                 head.weight.setText("Weight");
