@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.showcase;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -132,12 +133,15 @@ public class ProductInfoFragment extends Fragment {
                 mTableContainer.setVisibility(View.GONE);
             } else {
                 mTableContainer.setVisibility(View.VISIBLE);
+                StoneDetail t = rows.get(0);
                 TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
+                head.setTextColor(Color.WHITE);
+                head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
                 head.itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 head.component.setText("Component");
-                head.rate.setText("Rate");
-                head.weight.setText("Weight");
-                head.price.setText("Value");
+                head.rate.setText("Rate\n(" + t.rateunit + ")");
+                head.weight.setText("Weight\n(" + t.weightunit + ")");
+                head.price.setText("Value\n(" + t.rateunit + ")");
                 head.offer_price.setText("Offer Price");
 
                 int childPos = 1;
@@ -180,8 +184,12 @@ public class ProductInfoFragment extends Fragment {
         } else {
             holder = (TableRowHolder) convertView.getTag();
         }
+        int grey=getResources().getColor(R.color.cb_dark_grey);
+        int gold=getResources().getColor(R.color.colorPrimary);
         if (obj instanceof StoneDetail) {
-            holder.itemView.setBackgroundColor(getResources().getColor(R.color.white));
+            holder.itemView.setBackgroundColor(Color.WHITE);
+            holder.setTextColor(grey);
+            holder.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
             holder.component.setText(detail.stoneFactor);
             holder.rate.setText(detail.rateunit + " " + detail.price);
@@ -189,7 +197,9 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setText(detail.rateunit + " " + detail.price);
             holder.offer_price.setText(detail.rateunit + " " + detail.price);
         } else {
-            holder.itemView.setBackgroundColor(getResources().getColor(R.color.cb_dark_grey));
+            holder.itemView.setBackgroundColor(grey);
+            holder.setTextColor(gold);
+            holder.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setText((String) obj);
             holder.rate.setText("");
             holder.weight.setText("");
@@ -209,7 +219,7 @@ public class ProductInfoFragment extends Fragment {
         }
     }
 
-    public static class TableRowHolder {
+    private static class TableRowHolder {
         final View itemView;
         final TextView component, rate, weight, price, offer_price;
 
@@ -220,6 +230,22 @@ public class ProductInfoFragment extends Fragment {
             weight = (TextView) container.findViewById(R.id.colom_weight);
             price = (TextView) container.findViewById(R.id.colom_price);
             offer_price = (TextView) container.findViewById(R.id.colom_offer_price);
+        }
+
+        public void setTextColor(int color) {
+            component.setTextColor(color);
+            rate.setTextColor(color);
+            weight.setTextColor(color);
+            price.setTextColor(color);
+            offer_price.setTextColor(color);
+        }
+
+        public void setTextSize(float size) {
+//            component.setTextSize(size);
+//            rate.setTextSize(size);
+//            weight.setTextSize(size);
+//            price.setTextSize(size);
+//            offer_price.setTextSize(size);
         }
     }
 }
