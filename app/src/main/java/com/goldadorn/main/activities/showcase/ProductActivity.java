@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
@@ -250,7 +251,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     public void addCustomisation(String key, String value) {
-        Toast.makeText(mContext,key+" : "+value,Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, key + " : " + value, Toast.LENGTH_SHORT).show();
         mProduct.addCustomisation(key, value);
         // call api for updated price
     }
@@ -442,6 +443,10 @@ public class ProductActivity extends BaseDrawerActivity {
             this.appBarLayout = appBarLayout;
             ButterKnife.bind(this, itemView);
             productActionsToggle.setOnClickListener(this);
+            shareButton.setOnClickListener(this);
+            buyNoBuyButton.setOnClickListener(this);
+            wishlistButton.setOnClickListener(this);
+
             like.setOnClickListener(this);
             cartButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
@@ -507,7 +512,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo like click
                 Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
-                //todo buy no buy click
+                startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
                 Toast.makeText(v.getContext(), "Buy No buy click!", Toast.LENGTH_SHORT).show();
             } else if (v == wishlistButton) {
                 //todo wishlist click

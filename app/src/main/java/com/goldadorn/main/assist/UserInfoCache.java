@@ -49,10 +49,8 @@ public class UserInfoCache {
     public static final String TAG = "UserInfoCache";
     private long mLastRequest, mLastCancelled, mLastExecuted;
     protected Map<Integer, User> mCache = new HashMap<>();
-    private List<UserCacheListener> mCacheListeners = new ArrayList<>(
-            2);
-    private List<CICContentObesrver> mContentObservers = new ArrayList<>(
-            5);
+    private List<UserCacheListener> mCacheListeners = new ArrayList<>(2);
+    private List<CICContentObesrver> mContentObservers = new ArrayList<>(5);
 
     public interface UserCacheListener {
         public void onCacheChanged();
