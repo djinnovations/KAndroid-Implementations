@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
@@ -31,6 +32,15 @@ public class PostPollActivity extends AbstractPostActivity {
         Intent in = new Intent(context, PostPollActivity.class);
         if (product != null)
             in.putExtra("pr", product);
+        People people = ((Application) context.getApplicationContext()).getPeople();
+        in.putExtra("NAME", people.getUserName());
+        in.putExtra("FOLLOWER_COUNT", people.getFollowerCount());
+        in.putExtra("FOLLOWING_COUNT", people.getFollowingCount());
+        in.putExtra("PROFILE_PIC", people.getProfilePic());
+        in.putExtra("IS_DESIGNER", people.getIsDesigner());
+        in.putExtra("ID", people.getUserId());
+        in.putExtra("IS_SELF", people.isSelf());
+        in.putExtra("backEnabled", true);
         return in;
 
     }
@@ -48,7 +58,7 @@ public class PostPollActivity extends AbstractPostActivity {
     }
 
     protected List<File> getFiles() {
-        if (imageSelector1.isValid()) {
+        if (imageSelector1 != null && imageSelector1.isValid()) {
             List<File> map = new ArrayList<>();
             if (imageSelector1.getFile() != null)
                 map.add(imageSelector1.getFile());
@@ -59,7 +69,12 @@ public class PostPollActivity extends AbstractPostActivity {
 
 
     protected List<String> getLinks() {
-        if (imageSelector1.isValid()) {
+        if(mProduct!=null){
+            List<String> t= new ArrayList<>();
+            t.add(mProduct.getImageUrl());
+            return t;
+        }
+        if (imageSelector1 != null && imageSelector1.isValid()) {
             List<String> map = new ArrayList<>();
             if (imageSelector1.getLink() != null)
                 map.add(imageSelector1.getLink());
@@ -69,7 +84,7 @@ public class PostPollActivity extends AbstractPostActivity {
     }
 
     protected List<String> getFilesPath() {
-        if (imageSelector1.isValid()) {
+        if (imageSelector1 != null && imageSelector1.isValid()) {
             List<String> map = new ArrayList<>();
             if (imageSelector1.getFilePath() != null)
                 map.add(imageSelector1.getFilePath());
@@ -79,7 +94,7 @@ public class PostPollActivity extends AbstractPostActivity {
     }
 
     protected String isValid() {
-        if (imageSelector1.isValid() == false)
+        if (imageSelector1 != null && imageSelector1.isValid() == false)
             return "Please upload image";
         else if (details.getText().toString().equals(""))
             return "Please enter some details";
