@@ -216,16 +216,14 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     @Override
                     public void onResult(TimelineResponse result) {
                         mProgressFrame.setVisibility(View.GONE);
-                        if (mUser == null) {
-                            User user = mShowCaseAdapter.getUser(0);
-                            if (user != null)
-                                onUserChange(user);
-                        }
+//                        if (mUser == null) {
+//                            User user = mShowCaseAdapter.getUser(0);
+//                            if (user != null)
+//                                onUserChange(user);
+//                        }
                     }
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        //        Intent in = new Intent(mContext,PaymentTestActivity.class);
-        //        startActivity(in);
     }
 
 
