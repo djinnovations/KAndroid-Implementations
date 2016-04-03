@@ -18,7 +18,7 @@ public class ProductInfo  {
     public int imageCount;
     public ArrayList<String> images = new ArrayList<>();
     public String productType;
-    private ArrayList<StoneDetail> stonesDetails= new ArrayList<>();
+    public final ArrayList<StoneDetail> stonesDetails= new ArrayList<>();
 
     public ProductInfo(int id) {
         this.id = id;
@@ -37,7 +37,8 @@ public class ProductInfo  {
         p.productType = obj.getString("productType");
         p.code = obj.getString("productCode");
         if (obj.has(Constants.JsonConstants.PROSTONEDETAILS)) {
-            JSONArray stonedetailsarray = obj.getJSONArray(Constants.JsonConstants.PROSTONEDETAILS);
+            JSONArray stonedetailsarray = obj.optJSONArray(Constants.JsonConstants.PROSTONEDETAILS);
+            if(stonedetailsarray!=null)
             for (int i = 0; i < stonedetailsarray.length(); i++) {
                 JSONObject stoneobj = stonedetailsarray.getJSONObject(i);
                 StoneDetail stoneDetail = new StoneDetail();
