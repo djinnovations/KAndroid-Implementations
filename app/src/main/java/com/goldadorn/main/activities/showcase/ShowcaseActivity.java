@@ -150,6 +150,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
+        mTabLayout.animate().setDuration(0).y(tabStart);
         mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
 
 

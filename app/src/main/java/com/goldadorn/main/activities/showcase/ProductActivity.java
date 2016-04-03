@@ -338,7 +338,10 @@ public class ProductActivity extends BaseDrawerActivity {
         } else if (uiState == UISTATE_PRODUCT) {
             f = new ProductInfoFragment();
         } else {
+            id = R.id.frame_no_scroll_dummy;
             f = new ProductCustomiseFragment();
+            mFrame.setVisibility(View.INVISIBLE);
+            mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
