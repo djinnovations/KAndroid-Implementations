@@ -212,17 +212,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null,
                 mCollectionCallback);
 
-        initTabs();
-    }
-
-    private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        String social = getString(R.string.social).toLowerCase();
-        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
-            social += "@";
-            social += mCollection.name.toLowerCase().replace(" ", "");
-        }
-        mTabViewHolder.initTabs(getString(R.string.products), social, null,
+        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
@@ -293,6 +284,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mOverlayViewHolder.like.setTag(collection);
         mOverlayViewHolder.like.setSelected(collection.isLiked);
         mTabViewHolder.setCounts(collection.productcount, -1);
+        String social = getString(R.string.social).toLowerCase();
+        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
+            social += "@";
+            social += mCollection.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.tabName2.setText(social);
 
     }
 

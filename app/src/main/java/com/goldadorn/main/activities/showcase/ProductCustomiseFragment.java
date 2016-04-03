@@ -59,8 +59,8 @@ public class ProductCustomiseFragment extends Fragment {
         mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
-        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
-        mAdapter.addAdapter(new SingleItemAdapter(mContext, true, 0, ViewHolderFactory.TYPE.VHT_C_SEPARATOR));
+//        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
+//        mAdapter.addAdapter(new SingleItemAdapter(mContext, true, 0, ViewHolderFactory.TYPE.VHT_C_SEPARATOR));
         mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
