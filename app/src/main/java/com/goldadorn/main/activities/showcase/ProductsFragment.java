@@ -91,7 +91,7 @@ public class ProductsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -162,8 +162,8 @@ public class ProductsFragment extends Fragment {
     }
 
 
-
-    public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener, SwipeDeck.SwipeEventCallback, SwipeDeck.CardPositionCallback {
+    public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
+            SwipeDeck.SwipeEventCallback, SwipeDeck.CardPositionCallback {
 
         private Context context;
         private Cursor cursor;
@@ -194,8 +194,8 @@ public class ProductsFragment extends Fragment {
             ProductViewHolder holder;
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
-                        .inflate(R.layout.layout_product_card,
-                                parent, false));
+                                                             .inflate(R.layout.layout_product_card,
+                                                                     parent, false));
                 convertView = holder.itemview;
                 convertView.setTag(holder);
                 convertView.setOnClickListener(this);
@@ -227,14 +227,15 @@ public class ProductsFragment extends Fragment {
             if (id == R.id.likeButton) {
                 v.setEnabled(false);
                 Product product = (Product) v.getTag();
-                UIController.like(v.getContext(), product, !v.isSelected(), new IResultListener<LikeResponse>() {
+                UIController.like(v.getContext(), product, !v.isSelected(),
+                        new IResultListener<LikeResponse>() {
 
-                    @Override
-                    public void onResult(LikeResponse result) {
-                        v.setEnabled(true);
-                        v.setSelected(result.success);
-                    }
-                });
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success);
+                            }
+                        });
             } else if (id == R.id.product_actions_open) {
                 ProductViewHolder holder = (ProductViewHolder) v.getTag();
                 boolean isVisible = holder.productActions.getVisibility() == View.VISIBLE;
@@ -267,13 +268,14 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void cardSwipedLeft(final int position) {
-            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false, new
-                    IResultListener<LikeResponse>() {
+            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false,
+                    new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
                             if (mToast != null) mToast.cancel();
-                            mToast = Toast.makeText(getActivity(), result.success ? "Product " + position + " dis-liked" : "failed",
-                                    Toast.LENGTH_LONG);
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? "Product " + position + " dis-liked" :
+                                            "failed", Toast.LENGTH_LONG);
                             mToast.show();
                         }
                     });
@@ -282,12 +284,13 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void cardSwipedRight(final int position) {
-            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), true, new
-                    IResultListener<LikeResponse>() {
+            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), true,
+                    new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
                             if (mToast != null) mToast.cancel();
-                            mToast = Toast.makeText(getActivity(), result.success ? "Product " + position + " liked" : "failed",
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? "Product " + position + " liked" : "failed",
                                     Toast.LENGTH_LONG);
                             mToast.show();
                         }
@@ -305,12 +308,12 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void xPos(Float aFloat) {
-            Log.i("swipedeck", ""+aFloat);
+            Log.i("swipedeck", "" + aFloat);
         }
 
         @Override
         public void yPos(Float aFloat) {
-            Log.i("swipedeck", ""+aFloat);
+            Log.i("swipedeck", "" + aFloat);
         }
 
         class ProductViewHolder {
@@ -397,7 +400,7 @@ public class ProductsFragment extends Fragment {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mSwipeDeckAdapter.changeCursor(data);
-            setData(mSwipeDeckAdapter.getItem(0));
+            if (mProduct == null) setData(mSwipeDeckAdapter.getItem(0));
         }
 
         @Override
