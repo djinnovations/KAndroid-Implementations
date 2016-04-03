@@ -20,31 +20,21 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <View
-                    android:layout_width="@dimen/circle_button_small_height"
-                    android:layout_height="@dimen/circle_button_small_height"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="@dimen/padding_default_half"/>
 
                 <com.daprlabs.cardstack.SwipeDeck
                     android:id="@+id/swipe_deck"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="260dp"
-                    android:layout_weight="1"
                     android:paddingBottom="24dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="24dp"
+                    android:layout_marginRight="56dp"
+                    android:layout_marginLeft="56dp"
                     swipedeck:card_spacing="8dp"
                     swipedeck:deck_max_visible="3"
-                    swipedeck:render_above="true"
                     swipedeck:rotation_degrees="15"/>
 
-                <View
-                    android:layout_width="@dimen/circle_button_small_height"
-                    android:layout_height="@dimen/circle_button_small_height"
-                    android:layout_marginLeft="@dimen/padding_default_half"
-                    android:layout_marginRight="12dp"/>
 
             </com.daprlabs.cardstack.SwipeLinearLayout>
 
