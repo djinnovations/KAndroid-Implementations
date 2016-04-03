@@ -11,16 +11,16 @@ import butterknife.ButterKnife;
 
 class PBViewHolder extends ViewHolder {
 
-    @Bind(R.id.goldCost)
+    @Bind(R.id.price_breakdown)
     TextView gold;
-    @Bind(R.id.gemCost)
-    TextView gem;
-    @Bind(R.id.makingCost)
-    TextView making;
-    @Bind(R.id.vatCost)
-    TextView vat;
-    @Bind(R.id.totalCost)
-    TextView total;
+//    @Bind(R.id.gemCost)
+//    TextView gem;
+//    @Bind(R.id.makingCost)
+//    TextView making;
+//    @Bind(R.id.vatCost)
+//    TextView vat;
+//    @Bind(R.id.totalCost)
+//    TextView total;
 
     public PBViewHolder(View itemView) {
         super(itemView);

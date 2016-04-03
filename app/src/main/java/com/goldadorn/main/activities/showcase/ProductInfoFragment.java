@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,7 +190,7 @@ public class ProductInfoFragment extends Fragment {
         if (obj instanceof StoneDetail) {
             holder.itemView.setBackgroundColor(Color.WHITE);
             holder.setTextColor(grey);
-            holder.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
+            holder.setTextSize(getResources().getDimensionPixelSize(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
             holder.component.setText(detail.stoneFactor);
             holder.rate.setText(detail.rateunit + " " + detail.price);
@@ -241,11 +242,11 @@ public class ProductInfoFragment extends Fragment {
         }
 
         public void setTextSize(float size) {
-//            component.setTextSize(size);
-//            rate.setTextSize(size);
-//            weight.setTextSize(size);
-//            price.setTextSize(size);
-//            offer_price.setTextSize(size);
+            component.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+            rate.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+            weight.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+            price.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+            offer_price.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
         }
     }
 }

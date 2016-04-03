@@ -1,11 +1,15 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,7 @@ import com.goldadorn.main.model.ProductOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -106,11 +111,29 @@ public class ProductCustomiseFragment extends Fragment {
             ArrayList<Map.Entry<String, Float>> p = mProductOption.priceBreakDown;
             String priceUnit = mProductOption.priceUnit;
             float total = 0;
+            SpannableStringBuilder builder = new SpannableStringBuilder();
             for (Map.Entry<String, Float> entry : p) {
                 String name = entry.getKey();
                 Float price = entry.getValue();
+                String priceValue = String.format(Locale.getDefault(),"%.2f",price);
                 total = total + price;
+                builder.append(name);
+
+                for(int i = 35-name.length()-priceValue.length();i>0;i--){
+                    builder.append("\t");
+                }
+                builder.append(priceUnit);
+                builder.append("  ");
+                builder.append(priceValue);
+                builder.append("\n");
             }
+            int index = builder.length();
+            builder.append("Total\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            builder.append(priceUnit);
+            builder.append("  ");
+            builder.append(String.format(Locale.getDefault(),"%.2f",total));
+            builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.gold.setText(builder);
 
         }
     };

@@ -20,8 +20,14 @@
         android:layout_height="1dp"
         android:layout_marginBottom="12dp"
         android:background="@android:color/black"/>
+    <TextView
+        android:id="@+id/price_breakdown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="8dp"
+        android:text="Making Charges\t\t\t\t\t\t\t\t\t\t2862\nMetal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t3400"/>
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="2dp"
@@ -159,7 +165,7 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 
 </LinearLayout>
