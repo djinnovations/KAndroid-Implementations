@@ -3,7 +3,6 @@ package com.goldadorn.main.model;
 import android.database.Cursor;
 
 import com.goldadorn.main.db.Tables;
-import com.goldadorn.main.utils.ImageFilePath;
 
 import java.io.Serializable;
 
@@ -39,6 +38,7 @@ public class Collection implements Serializable {
     }
 
     public String getImageUrl() {
-        return ImageFilePath.getImageUrlForCollection(id);
+        return "http://demo.eremotus-portal.com/collections/3/3.jpg";
+//        return ImageFilePath.getImageUrlForCollection(id);
     }
 }

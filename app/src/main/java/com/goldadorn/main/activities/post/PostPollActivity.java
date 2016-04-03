@@ -11,6 +11,7 @@ import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.utils.GalleryImageSelector;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class PostPollActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
     private Product mProduct;
 
-    public static  Intent getLaunchIntent(Context context, Product product) {
+    public static Intent getLaunchIntent(Context context, Product product) {
         Intent in = new Intent(context, PostPollActivity.class);
         if (product != null)
             in.putExtra("pr", product);
@@ -36,10 +37,10 @@ public class PostPollActivity extends AbstractPostActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
+        if (b != null)
+            mProduct = (Product) b.getSerializable("pr");
         super.onCreate(savedInstanceState);
-        Bundle b=savedInstanceState==null?getIntent().getExtras():savedInstanceState;
-        if(b!=null)
-        mProduct= (Product) b.getSerializable("pr");
     }
 
     protected String getPageTitle() {
@@ -99,9 +100,16 @@ public class PostPollActivity extends AbstractPostActivity {
     @Bind(R.id.trigger)
     View trigger;
 
+
     protected void viewCreted(People people, int maxImageSize) {
         details.setText("Folks, should I buy or not buy this? #BONB");
-        imageSelector1 = new GalleryImageSelector(this, this, previewIamge, trigger);
-        imageSelector1.setMaxSize(maxImageSize);
+        if (mProduct == null) {
+            imageSelector1 = new GalleryImageSelector(this, this, previewIamge, trigger);
+            imageSelector1.setMaxSize(maxImageSize);
+        } else {
+            imageSelector1 = null;
+            trigger.setVisibility(View.GONE);
+            Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
+        }
     }
 }
