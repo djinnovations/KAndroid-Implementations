@@ -193,12 +193,13 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("designerIds", response.idsForProducts);
 
-            RequestBody body = RequestBody.create(JSON, response.idsForProducts.toString());
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
 
-
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getDesigners " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -554,7 +555,7 @@ public class ApiFactory extends ExtractResponse {
             } else if (response.collectionId != -1) {
                 builder.add("collection", response.collectionId + "");
                 builder.add("designer", response.userId + "");
-            } else if(response.userId!=-1){
+            } else if (response.userId != -1) {
                 builder.add("designerid", response.userId + "");
             }
             L.d("LIKE JSON " + builder.toString());
@@ -594,7 +595,7 @@ public class ApiFactory extends ExtractResponse {
             } else if (response.collectionId != -1) {
                 builder.add("collection", response.collectionId + "");
                 builder.add("designer", response.userId + "");
-            }else if(response.userId!=-1){
+            } else if (response.userId != -1) {
                 builder.add("designerid", response.userId + "");
             }
             L.d("unLike JSON " + builder.toString());
