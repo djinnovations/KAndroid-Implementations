@@ -1,6 +1,7 @@
 package com.goldadorn.main.modules.socialFeeds;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
@@ -23,15 +24,15 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
     public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target, int nestedScrollAxes) {
         return nestedScrollAxes == ViewCompat.SCROLL_AXIS_VERTICAL;
     }
-
+    Handler handler = new Handler();
+    Runnable runnablelocal;
     @Override
     public void onNestedScroll(CoordinatorLayout coordinatorLayout,final View child, View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
 
         if(dyConsumed > 0 && child.getVisibility() == View.VISIBLE)
         {
-            YoYo.with(Techniques.FadeOutDown).duration(300).withListener(new Animator.AnimatorListener()
-            {
+            YoYo.with(Techniques.FadeOutDown).duration(300).withListener(new Animator.AnimatorListener() {
 
                 @Override
                 public void onAnimationStart(Animator animator) {
@@ -41,6 +42,22 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
                 @Override
                 public void onAnimationEnd(Animator animator) {
                     child.setVisibility(View.GONE);
+
+                    /*
+                    if (runnablelocal != null) {
+                        handler.removeCallbacks(runnablelocal);
+                        runnablelocal=null;
+                    }
+
+                    runnablelocal = new Runnable() {
+                        @Override
+                        public void run() {
+                            child.setVisibility(View.VISIBLE);
+                            YoYo.with(Techniques.FadeInUp).duration(300).playOn(child);
+                        }
+                    };
+                    handler.postDelayed(runnablelocal, 5000);
+                    */
                 }
 
                 @Override
