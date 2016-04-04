@@ -695,13 +695,17 @@ public class SocialFeedFragment extends DefaultVerticalListView
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
-            TypefaceHelper.setFont(notBuyLabel, buyLabel,voteToView);
+            TypefaceHelper.setFont(notBuyLabel, buyLabel, voteToView);
+
+
+
         }
         public void updatePostView(SocialPost item,View view,int position)
         {
             pollLabel.setVisibility(View.VISIBLE);
             votePostButton.setVisibility(View.VISIBLE);
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
+            votePostButton.setText("{hea_buy_or_not}");
 
             if(item.getImg1()!=null && item.getImg1().url.trim().equals("")==false)
             {

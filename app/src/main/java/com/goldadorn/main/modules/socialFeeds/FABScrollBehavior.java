@@ -56,7 +56,7 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
                             YoYo.with(Techniques.FadeInUp).duration(300).playOn(child);
                         }
                     };
-                    handler.postDelayed(runnablelocal, 5000);
+                    handler.postDelayed(runnablelocal, 3000);
                     
                 }
 
