@@ -17,6 +17,7 @@ public class User implements Serializable{
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
     public long dataVersion;
+    public boolean isLiked;
 
 
     public User(int userid, int type) {

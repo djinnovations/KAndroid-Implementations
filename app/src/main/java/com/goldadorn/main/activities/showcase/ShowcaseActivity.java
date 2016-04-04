@@ -151,6 +151,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
+        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
+
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
@@ -215,29 +217,23 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     @Override
                     public void onResult(TimelineResponse result) {
                         mProgressFrame.setVisibility(View.GONE);
-                        mUser = mShowCaseAdapter.getUser(0);
-                        initTabs();
+//                        if (mUser == null) {
+//                            User user = mShowCaseAdapter.getUser(0);
+//                            if (user != null)
+//                                onUserChange(user);
+//                        }
                     }
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-        //        Intent in = new Intent(mContext,PaymentTestActivity.class);
-        //        startActivity(in);
     }
 
-    private void initTabs() {
-        String social = getString(R.string.social).toLowerCase();
-        if (mUser != null && !TextUtils.isEmpty(mUser.name)) {
-            social += "@";
-            social += mUser.name.toLowerCase().replace(" ", "");
+
+    TabViewHolder.TabClickListener mTabClickListener = new TabViewHolder.TabClickListener() {
+        @Override
+        public void onTabClick(int position) {
+            configureUI(position);
         }
-        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products),
-                social, new TabViewHolder.TabClickListener() {
-                    @Override
-                    public void onTabClick(int position) {
-                        configureUI(position);
-                    }
-                });
-    }
+    };
 
     @Override
     public void onStart() {
@@ -264,6 +260,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         return value;
     }
 
+    private void onUserChange(User user) {
+        mUser = user;
+        bindOverlay(user);
+        String social = getString(R.string.social).toLowerCase();
+        if (user != null && !TextUtils.isEmpty(user.name)) {
+            social += "@";
+            social += user.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.tabName3.setText(social);
+        for (UserChangeListener l : mUserChangeListeners)
+            l.onUserChange(user);
+    }
+
     public void registerUserChangeListener(UserChangeListener listener) {
         if (!mUserChangeListeners.contains(listener)) mUserChangeListeners.add(listener);
     }
@@ -277,9 +286,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    mUser = mShowCaseAdapter.getUser(mCurrentPosition);
-                    bindOverlay(mUser);
-                    for (UserChangeListener l : mUserChangeListeners) l.onUserChange(mUser);
+                    onUserChange(mShowCaseAdapter.getUser(mCurrentPosition));
                 }
             };
 
@@ -349,8 +356,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         mOverlayVH.mFollowButton.setTag(user);
+        mOverlayVH.mLikeButton.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
+        mOverlayVH.mLikeButton.setSelected(user.isLiked);
 
     }
 
@@ -368,14 +377,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public User getUser(int position) {
             if (cursor != null && cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null,
-                        cursor);
-            else {
-                User user = new User(2, User.TYPE_DESIGNER);
-                user.name = "Kiran BH";
-                user.imageUrl = "/kiran";
-                return user;
-            }
+                return UserInfoCache.extractFromCursor(null, cursor);
+            return null;
         }
 
         public void changeCursor(Cursor cursor) {
@@ -474,15 +477,27 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             int id = v.getId();
             Context context = v.getContext();
             if (id == R.id.likeButton) {
-            } else if (id == R.id.followButton) {
                 v.setEnabled(false);
                 User user = (User) v.getTag();
-                UIController.follow(context, user, !v.isSelected(), new IResultListener<LikeResponse>() {
+                final boolean isLiked = v.isSelected();
+                UIController.like(context, user, !isLiked, new IResultListener<LikeResponse>() {
 
                     @Override
                     public void onResult(LikeResponse result) {
                         v.setEnabled(true);
-                        v.setSelected(result.success);
+                        v.setSelected(result.success != isLiked);
+                    }
+                });
+            } else if (id == R.id.followButton) {
+                v.setEnabled(false);
+                User user = (User) v.getTag();
+                final boolean isFollowing = v.isSelected();
+                UIController.follow(context, user, !isFollowing, new IResultListener<LikeResponse>() {
+
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        v.setEnabled(true);
+                        v.setSelected(result.success != isFollowing);
                     }
                 });
             } else if (id == R.id.shareButton) {

@@ -18,13 +18,15 @@ public class ProductOptions {
 
     private final int id;
     ///customization variables
-    public float makingCharge;
-    public String makingChargeUnit;
-    public float primaryMetalPrice;
-    public String primaryMetalPriceUnits;
-    public float stonePrice;
-    public String stonePriceUnit;
+//    public float makingCharge;
+//    public String makingChargeUnit;
+//    public float primaryMetalPrice;
+//    public String primaryMetalPriceUnits;
+//    public float stonePrice;
+//    public String stonePriceUnit;
 
+    public String priceUnit;
+    public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
     public final ArrayList<Map.Entry<String, ArrayList<String>>> customisationOptions = new ArrayList<>();
 
     public ProductOptions(int id) {
@@ -44,12 +46,20 @@ public class ProductOptions {
 
     public static ProductOptions extractCustomization(JSONObject productInfo) throws JSONException {
         ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
-        p.makingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
-        p.makingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
-        p.primaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
-        p.primaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
-        p.stonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
-        p.stonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
+
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Making Charges", (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES)));
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE)));
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Stone", (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE)));
+
+        p.priceUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
+
+
+//        p.makingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
+//        p.makingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
+//        p.primaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
+//        p.primaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
+//        p.stonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
+//        p.stonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
 
         extract(productInfo, Constants.JsonConstants.METALLIST, p.customisationOptions);
         extract(productInfo, Constants.JsonConstants.METALPURITYLIST, p.customisationOptions);

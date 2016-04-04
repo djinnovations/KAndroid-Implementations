@@ -22,7 +22,7 @@ public class UserInfoCache {
     public static final String USER_INFO_SERVICE = "userinfocache";
     public static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
             Users.IMAGEURL, Users.TYPE, Users.COUNT_LIKES, Users.COUNT_FOLLOWING,
-            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED, Users.DATAVERSION};
+            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED,Users.IS_LIKED, Users.DATAVERSION};
     private static final String[] PROJECTION_CACHE_CHECK = new String[]{Users.DATAVERSION};
     private static final int INDEX_ID = 0;
     private static final int INDEX_NAME = 1;
@@ -36,7 +36,8 @@ public class UserInfoCache {
     private static final int INDEX_COUNT_PRODUCT = 9;
     private static final int INDEX_TRENDING = 10;
     private static final int INDEX_FEATURED = 11;
-    private static final int INDEX_DATAVERSION = 12;
+    private static final int INDEX_ISLIKED= 12;
+    private static final int INDEX_DATAVERSION = 13;
 
     protected Context mContext;
     private PreLoader mPreload;
@@ -48,10 +49,8 @@ public class UserInfoCache {
     public static final String TAG = "UserInfoCache";
     private long mLastRequest, mLastCancelled, mLastExecuted;
     protected Map<Integer, User> mCache = new HashMap<>();
-    private List<UserCacheListener> mCacheListeners = new ArrayList<>(
-            2);
-    private List<CICContentObesrver> mContentObservers = new ArrayList<>(
-            5);
+    private List<UserCacheListener> mCacheListeners = new ArrayList<>(2);
+    private List<CICContentObesrver> mContentObservers = new ArrayList<>(5);
 
     public interface UserCacheListener {
         public void onCacheChanged();
@@ -373,6 +372,7 @@ public class UserInfoCache {
         info.products_cnt = cursor.getInt(INDEX_COUNT_PRODUCT);
         info.trending = cursor.getInt(INDEX_TRENDING)==1;
         info.featured = cursor.getInt(INDEX_FEATURED)==1;
+        info.isLiked = cursor.getInt(INDEX_ISLIKED)==1;
         info.dataVersion = cursor.getLong(INDEX_DATAVERSION);
         return info;
     }

@@ -1,11 +1,16 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +26,14 @@ import com.goldadorn.main.model.ProductOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
  * Created by Vijith Menon on 18/3/16.
  */
-public class ProductOptionsFragment extends Fragment {
-    private final static String TAG = ProductOptionsFragment.class.getSimpleName();
+public class ProductCustomiseFragment extends Fragment {
+    private final static String TAG = ProductCustomiseFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
 
 
@@ -36,6 +42,8 @@ public class ProductOptionsFragment extends Fragment {
     Context mContext;
     private CustomizeMainAdapter mCustomizeAdapter;
     private ProductActivity mProductActivity;
+    private SingleItemAdapter mPriceAdapter;
+    private ProductOptions mProductOption;
 
     @Nullable
     @Override
@@ -53,11 +61,11 @@ public class ProductOptionsFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
-        mAdapter.addAdapter(new PBAdapter(getActivity()));
+        mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
-        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
-        mAdapter.addAdapter(new SingleItemAdapter(mContext, true, 0, ViewHolderFactory.TYPE.VHT_C_SEPARATOR));
+//        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
+//        mAdapter.addAdapter(new SingleItemAdapter(mContext, true, 0, ViewHolderFactory.TYPE.VHT_C_SEPARATOR));
         mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
 
@@ -81,39 +89,54 @@ public class ProductOptionsFragment extends Fragment {
 
     public void bindProductOptions(ProductOptions options) {
         if (options != null) {
+            mProductOption = options;
             mCustomizeAdapter.changeData(options.customisationOptions);
+            if (options.priceBreakDown.size() > 0) {
+                mPriceAdapter.setEnabled(true);
+                mPriceAdapter.notifyDataSetChanged();
+            } else {
+                mPriceAdapter.setEnabled(false);
+            }
         }
     }
 
-    class PBAdapter extends RecyclerAdapter<PBViewHolder> {
-
-        private final Context context;
-
-        public PBAdapter(Context context) {
-            super(context, true);
-            this.context = context;
-        }
-
+    private SingleItemAdapter.IViewBinder<PBViewHolder> mPriceBinder = new SingleItemAdapter.IViewBinder<PBViewHolder>() {
         @Override
-        public void onNewViewHolder(PBViewHolder holder) {
+        public void onNewView(int id, PBViewHolder holder) {
 
         }
 
         @Override
-        public void onBindViewHolder(PBViewHolder holder, int position) {
+        public void onBindView(int id, PBViewHolder holder) {
+            ArrayList<Map.Entry<String, Float>> p = mProductOption.priceBreakDown;
+            String priceUnit = mProductOption.priceUnit;
+            float total = 0;
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            for (Map.Entry<String, Float> entry : p) {
+                String name = entry.getKey();
+                Float price = entry.getValue();
+                String priceValue = String.format(Locale.getDefault(),"%.2f",price);
+                total = total + price;
+                builder.append(name);
+
+                for(int i = 35-name.length()-priceValue.length();i>0;i--){
+                    builder.append("\t");
+                }
+                builder.append(priceUnit);
+                builder.append("  ");
+                builder.append(priceValue);
+                builder.append("\n");
+            }
+            int index = builder.length();
+            builder.append("Total\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            builder.append(priceUnit);
+            builder.append("  ");
+            builder.append(String.format(Locale.getDefault(),"%.2f",total));
+            builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.gold.setText(builder);
 
         }
-
-        @Override
-        public int getItemViewType(int position) {
-            return ViewHolderFactory.TYPE.VHT_PB;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
-    }
+    };
 
 
     private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, String>> {
@@ -143,6 +166,7 @@ public class ProductOptionsFragment extends Fragment {
 
         public void changeData(List<Map.Entry<String, ArrayList<String>>> optionsList) {
             options = optionsList;
+            Log.d("changeData ", "" + optionsList.size());
             notifyDataSetChanged();
         }
 

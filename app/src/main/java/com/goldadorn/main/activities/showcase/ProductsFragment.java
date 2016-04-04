@@ -32,7 +32,6 @@ import com.goldadorn.main.server.response.ProductResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.Bind;
@@ -51,19 +50,19 @@ public class ProductsFragment extends Fragment {
     private static final int PRODUCT = 999999999;
 
     @Bind(R.id.swipe_deck)
-    SwipeDeck cardStack;
+    SwipeDeck mCardStack;
 
     @Bind(R.id.product_price)
-    TextView price;
+    TextView mPriceText;
     @Bind(R.id.product_name)
-    TextView name;
+    TextView mNameText;
     @Bind(R.id.cards_data)
-    View data;
+    View mDataView;
     @Bind(R.id.cards_end)
-    View end;
+    View mEndView;
 
     @Bind(R.id.buyButton)
-    Button buyButton;
+    Button mBuyButton;
 
     Toast mToast;
 
@@ -74,7 +73,7 @@ public class ProductsFragment extends Fragment {
     private View.OnClickListener mBuyClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            goToProductPage(v.getContext(),mProduct);
+            goToProductPage(v.getContext(), mProduct);
         }
     };
     private SwipeDeckAdapter mSwipeDeckAdapter;
@@ -106,64 +105,19 @@ public class ProductsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        final ArrayList<String> testData = new ArrayList<>();
-        testData.add("0");
-        testData.add("1");
-        testData.add("2");
-        testData.add("3");
-        testData.add("4");
-
-        end.setOnClickListener(new View.OnClickListener() {
+        mEndView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cardStack.setAdapter(mSwipeDeckAdapter);
-                data.setVisibility(View.VISIBLE);
-                end.setVisibility(View.GONE);
+                mCardStack.setAdapter(mSwipeDeckAdapter);
+                mDataView.setVisibility(View.VISIBLE);
+                mEndView.setVisibility(View.GONE);
             }
         });
 
         mSwipeDeckAdapter = new SwipeDeckAdapter(getActivity());
-        cardStack.setAdapter(mSwipeDeckAdapter);
-
-        cardStack.setEventCallback(new SwipeDeck.SwipeEventCallback() {
-            @Override
-            public void cardSwipedLeft(final int position) {
-                UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false, new
-                        IResultListener<LikeResponse>() {
-                            @Override
-                            public void onResult(LikeResponse result) {
-                                if (mToast != null) mToast.cancel();
-                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " dis-liked":"failed",
-                                        Toast.LENGTH_LONG);
-                                mToast.show();
-                            }
-                        });
-                refreshLayouts(position);
-            }
-
-            @Override
-            public void cardSwipedRight(final int position) {
-                UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), true, new
-                        IResultListener<LikeResponse>() {
-                            @Override
-                            public void onResult(LikeResponse result) {
-                                if (mToast != null) mToast.cancel();
-                                mToast = Toast.makeText(getActivity(),result.success? "Product " + position + " liked":"failed",
-                                        Toast.LENGTH_LONG);
-                                mToast.show();
-                            }
-                        });
-                refreshLayouts(position);
-            }
-
-            @Override
-            public void cardsDepleted() {
-                Log.i("MainActivity", "no more cards");
-                if (mToast != null) mToast.cancel();
-                mToast = Toast.makeText(getActivity(), "Products depleted ", Toast.LENGTH_LONG);
-                mToast.show();
-            }
-        });
+        mCardStack.setAdapter(mSwipeDeckAdapter);
+        mCardStack.setEventCallback(mSwipeDeckAdapter);
+        mCardStack.setPositionCallback(mSwipeDeckAdapter);
 
         if (mMode == MODE_USER) {
             ((ShowcaseActivity) getActivity()).registerUserChangeListener(mUserChangeListener);
@@ -174,24 +128,24 @@ public class ProductsFragment extends Fragment {
         getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
         refreshData();
 
-        buyButton.setOnClickListener(mBuyClick);
+        mBuyButton.setOnClickListener(mBuyClick);
     }
 
     private void refreshLayouts(int position) {
-        if(position<mSwipeDeckAdapter.getCount()-1) {
+        if (position < mSwipeDeckAdapter.getCount() - 1) {
             setData(mSwipeDeckAdapter.getItem(position + 1));
-        }else{
-            end.setVisibility(View.VISIBLE);
-            data.setVisibility(View.GONE);
+        } else {
+            mEndView.setVisibility(View.VISIBLE);
+            mDataView.setVisibility(View.GONE);
         }
     }
 
 
     private void setData(Product product) {
         mProduct = product;
-        if(product!=null){
-            name.setText(product.name);
-            price.setText(product.getDisplayPrice());
+        if (product != null) {
+            mNameText.setText(product.name);
+            mPriceText.setText(product.getDisplayPrice());
         }
     }
 
@@ -207,7 +161,9 @@ public class ProductsFragment extends Fragment {
         super.onDestroy();
     }
 
-    public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener {
+
+    public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
+            SwipeDeck.SwipeEventCallback, SwipeDeck.CardPositionCallback {
 
         private Context context;
         private Cursor cursor;
@@ -254,7 +210,7 @@ public class ProductsFragment extends Fragment {
 
 
             Product product = getItem(position);
-            convertView.setTag(PRODUCT,product);
+            convertView.setTag(PRODUCT, product);
 
             holder.productActionsToggle.setTag(holder);
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
@@ -271,14 +227,15 @@ public class ProductsFragment extends Fragment {
             if (id == R.id.likeButton) {
                 v.setEnabled(false);
                 Product product = (Product) v.getTag();
-                UIController.like(v.getContext(), product, !v.isSelected(), new IResultListener<LikeResponse>() {
+                UIController.like(v.getContext(), product, !v.isSelected(),
+                        new IResultListener<LikeResponse>() {
 
-                    @Override
-                    public void onResult(LikeResponse result) {
-                        v.setEnabled(true);
-                        v.setSelected(result.success);
-                    }
-                });
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success);
+                            }
+                        });
             } else if (id == R.id.product_actions_open) {
                 ProductViewHolder holder = (ProductViewHolder) v.getTag();
                 boolean isVisible = holder.productActions.getVisibility() == View.VISIBLE;
@@ -300,13 +257,63 @@ public class ProductsFragment extends Fragment {
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
             } else {
                 Product product = (Product) v.getTag(PRODUCT);
-                goToProductPage(v.getContext(),product);
+                goToProductPage(v.getContext(), product);
             }
         }
 
         public void changeCursor(Cursor data) {
             this.cursor = data;
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void cardSwipedLeft(final int position) {
+            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), false,
+                    new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            if (mToast != null) mToast.cancel();
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? "Product " + position + " dis-liked" :
+                                            "failed", Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    });
+            refreshLayouts(position);
+        }
+
+        @Override
+        public void cardSwipedRight(final int position) {
+            UIController.like(getActivity(), mSwipeDeckAdapter.getItem(position), true,
+                    new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            if (mToast != null) mToast.cancel();
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? "Product " + position + " liked" : "failed",
+                                    Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    });
+            refreshLayouts(position);
+        }
+
+        @Override
+        public void cardsDepleted() {
+            Log.i("MainActivity", "no more cards");
+            if (mToast != null) mToast.cancel();
+            mToast = Toast.makeText(getActivity(), "Products depleted ", Toast.LENGTH_LONG);
+            mToast.show();
+        }
+
+        @Override
+        public void xPos(Float aFloat) {
+            Log.i("swipedeck", "" + aFloat);
+        }
+
+        @Override
+        public void yPos(Float aFloat) {
+            Log.i("swipedeck", "" + aFloat);
         }
 
         class ProductViewHolder {
@@ -338,8 +345,8 @@ public class ProductsFragment extends Fragment {
         }
     }
 
-    private void goToProductPage(Context context,Product product) {
-        startActivity(ProductActivity.getLaunchIntent(context,product));
+    private void goToProductPage(Context context, Product product) {
+        startActivity(ProductActivity.getLaunchIntent(context, product));
     }
 
     private UserChangeListener mUserChangeListener = new UserChangeListener() {
@@ -365,7 +372,7 @@ public class ProductsFragment extends Fragment {
             response.userId = mUser.id;
         } else {
             response.collectionId = mCollection.id;
-            response.userId=mCollection.userId;
+            response.userId = mCollection.userId;
         }
         UIController.getProducts(getContext(), response, null);
     }
@@ -393,7 +400,7 @@ public class ProductsFragment extends Fragment {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mSwipeDeckAdapter.changeCursor(data);
-            setData(mSwipeDeckAdapter.getItem(0));
+            if (mProduct == null) setData(mSwipeDeckAdapter.getItem(0));
         }
 
         @Override

@@ -212,17 +212,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
         getSupportLoaderManager().initLoader(mCollectionCallback.hashCode(), null,
                 mCollectionCallback);
 
-        initTabs();
-    }
-
-    private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
-        String social = getString(R.string.social).toLowerCase();
-        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
-            social += "@";
-            social += mCollection.name.toLowerCase().replace(" ", "");
-        }
-        mTabViewHolder.initTabs(getString(R.string.products), social, null,
+        mTabViewHolder.initTabs(getString(R.string.products), getString(R.string.social), null,
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
@@ -281,7 +272,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId, true);
-        String t = user != null ?"By "+ user.getName() : "";
+        String t = user != null ? "By " + user.getName() : "";
         mOverlayViewHolder.ownerName.setText(t);
         mOverlayViewHolder.followButton.setVisibility(
                 TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);
@@ -291,8 +282,14 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mOverlayViewHolder.extra.setText("");
         mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
         mOverlayViewHolder.like.setTag(collection);
-
+        mOverlayViewHolder.like.setSelected(collection.isLiked);
         mTabViewHolder.setCounts(collection.productcount, -1);
+        String social = getString(R.string.social).toLowerCase();
+        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
+            social += "@";
+            social += mCollection.name.toLowerCase().replace(" ", "");
+        }
+        mTabViewHolder.tabName2.setText(social);
 
     }
 
@@ -339,8 +336,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(
-                    getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
             };
             return vh;
         }
@@ -458,7 +454,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         @Override
         public void onClick(final View v) {
-            if (v == like) {
+            if (v.equals(like)) {
                 v.setEnabled(false);
                 Collection collection = (Collection) v.getTag();
                 final boolean isLiked = v.isSelected();

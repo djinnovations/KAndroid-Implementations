@@ -332,7 +332,7 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("prodId", response.product.id);
             Product product = response.product;
             for (Map.Entry<String, String> entry : product.customisations.entrySet()) {
-                jsonObject.put(entry.getKey(),entry.getValue());
+                jsonObject.put(entry.getKey(), entry.getValue());
             }
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
@@ -428,6 +428,24 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.product.id);
+            jsonObject.put("userId", response.product.userId);
+            jsonObject.put("priceUnits", response.product.getTotalPrice());
+            jsonObject.put("orderQty", response.product.quantity);
+            if (response.product.customisations != null) {
+                try {
+                    if (response.product.customisations != null) {
+                        for (Map.Entry<String, String> entry : response.product.customisations.entrySet()) {
+                            if (entry.getKey() != null && entry.getValue() != null) {
+                                jsonObject.put(entry.getKey(),
+                                        entry.getValue());
+                            }
+
+                        }
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -459,7 +477,8 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("prodId", response.product.id);
+            jsonObject.put("transId", response.product.transid);
+            jsonObject.put("userId", response.product.userId);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);

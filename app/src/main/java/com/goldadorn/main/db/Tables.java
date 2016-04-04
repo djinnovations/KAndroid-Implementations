@@ -113,6 +113,7 @@ public class Tables {
         public static final String COUNT_FOLLOWING = "following";
         public static final String COUNT_COLLECTIONS = "collections";
         public static final String COUNT_PRODUCTS = "products";
+        public static final String IS_LIKED = "isliked";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" +
@@ -129,6 +130,7 @@ public class Tables {
                 "/" + TABLENAME +
                 "?" + PARAMETER_NOTIFY +
                 "=false");
+
 
         /**
          * The content:// style URL for a given row, identified by its id.
@@ -185,6 +187,7 @@ public class Tables {
                 Users.TYPE + " INTEGER DEFAULT 0," +
                 Users.TRENDING + " INTEGER DEFAULT 0," + Users.FEATURED + " INTEGER DEFAULT 0," +
                 Users.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Users.IS_LIKED + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWERS + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWING + " INTEGER DEFAULT 0," +
                 Users.COUNT_COLLECTIONS + " INTEGER DEFAULT 0," +

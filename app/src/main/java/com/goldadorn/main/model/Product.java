@@ -4,7 +4,6 @@ import android.database.Cursor;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.db.Tables;
-import com.goldadorn.main.utils.ImageFilePath;
 
 import org.json.JSONObject;
 
@@ -16,6 +15,7 @@ import java.util.HashMap;
  */
 public class Product implements Serializable {
     public final int id;
+    public int transid;
     public int userId, collectionId;
     public String name, description;
     public long unitPrice;
@@ -28,6 +28,7 @@ public class Product implements Serializable {
 
     //customise variable
     public final HashMap<String, String> customisations = new HashMap<>();
+    private boolean isLiked;
 //    public String primaryMetal;
 //    public String primaryMetalColor;
 //    public String primaryMetalPurity;
@@ -62,7 +63,8 @@ public class Product implements Serializable {
     }
 
     public String getImageUrl() {
-        return ImageFilePath.getImageUrlForProduct(id);
+        return "http://demo.eremotus-portal.com/products/28/28.jpg";
+//        return ImageFilePath.getImageUrlForProduct(id);
     }
 
     public static Product extractFromCursor(Cursor cursor) {
@@ -74,6 +76,7 @@ public class Product implements Serializable {
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES));
         t.unitPrice = cursor.getLong(cursor.getColumnIndex(Tables.Products.PRICE));
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
+        t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED)) == 1;
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)
             t.image_a_r = 1;
@@ -83,6 +86,7 @@ public class Product implements Serializable {
     public static Product extractGetCartProductList(JSONObject productInfo) {
         Product p = new Product(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
         p.name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
+        p.transid = productInfo.optInt("transId");
 //        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
 //        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
 //        p.primaryMetalPurity = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY);

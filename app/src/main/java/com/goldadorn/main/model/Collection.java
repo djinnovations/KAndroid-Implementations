@@ -3,7 +3,6 @@ package com.goldadorn.main.model;
 import android.database.Cursor;
 
 import com.goldadorn.main.db.Tables;
-import com.goldadorn.main.utils.ImageFilePath;
 
 import java.io.Serializable;
 
@@ -17,6 +16,7 @@ public class Collection implements Serializable {
     public float image_a_r = 1;
     public int likecount = 0, productcount = 0;
     public boolean isTrending,isFeatured;
+    public boolean isLiked;
 
     public Collection(int id) {
         this.id = id;
@@ -28,6 +28,7 @@ public class Collection implements Serializable {
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Collections.DESCRIPTION));
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES));
+        t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Collections.IS_LIKED))==1;
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
         t.category = cursor.getString(cursor.getColumnIndex(Tables.Collections.CATEGORY));
         if (t.image_a_r == 0)
@@ -37,6 +38,7 @@ public class Collection implements Serializable {
     }
 
     public String getImageUrl() {
-        return ImageFilePath.getImageUrlForCollection(id);
+        return "http://demo.eremotus-portal.com/collections/3/3.jpg";
+//        return ImageFilePath.getImageUrlForCollection(id);
     }
 }
