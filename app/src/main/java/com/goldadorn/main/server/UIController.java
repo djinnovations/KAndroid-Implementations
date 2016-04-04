@@ -37,7 +37,7 @@ public class UIController {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.getProducts(context, response, 0);
+                Api.getProductsSocial(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

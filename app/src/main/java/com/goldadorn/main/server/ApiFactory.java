@@ -61,7 +61,6 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
                 builder.appendPath("getdesigners");
-                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
             }
             case ADD_CART_TYPE: {
@@ -139,15 +138,6 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
                 builder.appendPath("getproducts");
-                if (((ProductResponse) urlBuilder.mResponse).collectionId != -1) {
-                    builder.appendPath("c");
-                    builder.appendPath(((ProductResponse) urlBuilder.mResponse).collectionId + "");
-                    builder.appendPath(urlBuilder.mResponse.mPageCount + "");
-                } else if (((ProductResponse) urlBuilder.mResponse).userId != -1) {
-                    builder.appendPath("d");
-                    builder.appendPath(((ProductResponse) urlBuilder.mResponse).userId + "");
-                    builder.appendPath(urlBuilder.mResponse.mPageCount + "");
-                }
                 break;
             }
             case PRODUCTS_SOCIAL_TYPE: {
@@ -197,6 +187,7 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("designerIds", response.idsForProducts);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("getDesigners post body content "+jsonObject.toString());
 
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -252,8 +243,16 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mContext = context;
             paramsBuilder.mApiType = PRODUCTS_TYPE;
 
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("prodIds", response.idsForProducts);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("getProducts post body content "+jsonObject.toString());
+
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());

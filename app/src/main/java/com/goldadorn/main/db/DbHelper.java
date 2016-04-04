@@ -59,7 +59,10 @@ public class DbHelper {
                     ContentValues cv = new ContentValues();
                     cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                     cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                    context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                    int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                    if (updatecount == 0)
+                        context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
+                    response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID) );
                 }
                 context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }

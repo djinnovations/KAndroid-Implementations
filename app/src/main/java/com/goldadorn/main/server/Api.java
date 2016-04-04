@@ -70,20 +70,22 @@ public class Api {
             ApiFactory.getProducts(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProducts(context, response);
-                response.responseContent = null;
-                getProductsSocial(context,response,retryCount);
             }
         } catch (Exception e) {
             extractException(context, response, e);
             e.printStackTrace();
         }
     }
-    private static void getProductsSocial(Context context, ProductResponse response, int retryCount) {
+    public static void getProductsSocial(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.getProductsSocial(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductsSocial(context, response);
+                response.responseContent = null;
+                response.success = false;
+                response.responseCode = -1;
+                getProducts(context,response,0);
             }
         } catch (Exception e) {
             extractException(context, response, e);
