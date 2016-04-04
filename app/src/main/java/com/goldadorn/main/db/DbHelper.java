@@ -95,8 +95,9 @@ public class DbHelper {
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
                         int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
+                        response.idsForProducts.put(userId);
                         User user = UserInfoCache.getInstance(context).getUserInfo(userId, true);
-                        if (user == null) user = new User(userId,User.TYPE_DESIGNER);
+                        if (user == null) user = new User(userId, User.TYPE_DESIGNER);
                         user.name = userObj.optString(Constants.JsonConstants.USERNAME);
                         user.featured = userObj.optInt(Constants.JsonConstants.ISFEATURED) == 1;
                         user.trending = userObj.optInt(Constants.JsonConstants.ISTRENDIND) == 1;
@@ -116,7 +117,9 @@ public class DbHelper {
                                 ContentValues collcv = new ContentValues();
                                 collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
                                 collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                                context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                                int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                                if (updatecollcnt == 0)
+                                    context.getContentResolver().insert(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv);
                             }
                         }
                     }
@@ -163,8 +166,6 @@ public class DbHelper {
                             collcv.put(Tables.Collections.CATEGORY, collObj.optString(Constants.JsonConstants.COLLECTIONCATEGORY, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
                             int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
-                            if (updatecollcnt == 0)
-                                context.getContentResolver().insert(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv);
                         }
                     }
                 }
@@ -184,6 +185,9 @@ public class DbHelper {
         } else if (response.collectionId != -1) {
             cv.put(Tables.Collections.IS_LIKED, 1);
             context.getContentResolver().update(Tables.Collections.CONTENT_URI, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
+        } else if (response.userId != -1) {
+            cv.put(Tables.Users.IS_LIKED, 1);
+            context.getContentResolver().update(Tables.Users.CONTENT_URI, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
         }
     }
 
@@ -195,6 +199,9 @@ public class DbHelper {
         } else if (response.collectionId != -1) {
             cv.put(Tables.Collections.IS_LIKED, 0);
             context.getContentResolver().update(Tables.Collections.CONTENT_URI, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
+        } else if (response.userId != -1) {
+            cv.put(Tables.Users.IS_LIKED, 0);
+            context.getContentResolver().update(Tables.Users.CONTENT_URI, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
         }
     }
 }
