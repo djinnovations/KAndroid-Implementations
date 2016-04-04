@@ -8,6 +8,7 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
@@ -70,7 +72,7 @@ public class HeaderItemHolder{
     TextView countFollowingLabel;
 
     @Bind(R.id.followLink)
-    TextView followLink;
+    Button followLink;
 
     @Bind(R.id.designer)
     TextView designer;
@@ -80,12 +82,12 @@ public class HeaderItemHolder{
         int isFollowing = people.getIsFollowing();
         isFollowing = isFollowing==0?1:0;
         people.setIsFollowing(isFollowing);
-        if(people.getIsFollowing()==1) {
-            followLink.setText("Unfollow");
+        if(people.getIsFollowing()==0) {
+            followLink.setText(context.getResources().getString(R.string.icon_follow_user));
             followLink.setSelected(true);
         }
         else {
-            followLink.setText("Follow");
+            followLink.setText(context.getResources().getString(R.string.icon_un_follow_user));
             followLink.setSelected(false);
         }
         YoYo.with(Techniques.Landing).duration(300).playOn(followLink);
@@ -195,9 +197,10 @@ public class HeaderItemHolder{
         else {
             followLink.setVisibility(View.VISIBLE);
             if(people.getIsFollowing()==0)
-                followLink.setText("Follow");
+                followLink.setText(context.getResources().getString(R.string.icon_follow_user));
             else
-                followLink.setText("Unfollow");
+                followLink.setText(context.getResources().getString(R.string.icon_un_follow_user));
+
         }
 
         people.setBackgroundPic("http://whatatimeline.com/covers/1330597507de0/balloons-sunset-view-facebook-cover.jpg");

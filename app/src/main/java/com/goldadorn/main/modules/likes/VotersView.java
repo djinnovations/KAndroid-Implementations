@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -141,6 +142,10 @@ public class VotersView extends DefaultVerticalListView implements DefaultProjec
 
         @Bind(R.id.userName)
         TextView userName;
+
+        @Bind(R.id.followButton)
+        Button followButton;
+
         private View.OnClickListener itemClick = new View.OnClickListener()
         {
             public void onClick(View v)

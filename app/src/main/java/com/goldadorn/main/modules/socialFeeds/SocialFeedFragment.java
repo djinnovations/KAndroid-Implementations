@@ -658,7 +658,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         buy.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(buy);
                         buy.setSelected(true);
-                        notBuy.setSelected(false);
+                        notBuy.setSelected(true);
                         voteToView.setVisibility(View.GONE);
                         voteAPost(socialPost, position);
                     }
@@ -668,7 +668,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         socialPost.setIsVoted(2);
                         notBuy.setText("{hea_broken_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(notBuy);
-                        buy.setSelected(false);
+                        buy.setSelected(true);
                         notBuy.setSelected(true);
                         voteToView.setVisibility(View.GONE);
                         voteAPost(socialPost, position);
@@ -759,12 +759,12 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 buy.setText("{hea_heart_fill}");
                 notBuy.setText("{hea_broken_heart_fill}");
                 buy.setSelected(true);
-                notBuy.setSelected(false);
+                notBuy.setSelected(true);
             }
             else if (item.getIsVoted() == 2) {
                 buy.setText("{hea_heart_fill}");
                 notBuy.setText("{hea_broken_heart_fill}");
-                buy.setSelected(false);
+                buy.setSelected(true);
                 notBuy.setSelected(true);
             }
         }
@@ -834,8 +834,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option1Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option1Button);
                         option1Button.setSelected(true);
-                        option2Button.setSelected(false);
-                        option3Button.setSelected(false);
+                        option2Button.setSelected(true);
+                        option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
                     }
@@ -846,9 +846,9 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         socialPost.setIsVoted(2);
                         option2Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option2Button);
-                        option1Button.setSelected(false);
+                        option1Button.setSelected(true);
                         option2Button.setSelected(true);
-                        option3Button.setSelected(false);
+                        option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
                     }
@@ -859,8 +859,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         socialPost.setIsVoted(3);
                         option3Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option3Button);
-                        option1Button.setSelected(false);
-                        option2Button.setSelected(false);
+                        option1Button.setSelected(true);
+                        option2Button.setSelected(true);
                         option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
                         selectAPost(socialPost, position);
@@ -1004,8 +1004,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option2Button.setText("{hea_heart_fill}");
                 option3Button.setText("{hea_heart_fill}");
                 option1Button.setSelected(true);
-                option2Button.setSelected(false);
-                option3Button.setSelected(false);
+                option2Button.setSelected(true);
+                option3Button.setSelected(true);
                 voteToView.setVisibility(View.GONE);
                 stackBar.setVisibility(View.VISIBLE);
 
@@ -1016,9 +1016,9 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setText("{hea_heart_fill}");
                 option2Button.setText("{hea_heart_fill}");
                 option3Button.setText("{hea_heart_fill}");
-                option1Button.setSelected(false);
+                option1Button.setSelected(true);
                 option2Button.setSelected(true);
-                option3Button.setSelected(false);
+                option3Button.setSelected(true);
                 voteToView.setVisibility(View.GONE);
                 stackBar.setVisibility(View.VISIBLE);
 
@@ -1028,8 +1028,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 option1Button.setText("{hea_heart_fill}");
                 option2Button.setText("{hea_heart_fill}");
                 option3Button.setText("{hea_heart_fill}");
-                option1Button.setSelected(false);
-                option2Button.setSelected(false);
+                option1Button.setSelected(true);
+                option2Button.setSelected(true);
                 option3Button.setSelected(true);
                 voteToView.setVisibility(View.GONE);
                 stackBar.setVisibility(View.VISIBLE);

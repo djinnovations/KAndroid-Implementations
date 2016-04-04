@@ -43,7 +43,7 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
                 public void onAnimationEnd(Animator animator) {
                     child.setVisibility(View.GONE);
 
-                    /*
+
                     if (runnablelocal != null) {
                         handler.removeCallbacks(runnablelocal);
                         runnablelocal=null;
@@ -57,7 +57,7 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
                         }
                     };
                     handler.postDelayed(runnablelocal, 5000);
-                    */
+                    
                 }
 
                 @Override

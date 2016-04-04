@@ -142,20 +142,15 @@
         android:layout_below="@+id/userName"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        style="@style/linkWhiteButton"
-        android:text="Follow"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="2"
-        android:shadowColor="#66000000"
+    <com.mikepenz.iconics.view.IconicsButton
         android:id="@+id/followLink"
-        android:textSize="14sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/userName"
-        android:layout_centerHorizontal="true" />
+        style="@style/postFotterButtonWhite"
+        android:layout_width="40dp"
+        android:text="@string/icon_follow_user"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/followersPort"
+        android:layout_alignRight="@+id/userName"
+        android:layout_alignEnd="@+id/userName" />
 
 
 </RelativeLayout>

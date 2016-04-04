@@ -71,7 +71,7 @@
 
 
             <com.mikepenz.iconics.view.IconicsButton
-                style="@style/circleSmallButton"
+                style="@style/botOp1"
                 android:layout_below="@+id/option1Image"
                 android:layout_marginTop="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/padding_default"
@@ -137,7 +137,7 @@
 
 
             <com.mikepenz.iconics.view.IconicsButton
-                style="@style/circleSmallButton"
+                style="@style/botOp2"
                 android:layout_below="@+id/option2Image"
                 android:layout_marginTop="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/padding_default"
@@ -208,7 +208,7 @@
 
 
             <com.mikepenz.iconics.view.IconicsButton
-                style="@style/circleSmallButton"
+                style="@style/botOp3"
                 android:layout_below="@+id/option3Image"
                 android:layout_marginTop="@dimen/padding_default"
                 android:layout_marginBottom="@dimen/padding_default"
@@ -254,7 +254,7 @@
             android:layout_below="@+id/options"
             tools:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="10dp" android:weightSum="100">
+            android:layout_height="14dp" android:weightSum="100">
             <TextView
                 android:layout_weight="33"
                 android:background="@color/staceColor1"
@@ -262,7 +262,7 @@
                 android:id="@+id/stack1"
                 android:text="1"
                 android:textColor="#ffffff"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:paddingLeft="3dp"
                 android:layout_gravity="center"
                 android:layout_height="match_parent" />
@@ -272,7 +272,7 @@
                 android:layout_weight="33"
                 android:text="2"
                 android:textColor="#ffffff"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:paddingLeft="3dp"
                 android:layout_gravity="center"
                 android:layout_width="0dp"
@@ -285,7 +285,7 @@
                 android:layout_width="0dp"
                 android:text="3"
                 android:textColor="#ffffff"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:paddingLeft="3dp"
                 android:layout_gravity="center"
                 android:layout_height="match_parent" />
@@ -296,7 +296,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
-            android:text="Vote to View a Result"
+            android:text="Vote To View Result"
             android:id="@+id/voteToView"
             android:textSize="11sp"
             android:layout_marginTop="-30dp"

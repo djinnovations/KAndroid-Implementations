@@ -152,6 +152,10 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
         @Bind(R.id.userImage)
         ImageView userImage;
 
+        @Bind(R.id.followButton)
+        Button followButton;
+
+
         @Bind(R.id.userName)
         TextView userName;
         private View.OnClickListener itemClick = new View.OnClickListener()

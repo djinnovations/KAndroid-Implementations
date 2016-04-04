@@ -94,15 +94,18 @@
         <RadioGroup
             android:layout_width="wrap_content" android:orientation="horizontal"
             android:id="@+id/genderRadioGroup"
+
             android:layout_height="wrap_content">
 
             <RadioButton
                 android:layout_width="wrap_content"
                 android:text="@string/labelMale"
                 android:id="@+id/maleRadioButton"
+                android:buttonTint="@color/colorPrimary"
                 android:layout_height="wrap_content" />
             <RadioButton
                 android:text="@string/labelFemale"
+                android:buttonTint="@color/colorPrimary"
                 android:id="@+id/femaleRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

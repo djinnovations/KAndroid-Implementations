@@ -69,7 +69,7 @@
             android:id="@+id/linearLayout">
 
         <com.mikepenz.iconics.view.IconicsButton
-            style="@style/circleSmallButton"
+            style="@style/buyStyle"
             android:layout_gravity="center_horizontal"
             android:layout_below="@+id/image"
             android:text="{hea_heart_out_line}"
@@ -102,7 +102,7 @@
             android:layout_marginRight="@dimen/padding_default_4x">
 
             <com.mikepenz.iconics.view.IconicsButton
-                style="@style/circleSmallButton"
+                style="@style/notBuyStyle"
                 android:layout_gravity="center_horizontal"
                 android:layout_below="@+id/image"
                 android:text="{hea_broken_heart_out_line}"
@@ -127,13 +127,13 @@
             android:layout_below="@+id/options"
             tools:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="10dp" android:weightSum="100">
+            android:layout_height="14dp" android:weightSum="100">
             <TextView
                 android:layout_weight="50"
                 android:background="@color/staceColor1"
                 android:layout_width="0dp"
                 android:text="buy"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:textColor="#ffffff"
                 android:paddingLeft="3dp"
                 android:id="@+id/stack1"
@@ -146,7 +146,7 @@
                 android:text="not buy"
                 android:textColor="#ffffff"
                 android:paddingLeft="3dp"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:layout_width="0dp"
                 android:layout_gravity="center"
                 android:layout_height="match_parent" />
@@ -156,10 +156,10 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
-            android:text="Vote to View a Result"
+            android:text="Vote To View Result"
             android:id="@+id/voteToView"
             android:textSize="11sp"
-            android:layout_marginTop="-24dp"
+            android:layout_marginTop="-65dp"
             android:layout_below="@+id/options"/>
     </RelativeLayout>
 
