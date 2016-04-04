@@ -40,7 +40,6 @@ public class Api {
             ApiFactory.getDesigners(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductShowcaseData(context, response);
-                getDesignersSocial(context,new TimelineResponse(),0);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -48,12 +47,16 @@ public class Api {
         }
     }
 
-    private static void getDesignersSocial(Context context, TimelineResponse response, int retryCount){
+    public static void getDesignersSocial(Context context, TimelineResponse response, int retryCount){
         try {
             generateUserCredentials(context, response);
             ApiFactory.getDesignersSocial(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeDesignersSocial(context, response);
+                response.responseContent = null;
+                response.success = false;
+                response.responseCode = -1;
+                getDesigners(context,response,0);
             }
         } catch (Exception e) {
             extractException(context, response, e);

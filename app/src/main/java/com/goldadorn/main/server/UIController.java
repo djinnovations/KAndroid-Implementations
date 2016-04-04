@@ -21,7 +21,7 @@ public class UIController {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.getDesigners(context, response, 0);
+                Api.getDesignersSocial(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
