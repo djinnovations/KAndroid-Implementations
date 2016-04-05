@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            app:layout_collapseMode="pin"
+            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        <LinearLayout
+            android:padding="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:paddingBottom="8dp"
+                android:text="@string/basic_profile"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/disabled_grey"/>
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/FormEditText"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <EditText
+                    android:id="@+id/first_name"
+                    style="@style/FormEditText"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_first_name"
+                    android:inputType="textPersonName"/>
+
+                <EditText
+                    android:id="@+id/last_name"
+                    style="@style/FormEditText"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_last_name"
+                    android:inputType="textPersonName"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="4dp"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/gender"
+                        style="@style/FormEditText"
+                        android:layout_weight="1"
+                        android:entries="@array/gender"
+                        android:prompt="@string/hint_gender"
+                        app:spn_arrowColor="@android:color/black"
+                        app:spn_label="@string/hint_gender"
+                        app:spn_labelEnable="false"
+                        app:spn_labelTextSize="13sp"
+                        app:spn_labelPadding="0dp"
+                        app:paddingStart="0dp"
+                        app:spn_arrowSwitchMode="true"
+                        app:spn_arrowSize="30dp"
+                        />
+
+                    <EditText
+                        android:id="@+id/dob"
+                        style="@style/FormEditText"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_birthday"
+                        android:inputType="date"/>
+
+                    <EditText
+                        android:id="@+id/phone"
+                        style="@style/FormEditText"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_phone_number"
+                        android:inputType="phone"/>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="4dp"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="1"
+                    android:src="@drawable/vector_icon_profile"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif"
+                android:paddingBottom="8dp"
+                android:text="@string/address"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/disabled_grey"/>
+
+            <EditText
+                android:id="@+id/address1"
+                style="@style/FormEditText"
+                android:hint="@string/address1"
+                android:inputType="textPostalAddress"
+                />
+
+            <EditText
+                android:id="@+id/address2"
+                style="@style/FormEditText"
+                android:hint="@string/address2"
+                android:inputType="textPostalAddress"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/country"
+                    style="@style/FormEditText"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:entries="@array/country"
+                    app:spn_arrowColor="@android:color/black"
+                    app:spn_label="Country"
+                    app:spn_labelEnable="true"
+                    app:spn_labelTextSize="13sp"/>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/state"
+                    style="@style/FormEditText"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:entries="@array/states"
+                    app:spn_arrowColor="@android:color/black"
+                    app:spn_label="State"
+                    app:spn_labelEnable="true"
+                    app:spn_labelTextSize="13sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/city"
+                    style="@style/FormEditText"
+                    android:layout_marginRight="4dp"
+                    android:layout_weight="1"
+                    android:entries="@array/cities"
+                    app:spn_arrowColor="@android:color/black"
+                    app:spn_label="City"
+                    app:spn_labelEnable="true"
+                    app:spn_labelTextSize="13sp"/>
+
+                <EditText
+                    android:id="@+id/zipcode"
+                    style="@style/FormEditText"
+                    android:layout_marginLeft="4dp"
+                    android:layout_weight="1"
+                    android:hint="@string/zipcode"
+                    android:inputType="number"
+                    android:maxLength="6"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/doneButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Done"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v4.widget.NestedScrollView>

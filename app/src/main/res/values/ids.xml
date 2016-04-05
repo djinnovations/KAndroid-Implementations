@@ -12,4 +12,5 @@
     <item name="tag_error" type="id"/>
     <item name="tag_collom" type="id"/>
     <item name="tag_progress" type="id"/>
+    <item name="nav_edit_profile" type="id"/>
 </resources>

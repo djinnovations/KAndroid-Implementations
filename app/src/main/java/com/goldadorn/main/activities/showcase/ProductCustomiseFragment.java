@@ -119,19 +119,27 @@ public class ProductCustomiseFragment extends Fragment {
                 total = total + price;
                 builder.append(name);
 
-                for(int i = 35-name.length()-priceValue.length();i>0;i--){
+                for(int i = 25-name.length();i>=0;i--){
                     builder.append("\t");
                 }
                 builder.append(priceUnit);
-                builder.append("  ");
+                for(int i = 10-priceValue.length();i>=0;i--){
+                    builder.append("\t");
+                }
                 builder.append(priceValue);
                 builder.append("\n");
             }
             int index = builder.length();
-            builder.append("Total\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            builder.append("Total");
+            for(int i = 25-"Total".length();i>=0;i--){
+                builder.append("\t");
+            }
             builder.append(priceUnit);
-            builder.append("  ");
-            builder.append(String.format(Locale.getDefault(),"%.2f",total));
+            String priceValue =String.format(Locale.getDefault(),"%.2f",total);
+            for(int i = 10-priceValue.length();i>=0;i--){
+                builder.append("\t");
+            }
+            builder.append(priceValue);
             builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.gold.setText(builder);
 

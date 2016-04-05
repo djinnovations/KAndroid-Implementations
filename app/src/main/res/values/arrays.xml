@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="country">
+        <item>China</item>
+        <item>Japan</item>
+        <item>India</item>
+    </string-array>
+    <string-array name="states">
+        <item>Goa</item>
+        <item>Maharashtra</item>
+        <item>Karnataka</item>
+        <item>Punjab</item>
+    </string-array>
+    <string-array name="cities">
+        <item>Bengaluru</item>
+        <item>Mangalore</item>
+        <item>Hubli</item>
+        <item>Belgaum</item>
+    </string-array>
+    <string-array name="gender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+</resources>

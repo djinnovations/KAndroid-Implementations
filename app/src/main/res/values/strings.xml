@@ -93,6 +93,17 @@
     <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07" id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm" id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g example="5.55 grams" id="weight">%s</xliff:g></string>
     <string name="product_information">Product Information</string>
     <string name="labelRecomandation">Recommendation</string>
+    <string name="basic_profile">Basic Profile</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_phone_number">Phone Number</string>
+    <string name="address">Address</string>
+    <string name="address1">Address 1</string>
+    <string name="address2">Address 2</string>
+    <string name="zipcode">Zip Code</string>
+    <string name="hint_gender">Gender</string>
+    <string name="hint_birthday">Birthday</string>
+    <string name="edit_profile">Edit profile</string>
 
 
 </resources>
