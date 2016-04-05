@@ -183,11 +183,9 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("designerIds", response.idsForProducts);
 
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            L.d("getDesigners post body content "+jsonObject.toString());
+            RequestBody body = RequestBody.create(JSON, response.idsForProducts.toString());
+            L.d("getDesigners post body content " + response.idsForProducts.toString());
 
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -249,10 +247,10 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("prodIds", response.idsForProducts);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-            L.d("getProducts post body content "+jsonObject.toString());
+            L.d("getProducts post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());

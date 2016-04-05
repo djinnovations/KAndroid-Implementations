@@ -62,7 +62,7 @@ public class DbHelper {
                     int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                     if (updatecount == 0)
                         context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
-                    response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID) );
+                    response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID));
                 }
                 context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
@@ -98,7 +98,9 @@ public class DbHelper {
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
                         int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
-                        response.idsForProducts.put(userId);
+
+                        JSONObject jsonforpost = new JSONObject();
+                        jsonforpost.put("desgnId", userId);
                         User user = UserInfoCache.getInstance(context).getUserInfo(userId, true);
                         if (user == null) user = new User(userId, User.TYPE_DESIGNER);
                         user.name = userObj.optString(Constants.JsonConstants.USERNAME);
@@ -115,6 +117,7 @@ public class DbHelper {
                         UserInfoCache.updateCacheAndDb(context, user);
                         if (userObj.has(Constants.JsonConstants.COLLECTIONLIST) && userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST).length() != 0) {
                             JSONArray collarray = userObj.getJSONArray(Constants.JsonConstants.COLLECTIONLIST);
+                            JSONArray tempforpost = new JSONArray();
                             for (int j = 0; j < collarray.length(); j++) {
                                 JSONObject collObj = collarray.getJSONObject(j);
                                 ContentValues collcv = new ContentValues();
@@ -123,8 +126,11 @@ public class DbHelper {
                                 int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
                                 if (updatecollcnt == 0)
                                     context.getContentResolver().insert(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv);
+                                tempforpost.put(collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             }
+                            jsonforpost.put("collIds", tempforpost);
                         }
+                        response.idsForProducts.put(jsonforpost);
                     }
                     context.getContentResolver().notifyChange(Tables.Collections.CONTENT_URI, null);
                     context.getContentResolver().notifyChange(Tables.Users.CONTENT_URI, null);
