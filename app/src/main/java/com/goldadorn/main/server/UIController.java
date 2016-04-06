@@ -10,6 +10,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 
 /**
@@ -208,6 +209,37 @@ public class UIController {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
                 Api.follow(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+
+    public static void getBasicProfileInfo(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.getBasicProfile(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+    public static void setBasicProfileInfo(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.setBasicProfile(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

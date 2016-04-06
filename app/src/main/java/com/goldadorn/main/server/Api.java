@@ -8,6 +8,7 @@ import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 
@@ -105,6 +106,32 @@ public class Api {
             e.printStackTrace();
         }
     }
+
+    public static void getBasicProfile(Context context, ProfileResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getBasicProfile(context, response);
+            if (response.success && response.responseContent != null) {
+                ExtractResponse.extractBasicProfile(response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void setBasicProfile(Context context, ProfileResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.setBasicProfile(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     public static void getProductCustomization(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);

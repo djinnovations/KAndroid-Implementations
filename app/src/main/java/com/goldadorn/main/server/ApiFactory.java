@@ -2,6 +2,7 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
@@ -9,6 +10,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
@@ -44,6 +46,8 @@ public class ApiFactory extends ExtractResponse {
     private static final int UNLIKE_TYPE = 12;
     private static final int FOLLOW_TYPE = 13;
     private static final int NOTIFY_PAYMENT_TYPE = 14;
+    private static final int BASIC_PROFILE_GET_TYPE = 15;
+    private static final int BASIC_PROFILE_SET_TYPE = 16;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -75,6 +79,19 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("notifypaymentstatus");
                 break;
             }
+            case BASIC_PROFILE_GET_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("getbasicprofile");
+                break;
+            }
+            case BASIC_PROFILE_SET_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("setbasicprofile");
+                break;
+            }
+
             case LIKE_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
@@ -308,6 +325,86 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProductBasicInfo " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void getBasicProfile(Context context, ProfileResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = BASIC_PROFILE_GET_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = BASIC_PROFILE_GET_TYPE;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void setBasicProfile(Context context, ProfileResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = BASIC_PROFILE_SET_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = BASIC_PROFILE_SET_TYPE;
+
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            if (TextUtils.isEmpty(response.email))
+                jsonObject.put("prof_username", response.email);
+            if (TextUtils.isEmpty(response.firstName))
+                jsonObject.put("prof_fname", response.firstName);
+            if (TextUtils.isEmpty(response.lastName))
+                jsonObject.put("prof_lname", response.lastName);
+            if (response.dob != -1 && response.dob > 0)
+                jsonObject.put("prof_birthday", response.dob);
+            if (TextUtils.isEmpty(response.phone))
+                jsonObject.put("prof_phone", response.phone);
+            if (TextUtils.isEmpty(response.address1))
+                jsonObject.put("prof_address1", response.address1);
+            if (TextUtils.isEmpty(response.address2))
+                jsonObject.put("prof_address2", response.address2);
+            if (TextUtils.isEmpty(response.country))
+                jsonObject.put("prof_country", response.country);
+            if (TextUtils.isEmpty(response.city))
+                jsonObject.put("prof_city", response.city);
+            if (TextUtils.isEmpty(response.pincode))
+                jsonObject.put("prof_pincode", response.pincode);
+
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("setBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

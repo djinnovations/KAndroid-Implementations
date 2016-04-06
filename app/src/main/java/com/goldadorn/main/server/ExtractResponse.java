@@ -5,9 +5,11 @@ import android.content.Context;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.ProfileResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by nithinjohn on 12/03/16.
@@ -43,5 +45,24 @@ public class ExtractResponse {
             }
 
         }
+    }
+
+    protected static void extractBasicProfile(ProfileResponse response) throws JSONException {
+        if (response.responseContent != null) {
+            JSONObject jsonObject = new JSONObject(response.responseContent);
+            response.firstName = jsonObject.optString("fname");
+            response.lastName = jsonObject.optString("lname");
+            response.email = jsonObject.optString("username");
+            response.phone = jsonObject.optString("phone");
+            response.profilePic = jsonObject.optString("profilePic");
+            response.address1 = jsonObject.optString("address1");
+            response.address2 = jsonObject.optString("address2");
+            response.country = jsonObject.optString("country");
+            response.state = jsonObject.optString("state");
+            response.city = jsonObject.optString("city");
+            response.pincode = jsonObject.optString("pincode");
+            response.dob = jsonObject.optLong("birthday");
+        }
+
     }
 }
