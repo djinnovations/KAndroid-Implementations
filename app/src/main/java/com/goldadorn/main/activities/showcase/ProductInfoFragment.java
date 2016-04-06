@@ -97,7 +97,8 @@ public class ProductInfoFragment extends Fragment {
             view.findViewById(R.id.owner_layout).setVisibility(View.GONE);
         }
         bindCollectionUI(mProductActivity.mCollection);
-        bindProductInfo(mProductActivity.mProductInfo);
+        if (mProductActivity != null && mProductActivity.mProductInfo != null)
+            bindProductInfo(mProductActivity.mProductInfo);
         mdescription.setText(mProduct.description);
     }
 
@@ -185,8 +186,8 @@ public class ProductInfoFragment extends Fragment {
         } else {
             holder = (TableRowHolder) convertView.getTag();
         }
-        int grey=getResources().getColor(R.color.cb_dark_grey);
-        int gold=getResources().getColor(R.color.colorPrimary);
+        int grey = getResources().getColor(R.color.cb_dark_grey);
+        int gold = getResources().getColor(R.color.colorPrimary);
         if (obj instanceof StoneDetail) {
             holder.itemView.setBackgroundColor(Color.WHITE);
             holder.setTextColor(grey);
@@ -242,11 +243,11 @@ public class ProductInfoFragment extends Fragment {
         }
 
         public void setTextSize(float size) {
-            component.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
-            rate.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
-            weight.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
-            price.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
-            offer_price.setTextSize(TypedValue.COMPLEX_UNIT_PX,size);
+            component.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            rate.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            weight.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            price.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+            offer_price.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
         }
     }
 }

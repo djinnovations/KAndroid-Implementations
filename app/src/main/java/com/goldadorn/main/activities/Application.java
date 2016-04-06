@@ -2,6 +2,7 @@ package com.goldadorn.main.activities;
 
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
@@ -21,6 +22,7 @@ import com.goldadorn.main.utils.AsyncRunnableTask;
 import com.goldadorn.main.utils.URLHelper;
 import com.google.android.gms.analytics.ExceptionReporter;
 import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.StandardExceptionParser;
 import com.google.android.gms.analytics.Tracker;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
@@ -195,12 +197,24 @@ public class Application extends BaseApplication {
     }
     private void initGoogleAnalytics() {
         getDefaultTracker();
+        setExceptionHandler();
+    }
+    private void setExceptionHandler() {
         Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(
-                mTracker,
-                Thread.getDefaultUncaughtExceptionHandler(),
-                this);
+                mTracker,                                        // Currently used Tracker.
+                Thread.getDefaultUncaughtExceptionHandler(),    // Current default uncaught exception handler.
+                this);                                         // Context of the application.
+        // Make myHandler the new default uncaught exception handler.
 
-// Make myHandler the new default uncaught exception handler.
+        StandardExceptionParser exceptionParser =
+                new StandardExceptionParser(getApplicationContext(), null) {
+                    @Override
+                    public String getDescription(String threadName, Throwable t) {
+                        return "{" + threadName + "} " + Log.getStackTraceString(t);
+                    }
+                };
+        ((ExceptionReporter) myHandler).setExceptionParser(exceptionParser);
+
         Thread.setDefaultUncaughtExceptionHandler(myHandler);
     }
 
