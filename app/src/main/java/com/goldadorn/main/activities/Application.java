@@ -19,6 +19,9 @@ import com.goldadorn.main.modules.search.HashTagFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.AsyncRunnableTask;
 import com.goldadorn.main.utils.URLHelper;
+import com.google.android.gms.analytics.ExceptionReporter;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.Tracker;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.model.BaseApplication;
@@ -173,7 +176,32 @@ public class Application extends BaseApplication {
         Iconics.registerFont(new GoldadornIconFont());
         Iconics.registerFont(new HeartIconFont());
         configMainMenu();
+        //dont remove this code
+        initGoogleAnalytics();
+    }
+    private Tracker mTracker;
 
+    /**
+     * Gets the default {@link Tracker} for this {@link Application}.
+     * @return tracker
+     */
+    synchronized public Tracker getDefaultTracker() {
+        if (mTracker == null) {
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.global_tracker);
+        }
+        return mTracker;
+    }
+    private void initGoogleAnalytics() {
+        getDefaultTracker();
+        Thread.UncaughtExceptionHandler myHandler = new ExceptionReporter(
+                mTracker,
+                Thread.getDefaultUncaughtExceptionHandler(),
+                this);
+
+// Make myHandler the new default uncaught exception handler.
+        Thread.setDefaultUncaughtExceptionHandler(myHandler);
     }
 
     private void logUser(User user) {

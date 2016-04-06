@@ -52,19 +52,22 @@ public class DbHelper {
 
     public static void writeProductsSocial(Context context, ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
-            JSONArray productsArray = new JSONArray(response.responseContent);
-            if (productsArray.length() != 0) {
-                for (int i = 0; i < productsArray.length(); i++) {
-                    JSONObject productObj = productsArray.getJSONObject(i);
-                    ContentValues cv = new ContentValues();
-                    cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
-                    cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                    int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
-                    if (updatecount == 0)
-                        context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
-                    response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID));
+            JSONObject dataObj = new JSONObject(response.responseContent);
+            if (dataObj.has("products")) {
+                JSONArray productsArray = dataObj.getJSONArray("products");
+                if (productsArray.length() != 0) {
+                    for (int i = 0; i < productsArray.length(); i++) {
+                        JSONObject productObj = productsArray.getJSONObject(i);
+                        ContentValues cv = new ContentValues();
+                        cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
+                        cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
+                        int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                        if (updatecount == 0)
+                            context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
+                        response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID));
+                    }
+                    context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
                 }
-                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
         }
     }

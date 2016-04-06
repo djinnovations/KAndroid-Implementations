@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.androidquery.callback.AjaxStatus;
+import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
@@ -36,6 +37,8 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
 
 public class AppStartActivity extends BaseActivity {
 
@@ -70,7 +73,11 @@ public class AppStartActivity extends BaseActivity {
             else
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
-        initMixpanel();
+        initFacebookSdk();
+    }
+
+    private void initFacebookSdk() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     private void initMixpanel() {
@@ -82,15 +89,35 @@ public class AppStartActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
+        checkbranchio();
     }
 
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        checkbranchio();
+    }
+
+    private void checkbranchio() {
+        Branch branch = Branch.getInstance(getApplicationContext());
+
+        branch.initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    // params are the deep linked params associated with the link that the user clicked -> was re-directed to this app
+                    // params will be empty if no data found
+                    // ... insert custom logic here ...
+                } else {
+                    Log.i("MyApp", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
     }
 
 
