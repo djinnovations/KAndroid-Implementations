@@ -18,7 +18,7 @@
         <item>Belgaum</item>
     </string-array>
     <string-array name="gender">
-        <item>Male</item>
         <item>Female</item>
+        <item>Male</item>
     </string-array>
 </resources>

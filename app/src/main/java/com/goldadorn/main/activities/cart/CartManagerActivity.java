@@ -3,6 +3,7 @@ package com.goldadorn.main.activities.cart;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -88,6 +89,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         mContinueButton.setOnClickListener(mClickListener);
         configureUI(UISTATE_CART);
         mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+        mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

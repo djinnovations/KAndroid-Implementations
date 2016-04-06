@@ -3,7 +3,9 @@ package com.goldadorn.main.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,6 +29,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
 import pl.aprilapps.easyphotopicker.EasyImage;
 import pl.aprilapps.easyphotopicker.EasyImageConfig;
@@ -34,7 +37,7 @@ import pl.aprilapps.easyphotopicker.EasyImageConfig;
 /**
  * Created by Vijith Menon on 5/4/16.
  */
-public class ProfileEditActivity extends BaseDrawerActivity {
+public class ProfileEditActivity extends BaseActivity {
     private final static String TAG = ProfileEditActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
     private Context mContext;
@@ -77,14 +80,16 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     private ProfileData mProfileData;
     Calendar mCalendar;
     SimpleDateFormat mFormat;
+    @Bind(R.id.toolbar)
+    Toolbar mToolbar;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
 
                 @Override
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    mCalendar.set(year,monthOfYear,dayOfMonth,0,0,0);
-                    mDob.setText(android.text.format.DateFormat.format("D/M/yyyy",mCalendar));
+                    mCalendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
+                    mDob.setText(android.text.format.DateFormat.format("dd/M/yyyy", mCalendar));
                 }
             };
     private DatePickerDialog mDialog;
@@ -94,16 +99,25 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         mContext = this;
+        ButterKnife.bind(this);
         mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
         setupDOB();
-
+        mToolbar.setTitle("Profile");
+        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mProfileData.email = mEmail.getText().toString();
                 mProfileData.firstName = mFirstName.getText().toString();
                 mProfileData.lastName = mLastName.getText().toString();
-                mProfileData.gender = mGender.getSelectedItem().toString();
+                mProfileData.genderType = mGender.getSelectedItemPosition();
                 mProfileData.phone = mPhone.getText().toString();
                 mProfileData.address1 = mAddress1.getText().toString();
                 mProfileData.address2 = mAddress2.getText().toString();
@@ -111,8 +125,8 @@ public class ProfileEditActivity extends BaseDrawerActivity {
                 mProfileData.state = mState.getSelectedItem().toString();
                 mProfileData.city = mCity.getSelectedItem().toString();
                 mProfileData.pincode = mPincode.getText().toString();
-                mProfileData.dob =mCalendar.getTimeInMillis();
-                mProfileData.imageToUpload=mImageFile;
+                mProfileData.dob = mCalendar.getTimeInMillis();
+                mProfileData.imageToUpload = mImageFile;
 
                 UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
                     @Override
@@ -156,33 +170,33 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         mPincode.setText(mProfileData.pincode);
 
         String[] array = getResources().getStringArray(R.array.gender);
-        int selected=0;
-        for (int i= 0;i<array.length;i++){
-            if(array[i].equalsIgnoreCase(mProfileData.gender))
+        int selected = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (i == mProfileData.genderType)
                 selected = i;
         }
         mGender.setSelection(selected);
 
         array = getResources().getStringArray(R.array.country);
         selected = 0;
-        for (int i= 0;i<array.length;i++){
-            if(array[i].equalsIgnoreCase(mProfileData.country))
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equalsIgnoreCase(mProfileData.country))
                 selected = i;
         }
         mCountry.setSelection(selected);
 
         array = getResources().getStringArray(R.array.states);
         selected = 0;
-        for (int i= 0;i<array.length;i++){
-            if(array[i].equalsIgnoreCase(mProfileData.state))
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equalsIgnoreCase(mProfileData.state))
                 selected = i;
         }
         mState.setSelection(selected);
 
         array = getResources().getStringArray(R.array.cities);
         selected = 0;
-        for (int i= 0;i<array.length;i++){
-            if(array[i].equalsIgnoreCase(mProfileData.city))
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equalsIgnoreCase(mProfileData.city))
                 selected = i;
         }
         mCity.setSelection(selected);
@@ -195,7 +209,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         mDob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mDialog==null)
+                if (mDialog == null)
                     mDialog = new DatePickerDialog(ProfileEditActivity.this,
                             mDateSetListener, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
                             mCalendar.get(Calendar.DAY_OF_MONTH));
@@ -210,7 +224,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mDialog!=null && mDialog.isShowing())
+        if (mDialog != null && mDialog.isShowing())
             mDialog.dismiss();
     }
 

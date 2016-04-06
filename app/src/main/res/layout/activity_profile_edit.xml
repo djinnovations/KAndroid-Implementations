@@ -19,12 +19,8 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="@android:color/transparent"
-                android:elevation="0dp"
-                app:elevation="0dp"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,7 +48,7 @@
                     style="@style/FormEditText"
                     android:hint="@string/hint_email"
                     android:inputType="textEmailAddress"
-                    />
+                />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -98,7 +94,7 @@
                             android:entries="@array/gender"
                             android:prompt="@string/hint_gender"
                             android:spinnerMode="dropdown"
-                            />
+                        />
 
                         <TextView
                             android:id="@+id/dob"
@@ -147,14 +143,14 @@
                     style="@style/FormEditText"
                     android:hint="@string/address1"
                     android:inputType="textPostalAddress"
-                    />
+                />
 
                 <EditText
                     android:id="@+id/address2"
                     style="@style/FormEditText"
                     android:hint="@string/address2"
                     android:inputType="textPostalAddress"
-                    />
+                />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -192,11 +188,11 @@
                         style="@style/FormEditText"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
+                        android:dropDownSelector="@drawable/arrow_cb"
                         android:entries="@array/cities"
                         android:prompt="@string/prompt_city"
                         android:spinnerMode="dropdown"
-                        android:dropDownSelector="@drawable/arrow_cb"
-                        />
+                    />
 
                     <EditText
                         android:id="@+id/zipcode"
