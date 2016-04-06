@@ -56,6 +56,8 @@ public class DbHelper {
             if (dataObj.has("products")) {
                 JSONArray productsArray = dataObj.getJSONArray("products");
                 if (productsArray.length() != 0) {
+                    if(response.mPageCount==0)
+                        context.getContentResolver().delete(Tables.Products.CONTENT_URI_NO_NOTIFICATION,null,null);
                     for (int i = 0; i < productsArray.length(); i++) {
                         JSONObject productObj = productsArray.getJSONObject(i);
                         ContentValues cv = new ContentValues();
@@ -98,6 +100,8 @@ public class DbHelper {
             if (dataObj.has(Constants.JsonConstants.DESIGNERS)) {
                 JSONArray userlist = dataObj.getJSONArray(Constants.JsonConstants.DESIGNERS);
                 if (userlist.length() != 0) {
+                    if(response.mPageCount==0)
+                        context.getContentResolver().delete(Tables.Collections.CONTENT_URI_NO_NOTIFICATION,null,null);
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
                         int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
