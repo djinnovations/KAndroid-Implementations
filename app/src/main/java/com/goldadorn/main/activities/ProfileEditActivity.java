@@ -4,12 +4,12 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +21,9 @@ import com.goldadorn.main.server.response.ObjectResponse;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import butterknife.Bind;
@@ -43,7 +45,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     @Bind(R.id.last_name)
     EditText mLastName;
     @Bind(R.id.gender)
-    AppCompatSpinner mGender;
+    Spinner mGender;
     @Bind(R.id.dob)
     TextView mDob;
     @Bind(R.id.phone)
@@ -57,26 +59,32 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     EditText mAddress2;
 
     @Bind(R.id.country)
-    AppCompatSpinner mCountry;
+    Spinner mCountry;
     @Bind(R.id.state)
-    AppCompatSpinner mState;
+    Spinner mState;
     @Bind(R.id.city)
-    AppCompatSpinner mCity;
+    Spinner mCity;
     @Bind(R.id.zipcode)
     EditText mPincode;
 
     @Bind(R.id.doneButton)
     Button mDone;
+
+    @Bind(R.id.progress_frame)
+    View mProgress;
+
     private File mImageFile;
     private ProfileData mProfileData;
     Calendar mCalendar;
+    SimpleDateFormat mFormat;
+
     private DatePickerDialog.OnDateSetListener mDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
 
                 @Override
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     mCalendar.set(year,monthOfYear,dayOfMonth,0,0,0);
-                    mDob.setText(android.text.format.DateFormat.format("dd/M/yyyy",mCalendar));
+                    mDob.setText(android.text.format.DateFormat.format("D/M/yyyy",mCalendar));
                 }
             };
     private DatePickerDialog mDialog;
@@ -86,7 +94,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         mContext = this;
-        initData();
+        mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
         setupDOB();
 
         mDone.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +132,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         UIController.getBasicProfileInfo(mContext, new IResultListener<ObjectResponse<ProfileData>>() {
             @Override
             public void onResult(ObjectResponse<ProfileData> result) {
+                mProgress.setVisibility(View.GONE);
                 if (result.success) {
                     bindUI(result.object);
                 }
@@ -133,6 +142,51 @@ public class ProfileEditActivity extends BaseDrawerActivity {
 
     private void bindUI(ProfileData profileData) {
         mProfileData = profileData;
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeZone(TimeZone.getDefault());
+        mCalendar.setTimeInMillis(mProfileData.dob);
+        mEmail.setText(mProfileData.email);
+        mFirstName.setText(mProfileData.firstName);
+        mLastName.setText(mProfileData.lastName);
+        mDob.setText(mFormat.format(mCalendar.getTime()));
+        mPhone.setText(mProfileData.phone);
+        mAddress1.setText(mProfileData.address1);
+        mAddress2.setText(mProfileData.address2);
+        mPincode.setText(mProfileData.pincode);
+
+        String[] array = getResources().getStringArray(R.array.gender);
+        int selected=0;
+        for (int i= 0;i<array.length;i++){
+            if(array[i].equalsIgnoreCase(mProfileData.gender))
+                selected = i;
+        }
+        mGender.setSelection(selected);
+
+        array = getResources().getStringArray(R.array.country);
+        selected = 0;
+        for (int i= 0;i<array.length;i++){
+            if(array[i].equalsIgnoreCase(mProfileData.country))
+                selected = i;
+        }
+        mCountry.setSelection(selected);
+
+        array = getResources().getStringArray(R.array.states);
+        selected = 0;
+        for (int i= 0;i<array.length;i++){
+            if(array[i].equalsIgnoreCase(mProfileData.state))
+                selected = i;
+        }
+        mState.setSelection(selected);
+
+        array = getResources().getStringArray(R.array.cities);
+        selected = 0;
+        for (int i= 0;i<array.length;i++){
+            if(array[i].equalsIgnoreCase(mProfileData.city))
+                selected = i;
+        }
+        mCity.setSelection(selected);
+
+        //        mImage.setImageDrawable(null);
 
     }
 
@@ -157,27 +211,6 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         super.onDestroy();
         if(mDialog!=null && mDialog.isShowing())
             mDialog.dismiss();
-    }
-
-    private void initData() {
-        mCalendar = Calendar.getInstance();
-        mCalendar.setTimeZone(TimeZone.getDefault());
-        mEmail.setText("");
-        mFirstName.setText("");
-        mLastName.setText("");
-        mDob.setText("");
-        mPhone.setText("");
-        mAddress1.setText("");
-        mAddress2.setText("");
-        mPincode.setText("");
-
-
-        mGender.setSelection(0);
-        mCountry.setSelection(0);
-        mState.setSelection(0);
-        mCity.setSelection(0);
-
-//        mImage.setImageDrawable(null);
     }
 
     @Override

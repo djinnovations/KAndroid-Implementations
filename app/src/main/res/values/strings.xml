@@ -104,6 +104,9 @@
     <string name="hint_gender">Gender</string>
     <string name="hint_birthday">Birthday</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="prompt_city">City</string>
+    <string name="prompt_state">State</string>
+    <string name="prompt_country">Country</string>
 
 
 </resources>
