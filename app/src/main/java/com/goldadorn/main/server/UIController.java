@@ -251,4 +251,20 @@ public class UIController {
         new Thread(runnable).start();
     }
 
+    public static void forgotPassword(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.forgotPassword(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+
 }

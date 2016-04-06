@@ -48,6 +48,7 @@ public class ApiFactory extends ExtractResponse {
     private static final int NOTIFY_PAYMENT_TYPE = 14;
     private static final int BASIC_PROFILE_GET_TYPE = 15;
     private static final int BASIC_PROFILE_SET_TYPE = 16;
+    private static final int FORGOT_PASSWORD = 17;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -89,6 +90,13 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("setbasicprofile");
+                break;
+            }
+
+            case FORGOT_PASSWORD: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("forgotpassword");
                 break;
             }
 
@@ -405,6 +413,42 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("setBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+
+    protected static void forgotPassword(Context context, ProfileResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = FORGOT_PASSWORD;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = FORGOT_PASSWORD;
+
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            if (TextUtils.isEmpty(response.email))
+                jsonObject.put("username", response.email);
+
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("forgotPassword " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
