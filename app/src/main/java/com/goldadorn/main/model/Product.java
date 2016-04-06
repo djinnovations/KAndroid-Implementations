@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.utils.ImageFilePath;
 
 import org.json.JSONObject;
 
@@ -63,8 +64,8 @@ public class Product implements Serializable {
     }
 
     public String getImageUrl() {
-        return "http://demo.eremotus-portal.com/products/28/28.jpg";
-//        return ImageFilePath.getImageUrlForProduct(id);
+//        return "http://demo.eremotus-portal.com/products/28/28.jpg";
+        return ImageFilePath.getImageUrlForProduct(id);
     }
 
     public static Product extractFromCursor(Cursor cursor) {

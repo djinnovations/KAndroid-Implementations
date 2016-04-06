@@ -1,9 +1,9 @@
-package com.goldadorn.main.server.response;
+package com.goldadorn.main.model;
 
 /**
- * Created by nithinjohn on 06/04/16.
+ * Created by Kiran BH on 06/04/16.
  */
-public class ProfileResponse extends BasicResponse{
+public class ProfileData {
     public String firstName;
     public String lastName;
     public String email;
@@ -16,5 +16,5 @@ public class ProfileResponse extends BasicResponse{
     public String city;
     public String pincode;
     public long dob;
-
+    public String gender;
 }

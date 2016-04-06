@@ -7,10 +7,11 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 
 /**
@@ -177,7 +178,7 @@ public class UIController {
             Collection p = (Collection) model;
             response.collectionId = p.id;
             response.userId = p.userId;
-        }else if (model instanceof User) {
+        } else if (model instanceof User) {
             User p = (User) model;
             response.userId = p.id;
         } else {
@@ -220,7 +221,8 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void getBasicProfileInfo(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+    public static void getBasicProfileInfo(final Context context, final IResultListener<ObjectResponse<ProfileData>> listener) {
+        final ObjectResponse<ProfileData> response = new ObjectResponse<>();
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
@@ -235,7 +237,10 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
-    public static void setBasicProfileInfo(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+
+    public static void setBasicProfileInfo(final Context context, ProfileData profileData, final IResultListener<ObjectResponse<ProfileData>> listener) {
+        final ObjectResponse<ProfileData> response = new ObjectResponse<>();
+        response.object = profileData;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
@@ -251,7 +256,10 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void forgotPassword(final Context context, final ProfileResponse response, final IResultListener<ProfileResponse> listener) {
+    public static void forgotPassword(final Context context, String email, final IResultListener<ObjectResponse<ProfileData>> listener) {
+        final ObjectResponse<ProfileData> response = new ObjectResponse<>();
+        response.object = new ProfileData();
+        response.object.email = email;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

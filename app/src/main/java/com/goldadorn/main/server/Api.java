@@ -5,10 +5,11 @@ import android.database.sqlite.SQLiteDiskIOException;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
+import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 
@@ -32,7 +33,7 @@ public class Api {
                 response.mCookies += cookies.get(i).getName() + "=" + cookies.get(i).getValue() + ";";
             }
         }
-        L.d("User credentials "+response.mCookies);
+        L.d("User credentials " + response.mCookies);
     }
 
     public static void getDesigners(Context context, TimelineResponse response, int retryCount) {
@@ -48,7 +49,7 @@ public class Api {
         }
     }
 
-    public static void getDesignersSocial(Context context, TimelineResponse response, int retryCount){
+    public static void getDesignersSocial(Context context, TimelineResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.getDesignersSocial(context, response);
@@ -57,7 +58,7 @@ public class Api {
                 response.responseContent = null;
                 response.success = false;
                 response.responseCode = -1;
-                getDesigners(context,response,0);
+                getDesigners(context, response, 0);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -77,6 +78,7 @@ public class Api {
             e.printStackTrace();
         }
     }
+
     public static void getProductsSocial(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
@@ -86,7 +88,7 @@ public class Api {
                 response.responseContent = null;
                 response.success = false;
                 response.responseCode = -1;
-                getProducts(context,response,0);
+                getProducts(context, response, 0);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -107,7 +109,7 @@ public class Api {
         }
     }
 
-    public static void getBasicProfile(Context context, ProfileResponse response, int retryCount) {
+    public static void getBasicProfile(Context context, ObjectResponse<ProfileData> response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.getBasicProfile(context, response);
@@ -120,7 +122,7 @@ public class Api {
         }
     }
 
-    public static void setBasicProfile(Context context, ProfileResponse response, int retryCount) {
+    public static void setBasicProfile(Context context, ObjectResponse<ProfileData> response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.setBasicProfile(context, response);
@@ -132,7 +134,7 @@ public class Api {
         }
     }
 
-    public static void forgotPassword(Context context, ProfileResponse response, int retryCount) {
+    public static void forgotPassword(Context context, ObjectResponse<ProfileData> response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.forgotPassword(context, response);
@@ -156,6 +158,7 @@ public class Api {
             e.printStackTrace();
         }
     }
+
     public static void getPriceForCustomization(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
@@ -222,19 +225,20 @@ public class Api {
             generateUserCredentials(context, response);
             ApiFactory.like(context, response);
             if (response.success && response.responseContent != null) {
-                DbHelper.writeLike(context,response);
+                DbHelper.writeLike(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);
             e.printStackTrace();
         }
     }
+
     public static void unLike(Context context, LikeResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.unLike(context, response);
             if (response.success && response.responseContent != null) {
-                DbHelper.writeUnLike(context,response);
+                DbHelper.writeUnLike(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -273,6 +277,6 @@ public class Api {
         } else if (e instanceof JSONException) {
             response.responseCode = BasicResponse.JSON_EXE;
         }
-        response.success=false;
+        response.success = false;
     }
 }

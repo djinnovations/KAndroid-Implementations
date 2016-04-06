@@ -3,9 +3,10 @@ package com.goldadorn.main.server;
 import android.content.Context;
 
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.goldadorn.main.server.response.ProfileResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,21 +48,22 @@ public class ExtractResponse {
         }
     }
 
-    protected static void extractBasicProfile(ProfileResponse response) throws JSONException {
+    protected static void extractBasicProfile(ObjectResponse<ProfileData> response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject jsonObject = new JSONObject(response.responseContent);
-            response.firstName = jsonObject.optString("fname");
-            response.lastName = jsonObject.optString("lname");
-            response.email = jsonObject.optString("username");
-            response.phone = jsonObject.optString("phone");
-            response.profilePic = jsonObject.optString("profilePic");
-            response.address1 = jsonObject.optString("address1");
-            response.address2 = jsonObject.optString("address2");
-            response.country = jsonObject.optString("country");
-            response.state = jsonObject.optString("state");
-            response.city = jsonObject.optString("city");
-            response.pincode = jsonObject.optString("pincode");
-            response.dob = jsonObject.optLong("birthday");
+            ProfileData profileData = response.object = new ProfileData();
+            profileData.firstName = jsonObject.optString("fname");
+            profileData.lastName = jsonObject.optString("lname");
+            profileData.email = jsonObject.optString("username");
+            profileData.phone = jsonObject.optString("phone");
+            profileData.profilePic = jsonObject.optString("profilePic");
+            profileData.address1 = jsonObject.optString("address1");
+            profileData.address2 = jsonObject.optString("address2");
+            profileData.country = jsonObject.optString("country");
+            profileData.state = jsonObject.optString("state");
+            profileData.city = jsonObject.optString("city");
+            profileData.pincode = jsonObject.optString("pincode");
+            profileData.dob = jsonObject.optLong("birthday");
         }
 
     }

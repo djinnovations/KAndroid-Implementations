@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
@@ -7,8 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.model.ProfileData;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.ObjectResponse;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -21,96 +27,116 @@ import pl.aprilapps.easyphotopicker.EasyImageConfig;
 /**
  * Created by Vijith Menon on 5/4/16.
  */
-public class ProfileEditActivity extends BaseDrawerActivity{
+public class ProfileEditActivity extends BaseDrawerActivity {
     private final static String TAG = ProfileEditActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
-
+    private Context mContext;
     @Bind(R.id.email)
-    EditText email;
+    EditText mEmail;
     @Bind(R.id.first_name)
-    EditText firstName;
+    EditText mFirstName;
     @Bind(R.id.last_name)
-    EditText lastName;
+    EditText mLastName;
     @Bind(R.id.gender)
-    AppCompatSpinner gender;
+    AppCompatSpinner mGender;
     @Bind(R.id.dob)
-    EditText dob;
+    EditText mDob;
     @Bind(R.id.phone)
-    EditText phone;
+    EditText mPhone;
     @Bind(R.id.image)
-    ImageView image;
+    ImageView mImage;
 
     @Bind(R.id.address1)
-    EditText address1;
+    EditText mAddress1;
     @Bind(R.id.address2)
-    EditText address2;
+    EditText mAddress2;
 
     @Bind(R.id.country)
-    AppCompatSpinner country;
+    AppCompatSpinner mCountry;
     @Bind(R.id.state)
-    AppCompatSpinner state;
+    AppCompatSpinner mState;
     @Bind(R.id.city)
-    AppCompatSpinner city;
+    AppCompatSpinner mCity;
     @Bind(R.id.zipcode)
-    EditText zipcode;
+    EditText mPincode;
 
     @Bind(R.id.doneButton)
-    Button done;
+    Button mDone;
     private File mImageFile;
+    private ProfileData mProfileData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
-
+        mContext = this;
         initData();
 
-        done.setOnClickListener(new View.OnClickListener() {
+        mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = ProfileEditActivity.this.email.getText().toString();
-                String firstName = ProfileEditActivity.this.firstName.getText().toString();
-                String lastName = ProfileEditActivity.this.lastName.getText().toString();
-                String gender = ProfileEditActivity.this.gender.getSelectedItem().toString();
-                String dob = ProfileEditActivity.this.dob.getText().toString();
-                String phone = ProfileEditActivity.this.phone.getText().toString();
-                String address1 = ProfileEditActivity.this.address1.getText().toString();
-                String address2 = ProfileEditActivity.this.address2.getText().toString();
-                String country = ProfileEditActivity.this.country.getSelectedItem().toString();
-                String state = ProfileEditActivity.this.state.getSelectedItem().toString();
-                String city = ProfileEditActivity.this.city.getSelectedItem().toString();
-                String zipcode = ProfileEditActivity.this.zipcode.getText().toString();
+                mProfileData.email = mEmail.getText().toString();
+                mProfileData.firstName = mFirstName.getText().toString();
+                mProfileData.lastName = mLastName.getText().toString();
+                mProfileData.gender = mGender.getSelectedItem().toString();
+                mProfileData.phone = mPhone.getText().toString();
+                mProfileData.address1 = mAddress1.getText().toString();
+                mProfileData.address2 = mAddress2.getText().toString();
+                mProfileData.country = mCountry.getSelectedItem().toString();
+                mProfileData.state = mState.getSelectedItem().toString();
+                mProfileData.city = mCity.getSelectedItem().toString();
+                mProfileData.pincode = mPincode.getText().toString();
+//mDob.getText().toString()
+                mProfileData.dob = System.currentTimeMillis();
 
-                //todo call update
+                UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
+                    @Override
+                    public void onResult(ObjectResponse<ProfileData> result) {
+                        Toast.makeText(mContext, result.success ? "Profile Updated" : "Someething went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
-        image.setOnClickListener(new View.OnClickListener() {
+        mImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EasyImage.openChooserWithGallery(ProfileEditActivity.this,"Pick an image",
+                EasyImage.openChooserWithGallery(ProfileEditActivity.this, "Pick an image",
                         EasyImageConfig.REQ_SOURCE_CHOOSER);
+            }
+        });
+        UIController.getBasicProfileInfo(mContext, new IResultListener<ObjectResponse<ProfileData>>() {
+            @Override
+            public void onResult(ObjectResponse<ProfileData> result) {
+                if (result.success) {
+                    bindUI(result.object);
+                }
             }
         });
     }
 
+    private void bindUI(ProfileData profileData) {
+        mProfileData = profileData;
+
+    }
+
     private void initData() {
-        email.setText("");
-        firstName.setText("");
-        lastName.setText("");
-        dob.setText("");
-        phone.setText("");
-        address1.setText("");
-        address2.setText("");
-        zipcode.setText("");
+        mEmail.setText("");
+        mFirstName.setText("");
+        mLastName.setText("");
+        mDob.setText("");
+        mPhone.setText("");
+        mAddress1.setText("");
+        mAddress2.setText("");
+        mPincode.setText("");
 
 
-        gender.setSelection(0);
-        country.setSelection(0);
-        state.setSelection(0);
-        city.setSelection(0);
+        mGender.setSelection(0);
+        mCountry.setSelection(0);
+        mState.setSelection(0);
+        mCity.setSelection(0);
 
-//        image.setImageDrawable(null);
+//        mImage.setImageDrawable(null);
     }
 
     @Override
@@ -125,9 +151,9 @@ public class ProfileEditActivity extends BaseDrawerActivity{
 
             @Override
             public void onImagePicked(final File imageFile, EasyImage.ImageSource source, int type) {
-                //Handle the image
+                //Handle the mImage
                 mImageFile = imageFile;
-                Picasso.with(ProfileEditActivity.this).load(mImageFile).into(image);
+                Picasso.with(ProfileEditActivity.this).load(mImageFile).into(mImage);
             }
 
         });

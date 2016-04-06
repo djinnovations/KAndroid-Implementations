@@ -7,10 +7,11 @@ import android.text.TextUtils;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.goldadorn.main.server.response.ProfileResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
@@ -340,7 +341,7 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void getBasicProfile(Context context, ProfileResponse response) throws IOException, JSONException {
+    protected static void getBasicProfile(Context context, ObjectResponse<ProfileData> response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -367,7 +368,7 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void setBasicProfile(Context context, ProfileResponse response) throws IOException, JSONException {
+    protected static void setBasicProfile(Context context, ObjectResponse<ProfileData> response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -385,26 +386,27 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            if (TextUtils.isEmpty(response.email))
-                jsonObject.put("prof_username", response.email);
-            if (TextUtils.isEmpty(response.firstName))
-                jsonObject.put("prof_fname", response.firstName);
-            if (TextUtils.isEmpty(response.lastName))
-                jsonObject.put("prof_lname", response.lastName);
-            if (response.dob != -1 && response.dob > 0)
-                jsonObject.put("prof_birthday", response.dob);
-            if (TextUtils.isEmpty(response.phone))
-                jsonObject.put("prof_phone", response.phone);
-            if (TextUtils.isEmpty(response.address1))
-                jsonObject.put("prof_address1", response.address1);
-            if (TextUtils.isEmpty(response.address2))
-                jsonObject.put("prof_address2", response.address2);
-            if (TextUtils.isEmpty(response.country))
-                jsonObject.put("prof_country", response.country);
-            if (TextUtils.isEmpty(response.city))
-                jsonObject.put("prof_city", response.city);
-            if (TextUtils.isEmpty(response.pincode))
-                jsonObject.put("prof_pincode", response.pincode);
+            ProfileData profileData = response.object;
+            if (TextUtils.isEmpty(profileData.email))
+                jsonObject.put("prof_username", profileData.email);
+            if (TextUtils.isEmpty(profileData.firstName))
+                jsonObject.put("prof_fname", profileData.firstName);
+            if (TextUtils.isEmpty(profileData.lastName))
+                jsonObject.put("prof_lname", profileData.lastName);
+            if (profileData.dob != -1 && profileData.dob > 0)
+                jsonObject.put("prof_birthday", profileData.dob);
+            if (TextUtils.isEmpty(profileData.phone))
+                jsonObject.put("prof_phone", profileData.phone);
+            if (TextUtils.isEmpty(profileData.address1))
+                jsonObject.put("prof_address1", profileData.address1);
+            if (TextUtils.isEmpty(profileData.address2))
+                jsonObject.put("prof_address2", profileData.address2);
+            if (TextUtils.isEmpty(profileData.country))
+                jsonObject.put("prof_country", profileData.country);
+            if (TextUtils.isEmpty(profileData.city))
+                jsonObject.put("prof_city", profileData.city);
+            if (TextUtils.isEmpty(profileData.pincode))
+                jsonObject.put("prof_pincode", profileData.pincode);
 
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
@@ -421,7 +423,7 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-    protected static void forgotPassword(Context context, ProfileResponse response) throws IOException, JSONException {
+    protected static void forgotPassword(Context context, ObjectResponse<ProfileData> response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -439,8 +441,9 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            if (TextUtils.isEmpty(response.email))
-                jsonObject.put("username", response.email);
+            ProfileData profileData = response.object;
+            if (TextUtils.isEmpty(profileData.email))
+                jsonObject.put("username", profileData.email);
 
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());

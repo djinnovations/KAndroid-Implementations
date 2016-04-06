@@ -224,7 +224,7 @@ public class NotificationsActivity extends BaseActivity {
             }
             JSONObject object = getItem(position);
 
-            // todo get person image
+            // todo get person mImage
             //holder.person.setImageResource(R.drawable.intro_screen_3_image_1);
             // todo get timestamp
             holder.time.setText("");
