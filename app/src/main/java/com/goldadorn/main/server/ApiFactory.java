@@ -410,8 +410,8 @@ public class ApiFactory extends ExtractResponse {
                 builder.addFormDataPart("prof_city", profileData.city);
             if (TextUtils.isEmpty(profileData.pincode))
                 builder.addFormDataPart("prof_pincode", profileData.pincode);
-            if (TextUtils.isEmpty(profileData.imagesourcefile))
-                builder.addFormDataPart("_file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, profileData.imagesourcefile));
+            if (profileData.imageToUpload!=null)
+                builder.addFormDataPart("_file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
 
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
