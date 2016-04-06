@@ -90,7 +90,11 @@
     <string name="font_name_text_normal">din-regular.ttf</string>
     <string name="font_name_text_secondary">didot-italic.ttf</string>
 
-    <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07" id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm" id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g example="5.55 grams" id="weight">%s</xliff:g></string>
+    <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07"
+                                                       id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g
+        example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm"
+                                                                     id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g
+        example="5.55 grams" id="weight">%s</xliff:g></string>
     <string name="product_information">Product Information</string>
     <string name="labelRecomandation">Recommendation</string>
     <string name="basic_profile">Basic Profile</string>
@@ -107,6 +111,7 @@
     <string name="prompt_city">City</string>
     <string name="prompt_state">State</string>
     <string name="prompt_country">Country</string>
+    <string name="hint_forgot_password">Enter your Email Id below. A link to reset your password will be sent to you shortly.</string>
 
 
 </resources>

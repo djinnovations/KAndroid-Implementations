@@ -135,7 +135,7 @@ public class Application extends BaseApplication {
         map.put(Action.ATTRIBUTE_DATA, getString(R.string.appShareBody) + appPlayStoreURL);
         menu.get(R.id.nav_share).setParam(map);
 
-        addItem(menu, R.id.nav_share_facebook, R.string.inviteFacebookFriends, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
+        addItem(menu, R.id.nav_share_facebook, R.string.inviteFacebookFriends, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ForgotPasswordActivity.class);
 
         addItem(menu, R.id.nav_rate_us, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL, appPlayStoreURL);
 
