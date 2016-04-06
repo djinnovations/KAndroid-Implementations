@@ -17,4 +17,5 @@ public class ProfileData {
     public String pincode;
     public long dob;
     public String gender;
+    public String imagesourcefile;
 }

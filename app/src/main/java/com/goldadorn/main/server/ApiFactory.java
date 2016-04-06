@@ -17,6 +17,7 @@ import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
@@ -384,34 +385,36 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = BASIC_PROFILE_SET_TYPE;
 
 
-            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-            JSONObject jsonObject = new JSONObject();
+            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+
+            MultipartBuilder builder = new MultipartBuilder();
+            builder.type(MultipartBuilder.FORM);
             ProfileData profileData = response.object;
             if (TextUtils.isEmpty(profileData.email))
-                jsonObject.put("prof_username", profileData.email);
+                builder.addFormDataPart("prof_username", profileData.email);
             if (TextUtils.isEmpty(profileData.firstName))
-                jsonObject.put("prof_fname", profileData.firstName);
+                builder.addFormDataPart("prof_fname", profileData.firstName);
             if (TextUtils.isEmpty(profileData.lastName))
-                jsonObject.put("prof_lname", profileData.lastName);
+                builder.addFormDataPart("prof_lname", profileData.lastName);
             if (profileData.dob != -1 && profileData.dob > 0)
-                jsonObject.put("prof_birthday", profileData.dob);
+                builder.addFormDataPart("prof_birthday", profileData.dob + "");
             if (TextUtils.isEmpty(profileData.phone))
-                jsonObject.put("prof_phone", profileData.phone);
+                builder.addFormDataPart("prof_phone", profileData.phone);
             if (TextUtils.isEmpty(profileData.address1))
-                jsonObject.put("prof_address1", profileData.address1);
+                builder.addFormDataPart("prof_address1", profileData.address1);
             if (TextUtils.isEmpty(profileData.address2))
-                jsonObject.put("prof_address2", profileData.address2);
+                builder.addFormDataPart("prof_address2", profileData.address2);
             if (TextUtils.isEmpty(profileData.country))
-                jsonObject.put("prof_country", profileData.country);
+                builder.addFormDataPart("prof_country", profileData.country);
             if (TextUtils.isEmpty(profileData.city))
-                jsonObject.put("prof_city", profileData.city);
+                builder.addFormDataPart("prof_city", profileData.city);
             if (TextUtils.isEmpty(profileData.pincode))
-                jsonObject.put("prof_pincode", profileData.pincode);
+                builder.addFormDataPart("prof_pincode", profileData.pincode);
+            if (TextUtils.isEmpty(profileData.imagesourcefile))
+                builder.addFormDataPart("_file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, profileData.imagesourcefile));
 
 
-            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
-
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("setBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
