@@ -2,12 +2,12 @@ package com.goldadorn.main.utils;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
-        import android.database.Cursor;
-        import android.net.Uri;
-        import android.os.Build;
-        import android.os.Environment;
-        import android.provider.DocumentsContract;
-        import android.provider.MediaStore;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 
 import com.goldadorn.main.server.ApiFactory;
 
@@ -160,6 +160,6 @@ public class ImageFilePath
         return ApiFactory.IMAGE_URL_HOST+"collections/"+collid+"/"+collid+".jpg";
     }
     public static String getImageUrlForProduct(int productid){
-        return ApiFactory.IMAGE_URL_HOST+"products/"+productid+"/"+productid+".jpg";
+        return ApiFactory.IMAGE_URL_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }
 }
