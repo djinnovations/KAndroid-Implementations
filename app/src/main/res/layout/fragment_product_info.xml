@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingBottom="@dimen/padding_default"
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Designer Name"
+            tools:text="Designer Name"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="18sp"
@@ -47,7 +48,7 @@
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
         android:paddingRight="@dimen/padding_default"
-        android:text="Eternity Rings Collection"
+        tools:text="Eternity Rings Collection"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         android:textSize="14sp"/>
@@ -64,7 +65,7 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        android:text="Everyday wear, lightweight"
+        tools:text="Everyday wear, lightweight"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         android:textSize="14sp"/>
@@ -81,7 +82,7 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        android:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         android:textSize="14sp"/>
@@ -99,7 +100,7 @@
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
         android:lineSpacingMultiplier="1.2"
-        android:text="@string/product_desc"
+        tools:text="@string/product_desc"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
         android:textSize="14sp"/>

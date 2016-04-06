@@ -612,7 +612,7 @@ public class ProductActivity extends BaseDrawerActivity {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success ? !isLiked : isLiked);
+                                v.setSelected(result.success != isLiked);
                             }
                         });
             } else if (v == shareButton) {
@@ -635,7 +635,7 @@ public class ProductActivity extends BaseDrawerActivity {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success ? !isFollowing : isFollowing);
+                                v.setSelected(result.success != isFollowing);
                             }
                         });
             }

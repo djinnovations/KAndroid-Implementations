@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:padding="@dimen/griditem_margin">
 
@@ -25,7 +26,7 @@
             android:paddingLeft="@dimen/griditem_margin"
             android:paddingRight="@dimen/griditem_margin"
             android:paddingTop="@dimen/griditem_margin"
-            android:text="Large Text"
+            tools:text="Large Text"
             android:textColor="@android:color/black"
             android:textSize="16sp"/>
 
@@ -37,7 +38,7 @@
             android:maxLines="3"
             android:lineSpacingMultiplier="1.1"
             android:padding="@dimen/griditem_margin"
-            android:text="New Text"
+            tools:text="New Text"
             android:textColor="@android:color/black"
             android:textSize="12sp"/>
 
@@ -58,7 +59,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="New Text"
+                tools:text="New Text"
                 android:textStyle="italic"
                 android:textColor="@color/colorPrimary"
                 android:textSize="13sp"/>
@@ -69,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/griditem_margin"
                 android:paddingRight="@dimen/griditem_margin"
-                android:text="275"
+                tools:text="275"
                 android:textStyle="italic"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"/>

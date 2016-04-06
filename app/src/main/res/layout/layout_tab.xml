@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="bottom"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <View
         android:id="@+id/shadow_left"
@@ -53,7 +54,7 @@
                 android:paddingBottom="4dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:text="66"
+                tools:text="66"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="italic"/>
@@ -175,7 +176,7 @@
                 android:paddingBottom="4dp"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
-                android:text="122"
+                tools:text="122"
                 android:textColor="@android:color/white"
                 android:textSize="22sp"
                 android:textStyle="italic"/>
@@ -279,7 +280,7 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:padding="4dp"
-                android:text="social@\nJunhaywndgasdddsewjsda"
+                tools:text="social@\nJunhaywndgasdddsewjsda"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:textStyle="italic"/>

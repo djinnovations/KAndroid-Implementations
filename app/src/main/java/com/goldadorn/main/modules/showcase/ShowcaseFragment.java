@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.showcase;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,7 @@ public class ShowcaseFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         try {
-            if (mImageUrl != null)
+            if (!TextUtils.isEmpty(mImageUrl))
                 Picasso.with(getActivity()).load(mImageUrl).into(
                     ((ImageView) view.findViewById(R.id.image)));
         } catch (Exception e) {

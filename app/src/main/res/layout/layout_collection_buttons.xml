@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:gravity="center_horizontal|bottom"
               android:paddingTop="56dp"
               android:layout_weight="1"
@@ -42,7 +43,7 @@
         android:paddingRight="8dp"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:text="Large Text"
+        tools:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
     <LinearLayout
         android:id="@+id/layout_2"
@@ -62,7 +63,7 @@
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
             android:gravity="center"
-            android:text="Small Text"
+            tools:text="Small Text"
             android:textSize="15sp"
             android:textColor="@android:color/white"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -84,7 +85,7 @@
         android:paddingRight="8dp"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:text="Small Text"
+        tools:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     <TextView
@@ -96,7 +97,7 @@
         android:textSize="13sp"
         android:paddingRight="8dp"
         android:textColor="@android:color/white"
-        android:text="Small Text"
+        tools:text="Small Text"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
 
 
@@ -118,7 +119,7 @@
             android:layout_toStartOf="@+id/lin_buttons"
             android:textStyle="italic"
             android:textColor="@android:color/white"
-            android:text="2012"
+            tools:text="2012"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <LinearLayout

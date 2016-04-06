@@ -237,7 +237,6 @@ public class ProductCustomiseFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     ((ProductActivity) getActivity()).addToCart();
-                    //// TODO: 30/3/16 kiran add to cart click
                 }
             });
         }
