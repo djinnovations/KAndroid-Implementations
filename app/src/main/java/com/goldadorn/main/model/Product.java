@@ -29,7 +29,7 @@ public class Product implements Serializable {
 
     //customise variable
     public final HashMap<String, String> customisations = new HashMap<>();
-    private boolean isLiked;
+    public boolean isLiked;
 //    public String primaryMetal;
 //    public String primaryMetalColor;
 //    public String primaryMetalPurity;

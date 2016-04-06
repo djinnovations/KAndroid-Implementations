@@ -151,7 +151,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
-        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
+        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social)+"@goldadorn design", mTabClickListener);
 
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -267,7 +267,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         if (user != null && !TextUtils.isEmpty(user.name)) {
             social += "@";
             social += user.name.toLowerCase().replace(" ", "");
-        }
+        }else
+            social += "@goldadorn design";
         mTabViewHolder.tabName3.setText(social);
         for (UserChangeListener l : mUserChangeListeners)
             l.onUserChange(user);

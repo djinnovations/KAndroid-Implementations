@@ -91,7 +91,7 @@ public class ProductsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -194,8 +194,8 @@ public class ProductsFragment extends Fragment {
             ProductViewHolder holder;
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
-                                                             .inflate(R.layout.layout_product_card,
-                                                                     parent, false));
+                        .inflate(R.layout.layout_product_card,
+                                parent, false));
                 convertView = holder.itemview;
                 convertView.setTag(holder);
                 convertView.setOnClickListener(this);
@@ -215,9 +215,8 @@ public class ProductsFragment extends Fragment {
             holder.productActionsToggle.setTag(holder);
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
             holder.like.setTag(product);
-
+            holder.like.setSelected(product.isLiked);
             Picasso.with(context).load(product.getImageUrl()).into(holder.image);
-
             return convertView;
         }
 
@@ -227,13 +226,14 @@ public class ProductsFragment extends Fragment {
             if (id == R.id.likeButton) {
                 v.setEnabled(false);
                 Product product = (Product) v.getTag();
-                UIController.like(v.getContext(), product, !v.isSelected(),
+                final boolean isLiked = v.isSelected();
+                UIController.like(v.getContext(), product, !isLiked,
                         new IResultListener<LikeResponse>() {
 
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success);
+                                v.setSelected(result.success != isLiked);
                             }
                         });
             } else if (id == R.id.product_actions_open) {
