@@ -390,25 +390,25 @@ public class ApiFactory extends ExtractResponse {
             MultipartBuilder builder = new MultipartBuilder();
             builder.type(MultipartBuilder.FORM);
             ProfileData profileData = response.object;
-            if (TextUtils.isEmpty(profileData.email))
+            if (!TextUtils.isEmpty(profileData.email))
                 builder.addFormDataPart("prof_username", profileData.email);
-            if (TextUtils.isEmpty(profileData.firstName))
+            if (!TextUtils.isEmpty(profileData.firstName))
                 builder.addFormDataPart("prof_fname", profileData.firstName);
-            if (TextUtils.isEmpty(profileData.lastName))
+            if (!TextUtils.isEmpty(profileData.lastName))
                 builder.addFormDataPart("prof_lname", profileData.lastName);
             if (profileData.dob != -1 && profileData.dob > 0)
                 builder.addFormDataPart("prof_birthday", profileData.dob + "");
-            if (TextUtils.isEmpty(profileData.phone))
+            if (!TextUtils.isEmpty(profileData.phone))
                 builder.addFormDataPart("prof_phone", profileData.phone);
-            if (TextUtils.isEmpty(profileData.address1))
+            if (!TextUtils.isEmpty(profileData.address1))
                 builder.addFormDataPart("prof_address1", profileData.address1);
-            if (TextUtils.isEmpty(profileData.address2))
+            if (!TextUtils.isEmpty(profileData.address2))
                 builder.addFormDataPart("prof_address2", profileData.address2);
-            if (TextUtils.isEmpty(profileData.country))
+            if (!TextUtils.isEmpty(profileData.country))
                 builder.addFormDataPart("prof_country", profileData.country);
-            if (TextUtils.isEmpty(profileData.city))
+            if (!TextUtils.isEmpty(profileData.city))
                 builder.addFormDataPart("prof_city", profileData.city);
-            if (TextUtils.isEmpty(profileData.pincode))
+            if (!TextUtils.isEmpty(profileData.pincode))
                 builder.addFormDataPart("prof_pincode", profileData.pincode);
             if (profileData.imageToUpload!=null)
                 builder.addFormDataPart("_file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
