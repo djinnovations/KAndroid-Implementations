@@ -112,6 +112,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
                 mProfileData.city = mCity.getSelectedItem().toString();
                 mProfileData.pincode = mPincode.getText().toString();
                 mProfileData.dob =mCalendar.getTimeInMillis();
+                mProfileData.imageToUpload=mImageFile;
 
                 UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
                     @Override

@@ -1,5 +1,7 @@
 package com.goldadorn.main.model;
 
+import java.io.File;
+
 /**
  * Created by Kiran BH on 06/04/16.
  */
@@ -17,4 +19,5 @@ public class ProfileData {
     public String pincode;
     public long dob;
     public String gender;
+    public File imageToUpload;
 }
