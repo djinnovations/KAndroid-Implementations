@@ -103,7 +103,7 @@
                         app:spn_arrowSize="30dp"
                         />
 
-                    <EditText
+                    <TextView
                         android:id="@+id/dob"
                         style="@style/FormEditText"
                         android:layout_weight="1"

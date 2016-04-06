@@ -1,13 +1,16 @@
 package com.goldadorn.main.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
@@ -18,6 +21,8 @@ import com.goldadorn.main.server.response.ObjectResponse;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import butterknife.Bind;
 import pl.aprilapps.easyphotopicker.DefaultCallback;
@@ -40,7 +45,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     @Bind(R.id.gender)
     AppCompatSpinner mGender;
     @Bind(R.id.dob)
-    EditText mDob;
+    TextView mDob;
     @Bind(R.id.phone)
     EditText mPhone;
     @Bind(R.id.image)
@@ -64,6 +69,17 @@ public class ProfileEditActivity extends BaseDrawerActivity {
     Button mDone;
     private File mImageFile;
     private ProfileData mProfileData;
+    Calendar mCalendar;
+    private DatePickerDialog.OnDateSetListener mDateSetListener =
+            new DatePickerDialog.OnDateSetListener() {
+
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    mCalendar.set(year,monthOfYear,dayOfMonth,0,0,0);
+                    mDob.setText(android.text.format.DateFormat.format("dd/M/yyyy",mCalendar));
+                }
+            };
+    private DatePickerDialog mDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,6 +87,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
         setContentView(R.layout.activity_profile_edit);
         mContext = this;
         initData();
+        setupDOB();
 
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,8 +103,7 @@ public class ProfileEditActivity extends BaseDrawerActivity {
                 mProfileData.state = mState.getSelectedItem().toString();
                 mProfileData.city = mCity.getSelectedItem().toString();
                 mProfileData.pincode = mPincode.getText().toString();
-//mDob.getText().toString()
-                mProfileData.dob = System.currentTimeMillis();
+                mProfileData.dob =mCalendar.getTimeInMillis();
 
                 UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
                     @Override
@@ -120,7 +136,32 @@ public class ProfileEditActivity extends BaseDrawerActivity {
 
     }
 
+    private void setupDOB() {
+        mDob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mDialog==null)
+                    mDialog = new DatePickerDialog(ProfileEditActivity.this,
+                            mDateSetListener, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH));
+                else
+                    mDialog.updateDate(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH),
+                            mCalendar.get(Calendar.DAY_OF_MONTH));
+                mDialog.show();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mDialog!=null && mDialog.isShowing())
+            mDialog.dismiss();
+    }
+
     private void initData() {
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTimeZone(TimeZone.getDefault());
         mEmail.setText("");
         mFirstName.setText("");
         mLastName.setText("");
