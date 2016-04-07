@@ -1,7 +1,6 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -19,15 +18,14 @@ import android.widget.TextView;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
-import com.goldadorn.main.utils.TypefaceHelper;
-import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
+import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
@@ -115,7 +113,7 @@ public class LoginPageActivity extends BaseActivity {
                 LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
                 if (loginResult.getSuccess()) {
-                    User user = new User(loginResult.getUserid(),User.TYPE_INDIVIDUAL);
+                    User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
                     user.setName(loginResult.getUsername());
                     user.setImageUrl(loginResult.getUserpic());
                     getApp().setUser(user);
@@ -256,8 +254,13 @@ public class LoginPageActivity extends BaseActivity {
         password.setCompoundDrawables(icon, null, null, null);
         password.setCompoundDrawablePadding(iconSize);
 
-        TypefaceHelper.setFont(inputLayoutUserName,inputLayoutPassword,userName,password,loginAccount,createAccount,forgotPasswordButton,orLabel);
-
+        TypefaceHelper.setFont(inputLayoutUserName, inputLayoutPassword, userName, password, loginAccount, createAccount, forgotPasswordButton, orLabel);
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ForgotPasswordActivity.getLaunchIntent(LoginPageActivity.this,userName.getText().toString()));
+            }
+        });
 //        Intent in = new Intent(this, CartManagerActivity.class);
 //        startActivity(in);
     }

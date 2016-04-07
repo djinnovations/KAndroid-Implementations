@@ -1,5 +1,7 @@
 package com.goldadorn.main.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -29,32 +31,45 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+        Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         ButterKnife.bind(this);
 
         mEmailLayout.setHint(getString(R.string.hint_email));
         mEmailLayout.setHintAnimationEnabled(true);
 
+        if (b != null) {
+            String email = b.getString("email");
+            mEmailLayout.getEditText().setText(email);
+        }
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = mEmailLayout.getEditText().getText().toString();
-                if(Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     mEmailLayout.setErrorEnabled(false);
                     UIController.forgotPassword(ForgotPasswordActivity.this, email, new
                             IResultListener<ObjectResponse<ProfileData>>() {
                                 @Override
                                 public void onResult(ObjectResponse<ProfileData> result) {
-                                    if(result.success){
-                                        Toast.makeText(ForgotPasswordActivity.this,"Mail sent!",Toast.LENGTH_LONG).show();
+                                    if (result.success) {
+                                        Toast.makeText(ForgotPasswordActivity.this, "Mail sent!", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
-                }else{
+                } else {
                     mEmailLayout.setErrorEnabled(true);
                     mEmailLayout.setError("Please provide a valid email");
                 }
                 //// TODO: 6/4/16 call reset password
             }
         });
+    }
+
+    public static Intent getLaunchIntent(Context context, String email) {
+        Intent in = new Intent(context, ForgotPasswordActivity.class);
+        if (Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            in.putExtra("email", email);
+        return in;
     }
 }
