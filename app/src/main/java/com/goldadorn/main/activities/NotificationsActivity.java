@@ -3,6 +3,7 @@ package com.goldadorn.main.activities;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
+import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -224,10 +226,13 @@ public class NotificationsActivity extends BaseActivity {
             }
             JSONObject object = getItem(position);
 
-            // todo get person mImage
-            //holder.person.setImageResource(R.drawable.intro_screen_3_image_1);
-            // todo get timestamp
-            holder.time.setText("");
+            // todo nithin get person mImage
+            String imageUrl = object.optString("image");
+            if(!TextUtils.isEmpty(imageUrl))
+            Picasso.with(context).load(imageUrl).into(holder.person);
+            // todo nithin get timestamp
+            long timestamp = object.optLong("timestamp",System.currentTimeMillis());
+            holder.time.setText(DateUtils.getRelativeDateTimeString(context,timestamp,DateUtils.SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL));
             holder.data.setText(createString(object));
 //            holder.content.setImageResource(R.drawable.slide_1_image);
             return convertView;
