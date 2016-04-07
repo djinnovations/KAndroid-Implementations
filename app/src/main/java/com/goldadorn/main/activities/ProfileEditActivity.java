@@ -114,6 +114,8 @@ public class ProfileEditActivity extends BaseActivity {
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mProfileData == null)
+                    mProfileData = new ProfileData();
                 mProfileData.email = mEmail.getText().toString();
                 mProfileData.firstName = mFirstName.getText().toString();
                 mProfileData.lastName = mLastName.getText().toString();
@@ -125,7 +127,8 @@ public class ProfileEditActivity extends BaseActivity {
                 mProfileData.state = mState.getSelectedItem().toString();
                 mProfileData.city = mCity.getSelectedItem().toString();
                 mProfileData.pincode = mPincode.getText().toString();
-                mProfileData.dob = mCalendar.getTimeInMillis();
+                if (mCalendar != null)
+                    mProfileData.dob = mCalendar.getTimeInMillis();
                 mProfileData.imageToUpload = mImageFile;
 
                 UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
