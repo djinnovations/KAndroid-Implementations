@@ -270,6 +270,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private void bindOverlay() {
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
+        mOverlayVH.mProductName2.setText(mProduct.name);
         mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
         if (mUser != null) {
             mOverlayVH.mProductOwner.setText("By " + mUser.getName());
@@ -524,8 +525,8 @@ public class ProductActivity extends BaseDrawerActivity {
         TextView mProductCollection;
         @Bind(R.id.product_cost)
         TextView mProductCost;
-        @Bind(R.id.product_collection_name_2)
-        TextView mProductCollection2;
+        @Bind(R.id.product_name_2)
+        TextView mProductName2;
         @Bind(R.id.product_cost_2)
         TextView mProductCost2;
 
@@ -581,7 +582,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     appBarLayout.setExpanded(true);
                     productActions.setVisibility(View.GONE);
                     productActionsToggle.setImageResource(R.drawable.add);
-                    mProductCollection2.setVisibility(View.GONE);
+                    mProductName2.setVisibility(View.GONE);
                     mProductCost2.setVisibility(View.GONE);
                     mProductName.setVisibility(View.VISIBLE);
                     layout1.setVisibility(View.VISIBLE);
@@ -595,7 +596,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     appBarLayout.setExpanded(false);
                     productActions.setVisibility(View.VISIBLE);
                     productActionsToggle.setImageResource(R.drawable.close);
-                    mProductCollection2.setVisibility(View.VISIBLE);
+                    mProductName2.setVisibility(View.VISIBLE);
                     mProductCost2.setVisibility(View.VISIBLE);
                     mProductName.setVisibility(View.GONE);
                     layout1.setVisibility(View.GONE);
@@ -619,7 +620,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo like click
                 Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
-                startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
+                startActivityForResult(PostPollActivity.getLaunchIntent(mContext, mProduct),POST_FEED);
                 Toast.makeText(v.getContext(), "Buy No buy click!", Toast.LENGTH_SHORT).show();
             } else if (v == wishlistButton) {
                 //todo wishlist click
@@ -685,10 +686,8 @@ public class ProductActivity extends BaseDrawerActivity {
                                 "" + UISTATE_PRODUCT);
                 if (f != null) f.bindCollectionUI(mCollection);
                 mOverlayVH.mProductCollection.setText(mCollection.name);
-                mOverlayVH.mProductCollection2.setText(mCollection.name);
             } else {
                 mOverlayVH.mProductCollection.setText("");
-                mOverlayVH.mProductCollection2.setText("");
             }
 
         }
