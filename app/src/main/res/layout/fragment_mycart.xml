@@ -81,7 +81,7 @@
         android:paddingLeft="@dimen/padding_default"
         android:paddingRight="@dimen/padding_default"
         android:paddingTop="@dimen/padding_default_2x"
-        android:text="Add some thing into Cart first"
+        android:text="No item added in cart"
         android:visibility="visible"/>
 
     <View
