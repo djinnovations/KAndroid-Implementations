@@ -408,10 +408,19 @@ public class ApiFactory extends ExtractResponse {
                 builder.addFormDataPart("prof_country", profileData.country);
             if (!TextUtils.isEmpty(profileData.city))
                 builder.addFormDataPart("prof_city", profileData.city);
+            if (!TextUtils.isEmpty(profileData.state))
+                builder.addFormDataPart("prof_state", profileData.state);
             if (!TextUtils.isEmpty(profileData.pincode))
                 builder.addFormDataPart("prof_pincode", profileData.pincode);
-            if (profileData.imageToUpload!=null)
-                builder.addFormDataPart("_file", "profile.png", RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
+            if (profileData.genderType > 0)
+                builder.addFormDataPart("prof_gender", profileData.genderType + "");
+            if (profileData.imageToUpload != null) {
+                String filename = profileData.imageToUpload.getPath().substring(profileData.imageToUpload.getPath().lastIndexOf("/") + 1);
+                builder.addFormDataPart("file1", filename , RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload ));
+//                builder.addPart(
+//                        Headers.of("Content-Disposition", "form-data; name=\"file1\""),
+//                        RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
+            }
 
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());

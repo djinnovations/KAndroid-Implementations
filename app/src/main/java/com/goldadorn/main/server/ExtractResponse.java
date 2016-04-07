@@ -1,6 +1,7 @@
 package com.goldadorn.main.server;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
@@ -56,7 +57,13 @@ public class ExtractResponse {
             profileData.lastName = jsonObject.optString("lname");
             profileData.email = jsonObject.optString("username");
             profileData.phone = jsonObject.optString("phone");
-            profileData.profilePic = jsonObject.optString("profilePic");
+            if (jsonObject.has("profilePic")) {
+                String url = jsonObject.optString("profilePic", null);
+                if (url != null && !TextUtils.isEmpty(url)) {
+                    url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
+                }
+                profileData.imageUrl = url;
+            }
             profileData.address1 = jsonObject.optString("address1");
             profileData.address2 = jsonObject.optString("address2");
             profileData.country = jsonObject.optString("country");
@@ -64,6 +71,7 @@ public class ExtractResponse {
             profileData.city = jsonObject.optString("city");
             profileData.pincode = jsonObject.optString("pincode");
             profileData.dob = jsonObject.optLong("birthday");
+            profileData.genderType = jsonObject.optInt("gender");
         }
 
     }

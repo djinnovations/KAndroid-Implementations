@@ -6,13 +6,12 @@ import java.io.File;
  * Created by Kiran BH on 06/04/16.
  */
 public class ProfileData {
-    public static final int GENDER_FEMALE = 0;
-    public static final int GENDER_MALE = 1;
+    public static final int GENDER_FEMALE = 1;
+    public static final int GENDER_MALE = 2;
     public String firstName;
     public String lastName;
     public String email;
     public String phone;
-    public String profilePic;
     public String address1;
     public String address2;
     public String country;
