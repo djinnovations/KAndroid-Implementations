@@ -17,7 +17,6 @@ import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
@@ -385,48 +384,45 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = BASIC_PROFILE_SET_TYPE;
 
 
-            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+//            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+//
+//            MultipartBuilder builder = new MultipartBuilder();
+//            builder.type(MultipartBuilder.FORM);
+//            ProfileData profileData = response.object;
+//            if (!TextUtils.isEmpty(profileData.email))
+//                builder.addFormDataPart("prof_username", profileData.email);
+//            if (!TextUtils.isEmpty(profileData.firstName))
+//                builder.addFormDataPart("prof_fname", profileData.firstName);
+//            if (!TextUtils.isEmpty(profileData.lastName))
+//                builder.addFormDataPart("prof_lname", profileData.lastName);
+//            if (profileData.dob != -1 && profileData.dob > 0)
+//                builder.addFormDataPart("prof_birthday", profileData.dob + "");
+//            if (!TextUtils.isEmpty(profileData.phone))
+//                builder.addFormDataPart("prof_phone", profileData.phone);
+//            if (!TextUtils.isEmpty(profileData.address1))
+//                builder.addFormDataPart("prof_address1", profileData.address1);
+//            if (!TextUtils.isEmpty(profileData.address2))
+//                builder.addFormDataPart("prof_address2", profileData.address2);
+//            if (!TextUtils.isEmpty(profileData.country))
+//                builder.addFormDataPart("prof_country", profileData.country);
+//            if (!TextUtils.isEmpty(profileData.city))
+//                builder.addFormDataPart("prof_city", profileData.city);
+//            if (!TextUtils.isEmpty(profileData.state))
+//                builder.addFormDataPart("prof_state", profileData.state);
+//            if (!TextUtils.isEmpty(profileData.pincode))
+//                builder.addFormDataPart("prof_pincode", profileData.pincode);
+//            if (profileData.genderType > 0)
+//                builder.addFormDataPart("prof_gender", profileData.genderType + "");
+//            if (profileData.imageToUpload != null) {
+//                String filename = profileData.imageToUpload.getPath().substring(profileData.imageToUpload.getPath().lastIndexOf("/") + 1);
+//                builder.addFormDataPart("file1", filename , RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload ));
+////                builder.addPart(
+////                        Headers.of("Content-Disposition", "form-data; name=\"file1\""),
+////                        RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
+//            }
 
-            MultipartBuilder builder = new MultipartBuilder();
-            builder.type(MultipartBuilder.FORM);
-            ProfileData profileData = response.object;
-            if (!TextUtils.isEmpty(profileData.email))
-                builder.addFormDataPart("prof_username", profileData.email);
-            if (!TextUtils.isEmpty(profileData.firstName))
-                builder.addFormDataPart("prof_fname", profileData.firstName);
-            if (!TextUtils.isEmpty(profileData.lastName))
-                builder.addFormDataPart("prof_lname", profileData.lastName);
-            if (profileData.dob != -1 && profileData.dob > 0)
-                builder.addFormDataPart("prof_birthday", profileData.dob + "");
-            if (!TextUtils.isEmpty(profileData.phone))
-                builder.addFormDataPart("prof_phone", profileData.phone);
-            if (!TextUtils.isEmpty(profileData.address1))
-                builder.addFormDataPart("prof_address1", profileData.address1);
-            if (!TextUtils.isEmpty(profileData.address2))
-                builder.addFormDataPart("prof_address2", profileData.address2);
-            if (!TextUtils.isEmpty(profileData.country))
-                builder.addFormDataPart("prof_country", profileData.country);
-            if (!TextUtils.isEmpty(profileData.city))
-                builder.addFormDataPart("prof_city", profileData.city);
-            if (!TextUtils.isEmpty(profileData.state))
-                builder.addFormDataPart("prof_state", profileData.state);
-            if (!TextUtils.isEmpty(profileData.pincode))
-                builder.addFormDataPart("prof_pincode", profileData.pincode);
-            if (profileData.genderType > 0)
-                builder.addFormDataPart("prof_gender", profileData.genderType + "");
-            if (profileData.imageToUpload != null) {
-                String filename = profileData.imageToUpload.getPath().substring(profileData.imageToUpload.getPath().lastIndexOf("/") + 1);
-                builder.addFormDataPart("file1", filename , RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload ));
-//                builder.addPart(
-//                        Headers.of("Content-Disposition", "form-data; name=\"file1\""),
-//                        RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
-            }
 
-
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
-            response.responseCode = httpResponse.code();
-            response.responseContent = httpResponse.body().string();
-            L.d("setBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+             ServerRequest.doPostRequestForImage(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), response);
             extractBasicResponse(context, response);
         } else {
             response.success = false;
