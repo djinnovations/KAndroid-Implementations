@@ -118,11 +118,15 @@ class TabViewHolder implements View.OnClickListener {
 
     public void setCounts(int count1, int count2) {
         if(count1>0){
+            tabCount1.setVisibility(View.VISIBLE);
             tabCount1.setText(String.format(Locale.getDefault(), "%d", count1));
         }else
             tabCount1.setVisibility(View.GONE);
 
-        if (count2 > 0) tabCount2.setText(String.format(Locale.getDefault(), "%d", count2));
+        if (count2 > 0) {
+            tabCount2.setVisibility(View.VISIBLE);
+            tabCount2.setText(String.format(Locale.getDefault(), "%d", count2));
+        }
         else tabCount2.setVisibility(View.GONE);
     }
 
