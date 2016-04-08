@@ -272,9 +272,10 @@ public class ProductsFragment extends Fragment {
                     new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
+                            Product p = getItem(position);
                             if (mToast != null) mToast.cancel();
                             mToast = Toast.makeText(getActivity(),
-                                    result.success ? "Product " + position + " dis-liked" :
+                                    result.success ? p.name + " dis-liked" :
                                             "failed", Toast.LENGTH_LONG);
                             mToast.show();
                         }
@@ -288,9 +289,10 @@ public class ProductsFragment extends Fragment {
                     new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
+                            Product p = getItem(position);
                             if (mToast != null) mToast.cancel();
                             mToast = Toast.makeText(getActivity(),
-                                    result.success ? "Product " + position + " liked" : "failed",
+                                    result.success ? p.name + " liked" : "failed",
                                     Toast.LENGTH_LONG);
                             mToast.show();
                         }
