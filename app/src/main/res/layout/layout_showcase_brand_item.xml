@@ -16,8 +16,7 @@
             android:id="@+id/collection_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/header_bg"
-            android:scaleType="centerCrop"/>
+            android:background="@drawable/header_bg"/>
 
         <TextView
             android:id="@+id/collection_name"
@@ -84,8 +83,6 @@
 
         </LinearLayout>
 
-
     </LinearLayout>
-
 
 </LinearLayout>
