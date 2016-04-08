@@ -84,6 +84,13 @@ public class URLHelper {
         return endPoint+VERB.CREATE_POST;
     }
 
+    public String getSetBasicProfileURL()
+    {
+        return "http://demo.eremotus-portal.com/goldadorn_dev/rest/setbasicprofile";
+
+        //return endPoint+VERB.SET_BASIC_PROFILE;
+    }
+
     public String getFindPeopleServiceURL()
     {
         return endPoint+VERB.PEOPLE;
@@ -160,6 +167,8 @@ public class URLHelper {
         public static final String PEOPLE="people";
         public static final String SOCIAL_FEED="socialfeed";
         public static final String CREATE_POST="createpost";
+        public static final String SET_BASIC_PROFILE="setbasicprofile";
+
         public static final String LIKE="like";
         public static final String POLL="poll";
         public static final String VOTE_BOF_3="votebof3";

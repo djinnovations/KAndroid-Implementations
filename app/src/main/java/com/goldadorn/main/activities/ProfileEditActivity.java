@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,17 +16,28 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ObjectResponse;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.Bind;
@@ -41,6 +53,10 @@ public class ProfileEditActivity extends BaseActivity {
     private final static String TAG = ProfileEditActivity.class.getSimpleName();
     private final static boolean DEBUG = true;
     private Context mContext;
+
+    @Bind(R.id.layoutParent)
+    ViewGroup layoutParent;
+
     @Bind(R.id.email)
     EditText mEmail;
     @Bind(R.id.first_name)
@@ -131,12 +147,18 @@ public class ProfileEditActivity extends BaseActivity {
                     mProfileData.dob = mCalendar.getTimeInMillis();
                 mProfileData.imageToUpload = mImageFile;
 
+
+                submitProfile(mProfileData);
+
+/*
                 UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
                     @Override
                     public void onResult(ObjectResponse<ProfileData> result) {
                         Toast.makeText(mContext, result.success ? "Profile Updated" : "Someething went wrong", Toast.LENGTH_SHORT).show();
                     }
                 });
+                */
+
             }
         });
 
@@ -156,6 +178,56 @@ public class ProfileEditActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    final private int postCallToken = IDUtils.generateViewId();
+    protected void submitProfile(ProfileData mProfileData)
+    {
+        MultipartEntity reqEntity = new MultipartEntity();
+
+
+        if(mProfileData.imageToUpload!=null && mProfileData.imageToUpload.exists()  && mProfileData.imageToUpload.canRead())
+            reqEntity.addPart("file1", new FileBody(mProfileData.imageToUpload));
+
+        putStringBody(reqEntity,"prof_username",mProfileData.email);
+        putStringBody(reqEntity,"prof_fname",mProfileData.firstName);
+        putStringBody(reqEntity,"prof_gender",mProfileData.genderType+"");
+
+
+        Map<String, Object> params = new HashMap<>();
+        params.put(AQuery.POST_ENTITY, reqEntity);
+
+
+        String url = getUrlHelper().getSetBasicProfileURL();
+        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
+        ajaxCallback.setClazz(String.class);
+        ajaxCallback.setParams(params);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        getAQuery().ajax(url, params, String.class, ajaxCallback);
+    }
+    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
+        if(id== postCallToken)
+        {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+            if(success)
+            {
+                Toast.makeText(ProfileEditActivity.this, "Profile has been updated", Toast.LENGTH_SHORT).show();
+            }
+            else {
+
+            }
+
+        }
+        else
+            super.serverCallEnds(id,url, json, status);
+    }
+    private void putStringBody(MultipartEntity reqEntity, String key, String value) {
+        try {
+            if(value!=null && value.equals("")==false)
+                reqEntity.addPart(key, new StringBody(value));
+        }catch (Exception e){
+
+        }
     }
 
     private void bindUI(ProfileData profileData) {
@@ -246,6 +318,7 @@ public class ProfileEditActivity extends BaseActivity {
                 //Handle the mImage
                 mImageFile = imageFile;
                 Picasso.with(ProfileEditActivity.this).load(mImageFile).into(mImage);
+
             }
 
         });

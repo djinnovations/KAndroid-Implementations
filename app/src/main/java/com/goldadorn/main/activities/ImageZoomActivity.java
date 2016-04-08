@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,12 +12,14 @@ import com.goldadorn.main.modules.slideShow.SimpleImageArray;
 import com.goldadorn.main.utils.IDUtils;
 import com.kimeeo.library.fragments.BaseFragment;
 
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
  */
 public class ImageZoomActivity extends BaseActivity{
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

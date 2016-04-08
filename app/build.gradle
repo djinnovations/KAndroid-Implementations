@@ -9,9 +9,9 @@ android {
         devVersion {
             applicationId "com.goldadorn.main"
             //goldadorn.cloudapp.net  demo.eremotus-portal.com
-            buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
-            buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
+            buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
+            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
         }
 
