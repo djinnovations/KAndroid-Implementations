@@ -100,8 +100,10 @@ public class DbHelper {
             if (dataObj.has(Constants.JsonConstants.DESIGNERS)) {
                 JSONArray userlist = dataObj.getJSONArray(Constants.JsonConstants.DESIGNERS);
                 if (userlist.length() != 0) {
-                    if(response.mPageCount==0)
-                        context.getContentResolver().delete(Tables.Collections.CONTENT_URI_NO_NOTIFICATION,null,null);
+                    if(response.mPageCount==0) {
+                        context.getContentResolver().delete(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, null, null);
+                        context.getContentResolver().delete(Tables.Users.CONTENT_URI_NO_NOTIFICATION,null,null);
+                    }
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
                         int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
@@ -153,7 +155,6 @@ public class DbHelper {
                 for (int i = 0; i < userlist.length(); i++) {
                     JSONObject userObj = userlist.getJSONObject(i);
                     ContentValues usercv = new ContentValues();
-                    usercv.put(Tables.Users.NAME, userObj.optString(Constants.JsonConstants.USERNAME, null));
                     long userId = userObj.optLong(Constants.JsonConstants.USERID, -1);
                     usercv.put(Tables.Users._ID, userId);
                     String url = userObj.optString(Constants.JsonConstants.USERPIC, null);

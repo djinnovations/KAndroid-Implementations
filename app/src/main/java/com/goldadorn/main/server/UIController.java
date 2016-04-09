@@ -12,6 +12,7 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.SearchResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 
 /**
@@ -238,13 +239,14 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void setBasicProfileInfo(final Context context, ProfileData profileData, final IResultListener<ObjectResponse<ProfileData>> listener) {
+    public static void forgotPassword(final Context context, String email, final IResultListener<ObjectResponse<ProfileData>> listener) {
         final ObjectResponse<ProfileData> response = new ObjectResponse<>();
-        response.object = profileData;
+        response.object = new ProfileData();
+        response.object.email = email;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.setBasicProfile(context, response, 0);
+                Api.forgotPassword(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -256,14 +258,11 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void forgotPassword(final Context context, String email, final IResultListener<ObjectResponse<ProfileData>> listener) {
-        final ObjectResponse<ProfileData> response = new ObjectResponse<>();
-        response.object = new ProfileData();
-        response.object.email = email;
+    public static void getSearchTags(final Context context,final SearchResponse response,final IResultListener<SearchResponse> listener){
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.forgotPassword(context, response, 0);
+                Api.getSearchTags(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

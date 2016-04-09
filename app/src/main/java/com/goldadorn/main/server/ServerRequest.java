@@ -2,10 +2,7 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 import android.os.Build;
-import android.text.TextUtils;
 
-import com.goldadorn.main.model.ProfileData;
-import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.L;
 import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.OkHttpClient;
@@ -13,27 +10,18 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.scheme.SocketFactory;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
@@ -72,79 +60,6 @@ public class ServerRequest {
         return new OkHttpClient().newCall(requstBuild.build()).execute();
     }
 
-    public static void doPostRequestForImage(Context context, String url, HashMap<String, String> nameValuePairs, ObjectResponse<ProfileData> responseresult) throws IOException {
-        final HttpParams httpParams = createHttpParams();
-        HttpClientParams.setRedirecting(httpParams, false);
-
-        DefaultHttpClient postClient = CreateDefaultHttpClient(httpParams);
-        postClient
-                .setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(
-                        0, false));
-        HttpPost httpPost = new HttpPost(url);
-        HttpResponse response;
-        L.d("doPostRequest " + url);
-        try {
-            if (nameValuePairs != null) {
-                for (Map.Entry<String, String> entry : nameValuePairs.entrySet()) {
-                    if (entry.getKey() != null && entry.getValue() != null) {
-                        httpPost.addHeader(entry.getKey(),
-                                entry.getValue());
-                    }
-
-                }
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-        ProfileData profileData = responseresult.object;
-        MultipartEntity entity = new MultipartEntity();
-        if (!TextUtils.isEmpty(profileData.email))
-            entity.addPart("prof_username", new StringBody(profileData.email));
-        if (!TextUtils.isEmpty(profileData.firstName))
-            entity.addPart("prof_fname", new StringBody(profileData.firstName));
-        if (!TextUtils.isEmpty(profileData.lastName))
-            entity.addPart("prof_lname", new StringBody(profileData.lastName));
-        if (profileData.dob != -1 && profileData.dob > 0)
-            entity.addPart("prof_birthday", new StringBody(profileData.dob + ""));
-        if (!TextUtils.isEmpty(profileData.phone))
-            entity.addPart("prof_phone", new StringBody(profileData.phone));
-        if (!TextUtils.isEmpty(profileData.address1))
-            entity.addPart("prof_address1", new StringBody(profileData.address1));
-        if (!TextUtils.isEmpty(profileData.address2))
-            entity.addPart("prof_address2", new StringBody(profileData.address2));
-        if (!TextUtils.isEmpty(profileData.country))
-            entity.addPart("prof_country", new StringBody(profileData.country));
-        if (!TextUtils.isEmpty(profileData.city))
-            entity.addPart("prof_city", new StringBody(profileData.city));
-        if (!TextUtils.isEmpty(profileData.state))
-            entity.addPart("prof_state", new StringBody(profileData.state));
-        if (!TextUtils.isEmpty(profileData.pincode))
-            entity.addPart("prof_pincode", new StringBody(profileData.pincode));
-        if (profileData.genderType > 0)
-            entity.addPart("prof_gender", new StringBody(profileData.genderType + ""));
-
-
-        if (profileData.imageToUpload != null) {
-//            String filename = profileData.imageToUpload.getPath().substring(profileData.imageToUpload.getPath().lastIndexOf("/") + 1);
-//            entity.addPart("file1", new FileBody(profileData.imageToUpload));
-            FileInputStream fileInputStream = new FileInputStream(profileData.imageToUpload);
-
-            entity.addPart("image", new InputStreamBody(fileInputStream, "image/png", "file1"));
-        }
-        httpPost.setEntity(entity);
-
-        response = postClient.execute(httpPost);
-        responseresult.responseCode = response.getStatusLine().getStatusCode();
-        HttpEntity httpentity = response.getEntity();
-        if (httpentity != null) {
-            SoftReference<InputStream> instream = new SoftReference<InputStream>(
-                    httpentity.getContent());
-            responseresult.responseContent = convertStreamToString(instream);
-            instream.get().close();
-        }
-        L.d("setBasicProfile " + "Code :" + responseresult.responseCode + " content", responseresult.responseContent);
-        httpPost.abort();
-    }
 
     public static Response doPutRequest(Context context, String url, HashMap<String, String> nameValuePairs, RequestBody requestBody) throws IOException {
         L.d("doPutRequest " + url);

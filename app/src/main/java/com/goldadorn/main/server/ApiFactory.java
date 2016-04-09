@@ -12,6 +12,7 @@ import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.SearchResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
@@ -48,8 +49,8 @@ public class ApiFactory extends ExtractResponse {
     private static final int FOLLOW_TYPE = 13;
     private static final int NOTIFY_PAYMENT_TYPE = 14;
     private static final int BASIC_PROFILE_GET_TYPE = 15;
-    private static final int BASIC_PROFILE_SET_TYPE = 16;
     private static final int FORGOT_PASSWORD = 17;
+    private static final int SEARCH_TAG_TYPE = 18;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -75,6 +76,12 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("addproductstocart");
                 break;
             }
+            case SEARCH_TAG_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("searchtag");
+                break;
+            }
             case NOTIFY_PAYMENT_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
@@ -85,12 +92,6 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("getbasicprofile");
-                break;
-            }
-            case BASIC_PROFILE_SET_TYPE: {
-                builder.appendPath("goldadorn_dev");
-                builder.appendPath("rest");
-                builder.appendPath("setbasicprofile");
                 break;
             }
 
@@ -218,6 +219,41 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getDesigners " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void getSearchTags(Context context, SearchResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = SEARCH_TAG_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = SEARCH_TAG_TYPE;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("tag", response.searchtagquery);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("getSearchTags post body content " + jsonObject.toString());
+
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getSearchTags " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
@@ -361,68 +397,6 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
-            extractBasicResponse(context, response);
-        } else {
-            response.success = false;
-            response.responseCode = BasicResponse.IO_EXE;
-        }
-    }
-
-    protected static void setBasicProfile(Context context, ObjectResponse<ProfileData> response) throws IOException, JSONException {
-        if (response.mCookies == null || response.mCookies.isEmpty()) {
-            response.responseCode = BasicResponse.FORBIDDEN;
-            response.success = false;
-            return;
-        }
-        if (NetworkUtilities.isConnected(context)) {
-            UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = BASIC_PROFILE_SET_TYPE;
-
-            urlBuilder.mResponse = response;
-            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
-            paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = BASIC_PROFILE_SET_TYPE;
-
-
-//            final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
-//
-//            MultipartBuilder builder = new MultipartBuilder();
-//            builder.type(MultipartBuilder.FORM);
-//            ProfileData profileData = response.object;
-//            if (!TextUtils.isEmpty(profileData.email))
-//                builder.addFormDataPart("prof_username", profileData.email);
-//            if (!TextUtils.isEmpty(profileData.firstName))
-//                builder.addFormDataPart("prof_fname", profileData.firstName);
-//            if (!TextUtils.isEmpty(profileData.lastName))
-//                builder.addFormDataPart("prof_lname", profileData.lastName);
-//            if (profileData.dob != -1 && profileData.dob > 0)
-//                builder.addFormDataPart("prof_birthday", profileData.dob + "");
-//            if (!TextUtils.isEmpty(profileData.phone))
-//                builder.addFormDataPart("prof_phone", profileData.phone);
-//            if (!TextUtils.isEmpty(profileData.address1))
-//                builder.addFormDataPart("prof_address1", profileData.address1);
-//            if (!TextUtils.isEmpty(profileData.address2))
-//                builder.addFormDataPart("prof_address2", profileData.address2);
-//            if (!TextUtils.isEmpty(profileData.country))
-//                builder.addFormDataPart("prof_country", profileData.country);
-//            if (!TextUtils.isEmpty(profileData.city))
-//                builder.addFormDataPart("prof_city", profileData.city);
-//            if (!TextUtils.isEmpty(profileData.state))
-//                builder.addFormDataPart("prof_state", profileData.state);
-//            if (!TextUtils.isEmpty(profileData.pincode))
-//                builder.addFormDataPart("prof_pincode", profileData.pincode);
-//            if (profileData.genderType > 0)
-//                builder.addFormDataPart("prof_gender", profileData.genderType + "");
-//            if (profileData.imageToUpload != null) {
-//                String filename = profileData.imageToUpload.getPath().substring(profileData.imageToUpload.getPath().lastIndexOf("/") + 1);
-//                builder.addFormDataPart("file1", filename , RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload ));
-////                builder.addPart(
-////                        Headers.of("Content-Disposition", "form-data; name=\"file1\""),
-////                        RequestBody.create(MEDIA_TYPE_PNG, profileData.imageToUpload));
-//            }
-
-
-             ServerRequest.doPostRequestForImage(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), response);
             extractBasicResponse(context, response);
         } else {
             response.success = false;

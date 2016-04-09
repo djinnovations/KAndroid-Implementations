@@ -10,6 +10,7 @@ import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.server.response.SearchResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 
@@ -42,6 +43,17 @@ public class Api {
             ApiFactory.getDesigners(context, response);
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProductShowcaseData(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+    public static void getSearchTags(Context context, SearchResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getSearchTags(context, response);
+            if (response.success && response.responseContent != null) {
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -115,18 +127,6 @@ public class Api {
             ApiFactory.getBasicProfile(context, response);
             if (response.success && response.responseContent != null) {
                 ExtractResponse.extractBasicProfile(response);
-            }
-        } catch (Exception e) {
-            extractException(context, response, e);
-            e.printStackTrace();
-        }
-    }
-
-    public static void setBasicProfile(Context context, ObjectResponse<ProfileData> response, int retryCount) {
-        try {
-            generateUserCredentials(context, response);
-            ApiFactory.setBasicProfile(context, response);
-            if (response.success && response.responseContent != null) {
             }
         } catch (Exception e) {
             extractException(context, response, e);
