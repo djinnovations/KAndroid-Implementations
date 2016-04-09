@@ -8,6 +8,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
+import com.goldadorn.main.model.Value;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
@@ -461,8 +462,8 @@ public class ApiFactory extends ExtractResponse {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.product.id);
             Product product = response.product;
-            for (Map.Entry<String, String> entry : product.customisations.entrySet()) {
-                jsonObject.put(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, Value> entry : product.customisations.entrySet()) {
+                jsonObject.put(entry.getKey(), entry.getValue().valueId);
             }
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
@@ -561,20 +562,16 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("userId", response.product.userId);
             jsonObject.put("priceUnits", response.product.getTotalPrice());
             jsonObject.put("orderQty", response.product.quantity);
-            if (response.product.customisations != null) {
-                try {
-                    if (response.product.customisations != null) {
-                        for (Map.Entry<String, String> entry : response.product.customisations.entrySet()) {
-                            if (entry.getKey() != null && entry.getValue() != null) {
-                                jsonObject.put(entry.getKey(),
-                                        entry.getValue());
-                            }
-
-                        }
+            try {
+                for (Map.Entry<String, Value> entry : response.product.customisations.entrySet()) {
+                    if (entry.getKey() != null && entry.getValue() != null) {
+                        jsonObject.put(entry.getKey(),
+                                entry.getValue().valueId);
                     }
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
+
                 }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
             }
 
             L.d("addToCart BODY "+jsonObject.toString());

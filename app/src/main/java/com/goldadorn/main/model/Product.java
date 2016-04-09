@@ -28,7 +28,7 @@ public class Product implements Serializable {
 
 
     //customise variable
-    public final HashMap<String, String> customisations = new HashMap<>();
+    public final HashMap<String, Value> customisations = new HashMap<>();
     public boolean isLiked;
 //    public String primaryMetal;
 //    public String primaryMetalColor;
@@ -41,7 +41,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public void addCustomisation(String key, String value) {
+    public void addCustomisation(String key, Value value) {
         if (value == null)
             customisations.remove(key);
         else
@@ -107,20 +107,20 @@ public class Product implements Serializable {
         p.quantity = 1;
 
         // alternate customisation
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETAL, productInfo.optString(Constants.JsonConstants.PRIMARYMETAL));
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALCOLOR, productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR));
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALPURITY, productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY));
-        p.addCustomisation(Constants.JsonConstants.CENTERSTONE, productInfo.optString(Constants.JsonConstants.CENTERSTONE));
+        p.addCustomisation(Constants.JsonConstants.PRIMARYMETAL,new Value(Constants.JsonConstants.PRIMARYMETAL, productInfo.optString(Constants.JsonConstants.PRIMARYMETAL)));
+        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALCOLOR, new Value(Constants.JsonConstants.PRIMARYMETALCOLOR,productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR)));
+        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALPURITY,new Value(Constants.JsonConstants.PRIMARYMETALPURITY, productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY)));
+        p.addCustomisation(Constants.JsonConstants.CENTERSTONE,new Value(Constants.JsonConstants.CENTERSTONE, productInfo.optString(Constants.JsonConstants.CENTERSTONE)));
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
                 String key = Constants.JsonConstants.ACCENTSTONE + i;
-                p.addCustomisation(key, productInfo.optString(key));
+                p.addCustomisation(key, new Value(key,productInfo.optString(key)));
             }
         }
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
                 String key = Constants.JsonConstants.GEMSTONE + i;
-                p.addCustomisation(key, productInfo.optString(key));
+                p.addCustomisation(key, new Value(key,productInfo.optString(key)));
             }
         }
         return p;

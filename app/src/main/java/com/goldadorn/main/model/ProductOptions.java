@@ -27,18 +27,18 @@ public class ProductOptions {
 
     public String priceUnit;
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
-    public final ArrayList<Map.Entry<String, ArrayList<String>>> customisationOptions = new ArrayList<>();
+    public final ArrayList<Map.Entry<String, ArrayList<Value>>> customisationOptions = new ArrayList<>();
 
     public ProductOptions(int id) {
         this.id = id;
     }
 
-    private static void extract(JSONObject productInfo, String key, List<Map.Entry<String, ArrayList<String>>> map) throws JSONException {
+    private static void extract(JSONObject productInfo, String key, List<Map.Entry<String, ArrayList<Value>>> map) throws JSONException {
         if (productInfo.has(key)) {
             JSONArray ja = productInfo.getJSONArray(key);
-            ArrayList<String> options = new ArrayList<>();
+            ArrayList<Value> options = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
-                options.add(ja.getString(i));
+                options.add(new Value(key,ja.getString(i)));
             }
             map.add(new AbstractMap.SimpleEntry<>(key, options));
         }

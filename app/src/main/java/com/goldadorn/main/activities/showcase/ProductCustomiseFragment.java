@@ -23,6 +23,7 @@ import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
 import com.goldadorn.main.model.ProductOptions;
+import com.goldadorn.main.model.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,9 +148,9 @@ public class ProductCustomiseFragment extends Fragment {
     };
 
 
-    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, String>> {
+    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, Value>> {
 
-        List<Map.Entry<String, ArrayList<String>>> options;
+        List<Map.Entry<String, ArrayList<Value>>> options;
 
         public CustomizeMainAdapter(Context context) {
             super(context, true);
@@ -162,7 +163,7 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
-            Map.Entry<String, ArrayList<String>> option = options.get(position);
+            Map.Entry<String, ArrayList<Value>> option = options.get(position);
             holder.setOptionSelectedListener(this);
             holder.bindUI(option);
         }
@@ -172,14 +173,14 @@ public class ProductCustomiseFragment extends Fragment {
             return options == null ? 0 : options.size();
         }
 
-        public void changeData(List<Map.Entry<String, ArrayList<String>>> optionsList) {
+        public void changeData(List<Map.Entry<String, ArrayList<Value>>> optionsList) {
             options = optionsList;
             Log.d("changeData ", "" + optionsList.size());
             notifyDataSetChanged();
         }
 
         @Override
-        public void onResult(Map.Entry<String, String> result) {
+        public void onResult(Map.Entry<String, Value> result) {
             mProductActivity.addCustomisation(result.getKey(), result.getValue());
         }
     }

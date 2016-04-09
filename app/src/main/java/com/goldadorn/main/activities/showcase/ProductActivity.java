@@ -47,6 +47,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.model.Value;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -261,7 +262,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 mCollectionCallBack);
     }
 
-    public void addCustomisation(String key, String value) {
+    public void addCustomisation(String key, Value value) {
         Toast.makeText(mContext, key + " : " + value, Toast.LENGTH_SHORT).show();
         mProduct.addCustomisation(key, value);
         // call api for updated price
