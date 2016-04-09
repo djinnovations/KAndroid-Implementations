@@ -261,10 +261,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
-                    mCollection = mCollectionAdapter.getCollection(mCurrentPosition);
-                    bindOverlay(mCollection);
-                    for (CollectionChangeListener l : mCollectionChangeListeners)
-                        l.onCollectionChange(mCollection);
+                    Collection collection = mCollectionAdapter.getCollection(mCurrentPosition);
+                    if (collection != null && !collection.equals(mCollection)) {
+                        mCollection = collection;
+                        bindOverlay(mCollection);
+                        for (CollectionChangeListener l : mCollectionChangeListeners)
+                            l.onCollectionChange(mCollection);
+                    }
                 }
             };
 

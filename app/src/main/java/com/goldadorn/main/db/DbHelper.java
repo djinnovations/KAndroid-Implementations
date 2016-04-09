@@ -33,15 +33,11 @@ public class DbHelper {
 //                    cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                     cv.put(Tables.Products.NAME, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
                     cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTDESC));
-                    cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
-                    cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
                     cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
 
                     cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
                     cv.put(Tables.Products.PRICEUNIT, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
                     int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
-                    if (updatecount == 0)
-                        context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
                 }
                 context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
@@ -59,11 +55,13 @@ public class DbHelper {
                     for (int i = 0; i < productsArray.length(); i++) {
                         JSONObject productObj = productsArray.getJSONObject(i);
                         ContentValues cv = new ContentValues();
+                        cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCT_ID, 0));
+                        cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
+                        cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
+
                         cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                         cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                        int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
-                        if (updatecount == 0)
-                            context.getContentResolver().insert(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
+                        updateInsert(context,Tables.Products.CONTENT_URI_NO_NOTIFICATION,cv);
                         response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID));
                     }
                     context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
