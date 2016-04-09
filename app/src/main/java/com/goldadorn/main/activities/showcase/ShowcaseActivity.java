@@ -343,19 +343,19 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
 
     private void bindOverlay(User user) {
-        mOverlayVH.mBrandName.setText(user.name);
-        mOverlayVH.mLikesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
-        mOverlayVH.mFollowersCount.setText(
+        mOverlayVH.brandName.setText(user.name);
+        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+        mOverlayVH.followersCount.setText(
                 String.format(Locale.getDefault(), "%d", user.followers_cnt));
-        mOverlayVH.mFollowingCount.setText(
+        mOverlayVH.followingCount.setText(
                 String.format(Locale.getDefault(), "%d", user.following_cnt));
 
-        mOverlayVH.mFollowButton.setTag(user);
-        mOverlayVH.mLikeButton.setTag(user);
+        mOverlayVH.followButton.setTag(user);
+        mOverlayVH.likeButton.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
-        mOverlayVH.mLikeButton.setSelected(user.isLiked);
-        mOverlayVH.mFollowButton.setSelected(user.isFollowed);
+        mOverlayVH.likeButton.setSelected(user.isLiked);
+        mOverlayVH.followButton.setSelected(user.isFollowed);
 
     }
 
@@ -416,7 +416,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.brand_name)
-        TextView mBrandName;
+        TextView brandName;
         //        @Bind(R.id.brand_description)
         //        TextView mBrandDescription;
 
@@ -428,36 +428,36 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         View layout3;
 
         @Bind(R.id.badge_1)
-        ImageView mFeatured;
+        ImageView featured;
         @Bind(R.id.badge_2)
-        ImageView mTrending;
+        ImageView trending;
 
         @Bind(R.id.likes_count)
-        TextView mLikesCount;
+        TextView likesCount;
         @Bind(R.id.followers_count)
-        TextView mFollowersCount;
+        TextView followersCount;
         @Bind(R.id.following_count)
-        TextView mFollowingCount;
+        TextView followingCount;
 
         @Bind(R.id.likeButton)
-        ImageView mLikeButton;
+        ImageView likeButton;
         @Bind(R.id.followButton)
-        ImageView mFollowButton;
+        ImageView followButton;
         @Bind(R.id.shareButton)
-        ImageView mShareButton;
+        ImageView shareButton;
 
         public OverlayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            mLikeButton.setOnClickListener(this);
-            mShareButton.setOnClickListener(this);
-            mFollowButton.setOnClickListener(this);
+            likeButton.setOnClickListener(this);
+            shareButton.setOnClickListener(this);
+            followButton.setOnClickListener(this);
         }
 
         public void setBadges(boolean trending, boolean featured) {
-            mFeatured.setVisibility(featured ? View.VISIBLE : View.GONE);
-            mTrending.setVisibility(trending ? View.VISIBLE : View.GONE);
+            this.featured.setVisibility(featured ? View.VISIBLE : View.GONE);
+            this.trending.setVisibility(trending ? View.VISIBLE : View.GONE);
         }
 
         public void setVisisbility(int visibility) {

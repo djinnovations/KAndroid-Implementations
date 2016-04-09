@@ -1,7 +1,6 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -34,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidquery.AQuery;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -53,20 +51,11 @@ import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.goldadorn.main.utils.IDUtils;
-import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,7 +66,6 @@ public class ProductActivity extends BaseDrawerActivity {
     private final static int UISTATE_SOCIAL = 2;
     private static final String TAG = ProductActivity.class.getName();
     public static final String EXTRA_PRODUCT = "product";
-    final public static int POST_FEED=1;
     private int mUIState = UISTATE_CUSTOMIZE;
 
     @Bind(R.id.app_bar)
@@ -114,26 +102,6 @@ public class ProductActivity extends BaseDrawerActivity {
     Product mProduct;
     private Handler mHandler = new Handler();
     private TabViewHolder mTabViewHolder;
-    private ViewPager.OnPageChangeListener mPageChangeListener =
-            new ViewPager.OnPageChangeListener() {
-
-
-                @Override
-                public void onPageScrolled(int position, float positionOffset,
-                                           int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-                    //todo pager page changes
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            };
     private CollectionCallBack mCollectionCallBack = new CollectionCallBack();
     User mUser;
     Collection mCollection;
@@ -316,18 +284,6 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        mOverlayVH.indicator.setOnPageChangeListener(mPageChangeListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mOverlayVH.indicator.setOnPageChangeListener(null);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         getSupportLoaderManager().destroyLoader(mCollectionCallBack.hashCode());
@@ -372,99 +328,6 @@ public class ProductActivity extends BaseDrawerActivity {
                 });
     }
 
-
-    final private int postCallToken = IDUtils.generateViewId();
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-
-        if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
-            try {
-                //String fileData=data.getStringExtra("fileData");
-                int type=data.getIntExtra("type", -1);
-                if(type!=-1)
-                {
-                    String msg=data.getStringExtra("msg");
-                    MultipartEntity reqEntity = new MultipartEntity();
-
-
-                    try
-                    {
-                        if(data.getExtras().get("files")!=null) {
-                            File[] files = (File[]) data.getExtras().get("files");
-
-                            File file;
-                            int count = 1;
-                            for (int i = 0; i < files.length; i++) {
-                                file = files[i];
-                                if (file!=null && file.exists() && file.canRead()) {
-                                    reqEntity.addPart("file" + count, new FileBody(file));
-                                    count++;
-                                }
-                            }
-                        }
-                    }catch (Exception e)
-                    {
-                        if(data.getExtras().get("filesURIs")!=null) {
-                            String[] uris = (String[]) data.getExtras().get("filesURIs");
-
-                            File file;
-                            int count = 1;
-                            for (int i = 0; i < uris.length; i++) {
-                                file = new File(uris[i]);;
-                                if (file!=null && file.exists() && file.canRead()) {
-                                    reqEntity.addPart("file" + count, new FileBody(file));
-                                    count++;
-                                }
-                            }
-                        }
-                    }
-
-                    if(data.getExtras().get("links")!=null) {
-                        String[] links = (String[]) data.getExtras().get("links");
-
-                        String link;
-                        int count = 1;
-                        for (int i = 0; i < links.length; i++) {
-                            link = links[i];
-                            if (link!=null && link.equals("")==false) {
-                                reqEntity.addPart("link" + count, new StringBody(link+""));
-                                count++;
-                            }
-                        }
-                    }
-
-
-
-
-
-                    if(msg!=null && msg.equals("")==false)
-                        reqEntity.addPart("createpost_message", new StringBody(msg));
-                    reqEntity.addPart("createpost_type", new StringBody(type+""));
-                    Map<String, Object> params = new HashMap<>();
-                    params.put(AQuery.POST_ENTITY, reqEntity);
-
-
-                    String url = getUrlHelper().getCreatePostServiceURL();
-                    ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
-                    ajaxCallback.setClazz(String.class);
-                    ajaxCallback.setParams(params);
-                    ajaxCallback.method(AQuery.METHOD_POST);
-                    getAQuery().ajax(url, params, String.class, ajaxCallback);
-//                    uploadInProgress=true;
-//                    startUploadProgress();
-                }
-
-
-
-            }catch (Exception e)
-            {
-                System.out.println(e);
-            }
-        }
-    }
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<String> images;
@@ -627,8 +490,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo like click
                 Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
-                startActivityForResult(PostPollActivity.getLaunchIntent(mContext, mProduct),POST_FEED);
-                Toast.makeText(v.getContext(), "Buy No buy click!", Toast.LENGTH_SHORT).show();
+                startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
             } else if (v == wishlistButton) {
                 //todo wishlist click
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();

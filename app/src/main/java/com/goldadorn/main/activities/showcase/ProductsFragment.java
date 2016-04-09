@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.model.Collection;
@@ -248,8 +249,7 @@ public class ProductsFragment extends Fragment {
                 //todo like click
                 Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.buyNoBuyButton) {
-                //todo buy no buy click
-                Toast.makeText(v.getContext(), "Buy No buy click!", Toast.LENGTH_SHORT).show();
+                startActivity(PostPollActivity.getLaunchIntent(context, mProduct));
             } else if (id == R.id.wishlistButton) {
                 //todo wishlist click
                 Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
