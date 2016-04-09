@@ -157,7 +157,11 @@ public class DbHelper {
         String id = cv.getAsString("_id");
         int cnt = context.getContentResolver().update(uri, cv, "_id = " + id, null);
         if (cnt == 0) {
-            context.getContentResolver().insert(uri, cv);
+            try {
+                context.getContentResolver().insert(uri, cv);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
