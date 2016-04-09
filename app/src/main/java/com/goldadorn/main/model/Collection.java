@@ -42,4 +42,10 @@ public class Collection implements Serializable {
 //        return "http://demo.eremotus-portal.com/collections/3/3.jpg";
         return ImageFilePath.getImageUrlForCollection(id);
     }
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof User)
+            return ((User) o).id == id;
+        else return false;
+    }
 }

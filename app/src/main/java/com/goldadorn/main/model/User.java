@@ -29,6 +29,13 @@ public class User implements Serializable {
         this.type = type;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o != null && o instanceof User)
+            return ((User) o).id == id;
+        else return false;
+    }
+
     public void setName(String username) {
         this.name = username;
     }
