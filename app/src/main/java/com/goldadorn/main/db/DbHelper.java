@@ -61,7 +61,7 @@ public class DbHelper {
 
                         cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
                         cv.put(Tables.Products.IS_LIKED, productObj.optInt(Constants.JsonConstants.ISLIKED, 0));
-                        updateInsert(context,Tables.Products.CONTENT_URI_NO_NOTIFICATION,cv);
+                        updateInsert(context, Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv);
                         response.idsForProducts.put(productObj.optInt(Constants.JsonConstants.PRODUCTID));
                     }
                     context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
@@ -110,13 +110,15 @@ public class DbHelper {
                         cv.put(Tables.Users._ID, userId);
                         cv.put(Tables.Users.TYPE, User.TYPE_DESIGNER);
                         cv.put(Tables.Users.NAME, userObj.optString(Constants.JsonConstants.USERNAME));
-                        cv.put(Tables.Users.TRENDING, userObj.optInt(Constants.JsonConstants.ISTRENDIND));
+                        cv.put(Tables.Users.TRENDING, userObj.optInt(Constants.JsonConstants.ISTRENDING));
                         cv.put(Tables.Users.FEATURED, userObj.optInt(Constants.JsonConstants.ISFEATURED));
                         cv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS));
                         cv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING));
                         cv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES));
                         cv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT));
                         cv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT));
+                        cv.put(Tables.Users.IS_FOLLOWED, userObj.optInt(Constants.JsonConstants.ISLIKED));
+                        cv.put(Tables.Users.IS_LIKED, userObj.optInt(Constants.JsonConstants.ISLIKED));
                         String url = userObj.optString(Constants.JsonConstants.USERPIC, null);
                         if (url != null) {
                             url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
@@ -129,7 +131,7 @@ public class DbHelper {
                             JSONArray tempforpost = new JSONArray();
                             for (int j = 0; j < collarray.length(); j++) {
                                 JSONObject collObj = collarray.getJSONObject(j);
-                                long collId=collObj.optLong(Constants.JsonConstants.COLLECTION_ID);
+                                long collId = collObj.optLong(Constants.JsonConstants.COLLECTION_ID);
                                 ContentValues collcv = new ContentValues();
                                 collcv.put(Tables.Collections._ID, collId);
                                 collcv.put(Tables.Collections.USER_ID, userId);

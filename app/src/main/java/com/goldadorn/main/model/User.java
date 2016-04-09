@@ -21,7 +21,7 @@ public class User implements Serializable {
     public final int type;
     public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
     public long dataVersion;
-    public boolean isLiked;
+    public boolean isLiked,isFollowed;
 
 
     public User(int userid, int type) {
@@ -65,6 +65,7 @@ public class User implements Serializable {
         info.trending = cursor.getInt(cursor.getColumnIndex(Users.TRENDING)) == 1;
         info.featured = cursor.getInt(cursor.getColumnIndex(Users.FEATURED)) == 1;
         info.isLiked = cursor.getInt(cursor.getColumnIndex(Users.IS_LIKED)) == 1;
+        info.isFollowed = cursor.getInt(cursor.getColumnIndex(Users.IS_FOLLOWED)) == 1;
         info.dataVersion = cursor.getLong(cursor.getColumnIndex(Users.DATAVERSION));
         return info;
     }
