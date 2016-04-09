@@ -28,6 +28,7 @@ import com.goldadorn.main.server.response.LikeResponse;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -104,6 +105,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         private Cursor cursor;
         Context context;
         private int cardWidth;
+        private HashMap<Integer, Boolean> likeMap = new HashMap<>();
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +119,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             public void onClick(final View v) {
                 try {
                     v.setEnabled(false);
-                    Collection collection = (Collection) v.getTag();
+                    final Collection collection = (Collection) v.getTag();
                     final boolean isLiked = v.isSelected();
                     UIController.like(v.getContext(), collection, !isLiked, new
                             IResultListener<LikeResponse>() {
@@ -125,6 +127,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                                 public void onResult(LikeResponse result) {
                                     v.setEnabled(true);
                                     v.setSelected(result.success != isLiked);
+                                   likeMap.put(collection.id,v.isSelected());
                                 }
                             });
                 } catch (Exception e) {
@@ -153,16 +156,18 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public void onBindViewHolder(final CollectionHolder holder, int position) {
-            final Collection collection = getCollection(position);
+            Collection collection = getCollection(position);
             holder.name.setText(collection.name);
             holder.description.setText(collection.category);
             holder.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
             holder.extra.setText(String.format(Locale.getDefault(), "%d Products", collection.productcount));
             holder.itemView.setTag(position);
-            holder.like.setSelected(collection.isLiked);
+            Boolean t = likeMap.get(collection.id);
+            holder.like.setSelected(t == null ? collection.isLiked : t);
             holder.like.setTag(collection);
-            holder.image.getLayoutParams().height = (int) ( cardWidth/collection.image_a_r);
-            Picasso.with(context).load(collection.getImageUrl()).fit().into(holder.image);
+            holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
+            Picasso.with(context).load(collection.getImageUrl()).into(holder.image);
+
         }
 
 
