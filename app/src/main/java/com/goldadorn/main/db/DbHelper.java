@@ -102,7 +102,7 @@ public class DbHelper {
                 if (userlist.length() != 0) {
                     if(response.mPageCount==0) {
                         context.getContentResolver().delete(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, null, null);
-                        context.getContentResolver().delete(Tables.Users.CONTENT_URI_NO_NOTIFICATION,null,null);
+                        context.getContentResolver().delete(Tables.Users.CONTENT_URI,null,null);
                     }
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
