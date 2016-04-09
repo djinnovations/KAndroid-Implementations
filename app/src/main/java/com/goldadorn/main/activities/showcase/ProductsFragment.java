@@ -126,6 +126,8 @@ public class ProductsFragment extends Fragment {
         mCardStack.setAdapter(mSwipeDeckAdapter);
         mCardStack.setFlingListener(mSwipeDeckAdapter);
 
+        mCardStack.setOnItemClickListener(mSwipeDeckAdapter);
+
         if (mMode == MODE_USER) {
             ((ShowcaseActivity) getActivity()).registerUserChangeListener(mUserChangeListener);
         } else {
@@ -159,7 +161,7 @@ public class ProductsFragment extends Fragment {
 
 
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
-            SwipeFlingAdapterView.onFlingListener {
+            SwipeFlingAdapterView.onFlingListener,SwipeFlingAdapterView.OnItemClickListener {
 
         private Context context;
         private final List<Product> products = new ArrayList<>();
@@ -334,6 +336,11 @@ public class ProductsFragment extends Fragment {
             products.clear();
             products.addAll(originalProducts);
             notifyDataSetChanged();
+        }
+
+        @Override
+        public void onItemClicked(int i, Object o) {
+            goToProductPage(context, (Product) o);
         }
 
         class ProductViewHolder {
