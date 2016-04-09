@@ -355,6 +355,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
         mOverlayVH.mLikeButton.setSelected(user.isLiked);
+        mOverlayVH.mFollowButton.setSelected(user.isFollowed);
 
     }
 

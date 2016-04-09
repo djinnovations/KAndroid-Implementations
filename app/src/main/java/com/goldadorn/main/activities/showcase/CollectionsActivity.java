@@ -267,7 +267,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId, true);
-        String t = user != null ? "By " + user.getName() : "";
+        String t = "";
+        if (user != null) {
+            mOverlayViewHolder.followButton.setSelected(user.isFollowed);
+            t = "By " + user.getName();
+            mOverlayViewHolder.followButton.setTag(user);
+        }
+
         mOverlayViewHolder.ownerName.setText(t);
         mOverlayViewHolder.followButton.setVisibility(
                 TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);
@@ -366,7 +372,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
-        private boolean otpFlag=true;
+        private boolean otpFlag = true;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -438,6 +444,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             super(itemView);
             ButterKnife.bind(this, itemView);
             like.setOnClickListener(this);
+            followButton.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -463,6 +470,18 @@ public class CollectionsActivity extends BaseDrawerActivity {
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
                                 v.setSelected(result.success != isLiked);
+                            }
+                        });
+            } else if (v.equals(followButton)) {
+                v.setEnabled(false);
+                User user = (User) v.getTag();
+                final boolean isFollowed = v.isSelected();
+                UIController.follow(v.getContext(), user, !isFollowed,
+                        new IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                v.setEnabled(true);
+                                v.setSelected(result.success != isFollowed);
                             }
                         });
             }
