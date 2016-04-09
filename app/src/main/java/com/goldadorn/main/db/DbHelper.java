@@ -117,7 +117,7 @@ public class DbHelper {
                         cv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES));
                         cv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT));
                         cv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT));
-                        cv.put(Tables.Users.IS_FOLLOWED, userObj.optInt(Constants.JsonConstants.ISLIKED));
+                        cv.put(Tables.Users.IS_FOLLOWING, userObj.optInt(Constants.JsonConstants.ISFOLLOWING));
                         cv.put(Tables.Users.IS_LIKED, userObj.optInt(Constants.JsonConstants.ISLIKED));
                         String url = userObj.optString(Constants.JsonConstants.USERPIC, null);
                         if (url != null) {
