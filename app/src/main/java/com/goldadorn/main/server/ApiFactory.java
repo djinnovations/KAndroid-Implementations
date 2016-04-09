@@ -577,6 +577,8 @@ public class ApiFactory extends ExtractResponse {
                 }
             }
 
+            L.d("addToCart BODY "+jsonObject.toString());
+
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
