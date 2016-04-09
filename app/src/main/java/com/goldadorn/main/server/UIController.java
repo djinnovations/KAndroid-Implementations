@@ -20,7 +20,8 @@ import com.goldadorn.main.server.response.TimelineResponse;
  */
 public class UIController {
 
-    public static void getDesigners(final Context context, final TimelineResponse response, final IResultListener<TimelineResponse> listener) {
+    public static void getShowCase(final Context context, final IResultListener<TimelineResponse> listener) {
+        final TimelineResponse response= new TimelineResponse();
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

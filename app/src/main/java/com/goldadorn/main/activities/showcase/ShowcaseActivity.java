@@ -151,7 +151,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
-        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social)+"@goldadorn design", mTabClickListener);
+        mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
 
 
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -212,7 +212,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         //        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         configureUI(mUIState);
-        UIController.getDesigners(mContext, new TimelineResponse(),
+        UIController.getShowCase(mContext,
                 new IResultListener<TimelineResponse>() {
                     @Override
                     public void onResult(TimelineResponse result) {
@@ -261,17 +261,18 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
     private void onUserChange(User user) {
-        mUser = user;
-        bindOverlay(user);
-        String social = getString(R.string.social).toLowerCase();
-        if (user != null && !TextUtils.isEmpty(user.name)) {
-            social += "@";
-            social += user.name.toLowerCase().replace(" ", "");
-        }else
-            social += "@goldadorn design";
-        mTabViewHolder.tabName3.setText(social);
-        for (UserChangeListener l : mUserChangeListeners)
-            l.onUserChange(user);
+        if (user != null && !user.equals(mUser)) {
+            mUser = user;
+            bindOverlay(user);
+            String social = getString(R.string.social).toLowerCase();
+            if (!TextUtils.isEmpty(user.name)) {
+                social += "@";
+                social += user.name.toLowerCase().replace(" ", "");
+            }
+            mTabViewHolder.tabName3.setText(social);
+            for (UserChangeListener l : mUserChangeListeners)
+                l.onUserChange(user);
+        }
     }
 
     public void registerUserChangeListener(UserChangeListener listener) {
