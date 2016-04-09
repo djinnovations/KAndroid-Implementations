@@ -39,7 +39,6 @@ public class Collection implements Serializable {
     }
 
     public String getImageUrl() {
-//        return "http://demo.eremotus-portal.com/collections/3/3.jpg";
         return ImageFilePath.getImageUrlForCollection(id);
     }
     @Override

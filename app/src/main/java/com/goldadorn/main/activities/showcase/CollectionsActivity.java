@@ -193,6 +193,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 mCurrentPosition--;
                 if (mCurrentPosition < 0) mCurrentPosition = mCollectionAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                mHandler.removeCallbacks(mCollectionChangeRunnable);
+                mHandler.postDelayed(mCollectionChangeRunnable, 100);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
@@ -201,6 +203,8 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 mCurrentPosition++;
                 if (mCurrentPosition > mCollectionAdapter.getItemCount() - 1) mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                mHandler.removeCallbacks(mCollectionChangeRunnable);
+                mHandler.postDelayed(mCollectionChangeRunnable, 100);
             }
         });
 
@@ -220,18 +224,6 @@ public class CollectionsActivity extends BaseDrawerActivity {
                         configureUI(position);
                     }
                 });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mRecyclerView.addOnScrollListener(mPageChangeListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mRecyclerView.addOnScrollListener(mPageChangeListener);
     }
 
     @Override
@@ -256,21 +248,21 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mCollectionChangeListeners.remove(listener);
     }
 
-    private RecyclerView.OnScrollListener mPageChangeListener =
-            new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    Collection collection = mCollectionAdapter.getCollection(mCurrentPosition);
-                    if (collection != null && !collection.equals(mCollection)) {
-                        mCollection = collection;
-                        bindOverlay(mCollection);
-                        for (CollectionChangeListener l : mCollectionChangeListeners)
-                            l.onCollectionChange(mCollection);
-                    }
-                }
-            };
+    private Runnable mCollectionChangeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            onCollectionChange(mCollectionAdapter.getCollection(mCurrentPosition));
+        }
+    };
 
+    private void onCollectionChange(Collection collection) {
+        if (collection != null && !collection.equals(mCollection)) {
+            mCollection = collection;
+            bindOverlay(mCollection);
+            for (CollectionChangeListener l : mCollectionChangeListeners)
+                l.onCollectionChange(mCollection);
+        }
+    }
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
@@ -374,6 +366,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
+        private boolean otpFlag=true;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -389,7 +382,10 @@ public class CollectionsActivity extends BaseDrawerActivity {
             this.cursor = data;
             mCollectionAdapter.changeCursor(data);
             if (data.getCount() > 0) {
-                mPageChangeListener.onScrolled(mRecyclerView, 0, 0);
+                if (otpFlag) {
+                    otpFlag = false;
+                    mHandler.post(mCollectionChangeRunnable);
+                }
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }
 

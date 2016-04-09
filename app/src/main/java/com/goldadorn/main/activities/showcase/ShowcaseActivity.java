@@ -114,7 +114,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private int mStartHeight, mCollapsedHeight;
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
 
 
     @Override
@@ -135,7 +135,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mOverlay.getLayoutParams().height = mStartHeight;
         topLayout.getLayoutParams().height = mStartHeight;
         mToolBar.getLayoutParams().height = mCollapsedHeight;
-        mHandler = new Handler();
 
         final int tabStart = mStartHeight - getResources().getDimensionPixelSize(
                 R.dimen.tab_height) + getResources().getDimensionPixelSize(R.dimen.shadow_height);
@@ -194,6 +193,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 mCurrentPosition--;
                 if (mCurrentPosition < 0) mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                mHandler.removeCallbacks(mUserChangeRunnable);
+                mHandler.postDelayed(mUserChangeRunnable, 100);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
@@ -202,6 +203,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 mCurrentPosition++;
                 if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1) mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+                mHandler.removeCallbacks(mUserChangeRunnable);
+                mHandler.postDelayed(mUserChangeRunnable, 100);
             }
         });
 
@@ -234,17 +237,6 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         }
     };
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mRecyclerView.addOnScrollListener(mPageChangeListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mRecyclerView.removeOnScrollListener(mPageChangeListener);
-    }
 
     @Override
     protected void onDestroy() {
@@ -282,14 +274,12 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         mUserChangeListeners.remove(listener);
     }
 
-    private RecyclerView.OnScrollListener mPageChangeListener =
-            new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    onUserChange(mShowCaseAdapter.getUser(mCurrentPosition));
-                }
-            };
+    private Runnable mUserChangeRunnable = new Runnable() {
+        @Override
+        public void run() {
+            onUserChange(mShowCaseAdapter.getUser(mCurrentPosition));
+        }
+    };
 
     private void configureUI(int uiState) {
         Fragment f = null;
@@ -323,6 +313,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
     private class ShowCaseCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
+        private boolean otpFlag = true;
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -336,7 +327,10 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             this.cursor = data;
             mShowCaseAdapter.changeCursor(data);
             if (data.getCount() > 0) {
-                mPageChangeListener.onScrolled(mRecyclerView, 0, 0);
+                if (otpFlag) {
+                    otpFlag = false;
+                    mHandler.post(mUserChangeRunnable);
+                }
                 mOverlayVH.itemView.setVisibility(View.VISIBLE);
             }
         }

@@ -64,7 +64,6 @@ public class Product implements Serializable {
     }
 
     public String getImageUrl() {
-//        return "http://demo.eremotus-portal.com/products/28/28.jpg";
         return ImageFilePath.getImageUrlForProduct(id);
     }
 
