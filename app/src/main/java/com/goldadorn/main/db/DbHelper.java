@@ -36,7 +36,6 @@ public class DbHelper {
                     cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTDESC));
                     cv.put(Tables.Products.USER_ID, productObj.optInt(Constants.JsonConstants.USERID, response.userId));
                     cv.put(Tables.Products.COLLECTION_ID, productObj.optInt(Constants.JsonConstants.COLLECTION_ID, response.collectionId));
-                    cv.put(Tables.Products.IMAGEURL, ImageFilePath.getImageUrlForProduct(productObj.optInt(Constants.JsonConstants.PRODUCTID)));
                     cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
 
                     cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
@@ -130,6 +129,7 @@ public class DbHelper {
                             for (int j = 0; j < collarray.length(); j++) {
                                 JSONObject collObj = collarray.getJSONObject(j);
                                 ContentValues collcv = new ContentValues();
+                                collcv.put(Tables.Collections.USER_ID,userId);
                                 collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
                                 collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                                 int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
@@ -176,7 +176,6 @@ public class DbHelper {
                             ContentValues collcv = new ContentValues();
                             collcv.put(Tables.Collections.USER_ID, userId);
                             collcv.put(Tables.Collections.NAME, collObj.optString(Constants.JsonConstants.COLLECTIONTITLE, null));
-                            collcv.put(Tables.Collections.IMAGEURL, ImageFilePath.getImageUrlForCollection(collObj.optLong(Constants.JsonConstants.COLLECTION_ID)));
                             collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));

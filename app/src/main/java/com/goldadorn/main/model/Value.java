@@ -17,9 +17,6 @@ public class Value implements Serializable{
         this.valueName = valueName;
     }
     public Value(String keyID, String valueId) {
-        this.keyID = keyID;
-        this.keyName=keyID;
-        this.valueId = valueId;
-        this.valueName = valueId;
+        this(keyID,keyID,valueId,valueId);
     }
 }

@@ -35,7 +35,6 @@ public class Tables {
         public static final String COLLECTION_ID = "collectionids";
         public static final String USER_ID = "userid";
         public static final String NAME = "name";
-        public static final String IMAGEURL = "imageurl";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String PRICE = "price";
         public static final String PRICEUNIT = "currency";
@@ -71,7 +70,6 @@ public class Tables {
         public static final String USER_ID = "userid";
         public static final String NAME = "name";
         public static final String DESCRIPTION = "description";
-        public static final String IMAGEURL = "imageurl";
         public static final String CATEGORY = "category";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String COUNT_LIKES = "likes";
@@ -200,7 +198,6 @@ public class Tables {
                 Products.COLLECTION_ID + " INTEGER DEFAULT -1," +
                 Products.NAME + " TEXT," +
                 Products.DESCRIPTION + " TEXT," +
-                Products.IMAGEURL + " TEXT," +
                 Products.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Products.PRICE + " INTEGER," +
                 Products.PRICEUNIT + " TEXT," +
@@ -218,7 +215,6 @@ public class Tables {
                 Collections.NAME + " TEXT," +
                 Collections.DESCRIPTION + " TEXT," +
                 Collections.CATEGORY + " TEXT," +
-                Collections.IMAGEURL + " TEXT," +
                 Collections.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Collections.IS_LIKED + " INTEGER DEFAULT 0," +
