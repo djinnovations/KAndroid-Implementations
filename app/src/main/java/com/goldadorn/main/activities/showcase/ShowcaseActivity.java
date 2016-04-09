@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -327,7 +326,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(mContext, Users.CONTENT_URI, UserInfoCache.PROJECTION, null,
+            return new CursorLoader(mContext, Users.CONTENT_URI, null, null,
                     null, null);
         }
 
@@ -379,7 +378,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         public User getUser(int position) {
             if (cursor != null && cursor.moveToPosition(position))
-                return UserInfoCache.extractFromCursor(null, cursor);
+                return User.extractFromCursor(cursor);
             return null;
         }
 

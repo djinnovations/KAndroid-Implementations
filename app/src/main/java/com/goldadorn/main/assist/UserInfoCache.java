@@ -20,24 +20,7 @@ import java.util.Map;
 public class UserInfoCache {
     public final boolean DEBUG;
     public static final String USER_INFO_SERVICE = "userinfocache";
-    public static String[] PROJECTION = new String[]{Users._ID, Users.NAME, Users.DESCRIPTION,
-            Users.IMAGEURL, Users.TYPE, Users.COUNT_LIKES, Users.COUNT_FOLLOWING,
-            Users.COUNT_FOLLOWERS, Users.COUNT_COLLECTIONS, Users.COUNT_PRODUCTS, Users.TRENDING,Users.FEATURED,Users.IS_LIKED, Users.DATAVERSION};
     private static final String[] PROJECTION_CACHE_CHECK = new String[]{Users.DATAVERSION};
-    private static final int INDEX_ID = 0;
-    private static final int INDEX_NAME = 1;
-    private static final int INDEX_DESCRIPTION = 2;
-    private static final int INDEX_IMAGE = 3;
-    private static final int INDEX_TYPE = 4;
-    private static final int INDEX_COUNT_LIKES = 5;
-    private static final int INDEX_COUNT_FOLLOWING = 6;
-    private static final int INDEX_COUNT_FOLLOWERS = 7;
-    private static final int INDEX_COUNT_COLLECTION = 8;
-    private static final int INDEX_COUNT_PRODUCT = 9;
-    private static final int INDEX_TRENDING = 10;
-    private static final int INDEX_FEATURED = 11;
-    private static final int INDEX_ISLIKED= 12;
-    private static final int INDEX_DATAVERSION = 13;
 
     protected Context mContext;
     private PreLoader mPreload;
@@ -66,49 +49,6 @@ public class UserInfoCache {
         return new UserInfoCache(context, handler, true);
     }
 
-    public static void updateCacheAndDb(final Context context, final User user) {
-        boolean isUpdated = false;
-        if (mIsActive) {
-            isUpdated = getInstance(context).updateCache(user);
-        }
-        if (isUpdated || !mIsActive)
-            ((com.goldadorn.main.activities.Application) context.getApplicationContext()).postWork(new Runnable() {
-                @Override
-                public void run() {
-                    ContentValues cv = new ContentValues();
-                    cv.put(Users._ID, user.id);
-                    cv.put(Users.NAME, user.getName());
-                    cv.put(Users.DESCRIPTION, user.description);
-                    cv.put(Users.IMAGEURL, user.imageUrl);
-                    cv.put(Users.TRENDING, user.trending);
-                    cv.put(Users.FEATURED, user.featured);
-                    cv.put(Users.COUNT_FOLLOWERS, user.followers_cnt);
-                    cv.put(Users.COUNT_FOLLOWING, user.following_cnt);
-                    cv.put(Users.COUNT_LIKES, user.likes_cnt);
-                    cv.put(Users.COUNT_COLLECTIONS, user.collections_cnt);
-                    cv.put(Users.COUNT_PRODUCTS, user.products_cnt);
-
-                    Uri uri = Users.CONTENT_URI_NO_NOTIFICATION;
-                    String selection = Users._ID + " = ? ";
-                    String[] selection_args = new String[]{String.valueOf(user.id)};
-                    Cursor c = context.getContentResolver().query(uri, PROJECTION_CACHE_CHECK, selection, selection_args, null);
-                    int cnt = 0;
-                    long dbTsp = 0;
-                    if (c != null) {
-                        cnt = c.getCount();
-                        if (c.moveToFirst())
-                            dbTsp = c.getLong(0);
-                        c.close();
-                    }
-                    if (cnt == 0) {
-                        context.getContentResolver().insert(uri, cv);
-                    } else if (user.dataVersion > dbTsp) {
-                        context.getContentResolver().update(uri, cv, selection, selection_args);
-                    }
-                }
-            });
-
-    }
 
 
     protected UserInfoCache(Context context, Handler handler,
@@ -246,15 +186,15 @@ public class UserInfoCache {
             Cursor cursor = null;
             try {
                 cursor = mContext.getContentResolver().query(Users.CONTENT_URI,
-                        PROJECTION, null, null, null);
+                        null, null, null, null);
             } catch (Exception e) {
             }
             Map<Integer, User> cache = new HashMap<>();
             if (cursor != null && cursor.moveToFirst()) {
                 do {
-                    int id = cursor.getInt(INDEX_ID);
+                    int id = cursor.getInt(cursor.getColumnIndex(Users._ID));
                     User info = null;
-                    long lastUpdated = cursor.getLong(INDEX_DATAVERSION);
+                    long lastUpdated = cursor.getLong(cursor.getColumnIndex(Users.DATAVERSION));
                     if (cache.containsKey(id)) {
                         User cachedInfo = cache.get(id);
                         if (cachedInfo != null) {
@@ -264,10 +204,7 @@ public class UserInfoCache {
 
                     }
                     if (info == null) {
-                        info = new User(id, cursor.getType(INDEX_TYPE));
-                        info.dataVersion = lastUpdated;
-                        extractFromCursor(info, cursor);
-                        cache.put(id, info);
+                        cache.put(id, info=User.extractFromCursor(cursor));
                     }
 
                 } while (cursor.moveToNext());
@@ -345,37 +282,15 @@ public class UserInfoCache {
 //            return null;
         User info = null;
         try {
-            Cursor c = mContext.getContentResolver().query(Users.CONTENT_URI, PROJECTION,
+            Cursor c = mContext.getContentResolver().query(Users.CONTENT_URI,null,
                     Users._ID + " = ?", new String[]{String.valueOf(id)}, null);
-            if (c != null && c.moveToFirst()) {
-                info = new User(id, c.getInt(INDEX_TYPE));
-                info = extractFromCursor(info, c);
-            }
-            if (c != null)
-                c.close();
+            if(c.moveToFirst())
+            info=User.extractFromCursor(c);
         } catch (Exception e) {
         }
         return info;
     }
 
-    public static User extractFromCursor(User info, Cursor cursor) {
-        if (info == null) {
-            info = new User(cursor.getInt(INDEX_ID), cursor.getInt(INDEX_TYPE));
-        }
-        info.name = cursor.getString(INDEX_NAME);
-        info.description = cursor.getString(INDEX_DESCRIPTION);
-        info.imageUrl = cursor.getString(INDEX_IMAGE);
-        info.likes_cnt = cursor.getInt(INDEX_COUNT_LIKES);
-        info.followers_cnt = cursor.getInt(INDEX_COUNT_FOLLOWERS);
-        info.following_cnt = cursor.getInt(INDEX_COUNT_FOLLOWING);
-        info.collections_cnt = cursor.getInt(INDEX_COUNT_COLLECTION);
-        info.products_cnt = cursor.getInt(INDEX_COUNT_PRODUCT);
-        info.trending = cursor.getInt(INDEX_TRENDING)==1;
-        info.featured = cursor.getInt(INDEX_FEATURED)==1;
-        info.isLiked = cursor.getInt(INDEX_ISLIKED)==1;
-        info.dataVersion = cursor.getLong(INDEX_DATAVERSION);
-        return info;
-    }
 
 
     public User getUserInfo(int id, boolean force) {

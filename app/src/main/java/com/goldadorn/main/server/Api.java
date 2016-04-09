@@ -37,18 +37,6 @@ public class Api {
         L.d("User credentials " + response.mCookies);
     }
 
-    public static void getDesigners(Context context, TimelineResponse response, int retryCount) {
-        try {
-            generateUserCredentials(context, response);
-            ApiFactory.getDesigners(context, response);
-            if (response.success && response.responseContent != null) {
-                DbHelper.writeProductShowcaseData(context, response);
-            }
-        } catch (Exception e) {
-            extractException(context, response, e);
-            e.printStackTrace();
-        }
-    }
     public static void getSearchTags(Context context, SearchResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
@@ -70,7 +58,10 @@ public class Api {
                 response.responseContent = null;
                 response.success = false;
                 response.responseCode = -1;
-                getDesigners(context, response, 0);
+                ApiFactory.getDesigners(context, response);
+                if (response.success && response.responseContent != null) {
+                    DbHelper.writeProductShowcaseData(context, response);
+                }
             }
         } catch (Exception e) {
             extractException(context, response, e);
