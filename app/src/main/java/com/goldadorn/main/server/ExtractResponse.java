@@ -54,6 +54,7 @@ public class ExtractResponse {
             JSONArray productArray = new JSONArray(response.responseContent);
             for (int i = 0; i < productArray.length(); i++) {
                 response.productArray.add(new Product(productArray.getJSONObject(i).optInt("productId")));
+                response.idsForProducts.put(productArray.getJSONObject(i).optInt("productId"));
             }
         }
     }

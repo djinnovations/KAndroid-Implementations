@@ -7,7 +7,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
-import com.goldadorn.main.server.response.CreatePostResponse;
+import com.goldadorn.main.server.response.CreatepostResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -55,6 +55,10 @@ public class Api {
             ApiFactory.getWishlist(context, response);
             if (response.success && response.responseContent != null) {
                 ExtractResponse.extractGetWishlist(response);
+                response.responseContent = null;
+                response.success = false;
+                response.responseCode = -1;
+                getProducts(context, response, 0);
             }
         } catch (Exception e) {
             extractException(context, response, e);
@@ -74,7 +78,7 @@ public class Api {
         }
     }
 
-    public static void buyorNobuy(Context context, CreatePostResponse response, int retryCount) {
+    public static void buyorNobuy(Context context, CreatepostResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.buyorNobuy(context, response);
