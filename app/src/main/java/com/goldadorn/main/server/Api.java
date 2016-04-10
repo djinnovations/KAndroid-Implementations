@@ -48,6 +48,30 @@ public class Api {
             e.printStackTrace();
         }
     }
+    public static void getWishlist(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.getWishlist(context, response);
+            if (response.success && response.responseContent != null) {
+                ExtractResponse.extractGetWishlist(response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void addToWishlist(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.addToWishlist(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
 
     public static void getDesignersSocial(Context context, TimelineResponse response, int retryCount) {
         try {

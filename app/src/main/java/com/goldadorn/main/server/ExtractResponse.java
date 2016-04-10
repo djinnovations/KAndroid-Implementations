@@ -49,6 +49,15 @@ public class ExtractResponse {
         }
     }
 
+    protected static void extractGetWishlist(ProductResponse response) throws JSONException {
+        if (response.responseContent != null) {
+            JSONArray productArray = new JSONArray(response.responseContent);
+            for (int i = 0; i < productArray.length(); i++) {
+                response.productArray.add(new Product(productArray.getJSONObject(i).optInt("productId")));
+            }
+        }
+    }
+
     protected static void extractBasicProfile(ObjectResponse<ProfileData> response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject jsonObject = new JSONObject(response.responseContent);

@@ -52,6 +52,7 @@ public class ApiFactory extends ExtractResponse {
     private static final int BASIC_PROFILE_GET_TYPE = 15;
     private static final int FORGOT_PASSWORD = 17;
     private static final int SEARCH_TAG_TYPE = 18;
+    private static final int WISHLIST_TYPE = 19;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -81,6 +82,12 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
                 builder.appendPath("searchtag");
+                break;
+            }
+            case WISHLIST_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("wish");
                 break;
             }
             case NOTIFY_PAYMENT_TYPE: {
@@ -255,6 +262,68 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getSearchTags " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void getWishlist(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = WISHLIST_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = WISHLIST_TYPE;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void addToWishlist(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = WISHLIST_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = WISHLIST_TYPE;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("productId", response.productId);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("addToWishlist post body content " + jsonObject.toString());
+
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("addToWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
@@ -574,7 +643,7 @@ public class ApiFactory extends ExtractResponse {
                 e.printStackTrace();
             }
 
-            L.d("addToCart BODY "+jsonObject.toString());
+            L.d("addToCart BODY " + jsonObject.toString());
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
