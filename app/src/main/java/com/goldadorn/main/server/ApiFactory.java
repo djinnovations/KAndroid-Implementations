@@ -10,6 +10,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.Value;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.CreatepostResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -53,6 +54,7 @@ public class ApiFactory extends ExtractResponse {
     private static final int FORGOT_PASSWORD = 17;
     private static final int SEARCH_TAG_TYPE = 18;
     private static final int WISHLIST_TYPE = 19;
+    private static final int BUY_NOBUY_TYPE = 20;
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -88,6 +90,12 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("wish");
+                break;
+            }
+            case BUY_NOBUY_TYPE: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("createpost");
                 break;
             }
             case NOTIFY_PAYMENT_TYPE: {
@@ -324,6 +332,43 @@ public class ApiFactory extends ExtractResponse {
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("addToWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void buyorNobuy(Context context, CreatepostResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = BUY_NOBUY_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = BUY_NOBUY_TYPE;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("createpost_message", response.message);
+            jsonObject.put("createpost_type", response.type);
+            jsonObject.put("link1", response.imageurl);
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("buyorNobuy post body content " + jsonObject.toString());
+
+
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("buyorNobuy " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

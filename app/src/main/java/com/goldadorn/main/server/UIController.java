@@ -9,6 +9,7 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.server.response.CreatepostResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -297,6 +298,21 @@ public class UIController {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
                 Api.addToWishlist(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+    public static void buyorNobuy(final Context context, final CreatepostResponse response, final IResultListener<CreatepostResponse> listener){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.buyorNobuy(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

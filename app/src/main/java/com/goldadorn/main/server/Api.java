@@ -7,6 +7,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
+import com.goldadorn.main.server.response.CreatepostResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -65,6 +66,18 @@ public class Api {
         try {
             generateUserCredentials(context, response);
             ApiFactory.addToWishlist(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void buyorNobuy(Context context, CreatepostResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.buyorNobuy(context, response);
             if (response.success && response.responseContent != null) {
             }
         } catch (Exception e) {
