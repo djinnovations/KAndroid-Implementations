@@ -6,9 +6,10 @@ import android.text.TextUtils;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
-import com.goldadorn.main.model.Value;
+import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.CreatePostForBuyResponse;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -576,8 +577,8 @@ public class ApiFactory extends ExtractResponse {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.product.id);
             Product product = response.product;
-            for (Map.Entry<String, Value> entry : product.customisations.entrySet()) {
-                jsonObject.put(entry.getKey(), entry.getValue().valueId);
+            for (Map.Entry<OptionKey, OptionValue> entry : product.customisations.entrySet()) {
+                jsonObject.put(entry.getKey().keyID, entry.getValue().valueId);
             }
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETAL, product.primaryMetal);
 //            jsonObject.put(Constants.JsonConstants.PRIMARYMETALPURITY, product.primaryMetalPurity);
@@ -677,9 +678,9 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("priceUnits", response.product.getTotalPrice());
             jsonObject.put("orderQty", response.product.quantity);
             try {
-                for (Map.Entry<String, Value> entry : response.product.customisations.entrySet()) {
+                for (Map.Entry<OptionKey, OptionValue> entry : response.product.customisations.entrySet()) {
                     if (entry.getKey() != null && entry.getValue() != null) {
-                        jsonObject.put(entry.getKey(),
+                        jsonObject.put(entry.getKey().keyID,
                                 entry.getValue().valueId);
                     }
 

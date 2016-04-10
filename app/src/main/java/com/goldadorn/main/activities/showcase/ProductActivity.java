@@ -41,11 +41,12 @@ import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.model.Collection;
+import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.model.Value;
+import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -219,6 +220,7 @@ public class ProductActivity extends BaseDrawerActivity {
             public void onResult(ProductResponse result) {
                 if (result.success) {
                     mProductOptions = result.options;
+                    mProduct.addDefaultCustomisation(mProductOptions);
                     ProductCustomiseFragment f = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
                     if (f != null)
                         f.bindProductOptions(mProductOptions);
@@ -230,7 +232,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 mCollectionCallBack);
     }
 
-    public void addCustomisation(String key, Value value) {
+    public void addCustomisation(OptionKey key, OptionValue value) {
         Toast.makeText(mContext, key + " : " + value, Toast.LENGTH_SHORT).show();
         mProduct.addCustomisation(key, value);
         // call api for updated price

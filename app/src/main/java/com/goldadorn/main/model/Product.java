@@ -9,7 +9,9 @@ import com.goldadorn.main.utils.ImageFilePath;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kiran BH on 06/03/16.
@@ -28,7 +30,7 @@ public class Product implements Serializable {
 
 
     //customise variable
-    public final HashMap<String, Value> customisations = new HashMap<>();
+    public final HashMap<OptionKey, OptionValue> customisations = new HashMap<>();
     public boolean isLiked;
 //    public String primaryMetal;
 //    public String primaryMetalColor;
@@ -41,7 +43,7 @@ public class Product implements Serializable {
         this.id = id;
     }
 
-    public void addCustomisation(String key, Value value) {
+    public void addCustomisation(OptionKey key, OptionValue value) {
         if (value == null)
             customisations.remove(key);
         else
@@ -87,41 +89,41 @@ public class Product implements Serializable {
         Product p = new Product(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
         p.name = productInfo.optString(Constants.JsonConstants.PRODUCTLABEL);
         p.transid = productInfo.optInt("transId");
-//        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-//        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR);
-//        p.primaryMetalPurity = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY);
-//        p.centerStoneSelected = productInfo.optString(Constants.JsonConstants.CENTERSTONE);
-//        for (int i = 0; i < 11; i++) {
-//            if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
-//                p.accentStoneSelected.put(Constants.JsonConstants.ACCENTSTONE + i, productInfo.optString(Constants.JsonConstants.ACCENTSTONE + i));
-//            }
-//        }
-//        for (int i = 0; i < 11; i++) {
-//            if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
-//                p.gemStoneSelected.put(Constants.JsonConstants.GEMSTONE + i, productInfo.optString(Constants.JsonConstants.GEMSTONE + i));
-//            }
-//        }
         p.priceUnit = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
         p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.quantity = 1;
 
         // alternate customisation
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETAL,new Value(Constants.JsonConstants.PRIMARYMETAL, productInfo.optString(Constants.JsonConstants.PRIMARYMETAL)));
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALCOLOR, new Value(Constants.JsonConstants.PRIMARYMETALCOLOR,productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR)));
-        p.addCustomisation(Constants.JsonConstants.PRIMARYMETALPURITY,new Value(Constants.JsonConstants.PRIMARYMETALPURITY, productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY)));
-        p.addCustomisation(Constants.JsonConstants.CENTERSTONE,new Value(Constants.JsonConstants.CENTERSTONE, productInfo.optString(Constants.JsonConstants.CENTERSTONE)));
+        OptionValue v;
+        v = new OptionValue(productInfo.optString(Constants.JsonConstants.PRIMARYMETAL));
+        p.addCustomisation(new OptionKey(Constants.JsonConstants.PRIMARYMETAL), v);
+        v = new OptionValue(productInfo.optString(Constants.JsonConstants.PRIMARYMETALCOLOR));
+        p.addCustomisation(new OptionKey(Constants.JsonConstants.PRIMARYMETALCOLOR), v);
+        v = new OptionValue(productInfo.optString(Constants.JsonConstants.PRIMARYMETALPURITY));
+        p.addCustomisation(new OptionKey(Constants.JsonConstants.PRIMARYMETALPURITY), v);
+        v = new OptionValue(productInfo.optString(Constants.JsonConstants.CENTERSTONE));
+        p.addCustomisation(new OptionKey(Constants.JsonConstants.CENTERSTONE), v);
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.ACCENTSTONE + i)) {
                 String key = Constants.JsonConstants.ACCENTSTONE + i;
-                p.addCustomisation(key, new Value(key,productInfo.optString(key)));
+                v = new OptionValue(productInfo.optString(key));
+                p.addCustomisation(new OptionKey(key), v);
             }
         }
         for (int i = 0; i < 11; i++) {
             if (productInfo.has(Constants.JsonConstants.GEMSTONE + i)) {
                 String key = Constants.JsonConstants.GEMSTONE + i;
-                p.addCustomisation(key, new Value(key,productInfo.optString(key)));
+                v = new OptionValue(productInfo.optString(key));
+                p.addCustomisation(new OptionKey(key), v);
             }
         }
         return p;
+    }
+
+    public void addDefaultCustomisation(ProductOptions productOptions) {
+        for (Map.Entry<OptionKey, ArrayList<OptionValue>> entry : productOptions.customisationOptions) {
+            if (!entry.getKey().isOptional)
+                addCustomisation(entry.getKey(), entry.getValue().get(0));
+        }
     }
 }

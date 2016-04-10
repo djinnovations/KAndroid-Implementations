@@ -10,7 +10,8 @@ import android.widget.TextView;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ViewHolder;
-import com.goldadorn.main.model.Value;
+import com.goldadorn.main.model.OptionKey;
+import com.goldadorn.main.model.OptionValue;
 import com.rey.material.widget.CircleCheckedTextView;
 
 import java.util.AbstractMap;
@@ -27,8 +28,8 @@ class CustomizeMainHolder extends ViewHolder {
     private View separator;
     private LinearLayout extraLayout;
 
-    private IResultListener<Map.Entry<String, Value>> listener;
-    private Map.Entry<String, ArrayList<Value>> data;
+    private IResultListener<Map.Entry<OptionKey, OptionValue>> listener;
+    private Map.Entry<OptionKey, ArrayList<OptionValue>> data;
 
     public CustomizeMainHolder(View itemView) {
         super(itemView);
@@ -51,12 +52,12 @@ class CustomizeMainHolder extends ViewHolder {
         });
     }
 
-    public void bindUI(Map.Entry<String, ArrayList<Value>> option) {
+    public void bindUI(Map.Entry<OptionKey, ArrayList<OptionValue>> option) {
         data = option;
-        name.setText(option.getKey());
+        name.setText(option.getKey().getDisplayString());
     }
 
-    public void setOptionSelectedListener(IResultListener<Map.Entry<String, Value>> listener) {
+    public void setOptionSelectedListener(IResultListener<Map.Entry<OptionKey, OptionValue>> listener) {
         this.listener = listener;
     }
 
@@ -64,23 +65,23 @@ class CustomizeMainHolder extends ViewHolder {
         @Override
         public void onClick(View v) {
             if (listener != null)
-                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Value) v.getTag()));
+                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (OptionValue) v.getTag()));
         }
     };
 
 
     private void populateExtraLayout() {
-        List<Value> list = data.getValue();
+        List<OptionValue> list = data.getValue();
         for (int i = 0; i < list.size(); i++) {
-            Value s = list.get(i);
+            OptionValue s = list.get(i);
             View child = extraLayout.getChildAt(i);
             View v = LayoutInflater.from(extraLayout.getContext()).inflate(R.layout.item_customize_type, extraLayout, false);
             v.setTag(s);
             v.setOnClickListener(mItemClick);
             TextView tv = (TextView) v.findViewById(R.id.name);
             CircleCheckedTextView image = (CircleCheckedTextView) v.findViewById(R.id.image);
-            image.setText(s.valueName);
-            tv.setText(s.valueName);
+            image.setText(s.getDisplayString());
+            tv.setText(s.getDisplayString());
             v.setVisibility(View.VISIBLE);
             if (child == null) {
                 extraLayout.addView(v);

@@ -22,8 +22,9 @@ import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.ProductOptions;
-import com.goldadorn.main.model.Value;
+import com.goldadorn.main.model.OptionValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,9 +149,9 @@ public class ProductCustomiseFragment extends Fragment {
     };
 
 
-    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<String, Value>> {
+    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<OptionKey, OptionValue>> {
 
-        List<Map.Entry<String, ArrayList<Value>>> options;
+        List<Map.Entry<OptionKey, ArrayList<OptionValue>>> options;
 
         public CustomizeMainAdapter(Context context) {
             super(context, true);
@@ -163,7 +164,7 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
-            Map.Entry<String, ArrayList<Value>> option = options.get(position);
+            Map.Entry<OptionKey, ArrayList<OptionValue>> option = options.get(position);
             holder.setOptionSelectedListener(this);
             holder.bindUI(option);
         }
@@ -173,14 +174,14 @@ public class ProductCustomiseFragment extends Fragment {
             return options == null ? 0 : options.size();
         }
 
-        public void changeData(List<Map.Entry<String, ArrayList<Value>>> optionsList) {
+        public void changeData(List<Map.Entry<OptionKey, ArrayList<OptionValue>>> optionsList) {
             options = optionsList;
             Log.d("changeData ", "" + optionsList.size());
             notifyDataSetChanged();
         }
 
         @Override
-        public void onResult(Map.Entry<String, Value> result) {
+        public void onResult(Map.Entry<OptionKey, OptionValue> result) {
             mProductActivity.addCustomisation(result.getKey(), result.getValue());
         }
     }

@@ -17,28 +17,20 @@ import java.util.Map;
 public class ProductOptions {
 
     private final int id;
-    ///customization variables
-//    public float makingCharge;
-//    public String makingChargeUnit;
-//    public float primaryMetalPrice;
-//    public String primaryMetalPriceUnits;
-//    public float stonePrice;
-//    public String stonePriceUnit;
-
     public String priceUnit;
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
-    public final ArrayList<Map.Entry<String, ArrayList<Value>>> customisationOptions = new ArrayList<>();
+    public final ArrayList<Map.Entry<OptionKey, ArrayList<OptionValue>>> customisationOptions = new ArrayList<>();
 
     public ProductOptions(int id) {
         this.id = id;
     }
 
-    private static void extract(JSONObject productInfo, String key, List<Map.Entry<String, ArrayList<Value>>> map) throws JSONException {
-        if (productInfo.has(key)) {
-            JSONArray ja = productInfo.getJSONArray(key);
-            ArrayList<Value> options = new ArrayList<>();
+    private static void extract(JSONObject productInfo, OptionKey key, List<Map.Entry<OptionKey, ArrayList<OptionValue>>> map) throws JSONException {
+        if (productInfo.has(key.keyName)) {
+            JSONArray ja = productInfo.getJSONArray(key.keyName);
+            ArrayList<OptionValue> options = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
-                options.add(new Value(key,ja.getString(i)));
+                options.add(new OptionValue(ja.getString(i)));
             }
             map.add(new AbstractMap.SimpleEntry<>(key, options));
         }
@@ -53,25 +45,17 @@ public class ProductOptions {
 
         p.priceUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
 
-
-//        p.makingCharge = (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES);
-//        p.makingChargeUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
-//        p.primaryMetalPrice = (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
-//        p.primaryMetalPriceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
-//        p.stonePrice = (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
-//        p.stonePriceUnit = productInfo.optString(Constants.JsonConstants.STONEPRICEUNITS);
-
-        extract(productInfo, Constants.JsonConstants.METALLIST, p.customisationOptions);
-        extract(productInfo, Constants.JsonConstants.METALPURITYLIST, p.customisationOptions);
-        extract(productInfo, Constants.JsonConstants.METALCOLORLIST, p.customisationOptions);
-        extract(productInfo, Constants.JsonConstants.CENTERSTONE, p.customisationOptions);
+        extract(productInfo, new OptionKey(Constants.JsonConstants.METALLIST, false), p.customisationOptions);
+        extract(productInfo, new OptionKey(Constants.JsonConstants.METALPURITYLIST, true), p.customisationOptions);
+        extract(productInfo, new OptionKey(Constants.JsonConstants.METALCOLORLIST, true), p.customisationOptions);
+        extract(productInfo, new OptionKey(Constants.JsonConstants.CENTERSTONE, false), p.customisationOptions);
 
         for (int i = 0; i < 11; i++) {
-            String key = Constants.JsonConstants.ACCENTSTONE + i;
+            OptionKey key = new OptionKey(Constants.JsonConstants.ACCENTSTONE + i, true);
             extract(productInfo, key, p.customisationOptions);
         }
         for (int i = 0; i < 11; i++) {
-            String key = Constants.JsonConstants.GEMSTONE + i;
+            OptionKey key = new OptionKey(Constants.JsonConstants.GEMSTONE + i, true);
             extract(productInfo, key, p.customisationOptions);
         }
         return p;
