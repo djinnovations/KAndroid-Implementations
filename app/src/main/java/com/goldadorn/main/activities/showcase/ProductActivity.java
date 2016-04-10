@@ -492,8 +492,12 @@ public class ProductActivity extends BaseDrawerActivity {
             } else if (v == buyNoBuyButton) {
                 startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
             } else if (v == wishlistButton) {
-                //todo wishlist click
-                Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
+                UIController.addToWhishlist(v.getContext(), ProductResponse.getWishlistResponse(mProduct), new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                            Toast.makeText(mContext, "Added to wishlist "+result.success, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else if (v == cartButton) {
                 addToCart();
             } else if (v == followButton) {

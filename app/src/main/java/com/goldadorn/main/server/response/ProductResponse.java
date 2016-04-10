@@ -23,5 +23,11 @@ public class ProductResponse extends BasicResponse {
     public JSONArray idsForProducts = new JSONArray();
 
     //for get cart api
-    public final ArrayList<Product> productArray= new ArrayList<>();
+    public final ArrayList<Product> productArray = new ArrayList<>();
+
+    public static ProductResponse getWishlistResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.productId = product.id;
+        return response;
+    }
 }

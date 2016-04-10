@@ -101,7 +101,7 @@ public class ProductsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -162,7 +162,7 @@ public class ProductsFragment extends Fragment {
 
 
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
-            SwipeFlingAdapterView.onFlingListener,SwipeFlingAdapterView.OnItemClickListener {
+            SwipeFlingAdapterView.onFlingListener, SwipeFlingAdapterView.OnItemClickListener {
 
         private Context context;
         private final List<Product> products = new ArrayList<>();
@@ -193,8 +193,8 @@ public class ProductsFragment extends Fragment {
             ProductViewHolder holder;
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
-                                                             .inflate(R.layout.layout_product_card,
-                                                                     parent, false));
+                        .inflate(R.layout.layout_product_card,
+                                parent, false));
                 convertView = holder.itemview;
                 convertView.setTag(holder);
                 convertView.setOnClickListener(this);
@@ -251,11 +251,14 @@ public class ProductsFragment extends Fragment {
             } else if (id == R.id.buyNoBuyButton) {
                 startActivity(PostPollActivity.getLaunchIntent(context, mProduct));
             } else if (id == R.id.wishlistButton) {
-                //todo wishlist click
-                Toast.makeText(v.getContext(), "wishlist click!", Toast.LENGTH_SHORT).show();
+                UIController.addToWhishlist(v.getContext(), ProductResponse.getWishlistResponse(mProduct), new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        Toast.makeText(getContext(), "Added to wishlist" + result.success, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
-                Product product = (Product) v.getTag(PRODUCT);
-                goToProductPage(v.getContext(), product);
+                goToProductPage(v.getContext(), mProduct);
             }
         }
 
@@ -373,11 +376,11 @@ public class ProductsFragment extends Fragment {
     }
 
     private void isLikedHover(boolean value) {
-        mLikeBg.setVisibility(value?View.VISIBLE:View.GONE);
+        mLikeBg.setVisibility(value ? View.VISIBLE : View.GONE);
     }
 
     private void isDislikedHover(boolean value) {
-        mDisLikeBg.setVisibility(value?View.VISIBLE:View.GONE);
+        mDisLikeBg.setVisibility(value ? View.VISIBLE : View.GONE);
     }
 
     private void showEmptyView(boolean isEmpty) {
