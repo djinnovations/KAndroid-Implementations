@@ -9,7 +9,7 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.server.response.CreatepostResponse;
+import com.goldadorn.main.server.response.CreatePostResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -308,7 +308,7 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
-    public static void buyorNobuy(final Context context, final CreatepostResponse response, final IResultListener<CreatepostResponse> listener){
+    public static void buyorNobuy(final Context context, final CreatePostResponse response, final IResultListener<CreatePostResponse> listener){
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

@@ -1,17 +1,24 @@
 package com.goldadorn.main.activities.post;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.CreatePostResponse;
 import com.goldadorn.main.utils.GalleryImageSelector;
+import com.goldadorn.main.views.ColoredSnackbar;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -27,6 +34,7 @@ public class PostPollActivity extends AbstractPostActivity {
 
     private GalleryImageSelector imageSelector1;
     private Product mProduct;
+    private ProgressDialog mProgressDialog;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent in = new Intent(context, PostPollActivity.class);
@@ -67,10 +75,40 @@ public class PostPollActivity extends AbstractPostActivity {
         return null;
     }
 
+    @Override
+    protected void postNow() {
+        if (mProduct == null)
+            super.postNow();
+        else {
+            String valid = isValid();
+            if (valid == null) {
+                if (mProgressDialog == null) {
+                    mProgressDialog = new ProgressDialog(PostPollActivity.this);
+                    mProgressDialog.setMessage("Loading");
+                    mProgressDialog.setCancelable(false);
+                }
+                mProgressDialog.show();
+                UIController.buyorNobuy(PostPollActivity.this, new CreatePostResponse(0, details.getText().toString(), mProduct.getImageUrl()), new IResultListener<CreatePostResponse>() {
+                    @Override
+                    public void onResult(CreatePostResponse result) {
+                        mProgressDialog.dismiss();
+                        if (result.success) {
+                            finish();
+                        } else {
+                            Toast.makeText(PostPollActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                Snackbar snackbar = Snackbar.make(layoutParent, valid, Snackbar.LENGTH_SHORT);
+                ColoredSnackbar.alert(snackbar).show();
+            }
+        }
+    }
 
     protected List<String> getLinks() {
-        if(mProduct!=null){
-            List<String> t= new ArrayList<>();
+        if (mProduct != null) {
+            List<String> t = new ArrayList<>();
             t.add(mProduct.getImageUrl());
             return t;
         }
