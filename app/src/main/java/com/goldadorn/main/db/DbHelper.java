@@ -2,6 +2,7 @@ package com.goldadorn.main.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 
 import com.goldadorn.main.constants.Constants;
@@ -214,12 +215,31 @@ public class DbHelper {
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
             cv.put(Tables.Products.IS_LIKED, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
+
         } else if (response.collectionId != -1) {
             cv.put(Tables.Collections.IS_LIKED, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Collections.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
         } else if (response.userId != -1) {
             cv.put(Tables.Users.IS_LIKED, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Users.CONTENT_URI, null, Tables.Users._ID + " = ? ", new String[]{response.userId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Users.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Users.COUNT_LIKES)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
         }
     }
@@ -228,12 +248,30 @@ public class DbHelper {
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
             cv.put(Tables.Products.IS_LIKED, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
         } else if (response.collectionId != -1) {
             cv.put(Tables.Collections.IS_LIKED, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Collections.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
         } else if (response.userId != -1) {
             cv.put(Tables.Users.IS_LIKED, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Users.CONTENT_URI, null, Tables.Users._ID + " = ? ", new String[]{response.userId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Users.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Users.COUNT_LIKES)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
             context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
         }
     }

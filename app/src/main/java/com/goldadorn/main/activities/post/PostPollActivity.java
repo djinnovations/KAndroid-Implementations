@@ -16,7 +16,7 @@ import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.server.UIController;
-import com.goldadorn.main.server.response.CreatepostResponse;
+import com.goldadorn.main.server.response.CreatePostForBuyResponse;
 import com.goldadorn.main.utils.GalleryImageSelector;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.squareup.picasso.Picasso;
@@ -88,9 +88,9 @@ public class PostPollActivity extends AbstractPostActivity {
                     mProgressDialog.setCancelable(false);
                 }
                 mProgressDialog.show();
-                UIController.buyorNobuy(PostPollActivity.this, new CreatepostResponse(0, details.getText().toString(), mProduct.getImageUrl()), new IResultListener<CreatepostResponse>() {
+                UIController.buyorNobuy(PostPollActivity.this, new CreatePostForBuyResponse(0, details.getText().toString(), mProduct.getImageUrl()), new IResultListener<CreatePostForBuyResponse>() {
                     @Override
-                    public void onResult(CreatepostResponse result) {
+                    public void onResult(CreatePostForBuyResponse result) {
                         mProgressDialog.dismiss();
                         if (result.success) {
                             finish();

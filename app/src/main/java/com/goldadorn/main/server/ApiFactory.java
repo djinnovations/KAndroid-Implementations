@@ -10,7 +10,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.Value;
 import com.goldadorn.main.server.response.BasicResponse;
-import com.goldadorn.main.server.response.CreatepostResponse;
+import com.goldadorn.main.server.response.CreatePostForBuyResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -339,7 +339,7 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void buyorNobuy(Context context, CreatepostResponse response) throws IOException, JSONException {
+    protected static void buyorNobuy(Context context, CreatePostForBuyResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
