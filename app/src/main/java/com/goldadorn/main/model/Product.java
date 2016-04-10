@@ -29,15 +29,8 @@ public class Product implements Serializable {
     public int likecount;
 
 
-    //customise variable
     public final HashMap<OptionKey, OptionValue> customisations = new HashMap<>();
     public boolean isLiked;
-//    public String primaryMetal;
-//    public String primaryMetalColor;
-//    public String primaryMetalPurity;
-//    public String centerStoneSelected;
-//    public final HashMap<String, String> accentStoneSelected = new HashMap<>();
-//    public final HashMap<String, String> gemStoneSelected = new HashMap<>();
 
     public Product(int id) {
         this.id = id;
