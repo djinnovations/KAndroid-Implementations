@@ -21,13 +21,25 @@ public class ProductResponse extends BasicResponse {
     public ProductOptions options;
 
     public JSONArray idsForProducts = new JSONArray();
+    //for get cart api and wishlist
+    public final ArrayList<Product> productArray;
+    public final boolean writeToDb;
 
-    //for get cart api
-    public final ArrayList<Product> productArray = new ArrayList<>();
+    private ProductResponse(boolean writeToDb, boolean fillList) {
+        this.writeToDb = writeToDb;
+        productArray = fillList ? new ArrayList<Product>() : null;
+    }
+    public ProductResponse() {
+       this(true,false);
+    }
 
     public static ProductResponse getWishlistResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.productId = product.id;
+        return response;
+    }
+    public static ProductResponse getCartResponse() {
+        ProductResponse response = new ProductResponse(false,true);
         return response;
     }
 }

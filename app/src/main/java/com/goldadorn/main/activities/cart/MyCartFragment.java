@@ -63,7 +63,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
 
         ((ILoadingProgress) getActivity()).showLoading(true);
-        UIController.getCartDetails(getContext(), new ProductResponse(), new IResultListener<ProductResponse>() {
+        UIController.getCartDetails(getContext(), ProductResponse.getCartResponse(), new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success && result.productArray != null) {

@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
@@ -29,20 +30,38 @@ public class DbHelper {
             if (productsArray.length() != 0) {
                 for (int i = 0; i < productsArray.length(); i++) {
                     JSONObject productObj = productsArray.getJSONObject(i);
-                    ContentValues cv = new ContentValues();
-                    cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCTID));
+                    int productID = productObj.optInt(Constants.JsonConstants.PRODUCTID);
+                    if (response.writeToDb) {
+                        ContentValues cv = new ContentValues();
+                        cv.put(Tables.Products._ID, productID);
 //                    cv.put(Tables.Products.COUNT_LIKES, productObj.optInt(Constants.JsonConstants.LIKECOUNT));
-                    cv.put(Tables.Products.NAME, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
-                    cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTDESC));
-                    cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
+                        cv.put(Tables.Products.NAME, productObj.optString(Constants.JsonConstants.PRODUCTLABEL));
+                        cv.put(Tables.Products.DESCRIPTION, productObj.optString(Constants.JsonConstants.PRODUCTDESC));
+                        cv.put(Tables.Collections.IMAGE_ASPECT_RATIO, productObj.optDouble(Constants.JsonConstants.ASPECTRATIO));
 
-                    cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
-                    cv.put(Tables.Products.PRICEUNIT, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
-                    int updatecount = context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                        cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
+                        cv.put(Tables.Products.PRICEUNIT, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
+                        context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
+                    }
+                    if (response.productArray != null) {
+                        Product temp = new Product(productID);
+                        int index = response.productArray.indexOf(temp);
+                        if (index != -1) {
+                            Product p = response.productArray.get(index);
+                            p.name = productObj.optString(Constants.JsonConstants.PRODUCTLABEL);
+                            p.description = productObj.optString(Constants.JsonConstants.PRODUCTDESC);
+                            p.image_a_r = (float) productObj.optDouble(Constants.JsonConstants.ASPECTRATIO);
+                            p.unitPrice = productObj.optLong(Constants.JsonConstants.PRODUCTPRICE);
+                            p.priceUnit = productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
+                        }
+
+                    }
                 }
-                context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
+                if (response.writeToDb)
+                    context.getContentResolver().notifyChange(Tables.Products.CONTENT_URI, null);
             }
         }
+
     }
 
     public static void writeProductsSocial(Context context, ProductResponse response) throws JSONException {

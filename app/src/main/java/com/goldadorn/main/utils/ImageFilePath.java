@@ -156,7 +156,7 @@ public class ImageFilePath
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    public static String getImageUrlForCollection(long collid){
+    public static String getImageUrlForCollection(int collid){
         return ApiFactory.IMAGE_URL_HOST+"collections/"+collid+"/"+collid+".jpg";
     }
     public static String getImageUrlForProduct(int productid){

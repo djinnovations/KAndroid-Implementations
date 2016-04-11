@@ -39,18 +39,17 @@ public class ExtractResponse {
 
 
     protected static void extractGetCart(ProductResponse response) throws JSONException {
-        if (response.responseContent != null) {
+        if (response.responseContent != null && response.productArray != null) {
             JSONArray productArray = new JSONArray(response.responseContent);
             for (int i = 0; i < productArray.length(); i++) {
                 response.productArray.add(Product.extractGetCartProductList(productArray.getJSONObject(i)));
-
             }
 
         }
     }
 
     protected static void extractGetWishlist(ProductResponse response) throws JSONException {
-        if (response.responseContent != null) {
+        if (response.responseContent != null && response.productArray != null) {
             JSONArray productArray = new JSONArray(response.responseContent);
             for (int i = 0; i < productArray.length(); i++) {
                 response.productArray.add(new Product(productArray.getJSONObject(i).optInt("productId")));
