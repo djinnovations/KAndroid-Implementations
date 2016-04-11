@@ -34,7 +34,7 @@ public class ProductResponse extends BasicResponse {
         this(true, false);
     }
 
-    public static ProductResponse getAddToWishlistResponse(Product product) {
+    public static ProductResponse getAddToListResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.productId = product.id;
         return response;

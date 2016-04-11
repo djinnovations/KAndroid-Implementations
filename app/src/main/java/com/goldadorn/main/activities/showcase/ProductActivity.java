@@ -494,7 +494,7 @@ public class ProductActivity extends BaseDrawerActivity {
             } else if (v == buyNoBuyButton) {
                 startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
             } else if (v == wishlistButton) {
-                UIController.addToWhishlist(v.getContext(), ProductResponse.getAddToWishlistResponse(mProduct), new IResultListener<ProductResponse>() {
+                UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
                             Toast.makeText(mContext, "Added to wishlist "+result.success, Toast.LENGTH_SHORT).show();

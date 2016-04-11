@@ -251,7 +251,7 @@ public class ProductsFragment extends Fragment {
             } else if (id == R.id.buyNoBuyButton) {
                 startActivity(PostPollActivity.getLaunchIntent(context, mProduct));
             } else if (id == R.id.wishlistButton) {
-                UIController.addToWhishlist(v.getContext(), ProductResponse.getAddToWishlistResponse(mProduct), new IResultListener<ProductResponse>() {
+                UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
                         Toast.makeText(getContext(), "Added to wishlist" + result.success, Toast.LENGTH_SHORT).show();
