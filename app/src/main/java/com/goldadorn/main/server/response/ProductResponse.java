@@ -29,17 +29,18 @@ public class ProductResponse extends BasicResponse {
         this.writeToDb = writeToDb;
         productArray = fillList ? new ArrayList<Product>() : null;
     }
+
     public ProductResponse() {
-       this(true,false);
+        this(true, false);
     }
 
-    public static ProductResponse getWishlistResponse(Product product) {
+    public static ProductResponse getAddToWishlistResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.productId = product.id;
         return response;
     }
-    public static ProductResponse getCartResponse() {
-        ProductResponse response = new ProductResponse(false,true);
-        return response;
+
+    public static ProductResponse getListResponse() {
+        return new ProductResponse(false, true);
     }
 }
