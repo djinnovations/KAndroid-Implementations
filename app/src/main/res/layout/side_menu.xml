@@ -1,352 +1,416 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/nav_header_height"
-    android:layout_height="wrap_content">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/nav_header_height"
+            android:orientation="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/menuButtonHeight" android:orientation="horizontal">
-        <RelativeLayout tools:background="#ddffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_home"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_home"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelHome"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/home"
-                android:textSize="16sp"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menuButtonHeight"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#ddffcc">
+
+                <ImageButton
+                    android:id="@+id/nav_home"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_home"/>
+
+                <TextView
+                    android:id="@+id/labelHome"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/home"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
 
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#66ffcc">
 
-        <RelativeLayout tools:background="#66ffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_timeline"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_time_line"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelTimeLine"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/timeline"
-                android:gravity="center_horizontal"
-                android:textSize="16sp"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/menuButtonHeight" android:orientation="horizontal">
-        <RelativeLayout tools:background="#ddffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_showcase"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_people"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelShowcase"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/showcase"
-                android:textSize="16sp"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/nav_timeline"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_time_line"/>
+
+                <TextView
+                    android:id="@+id/labelTimeLine"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/timeline"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menuButtonHeight"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#ddffcc">
+
+                <ImageButton
+                    android:id="@+id/nav_showcase"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_people"/>
+
+                <TextView
+                    android:id="@+id/labelShowcase"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/showcase"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
 
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#66ffcc">
 
-        <RelativeLayout tools:background="#66ffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                         android:id="@+id/nav_cart"
-                         android:layout_width="@dimen/circle_button_small1_height"
-                         android:layout_height="@dimen/circle_button_small1_height"
-                         android:layout_marginTop="10dp"
-                         android:src="@drawable/vector_icon_people"
-                         android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelCart"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cart"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:textSize="16sp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_collections"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                         android:visibility="gone"
-                android:src="@drawable/vector_icon_people"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelCollection"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/collections"
-                android:textSize="16sp"
+                <ImageButton
+                    android:id="@+id/nav_cart"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_people"/>
+
+                <TextView
+                    android:id="@+id/labelCart"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/cart"
+                    android:textSize="16sp"/>
+
+                <ImageButton
+                    android:id="@+id/nav_collections"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_people"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/labelCollection"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/collections"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menuButtonHeight"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#ddffcc">
+
+                <ImageButton
+                    android:id="@+id/nav_wishlist"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_wishlist"
+                    android:tint="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/labelWishlist"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/wishlist"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                tools:background="#66ffcc">
+
+                <ImageButton
+                    android:id="@+id/nav_shop_by"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_shop_by"/>
+
+                <TextView
+                    android:id="@+id/labelshopBy"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/shopBy"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:visibility="gone"
-                android:gravity="center_horizontal"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
-    </LinearLayout>
-    <LinearLayout
-        android:visibility="gone"
-        android:layout_width="match_parent" android:layout_height="@dimen/menuButtonHeight" android:orientation="horizontal">
-        <!--<RelativeLayout tools:background="#ddffcc" android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">-->
-            <!--<ImageButton style="@style/menuButton"-->
-                <!--android:id="@+id/nav_cart"-->
-                <!--android:layout_width="@dimen/circle_button_small1_height"-->
-                <!--android:layout_height="@dimen/circle_button_small1_height"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:src="@drawable/vector_icon_people"-->
-                <!--android:layout_centerHorizontal="true" />-->
-            <!--<TextView-->
-                <!--android:id="@+id/labelCart"-->
-                <!--style="@style/menuButtonLabel"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/cart"-->
-                <!--android:gravity="center_horizontal"-->
-                <!--android:layout_marginBottom="15dp"-->
-                <!--android:textSize="16sp"-->
-                <!--android:layout_alignParentBottom="true"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentStart="true" />-->
-        <!--</RelativeLayout>-->
+                tools:background="#66ffcc">
 
-        <RelativeLayout tools:background="#66ffcc"
-                        android:visibility="visible"
-            android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_shop_by"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_shop_by"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelshopBy"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/shopBy"
-                android:gravity="center_horizontal"
-                android:textSize="16sp"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
+                <ImageButton
+                    android:id="@+id/nav_feed"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_feeds"/>
 
+                <TextView
+                    android:id="@+id/labelFeed"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/socialFeeds"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+        </LinearLayout>
 
-        <RelativeLayout tools:background="#66ffcc"
-            android:visibility="gone"
-            android:layout_height="match_parent" android:layout_weight="1" android:layout_width="0dp">
-            <ImageButton style="@style/menuButton"
-                android:id="@+id/nav_feed"
-                android:layout_width="@dimen/circle_button_small1_height"
-                android:layout_height="@dimen/circle_button_small1_height"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/vector_icon_feeds"
-                android:layout_centerHorizontal="true" />
-            <TextView
-                android:id="@+id/labelFeed"
-                style="@style/menuButtonLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/socialFeeds"
-                android:gravity="center_horizontal"
-                android:textSize="16sp"
-                android:layout_marginBottom="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-        </RelativeLayout>
-    </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/socialLoginButtonNormalStart"/>
 
-    <View
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/socialLoginButtonNormalStart" android:layout_width="match_parent" android:layout_height=".5dp"/>
+        <Button
+            android:id="@+id/nav_share"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
 
-    <Button
-        android:id="@+id/nav_share"
-        android:text="@string/share"
-        style="@style/linkButton"
-        android:textSize="16sp"
-        android:gravity="left|center_vertical"
-        android:layout_width="match_parent"
+            android:text="@string/share"
+            android:textSize="16sp"/>
 
-        android:layout_marginLeft="10dp"
-        android:layout_height="40dp"/>
-
-    <Button
-        android:id="@+id/nav_share_facebook"
-        android:text="@string/inviteFacebookFriends"
-        style="@style/linkButton"
-        android:visibility="gone"
-        android:layout_marginLeft="10dp"
-        android:textSize="16sp"
-        android:gravity="left|center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        <Button
+            android:id="@+id/nav_share_facebook"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/inviteFacebookFriends"
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
 
-    <Button
-        android:id="@+id/nav_rate_us"
-        android:text="@string/rateAPP"
-        style="@style/linkButton"
-        android:layout_marginLeft="10dp"
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:gravity="left|center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"/>
+        <Button
+            android:id="@+id/nav_rate_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/rateAPP"
+            android:textSize="16sp"
+            android:visibility="gone"/>
 
-    <Button
-        android:id="@+id/nav_contact_us"
-        android:text="@string/contactUs"
-        style="@style/linkButton"
-        android:layout_marginLeft="10dp"
-        android:textSize="16sp"
-        android:gravity="left|center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"/>
-
-
+        <Button
+            android:id="@+id/nav_contact_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/contactUs"
+            android:textSize="16sp"/>
 
 
         <Button
             android:id="@+id/nav_my_profile"
-            android:text="@string/myProfile"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/myProfile"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/nav_order_tracking"
-            android:text="@string/orderTracking"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/orderTracking"
+            android:textSize="16sp"/>
 
 
         <Button
             android:id="@+id/nav_about_us"
-            android:text="@string/aboutUS"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/aboutUS"
+            android:textSize="16sp"/>
 
 
         <Button
             android:id="@+id/nav_faqs"
-            android:text="@string/faqs"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/faqs"
+            android:textSize="16sp"/>
 
 
         <Button
             android:id="@+id/nav_shipping_and_return"
-            android:text="@string/shippingAndReturnPolicy"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/shippingAndReturnPolicy"
+            android:textSize="16sp"/>
 
 
         <Button
             android:id="@+id/nav_privacy_policy"
-            android:text="@string/privacyPolicy"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/privacyPolicy"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/nav_terms_conditions"
-            android:text="@string/termsAndConditions"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/termsAndConditions"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/nav_settings"
-            android:text="@string/settings"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/settings"
+            android:textSize="16sp"/>
 
         <Button
             android:id="@+id/nav_logout"
-            android:text="@string/logout"
             style="@style/linkButton"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="20dp"
-            android:textSize="16sp"
-            android:gravity="left|center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="40dp"/>
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/logout"
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

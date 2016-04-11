@@ -107,6 +107,7 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_showcase, R.string.showcase, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ShowcaseActivity.class);
         addItem(menu, R.id.nav_collections, R.string.collections, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, TestActivity.class);
         addItem(menu, R.id.nav_cart, R.string.cart, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CartManagerActivity.class);
+        addItem(menu, R.id.nav_wishlist, R.string.wishlist, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, WishListManagerActivity.class);
 
 
         //UsersTimeLineFragment
@@ -121,7 +122,7 @@ public class Application extends BaseApplication {
 
         addItem(menu, R.id.nav_my_profile, R.string.myProfile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
         addItem(menu, R.id.nav_edit_profile, R.string.edit_profile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
-        addItem(menu, R.id.nav_order_tracking, R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, WishListManagerActivity.class);
+        addItem(menu, R.id.nav_order_tracking, R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
 
 
         addItem(menu, R.id.nav_my_notifications, R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);
