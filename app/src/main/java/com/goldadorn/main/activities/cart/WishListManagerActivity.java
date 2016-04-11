@@ -44,7 +44,12 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         public void onClick(View v) {
             if (v.getTag() != null && v.getTag() instanceof Product) {
                 Product p = (Product) v.getTag();
-                //TODO kiran add cart click
+                UIController.addToCart(mContext, p, new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        Toast.makeText(mContext, result.success ? "Added to Cart" : "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     };
