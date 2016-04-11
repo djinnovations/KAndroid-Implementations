@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
+import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.icons.GoldadornIconFont;
@@ -120,7 +121,7 @@ public class Application extends BaseApplication {
 
         addItem(menu, R.id.nav_my_profile, R.string.myProfile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
         addItem(menu, R.id.nav_edit_profile, R.string.edit_profile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
-        addItem(menu, R.id.nav_order_tracking, R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
+        addItem(menu, R.id.nav_order_tracking, R.string.orderTracking, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, WishListManagerActivity.class);
 
 
         addItem(menu, R.id.nav_my_notifications, R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);

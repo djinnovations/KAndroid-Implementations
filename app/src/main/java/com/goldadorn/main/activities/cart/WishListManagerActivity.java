@@ -12,6 +12,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.ILoadingProgress;
@@ -20,8 +23,12 @@ import com.goldadorn.main.assist.ViewHolder;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Kiran BH on 08/03/16.
@@ -31,6 +38,24 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     private Context mContext;
     private RecyclerView mRecyclerView;
     private Adapter mAdapter;
+    private View.OnClickListener mAddToCartClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getTag()!=null && v.getTag() instanceof Product){
+                Product p = (Product) v.getTag();
+                //TODO kiran add cart click
+            }
+        }
+    };
+    private View.OnClickListener mDeleteClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(v.getTag()!=null && v.getTag() instanceof Product){
+                Product p = (Product) v.getTag();
+                //TODO kiran delete click
+            }
+        }
+    };
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, WishListManagerActivity.class);
@@ -71,25 +96,40 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mProgressDialog!=null && mProgressDialog.isShowing())
+            mProgressDialog.dismiss();
+    }
+
+    @Override
     public void showLoading(boolean show) {
         if (show) mProgressDialog.show();
         else mProgressDialog.dismiss();
     }
 
-    private class Adapter extends RecyclerView.Adapter<ViewHolder> {
+    private class Adapter extends RecyclerView.Adapter<WishlistViewHolder> {
 
-        private ArrayList<Product> products;
+        private final ArrayList<Product> products=new ArrayList<>();
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            // todo vijith
-            return null;
+        public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            WishlistViewHolder vh = new WishlistViewHolder(getLayoutInflater().inflate(R.layout.layout_wishlist_item, parent, false)) {
+            };
+            vh.addToCart.setOnClickListener(mAddToCartClick);
+            vh.delete.setOnClickListener(mDeleteClick);
+            return vh;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(WishlistViewHolder holder, int position) {
             Product p = products.get(position);
-            // todo vijith
+            holder.name.setText(p.name);
+            holder.description.setText(p.description);
+            Picasso.with(WishListManagerActivity.this).load(p.getImageUrl()).into(holder.image);
+
+            holder.addToCart.setTag(p);
+            holder.delete.setTag(p);
         }
 
         @Override
@@ -98,7 +138,28 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         }
 
         public void changeData(ArrayList<Product> products) {
-            this.products = products;
+            this.products.clear();
+            this.products.addAll(products);
+        }
+    }
+
+    class WishlistViewHolder extends ViewHolder {
+
+        @Bind(R.id.name)
+        TextView name;
+        @Bind(R.id.description)
+        TextView description;
+        @Bind(R.id.image)
+        ImageView image;
+
+        @Bind(R.id.addToCart)
+        ImageButton addToCart;
+        @Bind(R.id.delete)
+        ImageButton delete;
+
+        public WishlistViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

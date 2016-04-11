@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <ImageView
+        android:layout_width="@dimen/circle_button_height"
+        android:layout_height="@dimen/circle_button_height"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="12dp"
+        android:scaleType="centerInside"
+        android:id="@+id/image"
+        />
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="8dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Product Name"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif"
+            android:textColor="@android:color/black"
+            android:paddingBottom="3dp"
+            android:id="@+id/name"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Lorem ipsum"
+            android:maxLines="3"
+            android:lineSpacingMultiplier="1.2"
+            android:textSize="13sp"
+            android:id="@+id/description"/>
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/addToCart"
+        android:src="@android:drawable/ic_menu_add"
+        style="?actionButtonStyle"
+        />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/delete"
+        android:src="@android:drawable/ic_menu_delete"
+        android:layout_marginRight="8dp"
+        style="?actionButtonStyle"
+        />
+
+
+
+</LinearLayout>

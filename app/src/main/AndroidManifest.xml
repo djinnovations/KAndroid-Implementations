@@ -126,7 +126,7 @@
             android:name=".activities.cart.WishListManagerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
         <activity
             android:name=".activities.post.SelectServerImageActivity"
             android:screenOrientation="portrait"
