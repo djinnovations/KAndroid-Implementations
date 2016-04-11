@@ -51,7 +51,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         setupMenu();
     }
 
-    @OnClick({ R.id.nav_home,R.id.nav_shop_by, R.id.nav_timeline,R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,
+    @OnClick({ R.id.nav_home,R.id.nav_shop_by, R.id.nav_timeline,R.id.nav_feed, R.id.nav_showcase,R.id.nav_collections,R.id.nav_cart,R.id.nav_wishlist,R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,
             R.id.nav_my_profile,
             R.id.nav_order_tracking,
             R.id.nav_about_us,
@@ -73,7 +73,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
 
 
-    @OnClick({ R.id.labelHome,R.id.labelshopBy,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart })
+    @OnClick({ R.id.labelHome,R.id.labelshopBy,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart,R.id.labelWishlist })
     public void menuLabelClick(View view) {
         int id = view.getId();
         if(id == R.id.labelHome)
@@ -88,6 +88,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             id =R.id.nav_collections;
         else if(id == R.id.labelCart)
             id =R.id.nav_cart;
+        else if(id == R.id.labelWishlist)
+            id =R.id.nav_wishlist;
         menuAction(id);
     }
 
@@ -101,7 +103,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @Bind({ R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,R.id.labelHome,R.id.labelFeed,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart,R.id.labelshopBy,
+    @Bind({ R.id.nav_share,R.id.nav_share_facebook,R.id.nav_rate_us,R.id.nav_contact_us,R.id.labelHome,R.id.labelFeed,R.id.labelTimeLine,R.id.labelShowcase,R.id.labelCollection,R.id.labelCart,R.id.labelWishlist,R.id.labelshopBy,
             R.id.nav_my_profile,
             R.id.nav_order_tracking,
             R.id.nav_about_us,

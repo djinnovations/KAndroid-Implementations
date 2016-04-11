@@ -6,63 +6,58 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/vector_icon_home"
-            android:title="@string/home" />
+            android:title="@string/home"/>
 
         <item
             android:id="@+id/nav_feed"
-            android:visible="false"
             android:icon="@drawable/vector_icon_feeds"
-            android:title="@string/socialFeeds" />
+            android:title="@string/socialFeeds"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_showcase"
             android:icon="@drawable/vector_icon_people"
-            android:title="@string/showcase" />
+            android:title="@string/showcase"/>
         <item
             android:id="@+id/nav_collections"
-            android:visible="false"
             android:icon="@drawable/vector_icon_people"
-            android:title="@string/collections" />
+            android:title="@string/collections"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_cart"
             android:icon="@drawable/vector_icon_people"
-            android:title="@string/cart" />
-
-
+            android:title="@string/cart"/>
 
         <item
             android:id="@+id/nav_people"
-            android:visible="false"
             android:icon="@drawable/vector_icon_people"
-            android:title="@string/findPeople" />
-
+            android:title="@string/findPeople"
+            android:visible="false"/>
 
 
         <item
             android:id="@+id/nav_my_collection"
             android:icon="@drawable/vector_icon_collections"
-            android:visible="false"
-            android:title="@string/myCollections" />
-
+            android:title="@string/myCollections"
+            android:visible="false"/>
 
 
         <item
             android:id="@+id/nav_wishlist"
             android:icon="@drawable/vector_icon_wishlist"
-            android:visible="false"
-            android:title="@string/wishlist" />
+            android:title="@string/wishlist"
+            android:visible="false"/>
     </group>
 
     <item
         android:id="@+id/nav_timeline"
         android:icon="@drawable/vector_icon_time_line"
-        android:title="@string/timeline" />
+        android:title="@string/timeline"/>
 
     <item
         android:id="@+id/nav_shop_by"
         android:icon="@drawable/vector_icon_shop_by"
-        android:title="@string/shopBy" />
-
+        android:title="@string/shopBy"/>
 
 
     <item android:title="Communicate">
@@ -78,7 +73,7 @@
                 android:title="@string/rateAPP"/>
             <item
                 android:id="@+id/nav_contact_us"
-                android:title="@string/contactUs" />
+                android:title="@string/contactUs"/>
         </menu>
     </item>
 </menu>
