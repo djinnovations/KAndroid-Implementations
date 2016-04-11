@@ -118,7 +118,6 @@ public class Application extends BaseApplication {
 
         addItem(menu, R.id.nav_shop_by, R.string.shopBy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, OurCollectionsActivity.class);
         addItem(menu, R.id.nav_my_collection, R.string.myCollections, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, UnderDevelopment.class);
-        addItem(menu, R.id.nav_wishlist, R.string.wishlist, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, UnderDevelopment.class);
 
         addItem(menu, R.id.nav_my_profile, R.string.myProfile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
         addItem(menu, R.id.nav_edit_profile, R.string.edit_profile, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ProfileEditActivity.class);
