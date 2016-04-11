@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.ILoadingProgress;
@@ -41,7 +42,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     private View.OnClickListener mAddToCartClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getTag()!=null && v.getTag() instanceof Product){
+            if (v.getTag() != null && v.getTag() instanceof Product) {
                 Product p = (Product) v.getTag();
                 //TODO kiran add cart click
             }
@@ -50,7 +51,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     private View.OnClickListener mDeleteClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(v.getTag()!=null && v.getTag() instanceof Product){
+            if (v.getTag() != null && v.getTag() instanceof Product) {
                 Product p = (Product) v.getTag();
                 //TODO kiran delete click
             }
@@ -89,6 +90,9 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
             public void onResult(ProductResponse result) {
                 if (result.success && result.productArray != null) {
                     mAdapter.changeData(result.productArray);
+                    if (!result.success) {
+                        Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
+                    }
                 }
                 showLoading(false);
             }
@@ -98,7 +102,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mProgressDialog!=null && mProgressDialog.isShowing())
+        if (mProgressDialog != null && mProgressDialog.isShowing())
             mProgressDialog.dismiss();
     }
 
@@ -110,7 +114,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
 
     private class Adapter extends RecyclerView.Adapter<WishlistViewHolder> {
 
-        private final ArrayList<Product> products=new ArrayList<>();
+        private final ArrayList<Product> products = new ArrayList<>();
 
         @Override
         public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
