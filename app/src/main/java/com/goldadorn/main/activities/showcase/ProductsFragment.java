@@ -282,40 +282,47 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onLeftCardExit(Object o) {
-            final Product p = (Product) o;
-            UIController.like(getActivity(), p, false, new IResultListener<LikeResponse>() {
-                @Override
-                public void onResult(LikeResponse result) {
-                    isDislikedHover(false);
-                    if (result.success) {
-                        p.isLiked = false;
+            final Product p = originalProducts.get(originalProducts.indexOf(o));
+            if (p.isLiked)
+                UIController.like(getActivity(), p, false, new IResultListener<LikeResponse>() {
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        isDislikedHover(false);
+                        if (result.success) {
+                            p.isLiked = false;
+                            p.likecount--;
+                        }
+                        if (mToast != null) mToast.cancel();
+                        mToast = Toast.makeText(getActivity(),
+                                result.success ? p.name + " dis-liked" : "failed", Toast.LENGTH_LONG);
+                        mToast.show();
                     }
-
-                    if (mToast != null) mToast.cancel();
-                    mToast = Toast.makeText(getActivity(),
-                            result.success ? p.name + " dis-liked" : "failed", Toast.LENGTH_LONG);
-                    mToast.show();
-                }
-            });
+                });
+            else
+                Toast.makeText(getContext(),"Already dis-liked",Toast.LENGTH_SHORT).show();
             if (getCount() > 0) setData();
         }
 
         @Override
         public void onRightCardExit(Object o) {
-            final Product p = (Product) o;
-            UIController.like(getActivity(), p, true, new IResultListener<LikeResponse>() {
-                @Override
-                public void onResult(LikeResponse result) {
-                    isLikedHover(false);
-                    if (result.success) {
-                        p.isLiked = true;
+            final Product p = originalProducts.get(originalProducts.indexOf(o));
+            if (!p.isLiked)
+                UIController.like(getActivity(), p, true, new IResultListener<LikeResponse>() {
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        isLikedHover(false);
+                        if (result.success) {
+                            p.isLiked = true;
+                            p.likecount++;
+                        }
+                        if (mToast != null) mToast.cancel();
+                        mToast = Toast.makeText(getActivity(),
+                                result.success ? p.name + " liked" : "failed", Toast.LENGTH_LONG);
+                        mToast.show();
                     }
-                    if (mToast != null) mToast.cancel();
-                    mToast = Toast.makeText(getActivity(),
-                            result.success ? p.name + " liked" : "failed", Toast.LENGTH_LONG);
-                    mToast.show();
-                }
-            });
+                });
+            else
+            Toast.makeText(getContext(),"Already liked",Toast.LENGTH_SHORT).show();
             if (getCount() > 0) setData();
         }
 
