@@ -793,7 +793,7 @@ public class ApiFactory extends ExtractResponse {
                 builder.add("collection", response.collectionId + "");
                 builder.add("designer", response.userId + "");
             } else if (response.userId != -1) {
-                builder.add("designerid", response.userId + "");
+                builder.add("designer", response.userId + "");
             }
             L.d("LIKE JSON " + builder.toString());
 
