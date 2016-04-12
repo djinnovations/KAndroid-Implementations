@@ -299,7 +299,7 @@ public class ProductsFragment extends Fragment {
                     }
                 });
             else
-                Toast.makeText(getContext(),"Already dis-liked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Already dis-liked", Toast.LENGTH_SHORT).show();
             if (getCount() > 0) setData();
         }
 
@@ -322,7 +322,7 @@ public class ProductsFragment extends Fragment {
                     }
                 });
             else
-            Toast.makeText(getContext(),"Already liked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Already liked", Toast.LENGTH_SHORT).show();
             if (getCount() > 0) setData();
         }
 
@@ -425,13 +425,15 @@ public class ProductsFragment extends Fragment {
 
     private void refreshData() {
         ProductResponse response = new ProductResponse();
-        if (mMode == MODE_USER) {
+        if (mMode == MODE_USER && mUser != null) {
             response.userId = mUser.id;
-        } else {
+            UIController.getProducts(getContext(), response, null);
+        } else if (mCollection != null) {
             response.collectionId = mCollection.id;
             response.userId = mCollection.userId;
+            UIController.getProducts(getContext(), response, null);
         }
-        UIController.getProducts(getContext(), response, null);
+
     }
 
     private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
