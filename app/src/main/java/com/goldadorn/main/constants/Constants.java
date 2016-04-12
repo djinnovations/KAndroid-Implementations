@@ -59,9 +59,9 @@ public class Constants {
         public static final String PRIMARYMETALPRICEUNITS = "primaryMetalPriceUnits";
         public static final String STONEPRICE = "stonePrice";
         public static final String STONEPRICEUNITS = "stonePriceUnits";
-        public static final String METALLIST = "metalList";
-        public static final String METALPURITYLIST = "metalPurityList";
-        public static final String METALCOLORLIST = "metalColorList";
+        public static final String METALLIST = "Metal List";
+        public static final String METALPURITYLIST = "Metal Purity List";
+        public static final String METALCOLORLIST = "Metal Color List";
         public static final String CENTERSTONE = "CenterStone";
         public static final String ACCENTSTONE = "AccentStone";
         public static final String GEMSTONE = "gemStone";

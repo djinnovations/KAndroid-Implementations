@@ -233,7 +233,6 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     public void addCustomisation(OptionKey key, OptionValue value) {
-        Toast.makeText(mContext, key + " : " + value, Toast.LENGTH_SHORT).show();
         mProduct.addCustomisation(key, value);
         // call api for updated price
         UIController.getPriceForCustomization(mContext, mProduct, new IResultListener<ProductResponse>() {

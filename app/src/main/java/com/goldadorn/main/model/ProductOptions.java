@@ -26,8 +26,8 @@ public class ProductOptions {
     }
 
     private static void extract(JSONObject productInfo, OptionKey key, List<Map.Entry<OptionKey, ArrayList<OptionValue>>> map) throws JSONException {
-        if (productInfo.has(key.keyName)) {
-            JSONArray ja = productInfo.getJSONArray(key.keyName);
+        if (productInfo.has(key.keyID)) {
+            JSONArray ja = productInfo.getJSONArray(key.keyID);
             ArrayList<OptionValue> options = new ArrayList<>();
             for (int i = 0; i < ja.length(); i++) {
                 options.add(new OptionValue(ja.getString(i)));
