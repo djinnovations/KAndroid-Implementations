@@ -166,7 +166,7 @@
             android:name=".activities.ProfileEditActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:launchMode="singleTop"
