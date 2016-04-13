@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +27,7 @@ import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mixpanel.android.util.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.entity.mime.MultipartEntity;
@@ -235,14 +237,30 @@ public class ProfileEditActivity extends BaseActivity {
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeZone(TimeZone.getDefault());
         mCalendar.setTimeInMillis(mProfileData.dob);
-        mEmail.setText(mProfileData.email);
-        mFirstName.setText(mProfileData.firstName);
-        mLastName.setText(mProfileData.lastName);
+
+        if(!TextUtils.isEmpty(mProfileData.email))
+            mEmail.setText(mProfileData.email);
+
+        if(!TextUtils.isEmpty(mProfileData.firstName))
+            mFirstName.setText(mProfileData.firstName);
+
+        if(!TextUtils.isEmpty(mProfileData.lastName))
+            mLastName.setText(mProfileData.lastName);
+
         mDob.setText(mFormat.format(mCalendar.getTime()));
-        mPhone.setText(mProfileData.phone);
-        mAddress1.setText(mProfileData.address1);
-        mAddress2.setText(mProfileData.address2);
-        mPincode.setText(mProfileData.pincode);
+
+        if(!TextUtils.isEmpty(mProfileData.phone))
+            mPhone.setText(mProfileData.phone);
+
+        if(!TextUtils.isEmpty(mProfileData.address1))
+            mAddress1.setText(mProfileData.address1);
+
+        if(!TextUtils.isEmpty(mProfileData.address2))
+            mAddress2.setText(mProfileData.address2);
+
+        if(!TextUtils.isEmpty(mProfileData.pincode))
+            mPincode.setText(mProfileData.pincode);
+
 
         String[] array = getResources().getStringArray(R.array.gender);
         int selected = 0;
@@ -275,6 +293,8 @@ public class ProfileEditActivity extends BaseActivity {
                 selected = i;
         }
         mCity.setSelection(selected);
+
+        Picasso.with(ProfileEditActivity.this).load(mProfileData.imageUrl).into(mImage);
 
         //        mImage.setImageDrawable(null);
 

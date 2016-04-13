@@ -59,7 +59,7 @@ public class ApiFactory extends ExtractResponse {
 
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/";
+    public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/goldadorn_dev/";
     private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
     private static final String HOST_NAME_PROD = "demo.eremotus-portal.com";
     public static final String HOST_NAME = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV;
