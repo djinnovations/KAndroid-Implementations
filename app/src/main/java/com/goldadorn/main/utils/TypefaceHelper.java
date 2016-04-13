@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -61,6 +62,15 @@ public class TypefaceHelper {
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
     }
+    public static void setFont(Spinner text) {
+        Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
+
+    }
+    public static void setFont(Spinner text,String fontName) {
+        Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
+
+    }
+
 
     public static void setFont(Button text) {
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
@@ -82,7 +92,8 @@ public class TypefaceHelper {
                 setFont((TextInputLayout)view);
             else if(view instanceof RadioButton)
                 setFont((RadioButton)view);
-
+            else if(view instanceof Spinner)
+                setFont((Spinner)view);
 
 
         }
@@ -103,6 +114,8 @@ public class TypefaceHelper {
                 setFont((TextInputLayout)view,fontName);
             else if(view instanceof RadioButton)
                 setFont((RadioButton)view,fontName);
+            else if(view instanceof Spinner)
+                setFont((Spinner)view,fontName);
         }
     }
 

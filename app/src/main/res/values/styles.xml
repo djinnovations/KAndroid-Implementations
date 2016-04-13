@@ -239,7 +239,7 @@
 
     <style name="FormEditText">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:background">@drawable/bg_edt</item>
         <item name="android:ems">10</item>

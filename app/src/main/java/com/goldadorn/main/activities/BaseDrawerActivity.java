@@ -206,7 +206,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             @Override
             public void onClick(View v) {
                 NavigationDataObject
-                        navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_edit_profile);
+                        navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_my_profile);
                 if(navigationDataObject !=null) {
                     action(navigationDataObject);
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -221,8 +221,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             userImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    NavigationDataObject navigationDataObject =
-                            (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_settings);
+                    NavigationDataObject navigationDataObject =(NavigationDataObject) getApp().getMainMenu().get(R.id.nav_my_profile);
                     if (navigationDataObject != null) {
                         action(navigationDataObject);
                         drawerLayout.closeDrawer(GravityCompat.START);

@@ -7,8 +7,11 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,6 +29,7 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mixpanel.android.util.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -36,8 +40,10 @@ import org.apache.http.entity.mime.content.StringBody;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -88,6 +94,13 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.zipcode)
     EditText mPincode;
 
+    @Bind(R.id.titleAddress)
+    TextView titleAddress;
+
+    @Bind(R.id.titleBasic)
+    TextView titleBasic;
+
+
     @Bind(R.id.doneButton)
     Button mDone;
 
@@ -101,6 +114,45 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
 
+
+    public void setupStyle()
+    {
+        View[] viewList = new View[14];
+        viewList[0]=mEmail;
+        viewList[1]=mFirstName;
+        viewList[2]=mLastName;
+        viewList[3]=mGender;
+        viewList[4]=mDob;
+        viewList[5]=mPhone;
+        viewList[6]=mAddress1;
+        viewList[7]=mAddress2;
+        viewList[8]=mCountry;
+        viewList[9]=mState;
+        viewList[10]=mCity;
+        viewList[11]=mPincode;
+        viewList[12]=titleBasic;
+        viewList[13]=titleAddress;
+
+
+
+        TypefaceHelper.setFont(viewList);
+
+
+        SpinnerAdapter adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.gender)));
+        mGender.setAdapter(adapter);
+
+
+        adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.country)));
+        mCountry.setAdapter(adapter);
+
+        adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.states)));
+        mState.setAdapter(adapter);
+
+        adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.cities)));
+        mCity.setAdapter(adapter);
+    }
+
+
     private DatePickerDialog.OnDateSetListener mDateSetListener =
             new DatePickerDialog.OnDateSetListener() {
 
@@ -113,6 +165,20 @@ public class ProfileEditActivity extends BaseActivity {
     private DatePickerDialog mDialog;
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home)
+        {
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
@@ -120,15 +186,10 @@ public class ProfileEditActivity extends BaseActivity {
         ButterKnife.bind(this);
         mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
         setupDOB();
-        mToolbar.setTitle("Profile");
-        mToolbar.setNavigationIcon(R.drawable.ic_action_back);
-        mToolbar.setTitleTextColor(Color.WHITE);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Profile");
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,6 +241,10 @@ public class ProfileEditActivity extends BaseActivity {
                 }
             }
         });
+
+        setupStyle();
+
+
     }
 
     final private int postCallToken = IDUtils.generateViewId();
@@ -342,5 +407,32 @@ public class ProfileEditActivity extends BaseActivity {
             }
 
         });
+    }
+
+    private static class SpinnerAdapter extends ArrayAdapter<String> {
+        private SpinnerAdapter(Context context, int resource, List<String> items) {
+            super(context, resource, items);
+        }
+
+        // Affects default (closed) state of the spinner
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+            view.setPadding(0,0,0,0);
+            TypefaceHelper.setFont(view);
+            return view;
+        }
+
+        // Affects opened state of the spinner
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getDropDownView(position, convertView, parent);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+            //view.setPadding(0,0,0,0);
+            TypefaceHelper.setFont(view);
+            return view;
+        }
     }
 }
