@@ -1,5 +1,7 @@
 package com.goldadorn.main.activities;
 
+    import android.content.Context;
+    import android.content.SharedPreferences;
     import android.graphics.drawable.Drawable;
     import android.os.Bundle;
     import android.os.Handler;
@@ -24,6 +26,8 @@ package com.goldadorn.main.activities;
     import com.goldadorn.main.R;
     import com.goldadorn.main.icons.IconsUtils;
     import com.goldadorn.main.model.LoginResult;
+    import com.goldadorn.main.model.User;
+    import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
     import com.goldadorn.main.utils.TypefaceHelper;
     import com.goldadorn.main.utils.URLHelper;
     import com.goldadorn.main.utils.IDUtils;
@@ -35,7 +39,10 @@ package com.goldadorn.main.activities;
     import com.mikepenz.fontawesome_typeface_library.FontAwesome;
     import com.rey.material.widget.ProgressView;
 
+    import org.apache.http.cookie.Cookie;
+
     import java.util.HashMap;
+    import java.util.List;
     import java.util.Map;
 
     import butterknife.Bind;
@@ -63,8 +70,7 @@ package com.goldadorn.main.activities;
         @Bind(R.id.input_layout_userName)
         TextInputLayout inputLayoutUserName;
 
-        @Bind(R.id.input_layout_password)
-        TextInputLayout inputLayoutPassword;
+
 
         @Bind(R.id.userName)
         EditText userName;
@@ -73,9 +79,17 @@ package com.goldadorn.main.activities;
         TextView labelGender;
 
 
+        @Bind(R.id.input_layout_password)
+        TextInputLayout inputLayoutPassword;
 
         @Bind(R.id.password)
         EditText password;
+
+        @Bind(R.id.input_layout_password_confirm)
+        TextInputLayout inputLayoutPasswordConfirm;
+
+        @Bind(R.id.password_confirm)
+        EditText passwordConfirm;
 
         @Bind(R.id.policyText)
         TextView policyText;
@@ -85,11 +99,19 @@ package com.goldadorn.main.activities;
         @Bind(R.id.layoutParent)
         ViewGroup layoutParent;
 
-        @Bind(R.id.input_layout_name)
-        TextInputLayout inputLayoutName;
+        @Bind(R.id.input_layout_first_name)
+        TextInputLayout inputLayoutFirstName;
 
-        @Bind(R.id.name)
-        EditText name;
+        @Bind(R.id.firstName)
+        EditText firstName;
+
+        @Bind(R.id.input_layout_last_name)
+        TextInputLayout inputLayoutLastName;
+
+        @Bind(R.id.lastName)
+        EditText lastName;
+
+
 
         @Bind(R.id.genderRadioGroup)
         RadioGroup genderRadioGroup;
@@ -113,13 +135,15 @@ package com.goldadorn.main.activities;
 
         @OnClick(R.id.createAccount) void onClickCreateAccount()
         {
-            if(!validateName())
+            if(!validateFirstName())
+                return;
+            if(!validateLastName())
                 return;
             if(!validateEmail())
                 return;
             if(!validatePassword())
                 return;
-            register(name.getText().toString().trim(), userName.getText().toString().trim(), password.getText().toString().trim());
+            register(firstName.getText().toString().trim(),lastName.getText().toString().trim(), userName.getText().toString().trim(), password.getText().toString().trim());
         }
 
         @OnClick(R.id.loginAccount) void onClickLogin()
@@ -128,7 +152,7 @@ package com.goldadorn.main.activities;
         }
 
         public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-            if(id==loginServiceCall)
+            if(id==regServiceCall)
             {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String)json, status,null, layoutParent, this);
 
@@ -139,8 +163,9 @@ package com.goldadorn.main.activities;
 
                     if(loginResult.getSuccess())
                     {
-                        onClickLogin();
-                        Toast.makeText(this, R.string.registerSuccssMsg, Toast.LENGTH_SHORT).show();
+                        login(userName.getText().toString().trim(), password.getText().toString().trim());
+                        //onClickLogin();
+                        //Toast.makeText(this, R.string.registerSuccssMsg, Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
@@ -153,6 +178,52 @@ package com.goldadorn.main.activities;
                     stopProgress(success);
                 }
             }
+            else if (id == loginServiceCall) {
+                boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+                List<Cookie> cookies = status.getCookies();
+                if (success) {
+                    Gson gson = new Gson();
+                    LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
+
+                    if (loginResult.getSuccess()) {
+                        User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
+                        user.setName(loginResult.getUsername());
+                        user.setImageUrl(loginResult.getUserpic());
+                        getApp().setUser(user);
+
+                        getApp().setCookies(cookies);
+                        SharedPreferences sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
+                        sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
+                                .putString(AppSharedPreferences.LoginInfo.USER_NAME, userName.getText().toString())
+                                .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
+
+                        gotoApp();
+                    } else {
+                        final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);
+                        ColoredSnackbar.alert(snackbar).show();
+                    }
+                    stopProgress(loginResult.getSuccess());
+                } else {
+                    stopProgress(success);
+                }
+            }else
+                super.serverCallEnds(id, url, json, status);
+
+        }
+        final private int loginServiceCall = IDUtils.generateViewId();
+
+        protected void login(String userName, String password) {
+            startProgress();
+            String url = getUrlHelper().getLoginServiceURL();
+            ExtendedAjaxCallback ajaxCallback = getAjaxCallback(loginServiceCall);
+            Map<String, String> params = new HashMap<>();
+            params.put(URLHelper.LOGIN_PARAM.USER_NAME, userName);
+            params.put(URLHelper.LOGIN_PARAM.PASSWORD, password);
+            ajaxCallback.setClazz(String.class);
+
+            ajaxCallback.setParams(params);
+            ajaxCallback.setClazz(String.class);
+            getAQuery().ajax(url, params, String.class, ajaxCallback);
         }
 
         protected void startProgress()
@@ -162,6 +233,7 @@ package com.goldadorn.main.activities;
             progressBar.start();
 
             password.setEnabled(false);
+            passwordConfirm.setEnabled(false);
             userName.setEnabled(false);
             loginAccount.setEnabled(false);
             loginWithFacebookButton.setEnabled(false);
@@ -176,6 +248,7 @@ package com.goldadorn.main.activities;
             progressBar.stop();
 
             password.setEnabled(true);
+            passwordConfirm.setEnabled(true);
             userName.setEnabled(true);
             loginAccount.setEnabled(true);
             loginWithFacebookButton.setEnabled(true);
@@ -184,15 +257,15 @@ package com.goldadorn.main.activities;
             createAccount.setEnabled(true);
         }
 
-        final private int loginServiceCall= IDUtils.generateViewId();
-        protected void register(String name,String userName,String password)
+        final private int regServiceCall= IDUtils.generateViewId();
+        protected void register(String fName,String lName,String userName,String password)
         {
             startProgress();
             String url = getUrlHelper().getRegisterServiceURL();
-            ExtendedAjaxCallback ajaxCallback =getAjaxCallback(loginServiceCall);
+            ExtendedAjaxCallback ajaxCallback =getAjaxCallback(regServiceCall);
             Map<String,String> params= new HashMap<>();
-            params.put(URLHelper.REGISTER_PARAM.REGISTER_FIRST_NAME, name);
-            params.put(URLHelper.REGISTER_PARAM.REGISTER_LAST_NAME, " ");
+            params.put(URLHelper.REGISTER_PARAM.REGISTER_FIRST_NAME, fName);
+            params.put(URLHelper.REGISTER_PARAM.REGISTER_LAST_NAME,lName);
             params.put(URLHelper.REGISTER_PARAM.REGISTER_EMAIL, userName);
             params.put(URLHelper.REGISTER_PARAM.REGISTER_PASSWORD, password);
             params.put(URLHelper.REGISTER_PARAM.REGISTER_CONFIRM_PASSWORD, password);
@@ -223,13 +296,25 @@ package com.goldadorn.main.activities;
             return true;
 
         }
-        private boolean validateName() {
-            if (name.getText().toString().trim().isEmpty()) {
-                inputLayoutName.setError(getString(R.string.err_msg_name));
-                requestFocus(name);
+        private boolean validateFirstName() {
+            if (firstName.getText().toString().trim().isEmpty()) {
+                inputLayoutFirstName.setError(getString(R.string.err_msg_f_name));
+                requestFocus(firstName);
                 return false;
             } else {
-                inputLayoutName.setErrorEnabled(false);
+                inputLayoutFirstName.setErrorEnabled(false);
+            }
+
+            return true;
+        }
+
+        private boolean validateLastName() {
+            if (lastName.getText().toString().trim().isEmpty()) {
+                inputLayoutLastName.setError(getString(R.string.err_msg_l_name));
+                requestFocus(lastName);
+                return false;
+            } else {
+                inputLayoutLastName.setErrorEnabled(false);
             }
 
             return true;
@@ -240,7 +325,19 @@ package com.goldadorn.main.activities;
                 inputLayoutPassword.setError(getString(R.string.err_msg_password));
                 requestFocus(password);
                 return false;
-            } else {
+            }
+            else if (passwordConfirm.getText().toString().trim().isEmpty()) {
+                inputLayoutPasswordConfirm.setError(getString(R.string.err_msg_password));
+                requestFocus(passwordConfirm);
+                return false;
+            }
+            else if (!passwordConfirm.getText().toString().equals(password.getText().toString())) {
+                inputLayoutPasswordConfirm.setError(getString(R.string.err_msg_password_not_match));
+                requestFocus(passwordConfirm);
+                return false;
+            }
+
+            else {
                 inputLayoutPassword.setErrorEnabled(false);
             }
 
@@ -279,7 +376,9 @@ package com.goldadorn.main.activities;
 
             userName.addTextChangedListener(new LoginTextWatcher(userName));
             password.addTextChangedListener(new LoginTextWatcher(password));
-            name.addTextChangedListener(new LoginTextWatcher(name));
+            passwordConfirm.addTextChangedListener(new LoginTextWatcher(passwordConfirm));
+            firstName.addTextChangedListener(new LoginTextWatcher(firstName));
+            lastName.addTextChangedListener(new LoginTextWatcher(lastName));
 
 
             int iconSize = 15;
@@ -292,16 +391,28 @@ package com.goldadorn.main.activities;
             password.setCompoundDrawables(icon, null, null, null);
             password.setCompoundDrawablePadding(iconSize);
 
+
+            icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_lock,R.color.colorPrimary,iconSize);
+            passwordConfirm.setCompoundDrawables(icon, null, null, null);
+            passwordConfirm.setCompoundDrawablePadding(iconSize);
+
+
             icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_user,R.color.colorPrimary,iconSize);
-            name.setCompoundDrawables(icon, null, null, null);
-            name.setCompoundDrawablePadding(iconSize);
+            firstName.setCompoundDrawables(icon, null, null, null);
+            firstName.setCompoundDrawablePadding(iconSize);
+
+            icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_user,R.color.colorPrimary,iconSize);
+            lastName.setCompoundDrawables(icon, null, null, null);
+            lastName.setCompoundDrawablePadding(iconSize);
+
+
 
             policyText.setMovementMethod(LinkMovementMethod.getInstance());
             policyText.setText(Html.fromHtml(getResources().getString(R.string.creatingAnAccount)));
 
             genderRadioGroup.check(R.id.femaleRadioButton);
 
-            TypefaceHelper.setFont(orLabel,femaleRadioButton,maleRadioButton,labelGender,inputLayoutName,inputLayoutPassword,inputLayoutUserName,userName, password,name, loginAccount, createAccount);
+            TypefaceHelper.setFont(orLabel,femaleRadioButton,maleRadioButton,labelGender,inputLayoutFirstName,inputLayoutLastName,inputLayoutPassword,inputLayoutUserName,userName, password,firstName,lastName, loginAccount, createAccount);
         }
 
         private class LoginTextWatcher implements TextWatcher {
@@ -324,14 +435,21 @@ package com.goldadorn.main.activities;
                         if(!userName.getText().toString().trim().equals(""))
                             inputLayoutUserName.setErrorEnabled(false);
                         break;
-                    case R.id.name:
-                        if(!name.getText().toString().trim().equals(""))
-                            inputLayoutName.setErrorEnabled(false);
+                    case R.id.firstName:
+                        if(!firstName.getText().toString().trim().equals(""))
+                            inputLayoutFirstName.setErrorEnabled(false);
                         break;
-
+                    case R.id.lastName:
+                        if(!lastName.getText().toString().trim().equals(""))
+                            inputLayoutLastName.setErrorEnabled(false);
+                        break;
                     case R.id.password:
                         if(!password.getText().toString().trim().equals(""))
                             inputLayoutPassword.setErrorEnabled(false);
+                        break;
+                    case R.id.password_confirm:
+                        if(!passwordConfirm.getText().toString().trim().equals(""))
+                            inputLayoutPasswordConfirm.setErrorEnabled(false);
                         break;
                 }
             }
