@@ -16,6 +16,16 @@ public class Comment implements IParseableObject {
     private String userName;
     private String profilePic;
     private String commentText;
+
+    public int getIsFollow() {
+        return isFollow;
+    }
+
+    public void setIsFollow(int isFollow) {
+        this.isFollow = isFollow;
+    }
+
+    private int isFollow;
     private int userId;
     private Long timestamp;
 

@@ -15,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
@@ -29,9 +31,15 @@ import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
+import com.goldadorn.main.modules.people.FollowPeopleHelper;
+import com.goldadorn.main.modules.people.PeopleUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.CommentDividerDecoration;
+import com.goldadorn.main.modules.socialFeeds.helper.FollowHelper;
+import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
+import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
+import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
@@ -59,6 +67,36 @@ import butterknife.OnClick;
  */
 public class LikesView extends DefaultVerticalListView implements DefaultProjectDataManager.IDataManagerDelegate
 {
+    private FollowPeopleHelper followPeopleHelper;
+    PeopleUpdateHelper.UpdateResult postUpdateResult = new PeopleUpdateHelper.UpdateResult() {
+        @Override
+        public void onFail(PeopleUpdateHelper host,People post, int pos) {
+            if(host instanceof FollowPeopleHelper)
+            {
+                int isFollowing = post.getIsFollowing();
+                isFollowing = isFollowing==0?1:0;
+                post.setIsFollowing(isFollowing);
+                getAdapter().notifyItemChanged(pos);
+            }
+        }
+        @Override
+        public void onSuccess(PeopleUpdateHelper host,People post, int pos) {
+            if(host instanceof FollowPeopleHelper)
+                getAdapter().notifyItemChanged(pos);
+        }
+    };
+    @Override
+    public void onViewCreated(View view) {
+        super.onViewCreated(view);
+        followPeopleHelper= new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
+    }
+    public void followUser(People people,int pos)
+    {
+        followPeopleHelper.update(people, pos);
+    }
+
+
+
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
         return baseActivity.getApp();
@@ -166,6 +204,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
                 p.setUserId(liked.getUserId());
                 p.setUserName(liked.getUserName());
                 p.setProfilePic(liked.getProfilePic());
+                p.setIsFollowing(liked.getIsFollow());
                 p.setIsSelf(liked.isSelf());
                 if(v==userImage)
                 {
@@ -174,6 +213,22 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
                 else if(v==userName)
                 {
                     gotoUser(p);
+                }
+                else if(v==followButton)
+                {
+                    int isFollowing = liked.getIsFollow();
+                    isFollowing = isFollowing==0?1:0;
+                    liked.setIsFollow(isFollowing);
+                    if(liked.getIsFollow()==1) {
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                        //followButton.setSelected(true);
+                    }
+                    else {
+                        followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                        //followButton.setSelected(false);
+                    }
+                    YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
+                    followUser(p, position);
                 }
             }
         };
@@ -185,6 +240,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
             ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
+            followButton.setOnClickListener(itemClick);
             TypefaceHelper.setFont(userName);
         }
         public void updateItemView(Object item,View view,int position)
@@ -197,22 +253,36 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
                     .tag(getContext())
                     .resize(100,100)
                     .into(userImage);
+
+            if(liked.isSelf()) {
+                followButton.setVisibility(View.INVISIBLE);
+            }
+            else {
+                followButton.setVisibility(View.VISIBLE);
+
+                if(liked.getIsFollow()==1) {
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
+                }
+                else {
+                    followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
+                }
+            }
         }
     }
     public static class LikesResult extends CodeDataParser
     {
-        List<Liked> data;
+        List<Liked> likes;
         public List<?> getList()
         {
-            return data;
+            return likes;
         }
         public Object getData()
         {
-            return data;
+            return likes;
         }
         public void setData(Object data)
         {
-            this.data=(List<Liked>)data;
+            this.likes=(List<Liked>)data;
         }
     }
 }

@@ -78,6 +78,10 @@ public class URLHelper {
     {
         return endPoint+VERB.LOGIN;
     }
+    public String getForgotPasswordServiceURL()
+    {
+        return endPoint+VERB.FORGOTPASSWORD;
+    }
 
     public String getCreatePostServiceURL()
     {
@@ -163,6 +167,8 @@ public class URLHelper {
     {
         public static final String REGISTER="register";
         public static final String LOGIN="login";
+        public static final String FORGOTPASSWORD="forgotpassword";
+
         public static final String LOGOUT="logout";
         public static final String PEOPLE="people";
         public static final String SOCIAL_FEED="socialfeed";
@@ -187,6 +193,8 @@ public class URLHelper {
     {
         public static final String USER_NAME="login_userId";
         public static final String PASSWORD="login_password";
+        public static final String USERNAME="username";
+
     }
     public static class LIKE_A_POST
     {
