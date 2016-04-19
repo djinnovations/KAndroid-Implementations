@@ -12,7 +12,8 @@ import java.util.List;
  */
 public class URLHelper {
     // Private constructor prevents instantiation from other classes
-    public final String  endPoint;
+    public final String endPointSocial;
+    public final String  endPointCommercial;
     public final String  iamgeEndPoint;
     public final String  websiteEndPoint;
 
@@ -25,7 +26,9 @@ public class URLHelper {
     private List<Cookie> cookies;
 
     private URLHelper() {
-        endPoint= BuildConfig.END_POINT;
+
+        endPointCommercial= BuildConfig.END_POINT_COMERCIAL;
+        endPointSocial = BuildConfig.END_POINT;
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
         websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
@@ -76,91 +79,96 @@ public class URLHelper {
 
     public String getLoginServiceURL()
     {
-        return endPoint+VERB.LOGIN;
+        return endPointSocial +VERB.LOGIN;
     }
     public String getForgotPasswordServiceURL()
     {
-        return endPoint+VERB.FORGOTPASSWORD;
+        return endPointSocial +VERB.FORGOTPASSWORD;
     }
 
     public String getCreatePostServiceURL()
     {
-        return endPoint+VERB.CREATE_POST;
+        return endPointSocial +VERB.CREATE_POST;
     }
 
     public String getSetBasicProfileURL()
     {
-        return "http://demo.eremotus-portal.com/goldadorn_dev/rest/setbasicprofile";
-
-        //return endPoint+VERB.SET_BASIC_PROFILE;
+        return endPointSocial+VERB.SET_BASIC_PROFILE;
     }
 
     public String getFindPeopleServiceURL()
     {
-        return endPoint+VERB.PEOPLE;
+        return endPointSocial +VERB.PEOPLE;
     }
     public String getSocialFeedServiceURL()
     {
-        return endPoint+VERB.SOCIAL_FEED;
+        return endPointSocial +VERB.SOCIAL_FEED;
     }
     public String getFolderServiceURL()
     {
-        return endPoint+VERB.FETCH_GALLERY;
+        return endPointSocial +VERB.FETCH_GALLERY;
     }
+
+    public String getApplyfilterServiceURL()
+    {
+        return endPointCommercial +VERB.APPLY_FILTER;
+    }
+
+
     public String getSocialFeedRefreshServiceURL()
     {
-        return endPoint+VERB.SOCIAL_FEED;
+        return endPointSocial +VERB.SOCIAL_FEED;
     }
     public String getUsersSocialFeedServiceURL()
     {
-        return endPoint+VERB.FETCH_TIME_LINE;
+        return endPointSocial +VERB.FETCH_TIME_LINE;
     }
     public String getLogoutServiceURL()
     {
-        return endPoint+VERB.LOGOUT;
+        return endPointSocial +VERB.LOGOUT;
     }
     public String getRegisterServiceURL()
     {
-        return endPoint+VERB.REGISTER;
+        return endPointSocial +VERB.REGISTER;
     }
     public String getLikeAPostServiceURL()
     {
-        return endPoint+VERB.LIKE;
+        return endPointSocial +VERB.LIKE;
     }
     public String getFollowPeopleServiceURL()
     {
-        return endPoint+VERB.FOLLOW;
+        return endPointSocial +VERB.FOLLOW;
     }
 
     public String getCommentOnPostServiceURL()
     {
-        return endPoint+VERB.COMMENT;
+        return endPointSocial +VERB.COMMENT;
     }
     public String getFetchCommentsServiceURL()
     {
-        return endPoint+VERB.FETCH_COMMENTS;
+        return endPointSocial +VERB.FETCH_COMMENTS;
     }
     public String getFetchLikesServiceURL()
     {
-        return endPoint+VERB.FETCH_LIKES;
+        return endPointSocial +VERB.FETCH_LIKES;
     }
 
     public String getPollPostServiceURL()
     {
-        return endPoint+VERB.POLL;
+        return endPointSocial +VERB.POLL;
     }
     public String getVoteBof3PostServiceURL()
     {
-        return endPoint+VERB.VOTE_BOF_3;
+        return endPointSocial +VERB.VOTE_BOF_3;
     }
     public String getFetchVotersServiceURL()
     {
-        return endPoint+VERB.FETCH_VOTERS;
+        return endPointSocial +VERB.FETCH_VOTERS;
     }
 
     public String getNotificationsUrl()
     {
-        return endPoint+VERB.FETCH_NOTIFICATIONS;
+        return endPointSocial +VERB.FETCH_NOTIFICATIONS;
     }
 
     public static class VERB
@@ -186,6 +194,8 @@ public class URLHelper {
         public static final String FETCH_VOTERS="fetchvoters";
         public static final String FETCH_NOTIFICATIONS="notifications";
         public static final String FETCH_GALLERY="fetchgallery";
+        public static final String APPLY_FILTER="applyfilter";
+
 
 
     }

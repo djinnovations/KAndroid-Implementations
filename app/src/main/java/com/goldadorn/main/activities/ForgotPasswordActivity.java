@@ -104,7 +104,7 @@ public class ForgotPasswordActivity extends BaseActivity {
                 ServerError loginResult = gson.fromJson((String) json, ServerError.class);
                 if (loginResult.getSuccess()) {
                     stopProgress(true);
-                    Toast.makeText(ForgotPasswordActivity.this, "Password reset link has been sent to your email ID.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText( ForgotPasswordActivity.this, "Password reset link has been sent to your email ID.", Toast.LENGTH_SHORT).show();
                     new Action(this).launchActivity(LoginPageActivity.class,true);
                     finish();
 

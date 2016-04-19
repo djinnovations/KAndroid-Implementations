@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.imagePicker.PickServerProducts;
 import com.goldadorn.main.activities.post.AbstractPostActivity;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
@@ -114,7 +115,13 @@ public class GalleryImageSelector extends ImageSelector
     }
 
     public void openServerSelecton() {
+        /*
         Intent intent = new Intent(activity, SelectServerImageActivity.class);
+        intent.putExtra("backEnabled",true);
+        activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
+        */
+
+        Intent intent = new Intent(activity, PickServerProducts.class);
         intent.putExtra("backEnabled",true);
         activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
     }
