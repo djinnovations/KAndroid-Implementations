@@ -18,6 +18,7 @@ public class URLHelper {
     public final String  websiteEndPoint;
 
     public final String  htmlEndPoint;
+    public final String productImageEndPoint;
 
     public List<Cookie> getCookies() {
         return cookies;
@@ -31,6 +32,8 @@ public class URLHelper {
         endPointSocial = BuildConfig.END_POINT;
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
+        productImageEndPoint= BuildConfig.PRODUCT_IMAGE_END_POINT;
+
         websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
     }
 

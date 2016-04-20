@@ -1,34 +1,30 @@
 package com.goldadorn.main.activities.productListing;
 
+import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.androidquery.AQuery;
+import com.goldadorn.main.BR;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
-import com.goldadorn.main.activities.ServerFolderActivity;
+import com.goldadorn.main.bindings.BindingRecycleItemHolder;
+import com.goldadorn.main.databinding.ProductPickGridItemBinding;
+import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
-import com.goldadorn.main.utils.TypefaceHelper;
-import com.goldadorn.main.utils.URLHelper;
-import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
-import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.kimeeo.library.listDataView.recyclerView.DefaultDividerDecoration;
 import com.kimeeo.library.listDataView.recyclerView.verticalViews.ResponsiveView;
-import com.kimeeo.library.listDataView.viewPager.fragmentPager.BaseHorizontalFragmentViewPager;
-import com.kimeeo.library.model.IFragmentData;
-import com.nshmura.recyclertablayout.RecyclerTabLayout;
-import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
@@ -37,17 +33,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by bhavinpadhiyar on 3/2/16.
  */
 public class ProductsFragment extends ResponsiveView implements DefaultProjectDataManager.IDataManagerDelegate
 {
+    protected RecyclerView.ItemDecoration createItemDecoration() {
+        return new DividerDecoration(this.getActivity());
+    }
+
+
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
         return baseActivity.getApp();
+    }
+    public void onCallEnd(List<?> dataList, boolean isRefreshData) {
+        super.onCallEnd(dataList,isRefreshData);
+        if(dataList!=null && dataList.size()!=0)
+        {
+            String list="";
+            for (int i = 0; i < dataList.size(); i++) {
+                if(dataList.get(i) instanceof FilterProductListing)
+                {
+                    FilterProductListing item = (FilterProductListing)dataList.get(i);
+                    list +=item.getProdId()+"";
+                    if(i!=(dataList.size()-1))
+                    {
+                        list +=",";
+                    }
+                }
+            }
+            System.out.println(list);
+        }
     }
     protected DataManager createDataManager()
     {
@@ -64,7 +81,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return params;
     }
 
-    private String getParam(String offset)
+
+    private String getParam(int offset)
     {
         if(filters==null)
             return "{\"offset\" : "+offset+"}";
@@ -73,13 +91,14 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     }
 
     private String filters;
-    private String offset = "0";
+    private int offset = 0;
 
     public class DataManager extends DefaultProjectDataManager
     {
         public DataManager(Context context, IDataManagerDelegate delegate,List<Cookie> cookies)
         {
             super(context,delegate,cookies);
+            setIsConfigurableObject(true);
         }
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
@@ -106,34 +125,49 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     public Class getLoadedDataParsingAwareClass()
     {
-        return FolderResult.class;
+        return Result.class;
     }
 
 
     @Override
     public View getItemView(int i, LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        return null;
+        View view =layoutInflater.inflate(R.layout.product_pick_grid_item, viewGroup, false);
+        ViewDataBinding binding = DataBindingUtil.bind(view);
+        return binding.getRoot();
     }
     @Override
     public BaseItemHolder getItemHolder(int i, View view) {
-        return null;
+        return new BindingItemHolder(view, BR.product);
     }
 
-    public static class FolderResult extends CodeDataParser
+    public static class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T>
     {
-        List<ServerFolderObject> data;
-        Object data1;
+        public BindingItemHolder(View itemView,int variableID)
+        {
+            super(itemView, variableID);
+        }
+    }
+
+    public static class Result extends CodeDataParser
+    {
+        List<FilterProductListing> data;
+        private int offset;
         public List<?> getList()
         {
             return data;
         }
-        public Object getData()
+        public List<FilterProductListing> getData()
         {
-            return this;
+            return data;
         }
-        public void setData(Object data)
-        {
-            this.data1=this;
+        public void setData(List<FilterProductListing> data){this.data=data;}
+
+        public int getOffset() {
+            return offset;
+        }
+
+        public void setOffset(int offset) {
+            this.offset = offset;
         }
     }
 }

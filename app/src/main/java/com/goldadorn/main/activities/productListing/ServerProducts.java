@@ -59,7 +59,7 @@ public class ServerProducts extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String title = getPageTitle();
-        setTitle("");
+        setTitle("Select Product");
 
         int iconSize = 4;
         Drawable icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_check, R.color.white, iconSize);
