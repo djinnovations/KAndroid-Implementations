@@ -19,23 +19,27 @@
         <LinearLayout
             android:background="@color/productFilterItemBackgraound"
             android:orientation="vertical" android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="225dp">
             <ImageView
                 android:background="#ffffff"
                 app:imageUrl="@{product.image}"
                 android:layout_width="match_parent"
                 android:layout_height="140dp" />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                tools:text="Product Name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginLeft="5dp"
-                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center_vertical|center_horizontal"
                 app:fontName="@{@string/font_name_text_normal}"
                 android:text="@{product.prodName}"/>
 
             <TextView
+                tools:text="INR 30000"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
