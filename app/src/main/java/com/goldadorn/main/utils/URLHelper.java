@@ -49,6 +49,10 @@ public class URLHelper {
         return websiteEndPoint;
     }
 
+    public String getProductsLikes() {
+        return endPointSocial+VERB.GET_PRODUCTS_LIKES;
+    }
+
     /**
      * SingletonHolder is loaded on the first execution of Singleton.getInstance()
      * or the first access to SingletonHolder.INSTANCE, not before.
@@ -200,7 +204,7 @@ public class URLHelper {
         public static final String APPLY_FILTER="applyfilter";
 
 
-
+        public static final String GET_PRODUCTS_LIKES = "getproductslikes";
     }
     public static class LOGIN_PARAM
     {

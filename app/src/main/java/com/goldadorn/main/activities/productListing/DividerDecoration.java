@@ -26,7 +26,7 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
         //mDivider = a.getDrawable(0);
         //a.recycle();
 
-        mInsets = context.getResources().getDimensionPixelSize(R.dimen.card_insets);
+        mInsets = context.getResources().getDimensionPixelSize(R.dimen.card_insets_half);
     }
 
     @Override

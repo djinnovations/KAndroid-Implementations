@@ -1,6 +1,5 @@
 package com.goldadorn.main.activities.productListing;
 
-import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.BR;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
@@ -17,21 +17,26 @@ import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.bindings.BindingRecycleItemHolder;
 import com.goldadorn.main.databinding.ProductPickGridItemBinding;
 import com.goldadorn.main.model.FilterProductListing;
-import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
+import com.goldadorn.main.utils.ResultFormating;
+import com.goldadorn.main.utils.URLHelper;
+import com.google.gson.Gson;
+import com.kimeeo.library.actions.LoadDataAQuery;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
-import com.kimeeo.library.listDataView.recyclerView.DefaultDividerDecoration;
 import com.kimeeo.library.listDataView.recyclerView.verticalViews.ResponsiveView;
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.crypto.Mac;
 
 /**
  * Created by bhavinpadhiyar on 3/2/16.
@@ -49,6 +54,12 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     }
     public void onCallEnd(List<?> dataList, boolean isRefreshData) {
         super.onCallEnd(dataList,isRefreshData);
+        loadLikes(dataList);
+
+
+    }
+
+    private void loadLikes(final List<?> dataList) {
         if(dataList!=null && dataList.size()!=0)
         {
             String list="";
@@ -63,9 +74,80 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                     }
                 }
             }
-            System.out.println(list);
+
+
+
+
+            try {
+                LoadDataAQuery data = new LoadDataAQuery(getActivity());
+                data.setCookies(getApp().getCookies());
+                LoadDataAQuery.Result result= new LoadDataAQuery.Result()
+                {
+                    @Override
+                    public void done(String url, Object json, Object status) {
+                            if(json!=null && json instanceof String) {
+                                json = ResultFormating.formating((String) json);
+                                Gson gson = new Gson();
+                                ProductLikeData data= gson.fromJson((String) json,ProductLikeData.class);
+                                if(data.data!=null && data.data.size()!=0)
+                                {
+                                    FilterProductListing filterProductListing;
+                                    for (ProductLikeData.ProductLike productLike : data.data) {
+                                        for (int i = 0; i < dataList.size(); i++) {
+                                            if(dataList.get(i) !=null && dataList.get(i) instanceof FilterProductListing)
+                                            {
+                                                filterProductListing= (FilterProductListing)dataList.get(i);
+                                                if(filterProductListing.getProdId()==productLike.getProductId())
+                                                {
+                                                    filterProductListing.setLikeCount(productLike.getLikeCount()+"");
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                };
+
+
+                Map<String,Object> params= new HashMap<>();
+
+                list = "{\"prodIds\":["+list+"]}";
+                params.put(AQuery.POST_ENTITY,new StringEntity(list));
+                String url = URLHelper.getInstance().getProductsLikes();
+                data.perform(url,result,params);
+
+            }catch (Exception e){}
         }
     }
+    public class ProductLikeData
+    {
+        public List<ProductLike> data;
+        public class ProductLike
+        {
+            private int productId;
+            private int likeCount;
+
+            public int getProductId() {
+                return productId;
+            }
+
+            public void setProductId(int productId) {
+                this.productId = productId;
+            }
+
+            public int getLikeCount() {
+                return likeCount;
+            }
+
+            public void setLikeCount(int likeCount) {
+                this.likeCount = likeCount;
+            }
+        }
+    }
+
+
     protected DataManager createDataManager()
     {
         return new DataManager(getActivity(),this,getApp().getCookies());
@@ -108,8 +190,24 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         }
         protected void updatePagingData(BaseDataParser loadedDataVO)
         {
-            pageData.curruntPage +=1;
-            pageData.totalPage +=1;
+            if(loadedDataVO!=null && loadedDataVO instanceof Result)
+            {
+                Result result = (Result) loadedDataVO;
+                if(result.offset!=-1 && offset != result.offset) {
+                    offset = result.offset;
+                    pageData.curruntPage += 1;
+                    pageData.totalPage += 1;
+                }
+                else
+                {
+                    pageData.totalPage=pageData.curruntPage;
+                }
+            }
+            else
+            {
+                pageData.totalPage=pageData.curruntPage;
+            }
+
         }
     }
 
@@ -151,7 +249,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     public static class Result extends CodeDataParser
     {
         List<FilterProductListing> data;
-        private int offset;
+        private int offset=-1;
         public List<?> getList()
         {
             return data;
