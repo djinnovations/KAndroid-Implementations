@@ -210,7 +210,7 @@ public class VotersView extends DefaultVerticalListView implements DefaultProjec
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followUser(p, position);
+                    followUser(p, getAdapterPosition());
                 }
             }
         };

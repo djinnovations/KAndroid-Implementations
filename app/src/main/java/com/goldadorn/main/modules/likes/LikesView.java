@@ -228,7 +228,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followUser(p, position);
+                    followUser(p, getAdapterPosition());
                 }
             }
         };

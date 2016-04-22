@@ -116,7 +116,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                 list = "{\"prodIds\":["+list+"]}";
                 params.put(AQuery.POST_ENTITY,new StringEntity(list));
                 String url = URLHelper.getInstance().getProductsLikes();
-                data.perform(url,result,params);
+                data.perform(url,result,params,"");
 
             }catch (Exception e){}
         }

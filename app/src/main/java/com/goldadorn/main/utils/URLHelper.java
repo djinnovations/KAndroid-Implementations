@@ -19,6 +19,10 @@ public class URLHelper {
 
     public final String  htmlEndPoint;
     public final String productImageEndPoint;
+    public final String collectionImageEndPoint;
+    public final String productTypesImageEndPoint;
+
+
 
     public List<Cookie> getCookies() {
         return cookies;
@@ -33,8 +37,9 @@ public class URLHelper {
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
         productImageEndPoint= BuildConfig.PRODUCT_IMAGE_END_POINT;
-
+        collectionImageEndPoint=BuildConfig.COLLECTION_IMAGE_END_POINT;
         websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
+        productTypesImageEndPoint=BuildConfig.PRODUCT_TYPES_IMAGE_END_POINT;
     }
 
     public void setCookies(List<Cookie> cookies) {
@@ -52,6 +57,17 @@ public class URLHelper {
     public String getProductsLikes() {
         return endPointSocial+VERB.GET_PRODUCTS_LIKES;
     }
+
+    public String getDesignersFilter(int offset) {
+        return endPointSocial+VERB.GET_DESIGNERS_FILTER+"/"+offset;
+    }
+    public String getCollectionData(int offset) {
+        return endPointCommercial+VERB.GET_SCROLL_DATA+"/c/"+offset;
+    }
+    public String getProductType(int offset) {
+        return endPointCommercial+VERB.GET_SCROLL_DATA+"/t/"+offset;
+    }
+
 
     /**
      * SingletonHolder is loaded on the first execution of Singleton.getInstance()
@@ -205,6 +221,9 @@ public class URLHelper {
 
 
         public static final String GET_PRODUCTS_LIKES = "getproductslikes";
+        public static String GET_DESIGNERS_FILTER="getdesignersfilter";
+        public static String GET_SCROLL_DATA="getscrolldata";
+
     }
     public static class LOGIN_PARAM
     {

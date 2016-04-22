@@ -59,7 +59,7 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
                 super.dataHandler(url, stringValue, status);
             }
             else
-                super.dataHandler(url,value,status);
+                super.dataHandler(url,stringValue,status);
         }
         else
             super.dataHandler(url,value,status);

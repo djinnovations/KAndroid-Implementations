@@ -164,7 +164,7 @@ public class FindPeopleFragment extends DefaultVerticalListView
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followPeope(people, position);
+                    followPeope(people, getAdapterPosition());
                 }
             }
         };

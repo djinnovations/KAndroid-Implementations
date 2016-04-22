@@ -660,7 +660,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         buy.setSelected(true);
                         notBuy.setSelected(true);
                         voteToView.setVisibility(View.GONE);
-                        voteAPost(socialPost, position);
+                        voteAPost(socialPost, getAdapterPosition());
                     }
                 }
                 else if (v == notBuy) {
@@ -671,7 +671,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         buy.setSelected(true);
                         notBuy.setSelected(true);
                         voteToView.setVisibility(View.GONE);
-                        voteAPost(socialPost, position);
+                        voteAPost(socialPost, getAdapterPosition());
                     }
 
                 }
@@ -679,10 +679,10 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     zoomImages(socialPost,0);
                 }
                 else if (v == votePostButton) {
-                    gotoVotes(socialPost, position);
+                    gotoVotes(socialPost, getAdapterPosition());
                 }
                 else if (v == pollLabel) {
-                    gotoVotes(socialPost, position);
+                    gotoVotes(socialPost, getAdapterPosition());
                 }
 
             }
@@ -841,7 +841,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option2Button.setSelected(true);
                         option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
-                        selectAPost(socialPost, position);
+                        selectAPost(socialPost, getAdapterPosition());
                     }
                 }
                 else if (v == option2Button) {
@@ -854,7 +854,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option2Button.setSelected(true);
                         option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
-                        selectAPost(socialPost, position);
+                        selectAPost(socialPost, getAdapterPosition());
                     }
                 }
                 else if (v == option3Button) {
@@ -867,7 +867,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         option2Button.setSelected(true);
                         option3Button.setSelected(true);
                         voteToView.setVisibility(View.GONE);
-                        selectAPost(socialPost, position);
+                        selectAPost(socialPost, getAdapterPosition());
                     }
                 }
                 else if (v == option1Image) {
@@ -880,10 +880,10 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     zoomImages(socialPost,2);
                 }
                 else if (v == votePostButton) {
-                    gotoVotes(socialPost, position);
+                    gotoVotes(socialPost, getAdapterPosition());
                 }
                 else if (v == pollLabel) {
-                    gotoVotes(socialPost, position);
+                    gotoVotes(socialPost, getAdapterPosition());
                 }
             }
         };
@@ -1240,7 +1240,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followPeope(socialPost, position);
+                    followPeope(socialPost, getAdapterPosition());
                 }
                 else if(v==likesLabel)
                 {
@@ -1254,11 +1254,11 @@ public class SocialFeedFragment extends DefaultVerticalListView
                 }
                 else if(v==commentsLabel)
                 {
-                    gotoComments(socialPost,false,position);
+                    gotoComments(socialPost,false,getAdapterPosition());
                 }
                 else if(v==commentPostButton)
                 {
-                    gotoComments(socialPost,true,position);
+                    gotoComments(socialPost,true,getAdapterPosition());
                 }
                 else if(v==votePostButton)
                 {
@@ -1285,7 +1285,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(likePostButton);
 
-                    likeAPost(socialPost, position);
+                    likeAPost(socialPost, getAdapterPosition());
 
                 }
                 else if(v==sharePostButton)
