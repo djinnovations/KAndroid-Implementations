@@ -116,15 +116,16 @@ public class GalleryImageSelector extends ImageSelector
 
     public void openServerSelecton() {
 
-        Intent intent = new Intent(activity, SelectServerImageActivity.class);
-        intent.putExtra("backEnabled",true);
-        activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
-
-        /*
-        Intent intent = new Intent(activity, PickServerProducts.class);
-        intent.putExtra("backEnabled",true);
-        activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
-        */
+        boolean live=true;
+        if(live) {
+            Intent intent = new Intent(activity, SelectServerImageActivity.class);
+            intent.putExtra("backEnabled", true);
+            activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
+        }else {
+            Intent intent = new Intent(activity, PickServerProducts.class);
+            intent.putExtra("backEnabled", true);
+            activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
+        }
     }
     public String getLink()
     {

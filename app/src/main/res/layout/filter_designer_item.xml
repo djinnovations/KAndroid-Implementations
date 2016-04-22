@@ -28,6 +28,7 @@
 
 
         <TextView
+            app:fontName="@{@string/font_name_text_normal}"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"
             android:layout_below="@+id/image"

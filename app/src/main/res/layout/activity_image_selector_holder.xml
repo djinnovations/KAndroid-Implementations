@@ -20,9 +20,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/toolbarStyle"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
+
+    <com.nshmura.recyclertablayout.RecyclerTabLayout
+        android:id="@+id/indicator"
+        android:layout_width="250dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="50dp"
+        android:elevation="10dp"
+        app:rtl_tabIndicatorColor="#ff000000"
+        app:rtl_tabIndicatorHeight="0dp"/>
+
 
     <FrameLayout
         android:layout_below="@+id/appBarLayout"
@@ -30,6 +41,8 @@
         android:id="@+id/mainHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activities.MainActivity"
         tools:showIn="@layout/app_bar_main"/>
 
 

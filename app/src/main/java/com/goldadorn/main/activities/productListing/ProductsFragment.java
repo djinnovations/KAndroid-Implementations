@@ -3,6 +3,7 @@ package com.goldadorn.main.activities.productListing;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,12 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.bindings.BindingRecycleItemHolder;
 import com.goldadorn.main.databinding.ProductPickGridItemBinding;
+import com.goldadorn.main.model.Designer;
+import com.goldadorn.main.model.FilterCollection;
+import com.goldadorn.main.model.FilterPrice;
 import com.goldadorn.main.model.FilterProductListing;
+import com.goldadorn.main.model.FilterType;
+import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.utils.ResultFormating;
@@ -30,8 +36,10 @@ import com.kimeeo.library.listDataView.recyclerView.verticalViews.ResponsiveView
 
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +54,10 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new DividerDecoration(this.getActivity());
     }
-
+    public void onItemClick(Object baseObject) {
+        FilterProductListing file = (FilterProductListing)baseObject;
+        EventBus.getDefault().post(file);
+    }
 
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
@@ -121,6 +132,11 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
             }catch (Exception e){}
         }
     }
+    ArrayList<Parcelable> filters;
+    public void setFilters(ArrayList<Parcelable> filters) {
+        this.filters= filters;
+    }
+
     public class ProductLikeData
     {
         public List<ProductLike> data;
@@ -166,13 +182,115 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     private String getParam(int offset)
     {
+        /*
         if(filters==null)
             return "{\"offset\" : "+offset+"}";
         else
             return "{\"offset\" : \""+offset+"\"}";
+            */
+
+
+        if(filters==null || filters.size()==0)
+            return "{\"offset\" : \""+offset+"\"}";
+        else
+        {
+            List<Designer> designerList = new ArrayList<>();
+            List<FilterCollection> collectionList = new ArrayList<>();
+            List<FilterPrice> priceList = new ArrayList<>();
+            List<FilterType> typeList = new ArrayList<>();
+            for (Parcelable filter : filters) {
+                if(filter instanceof Designer)
+                    designerList.add((Designer)filter);
+                else if(filter instanceof FilterCollection)
+                    collectionList.add((FilterCollection)filter);
+                else if(filter instanceof FilterPrice)
+                    priceList.add((FilterPrice)filter);
+                else if(filter instanceof FilterType)
+                    typeList.add((FilterType)filter);
+            }
+
+            String val ="{";
+            String priceRanges=null;
+            if(priceList.size()!=0)
+            {
+                priceRanges ="\"priceRanges\":[";
+                for (int i = 0; i < priceList.size(); i++) {
+                    priceRanges+="{";
+                    priceRanges+="\"min\":"+priceList.get(i).getMin();
+                    priceRanges+=",\"max\":"+priceList.get(i).getMax();
+                    priceRanges+="}";
+                    if(i!=priceList.size()-1)
+                        priceRanges+=",";
+                }
+                priceRanges+="]";
+            }
+
+            String prodTypes=null;
+            if(typeList.size()!=0)
+            {
+                prodTypes ="\"prodTypes\":[";
+                for (int i = 0; i < typeList.size(); i++) {
+                    prodTypes+="\""+typeList.get(i).getProdType()+"\"";
+                    if(i!=typeList.size()-1)
+                        prodTypes+=",";
+                }
+                prodTypes+="]";
+            }
+
+            String desgnIds=null;
+            if(designerList.size()!=0)
+            {
+                desgnIds ="\"desgnIds\":[";
+                for (int i = 0; i < designerList.size(); i++) {
+                    desgnIds+=designerList.get(i).getDesignerId();
+                    if(i!=designerList.size()-1)
+                        desgnIds+=",";
+                }
+                desgnIds+="]";
+            }
+
+            String collIds=null;
+            if(collectionList.size()!=0)
+            {
+                collIds ="\"collIds\":[";
+                for (int i = 0; i < collectionList.size(); i++) {
+                    collIds+=collectionList.get(i).getCollId();
+                    if(i!=collectionList.size()-1)
+                        collIds+=",";
+                }
+                collIds+="]";
+            }
+            if(priceRanges!=null)
+                val +=priceRanges+",";
+            if(prodTypes!=null)
+                val +=prodTypes+",";
+            if(desgnIds!=null)
+                val +=desgnIds+",";
+            if(collIds!=null)
+                val +=collIds+",";
+            val +="\"offset\" : "+offset+"}";
+            /*
+            {
+                "priceRanges":
+                [
+                {
+                    "min": 1000,
+                        "max": 10000
+                },
+                {
+                    "min": 6000,
+                        "max": 13000
+                }
+                ],
+                "desgnIds": [11,12],
+                "collIds": [13,14,15],
+                "prodTypes": ["Pendants","Rings"],
+                "offset" : 10
+            }*/
+            return val;
+        }
     }
 
-    private String filters;
     private int offset = 0;
 
     public class DataManager extends DefaultProjectDataManager

@@ -166,12 +166,12 @@
             android:name=".activities.ProfileEditActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".activities.imagePicker.PickServerProducts"

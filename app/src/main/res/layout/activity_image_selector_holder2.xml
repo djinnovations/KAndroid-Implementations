@@ -53,7 +53,7 @@
                 android:visibility="gone"
                 android:id="@+id/recyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="130dp"/>
+                android:layout_height="100dp"/>
 
 
             <Button

@@ -37,13 +37,12 @@
             android:layout_weight="1"
             android:layout_height="0dp">
             <LinearLayout
-                android:background="#33cccccc"
+                android:background="#77cccccc"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="#ffffff"
             android:layout_width="match_parent"
@@ -56,7 +55,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/priceRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"/>
+                android:layout_height="100dp"/>
 
 
             <LinearLayout
@@ -116,7 +115,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/designersRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"/>
+                android:layout_height="140dp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -134,14 +133,13 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/collectionsRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"/>
+                android:layout_height="140dp"/>
         </LinearLayout>
 
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -153,7 +151,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/productTypeRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"/>
+                android:layout_height="140dp"/>
         </LinearLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
@@ -168,7 +166,7 @@
                 android:layout_below="@+id/title"
                 android:id="@+id/selectorRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="150dp"/>
+                android:layout_height="100dp"/>
 
 
             <Button

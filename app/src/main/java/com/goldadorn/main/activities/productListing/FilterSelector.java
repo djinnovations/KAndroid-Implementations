@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +19,7 @@ import com.appyvet.rangebar.RangeBar;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.model.FilterPrice;
+import com.goldadorn.main.model.IIDInterface;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -25,6 +27,7 @@ import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.viewHelper.RecyclerViewHelper;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -73,7 +76,12 @@ public class FilterSelector extends BaseActivity {
         new PriceHelper(this,priceRecyclerView,filterItemClick);
 
         RecyclerView selectorRecyclerView= (RecyclerView) findViewById(R.id.selectorRecyclerView);
+
+        final ArrayList<Parcelable> filters = getIntent().getParcelableArrayListExtra("filters");
         selectorHelper= new SelectorHelper(this,selectorRecyclerView);
+        if(filters!=null && filters.size()!=0)
+            selectorHelper.addAll(filters);
+
 
         rangebar = (RangeBar) findViewById(R.id.rangebar);
 
@@ -82,15 +90,21 @@ public class FilterSelector extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FilterPrice price=new FilterPrice();
-                price.setMin((rangebar.getLeftIndex()*100)+"");
-                price.setMax((rangebar.getRightIndex()*100)+"");
+                price.setMin((rangebar.getLeftIndex()*50)+"");
+                price.setMax((rangebar.getRightIndex()*50)+"");
+                price.setMaxVal("INR "+price.getMax());
+                price.setMinVal("INR "+price.getMin());
+                price.setId(price.getMin()+price.getMax());
                 selectorHelper.add(price);
             }
         });
         rangebar.setFormatter(new IRangeBarFormatter() {
             @Override
             public String format(String s) {
-                return Integer.parseInt(s)*100+"";
+                if(Integer.parseInt(s)>=1000)
+                    return Integer.parseInt(s)*50+"+";
+                else
+                    return Integer.parseInt(s)*50+"";
             }
         });
 
@@ -100,14 +114,25 @@ public class FilterSelector extends BaseActivity {
     RecyclerViewHelper.OnItemClick filterItemClick = new RecyclerViewHelper.OnItemClick(){
         @Override
         public void onItemClick(Object o) {
-            selectorHelper.add(o);
+            if(o instanceof IIDInterface)
+                selectorHelper.add((IIDInterface)o);
         }
     };
 
     @OnClick(R.id.applyFilters)void applyFilters()
     {
         Intent intent = new Intent();
-        intent.putExtra("type", "");
+        List<Object> list = selectorHelper.list();
+        ArrayList<Parcelable> parcelableList = new ArrayList<>();
+        if(list!=null && list.size()!=0)
+        {
+            for (Object o : list) {
+                if(o instanceof Parcelable)
+                    parcelableList.add((Parcelable)o);
+            }
+        }
+
+        intent.putParcelableArrayListExtra("filters",parcelableList);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

@@ -8,11 +8,17 @@
             type="com.goldadorn.main.model.FilterPrice"/>
     </data>
 
-    <LinearLayout android:layout_width="80dp" android:orientation="vertical"
-        android:background="@drawable/circle_bg_for_price"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_height="80dp">
 
+    <RelativeLayout android:layout_width="100dp"
+        android:layout_height="90dp">
+
+        <LinearLayout
+            android:layout_margin="5dp"
+            android:background="@drawable/circle_bg_for_price"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="80dp"
+            android:layout_height="80dp">
         <TextView
             android:layout_gravity="center_vertical|center_horizontal"
             android:id="@+id/minVal"
@@ -21,9 +27,9 @@
             tools:text="ABC"
             app:fontName="@{@string/font_name_text_normal}"
             android:text="@{price.minVal}"
-            android:textSize="11sp"
             android:layout_width="match_parent"
             android:maxLines="1"
+            android:textSize="11sp"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -32,12 +38,19 @@
             android:layout_margin="5dp"
             android:gravity="center_vertical|center_horizontal"
             tools:text="ABC"
-            android:textSize="11sp"
             app:fontName="@{@string/font_name_text_normal}"
             android:text="@{price.maxVal}"
             android:layout_width="match_parent"
             android:maxLines="1"
+            android:textSize="11sp"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+        </LinearLayout>
+        <View
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/vector_icon_filter_delete"/>
+    </RelativeLayout>
 </layout>
 

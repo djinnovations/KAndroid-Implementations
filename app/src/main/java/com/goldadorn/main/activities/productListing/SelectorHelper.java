@@ -19,6 +19,7 @@ import com.goldadorn.main.model.Designer;
 import com.goldadorn.main.model.FilterCollection;
 import com.goldadorn.main.model.FilterPrice;
 import com.goldadorn.main.model.FilterType;
+import com.goldadorn.main.model.IIDInterface;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.IListProvider;
 import com.kimeeo.library.listDataView.dataManagers.OnCallService;
@@ -44,13 +45,12 @@ public class SelectorHelper implements IViewProvider {
     {
         return dataManager;
     }
-    public boolean add(Object data)
+    public boolean add(IIDInterface data)
     {
         boolean isAdded=false;
         for (Object o : dataManager) {
-            if(data==o)
-            {
-                isAdded=true;
+            if(o instanceof IIDInterface && ((IIDInterface)o).getId().equals(data.getId())) {
+                isAdded = true;
                 break;
             }
         }
@@ -66,6 +66,20 @@ public class SelectorHelper implements IViewProvider {
         return false;
     }
 
+    public void addAll(ArrayList<?> data)
+    {
+        dataManager.addAll(data);
+        if(recyclerView !=null && dataManager.size()!=0)
+            recyclerView.setVisibility(View.VISIBLE);
+        else if(recyclerView !=null && dataManager.size()==0)
+            recyclerView.setVisibility(View.GONE);
+    }
+    public void removeAll()
+    {
+        dataManager.removeAll(dataManager);
+        recyclerView.setVisibility(View.GONE);
+    }
+
     RecyclerViewHelper.OnItemClick selector = new RecyclerViewHelper.OnItemClick()
     {
         @Override
@@ -76,6 +90,8 @@ public class SelectorHelper implements IViewProvider {
                     if(dataManager.get(i)==o)
                     {
                         dataManager.remove(i);
+                        if(onRemoveListner!=null)
+                            onRemoveListner.remove(o);
                         if(recyclerView !=null && dataManager.size()!=0)
                             recyclerView.setVisibility(View.VISIBLE);
                         else if(recyclerView !=null && dataManager.size()==0)
@@ -150,6 +166,14 @@ public class SelectorHelper implements IViewProvider {
         listData1.setRefreshEnabled(false);
         return listData1;
     }
+    OnRemoveListner onRemoveListner;
+    public void onRemoveListner(OnRemoveListner onRemoveListner) {
+        this.onRemoveListner=onRemoveListner;
+    }
+    public interface OnRemoveListner
+    {
+        void remove(Object o);
+    }
 
 
     //VIEW HERE
@@ -179,13 +203,13 @@ public class SelectorHelper implements IViewProvider {
     {
         View view=null;
         if(viewType==ViewTypes.VIEW_ITEM_PRICE)
-            view=inflater.inflate(R.layout.filter_price_item,container,false);
+            view=inflater.inflate(R.layout.filter_price_item_selected,container,false);
         else if(viewType==ViewTypes.VIEW_ITEM_DESIGNER)
-            view=inflater.inflate(R.layout.filter_designer_item,container,false);
+            view=inflater.inflate(R.layout.filter_designer_item_selected,container,false);
         else if(viewType==ViewTypes.VIEW_ITEM_COLLECTION)
-            view=inflater.inflate(R.layout.filter_collection_item,container,false);
+            view=inflater.inflate(R.layout.filter_collection_item_selected,container,false);
         else if(viewType==ViewTypes.VIEW_ITEM_PRODUCT_TYPE)
-            view=inflater.inflate(R.layout.filter_type_item,container,false);
+            view=inflater.inflate(R.layout.filter_type_item_selected,container,false);
 
         if(view!=null) {
             ViewDataBinding binding = DataBindingUtil.bind(view);
@@ -206,7 +230,7 @@ public class SelectorHelper implements IViewProvider {
 
         return null;
     }
-    public static class BindingItemHolder<T extends FilterPriceItemBinding> extends BindingRecycleItemHolder<T>
+    public static class BindingItemHolder<T extends ViewDataBinding> extends BindingRecycleItemHolder<T>
     {
         public BindingItemHolder(View itemView,int variableID)
         {

@@ -86,6 +86,9 @@ public class PriceHelper implements IViewProvider{
             FilterPrice price = new FilterPrice();
             price.setMax(max);
             price.setMin(min);
+            price.setMaxVal("INR "+max);
+            price.setMinVal("INR "+min);
+            price.setId(min+max);
             return price;
         }
     };

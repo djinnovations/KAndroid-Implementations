@@ -10,7 +10,6 @@
     </data>
 
     <RelativeLayout android:layout_width="120dp"
-
         android:layout_height="wrap_content">
 
         <com.github.siyamed.shapeimageview.RoundedImageView
@@ -29,6 +28,7 @@
 
 
         <TextView
+            android:visibility="gone"
             app:fontName="@{@string/font_name_text_normal}"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"
@@ -38,6 +38,13 @@
             android:layout_width="match_parent"
             android:maxLines="2"
             android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/vector_icon_filter_delete"/>
     </RelativeLayout>
 </layout>
 
