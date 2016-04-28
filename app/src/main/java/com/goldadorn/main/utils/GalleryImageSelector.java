@@ -116,7 +116,7 @@ public class GalleryImageSelector extends ImageSelector
 
     public void openServerSelecton() {
 
-        boolean live=true;
+        boolean live=false;
         if(live) {
             Intent intent = new Intent(activity, SelectServerImageActivity.class);
             intent.putExtra("backEnabled", true);

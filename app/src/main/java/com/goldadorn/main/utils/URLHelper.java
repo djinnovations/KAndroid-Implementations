@@ -95,8 +95,15 @@ public class URLHelper {
         else if(url!=null && url.trim().startsWith(".../")) {
             url = url.trim().replace(".../", "");
         }
-        if(url!=null)
-            return getInstance().iamgeEndPoint+url;
+        if(url!=null) {
+            if(url.indexOf("products/")!=-1) {
+                url = getInstance().productImageEndPoint + url;
+                url = url.replace("/products/","/");
+                return url;
+            }
+            else
+                return getInstance().iamgeEndPoint + url;
+        }
         return null;
     }
 
@@ -119,9 +126,9 @@ public class URLHelper {
         return endPointSocial+VERB.SET_BASIC_PROFILE;
     }
 
-    public String getFindPeopleServiceURL()
+    public String getFindPeopleServiceURL(int offset)
     {
-        return endPointSocial +VERB.PEOPLE;
+        return endPointSocial +VERB.PEOPLE+"/"+offset;
     }
     public String getSocialFeedServiceURL()
     {

@@ -76,7 +76,7 @@ public class HashTagFragment extends DefaultVerticalListView {
     public String getNextDataURL(PageData pageData)
     {
         if(pageData.curruntPage==1)
-            return getApp().getUrlHelper().getFindPeopleServiceURL();
+            return getApp().getUrlHelper().getFindPeopleServiceURL(0);
         else
             return null;
     }

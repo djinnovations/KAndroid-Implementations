@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
@@ -50,6 +51,7 @@ import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collections;
@@ -113,9 +115,14 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
     {
         return null;
     }
+    private int offset=0;
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
-        params.put(URLHelper.LIKE_A_POST.POST_ID, getPostID());
+
+        try {
+            String param="{\"postid\":"+getPostID()+",\"offset\":"+offset+"}";
+            params.put(AQuery.POST_ENTITY,new StringEntity(param));
+        }catch (Exception e){}
         return params;
     }
     protected DataManager createDataManager()
@@ -134,6 +141,34 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
         }
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
+        }
+        @Override
+        protected void updatePagingData(BaseDataParser loadedDataVO)
+        {
+
+            try
+            {
+                if(loadedDataVO!=null && loadedDataVO instanceof LikesResult)
+                {
+                    LikesResult result = (LikesResult) loadedDataVO;
+                    if(result.offset!=-1 && offset != result.offset) {
+                        offset = result.offset;
+                        pageData.curruntPage += 1;
+                        pageData.totalPage += 1;
+                    }
+                    else
+                    {
+                        pageData.totalPage=pageData.curruntPage;
+                    }
+                }
+                else
+                {
+                    pageData.totalPage=pageData.curruntPage;
+                }
+            }catch (Exception e)
+            {
+                pageData.curruntPage=pageData.totalPage=1;
+            }
         }
     }
     protected void configDataManager(DataManager dataManager) {
@@ -271,7 +306,8 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
     }
     public static class LikesResult extends CodeDataParser
     {
-        List<Liked> likes;
+        public List<Liked> likes;
+        public int offset;
         public List<?> getList()
         {
             return likes;
