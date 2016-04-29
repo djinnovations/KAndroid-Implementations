@@ -29,12 +29,14 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.WebActivity;
+import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
@@ -1046,9 +1048,10 @@ public class SocialFeedFragment extends DefaultVerticalListView
     {
         //path = "http://goldadorn.cloudapp.net/goldadorn_dev/gallery/earrings/GALINK_1_the_an_anshar_ring.jpg";
 
-        if(path!=null && path.equals("")==false && path.indexOf("galink_")!=-1)
+        if(path!=null && path.equals("")==false && path.indexOf("/products/")!=-1)
         {
-            String link = path.substring(path.indexOf("galink_") + "galink_".length());
+            /*
+            String link = path.substring(path.indexOf("/products/") + "/products/".length());
             link = link.substring(0,link.indexOf("."));
             try{
                 String firstChar = link.substring(0,link.indexOf("_"));
@@ -1061,7 +1064,8 @@ public class SocialFeedFragment extends DefaultVerticalListView
             }
             if(link.indexOf("_")!=-1)
                 link = link.replaceAll("_","-");
-            return link;
+            */
+            return path;
 
         }
         return null;
@@ -1079,9 +1083,16 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
         if(imageURL!=null && isProductLink(imageURL)!=null)
         {
+            String id = imageURL.substring(imageURL.indexOf("/products/")+10,imageURL.length());
+            id = id.substring(0,id.indexOf("/"));
+
+            Product product = new Product(Integer.parseInt(id));
+            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            /*
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
             NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME,profuctLink,WebActivity.class);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
+            */
         }
         else {
             NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(), "Best of", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ImageZoomActivity.class);

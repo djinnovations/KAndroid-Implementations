@@ -133,8 +133,10 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         }
     }
     ArrayList<Parcelable> filters;
-    public void setFilters(ArrayList<Parcelable> filters) {
+    String sort;
+    public void setFilters(ArrayList<Parcelable> filters, String sort) {
         this.filters= filters;
+        this.sort =sort;
     }
 
     public class ProductLikeData
@@ -179,19 +181,13 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return params;
     }
 
-
     private String getParam(int offset)
     {
-        /*
-        if(filters==null)
-            return "{\"offset\" : "+offset+"}";
-        else
-            return "{\"offset\" : \""+offset+"\"}";
-            */
-
-
-        if(filters==null || filters.size()==0)
-            return "{\"offset\" : \""+offset+"\"}";
+        if(filters==null || filters.size()==0) {
+            String val = "{\"offset\" :" + offset;
+            val += ",\"sort\" : \""+ sort+"\"}";
+            return val;
+        }
         else
         {
             List<Designer> designerList = new ArrayList<>();
@@ -268,7 +264,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                 val +=desgnIds+",";
             if(collIds!=null)
                 val +=collIds+",";
-            val +="\"offset\" : "+offset+"}";
+            val +="\"offset\" : "+offset;
+            val +=",\"sort\" : \""+sort+"\"}";
             /*
             {
                 "priceRanges":

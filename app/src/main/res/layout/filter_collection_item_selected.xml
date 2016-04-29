@@ -28,7 +28,8 @@
 
 
         <TextView
-            android:visibility="gone"
+            android:textSize="10sp"
+            android:textColor="#ffffff"
             app:fontName="@{@string/font_name_text_normal}"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"

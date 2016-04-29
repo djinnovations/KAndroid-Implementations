@@ -33,7 +33,8 @@
 
 
 
-    <FrameLayout
+
+        <FrameLayout
 
         android:layout_below="@+id/filterPanel"
         android:id="@+id/mainHolder"
@@ -48,12 +49,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:id="@+id/sorting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:id="@+id/sortBestSelling"
+                    android:text="Best Selling"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <View
+
+                    android:layout_margin="10dp"
+                    android:background="#dddddd"
+                    android:layout_width=".5dp"
+                    android:layout_height="match_parent"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:id="@+id/sortPrice"
+                    android:text="Price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <View
+
+                    android:layout_margin="10dp"
+                    android:background="#dddddd"
+                    android:layout_width=".5dp"
+                    android:layout_height="match_parent"/>
+                <Button
+                    style="?android:attr/borderlessButtonStyle"
+                    android:id="@+id/sortNew"
+                    android:text="New"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
-                android:layout_below="@+id/title"
+                android:layout_below="@+id/sorting"
                 android:visibility="gone"
                 android:id="@+id/recyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="100dp"/>
+                android:layout_height="120dp"/>
 
 
             <Button
@@ -63,7 +104,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Add New or Change Current Filters"/>
-
         </RelativeLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -27,7 +27,8 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
-            android:visibility="gone"
+            android:textSize="10sp"
+            android:textColor="#ffffff"
             android:layout_margin="5dp"
             android:gravity="center_horizontal"
             android:layout_below="@+id/image"

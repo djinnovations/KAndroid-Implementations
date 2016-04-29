@@ -56,6 +56,42 @@ public class ServerProducts extends BaseActivity {
     @Bind(R.id.applyFilters)
     Button applyFilters;
 
+
+    @Bind(R.id.sortBestSelling)
+    Button sortBestSelling;
+    @OnClick(R.id.sortBestSelling)
+    void onSortBestSelling(){updateSort(sortBestSelling);}
+
+    @Bind(R.id.sortPrice)
+    Button sortPrice;
+    @OnClick(R.id.sortPrice)
+    void onSortPrice(){updateSort(sortPrice);}
+
+    @Bind(R.id.sortNew)
+    Button sortNew;
+
+
+    @OnClick(R.id.sortNew)
+    void onSortNew(){updateSort(sortNew);}
+
+    Button lastSorted;
+    private void updateSort(Button btn) {
+        if(lastSorted!=btn) {
+            lastSorted.setSelected(false);
+            lastSorted.setAlpha(Float.parseFloat(".3"));
+            btn.setSelected(true);
+            btn.setAlpha(Float.parseFloat("1"));
+            lastSorted = btn;
+            if (btn ==sortBestSelling)
+                sort = SORT_SOLD_UNITS;
+            else if (btn ==sortNew)
+                sort = SORT_DATE_ADDED;
+            else if (btn ==sortPrice)
+                sort = SORT_PROD_DEFAULT_PRICE;
+            refreshView(filters,sort);
+        }
+    }
+
     @Subscribe
     public void onEvent(FilterProductListing data)
     {
@@ -64,6 +100,12 @@ public class ServerProducts extends BaseActivity {
     public void processItem(FilterProductListing data) {
 
     }
+
+    public static final String SORT_PROD_DEFAULT_PRICE ="prodDefaultPrice";
+    public static final String SORT_DATE_ADDED="dateAdded";
+    public static final String SORT_SOLD_UNITS="soldUnits";
+    public String sort=SORT_SOLD_UNITS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,45 +114,58 @@ public class ServerProducts extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Selected Product");
+        setTitle("Our Product");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
 
-        refreshView(filters);
+        sortBestSelling.setSelected(true);
+        sortBestSelling.setAlpha(Float.parseFloat("1"));
+        sortNew.setAlpha(Float.parseFloat(".3"));
+        sortPrice.setAlpha(Float.parseFloat(".3"));
+        lastSorted=sortBestSelling;
+        refreshView(filters,sort);
 
         RecyclerView selectorRecyclerView= (RecyclerView) findViewById(R.id.recyclerView);
         selectorHelper= new SelectorHelper(this,selectorRecyclerView);
         selectorHelper.onRemoveListner(onRemoveListner);
         TypefaceHelper.setFont(applyFilters);
     }
+
+
     SelectorHelper.OnRemoveListner onRemoveListner = new SelectorHelper.OnRemoveListner()
     {
         @Override
         public void remove(Object o) {
-            System.out.println(o);
             for (Parcelable filter : filters) {
                 if(o instanceof Parcelable && (Parcelable)o==filter)
                 {
                     filters.remove((Parcelable)o);
-                    refreshView(filters);
+
+                    refreshView(filters,sort);
                     break;
                 }
             }
         }
     };
-    private void refreshView(ArrayList<Parcelable> filters) {
+    private void refreshView(ArrayList<Parcelable> filters,String sort) {
         if(filters!=null)
         {
             this.filters=filters;
             selectorHelper.removeAll();
             selectorHelper.addAll(filters);
+            if(filters.size()==0)
+                setTitle("Our Product");
+            else
+                setTitle("Your Selections");
         }
+        else
+            setTitle("Our Product");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),"", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);
         mActivePage = (ProductsFragment) BaseFragment.newInstance(navigationObject);
-        mActivePage.setFilters(filters);
+        mActivePage.setFilters(filters,sort);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
     }
 
@@ -135,10 +190,10 @@ public class ServerProducts extends BaseActivity {
             Runnable r= new Runnable() {
                 @Override
                 public void run() {
-                    refreshView(filters);
+                    refreshView(filters,sort);
                 }
             };
-            h.postDelayed(r,1000);
+            h.postDelayed(r,200);
 
         }
     }
