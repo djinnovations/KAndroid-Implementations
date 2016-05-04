@@ -114,7 +114,7 @@ public class ServerProducts extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Our Product");
+        setTitle("Our Products");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
@@ -155,12 +155,12 @@ public class ServerProducts extends BaseActivity {
             selectorHelper.removeAll();
             selectorHelper.addAll(filters);
             if(filters.size()==0)
-                setTitle("Our Product");
+                setTitle("Our Products");
             else
                 setTitle("Your Selections");
         }
         else
-            setTitle("Our Product");
+            setTitle("Our Products");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),"", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);

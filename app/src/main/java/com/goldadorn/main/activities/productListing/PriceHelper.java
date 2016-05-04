@@ -65,18 +65,20 @@ public class PriceHelper implements IViewProvider{
         public List<?> getList(PageData data, Map<String, Object> param) {
             if (data.curruntPage == 1) {
                 List<FilterPrice> list = new ArrayList<>();
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
-                list.add(getPrice("500", "10000"));
+                list.add(getPrice("1000", "5000"));
+                list.add(getPrice("5000", "10000"));
+                list.add(getPrice("10000", "15000"));
+                list.add(getPrice("15000", "20000"));
+                list.add(getPrice("20000", "25000"));
+                list.add(getPrice("25000", "30000"));
+                list.add(getPrice("30000", "40000"));
+                list.add(getPrice("40000", "50000"));
+                list.add(getPrice("50000", "60000"));
+                list.add(getPrice("60000", "70000"));
+                list.add(getPrice("70000", "80000"));
+                list.add(getPrice("80000", "90000"));
+                list.add(getPrice("90000", "100000"));
+                list.add(getPrice("100000", "1000000"));
                 return list;
             }
             return null;

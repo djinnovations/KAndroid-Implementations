@@ -58,7 +58,7 @@ public class FilterSelector extends BaseActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Apply Filter");
+        setTitle("Apply Filter(s)");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
@@ -101,10 +101,14 @@ public class FilterSelector extends BaseActivity {
         rangebar.setFormatter(new IRangeBarFormatter() {
             @Override
             public String format(String s) {
-                if(Integer.parseInt(s)>=1000)
-                    return Integer.parseInt(s)*50+"+";
-                else
-                    return Integer.parseInt(s)*50+"";
+                if(Integer.parseInt(s)>=1000) {
+                    int value =(Integer.parseInt(s)* 50)/1000;
+                    return value  + "k+";
+                }
+                else {
+                    int value =(Integer.parseInt(s)* 50)/1000;
+                    return value  + "k";
+                }
             }
         });
 
