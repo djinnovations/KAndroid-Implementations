@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,6 +19,9 @@ import android.widget.TextView;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.utils.ConnectionDetector;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
@@ -82,11 +86,14 @@ public class LoginPageActivity extends BaseActivity {
 
 
     @Bind(R.id.layoutParent)
-    ViewGroup layoutParent;
+    public ViewGroup layoutParent;
 
     @Bind(R.id.progressBar)
     ProgressView progressBar;
 
+
+    //Author DJphy
+    private SocialLoginUtil mSocialLoginInstance;
 
     @OnClick(R.id.createAccount)
     void onClickCreateAccount() {
@@ -221,17 +228,24 @@ public class LoginPageActivity extends BaseActivity {
 
     @OnClick(R.id.loginWithFacebookButton)
     void onClickLoginWithFacebookButton() {
-
+        //// TODO: 5/6/2016
+        if (checkNetwork()){
+            mSocialLoginInstance.onFacebookLogin(this);
+        }
     }
 
     @OnClick(R.id.loginWithGoogleButton)
     void onClickLoginWithGoogleButton() {
-
+        if (checkNetwork()){
+            mSocialLoginInstance.onGoogleLogin(this);
+        }
     }
 
     @OnClick(R.id.loginWithTwitterButton)
     void onClickLoginWithTwitterButton() {
-
+        if (checkNetwork()){
+            mSocialLoginInstance.onTwitterLogin(this);
+        }
     }
 
 
@@ -263,7 +277,50 @@ public class LoginPageActivity extends BaseActivity {
         });
 //        Intent in = new Intent(this, CartManagerActivity.class);
 //        startActivity(in);
+
+        //Author DJphy
+        mSocialLoginInstance = SocialLoginUtil.getInstance(getApplicationContext());
     }
+
+    private boolean checkNetwork(){
+
+        if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()){
+            return true;
+        }
+        else {
+            final Snackbar snackbar = Snackbar.make(loginAccount, Constants.ERR_MSG_NETWORK, Snackbar.LENGTH_SHORT);
+            ColoredSnackbar.alert(snackbar).show();
+            return false;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mSocialLoginInstance.handleActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSocialLoginInstance.onActivityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSocialLoginInstance.onActivityStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSocialLoginInstance.performGoogleLogout();
+    }
+
 
     private class LoginTextWatcher implements TextWatcher {
 

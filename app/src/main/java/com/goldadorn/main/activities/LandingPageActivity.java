@@ -3,42 +3,22 @@ package com.goldadorn.main.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
-import com.facebook.login.LoginResult;
 import com.goldadorn.main.R;
-import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
-import com.goldadorn.main.dj.model.UserProfile;
 import com.goldadorn.main.dj.model.UserSession;
-import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.plus.Plus;
-import com.google.android.gms.plus.model.people.Person;
 import com.kimeeo.library.actions.Action;
-
-import org.joda.time.LocalDate;
-import org.joda.time.Years;
-import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,7 +31,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     Button createAccount;
 
     @Bind(R.id.loginAccount)
-    Button loginAccount;
+    public Button loginAccount;
 
     @Bind(R.id.loginWithFacebookButton)
     Button loginWithFacebookButton;
@@ -102,7 +82,6 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
         if (checkNetwork()){
             mSocialLoginInstance.onFacebookLogin(this);
         }
-
     }
 
     @OnClick(R.id.loginWithGoogleButton)
@@ -185,7 +164,6 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         Log.d(Constants.TAG, "Login successs");
-                        //// TODO: 5/4/2016
                         onSuccessfulLogin(new FbGoogleTweetLoginResult(null, loginResult, Constants.PLATFORM_FACEBOOK));
                     }
 
@@ -202,7 +180,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                 });
     }*/
 
-    private void setResultListenerFb(LoginResult loginResult) {
+    /*private void setResultListenerFb(LoginResult loginResult) {
 
         GraphRequest request = GraphRequest.newMeRequest(
                 loginResult.getAccessToken(),
@@ -234,9 +212,9 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                                 birthday = object.getString("birthday");
                             }
 
-                            /*UserProfile mUserProfile = new UserProfile(uniqueId, Constants.PLATFORM_GOOGLE,
+                            *//*UserProfile mUserProfile = new UserProfile(uniqueId, Constants.PLATFORM_GOOGLE,
                                     name, emailId, gender, city, "10");
-                            mUserSession.setUserProfile(mUserProfile);*/
+                            mUserSession.setUserProfile(mUserProfile);*//*
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -293,7 +271,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                     });
         }
 
-    }
+    }*/
 
 
     @Override
@@ -331,7 +309,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     }*/
 
 
-    private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
+    /*private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
         // TODO Auto-generated method stub
         if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_GOOGLE)) {
 
@@ -339,19 +317,19 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
             GoogleSignInAccount mGoogleProfile = mGoogleResult.getSignInAccount();
 
             UserProfile mUserProfie = getGplusProfile( mGoogleProfile.getId(),mGoogleProfile.getEmail());
-                    /*new UserProfile(mGoogleProfile.getId(),  Constants.PLATFORM_GOOGLE,
+                    *//*new UserProfile(mGoogleProfile.getId(),  Constants.PLATFORM_GOOGLE,
                     mGoogleProfile.getDisplayName(), mGoogleProfile.getEmail(),
-                    mGoogleProfile.,);*/
+                    mGoogleProfile.,);*//*
             mUserSession.setUserProfile(mUserProfie);
         } else if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_FACEBOOK)) {
 
-            /** Unable to fetch email-id, user-name through facebook login **/
+            *//** Unable to fetch email-id, user-name through facebook login **//*
             LoginResult mFbLoginResult = loginResults.getFaceBookLoginResult();
 
             //setResultListenerFb(mFbLoginResult);
 
             authWithServer(mFbLoginResult);
-            /*
+            *//*
             Log.d(Constants.TAG, "userName: " + user_name);
             Log.d(Constants.TAG, "userId: " + user_id_fb);
             Log.d(Constants.TAG, "email id: " + email_id);
@@ -360,7 +338,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                     email_id, Ibek_AppConstants.LOGIN_PLATFORM_FACEBOOK);
             mUserSession.setUserProfile(mUserProfie);
 
-            *//************Dont use facebook login******************************************************/
+            *//**//************Dont use facebook login******************************************************//*
 
         }
 
@@ -419,7 +397,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
         LocalDate now = new LocalDate();
         Years age = Years.yearsBetween(birthdate, now);
         return age.getYears();
-    }
+    }*/
 
 
 
@@ -443,7 +421,6 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
 
     /*@Override
     public void onConnectionFailed(ConnectionResult result) {
-        // TODO Auto-generated method stub
         Log.d(Constants.TAG, "on connection failed");
         if (!result.hasResolution()) {
             GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), this,
@@ -487,7 +464,6 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
 
     @Override
     public void onConnected(Bundle arg0) {
-        // TODO Auto-generated method stub
         Log.d(Constants.TAG, "on connected");
     }
 
@@ -513,7 +489,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     }
 
 
-    private void clearPermissionByFb(){
+    /*private void clearPermissionByFb(){
         new GraphRequest(
                 AccessToken.getCurrentAccessToken(),
                 "/me/permissions",
@@ -521,10 +497,10 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
                 HttpMethod.DELETE,
                 new GraphRequest.Callback() {
                     public void onCompleted(GraphResponse response) {
-            /* handle the result */
+            *//* handle the result *//*
                         Log.d(Constants.TAG, "on clear permission fb response: "+response.toString());
                     }
                 }
         ).executeAsync();
-    }
+    }*/
 }

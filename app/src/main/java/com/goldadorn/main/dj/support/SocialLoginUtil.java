@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,12 +31,15 @@ import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.LandingPageActivity;
+import com.goldadorn.main.activities.LoginPageActivity;
 import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
 import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -222,7 +226,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
         @Override
         public void failure(TwitterException exception) {
-
+            exception.printStackTrace();
+            setErrSnackBar(Constants.ERR_MSG_NETWORK);
         }
     };
 
@@ -298,9 +303,26 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                     @Override
                     public void onError(FacebookException exception) {
                         //probably no network connection at the moment (most of the times)
-                        Toast.makeText(mContext, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        setErrSnackBar(Constants.ERR_MSG_NETWORK);
                     }
                 });
+    }
+
+
+    private void setErrSnackBar(String errMsg){
+
+        View viewForSnackBar = null;
+        if (mActivity instanceof LandingPageActivity){
+            viewForSnackBar = ((LandingPageActivity) mActivity).loginAccount;
+        }else if (mActivity instanceof LoginPageActivity){
+            viewForSnackBar = ((LoginPageActivity) mActivity).layoutParent;
+        }
+        if (viewForSnackBar != null){
+            final Snackbar snackbar = Snackbar.make(viewForSnackBar, errMsg,
+                    Snackbar.LENGTH_SHORT);
+            ColoredSnackbar.alert(snackbar).show();
+        }
     }
 
 
@@ -339,8 +361,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
             String token = loginResults.getTwitterLoginResult().data.getAuthToken().token;
             String ver = twitCore.getVersion();
-            Log.d("dj", "token - onSuccessfulLogin: "+token);
-            Log.d("dj", "version - onSuccessfulLogin: "+ver);
+            Log.d(Constants.TAG, "token - onSuccessfulLogin: "+token);
+            Log.d(Constants.TAG, "version - onSuccessfulLogin: "+ver);
         }
 
         //Intent loggedInActivityIntent = new Intent(this, LoggedInScreenActivity.class);
@@ -370,21 +392,22 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                     @Override
                     public void onResponse(JSONObject response) {
 
-                        Log.d("dj", "response - authWithServer: "+response);
+                        Log.d(Constants.TAG, "response - authWithServer: "+response);
                         String status = "N/A";
                         String message = "N/A";
 
                         try {
                             status = response.getString(ApiKeys.STATUS);
                             message = response.getString(ApiKeys.MESSAGE);
-                            Log.d("dj", "status: "+status);
-                            Log.d("dj", "message: "+message);
+                            Log.d(Constants.TAG, "status: "+status);
+                            Log.d(Constants.TAG, "message: "+message);
                             dialog.dismiss();
                             evaluateResults(status, message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             dialog.dismiss();
-                            genericInfo(Constants.ERR_MSG_1);
+                            //genericInfo(Constants.ERR_MSG_1);
+                            setErrSnackBar(Constants.ERR_MSG_1);
                         }
 
                     }
@@ -392,9 +415,10 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             @Override
             public void onErrorResponse(VolleyError error) {
                 dialog.dismiss();
-                Log.d("dj", "volley error: ");
+                Log.d(Constants.TAG, "volley error: ");
                 error.printStackTrace();
-                genericInfo(Constants.ERR_MSG_1);
+                //genericInfo(Constants.ERR_MSG_1);
+                setErrSnackBar(Constants.ERR_MSG_NETWORK);
             }
         });
 
@@ -414,12 +438,13 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             doSuccessOperation();
         }
         else if (status.equalsIgnoreCase(ApiKeys.RESPONSE_FAIL)){
-            genericInfo(message);
+            //genericInfo(message);
+            setErrSnackBar(message);
         }
     }
 
     private void doSuccessOperation() {
-        //// TODO: 5/6/2016  
+        //// TODO: 5/6/2016
         genericInfo("Auth from server successful");
     }
 
@@ -435,7 +460,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status arg0) {
-                            //Log.d("dj", "on revoke");
+                            //Log.d(Constants.TAG, "on revoke");
                             //Toast.makeText(getBaseContext(), "Sign-out, successful", Toast.LENGTH_SHORT).show();
                             mGoogleApiClient.connect();
                         }
@@ -448,9 +473,10 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 
+        Log.d(Constants.TAG, "onActivity result - Social Logins ActResultCallback ");
         if (requestCode == GMAIL_RC_SIGN_IN && resultCode == Activity.RESULT_OK) {
 
-            Log.d(Constants.TAG, "onActivity result - Result_Ok");
+            Log.d(Constants.TAG, "onActivity result GoogleSignIn - Result_Ok");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
@@ -465,7 +491,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         if (result.isSuccess()) {
             // Signed in successfully.
             isSignedIn = true;
-            //setGooglePlusButtonText(getResources().getString(R.string.google_signout_text));
             onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
@@ -480,50 +505,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
-        // TODO Auto-generated method stub
         Log.d(Constants.TAG, "on connection failed");
-        /*if (!result.hasResolution()) {
-            GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), mContext,
-                    0).show();
-            return;
-        }
-
-        if (!mIntentInProgress) {
-            // Store the ConnectionResult for later usage
-            mConnectionResult = result;
-            Log.d(Constants.TAG, "on connection failed - !mIntentInProgress");
-            if (!isSignedIn) {
-                // The user has already clicked 'sign-in' so we attempt to
-                // resolve all
-                // errors until the user is signed in, or they cancel.
-                Log.d(Constants.TAG, "on connection failed - singinflag");
-                resolveSignInError();
-            }
-        }*/
     }
-
-
-
-    /*private void resolveSignInError() {
-
-        Log.d(Constants.TAG, "on resolve signin error");
-        mGoogleApiClient.connect();
-        if (mConnectionResult != null && mConnectionResult.hasResolution()) {
-            try {
-                Log.d(Constants.TAG, "on resolve signin error - has resolution");
-                mIntentInProgress = true;
-                mConnectionResult.startResolutionForResult(this, GMAIL_RC_SIGN_IN);
-            } catch (IntentSender.SendIntentException e) {
-                mIntentInProgress = false;
-                mGoogleApiClient.connect();
-            }
-        }
-    }*/
 
 
     @Override
     public void onConnected(Bundle arg0) {
-        // TODO Auto-generated method stub
         Log.d(Constants.TAG, "on connected");
     }
 
