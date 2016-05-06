@@ -105,6 +105,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add New or Change Current Filters"/>
+
+
+        <View
+            android:id="@+id/closeFilter"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/vector_icon_filter_delete"/>
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
 

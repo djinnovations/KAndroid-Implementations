@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_post_normal"
+        android:icon="@drawable/vector_icon_search"
+        android:orderInCategory="100"
+        android:title="Post"
+        app:showAsAction="always|collapseActionView"/>
+
+    <item
+        android:id="@+id/nav_post_buy_or_not"
+        android:icon="@drawable/vector_icon_bell"
+        android:orderInCategory="100"
+        android:title="Buy or Not Buy"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/nav_post_b_o_t"
+        android:icon="@drawable/vector_icon_bell"
+        android:orderInCategory="100"
+        android:title="Best of Three"
+        app:showAsAction="always"/>
+</menu>

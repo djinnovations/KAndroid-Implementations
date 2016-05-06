@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
@@ -27,6 +29,7 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.nineoldandroids.animation.Animator;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -70,9 +73,40 @@ public class ServerProducts extends BaseActivity {
     @Bind(R.id.sortNew)
     Button sortNew;
 
+    @Bind(R.id.filterPanel)
+    View filterPanel;
+
+
+
 
     @OnClick(R.id.sortNew)
     void onSortNew(){updateSort(sortNew);}
+
+    @OnClick(R.id.closeFilter)
+    void onCloseFilter(){
+        YoYo.with(Techniques.FadeOutDown).duration(300).withListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                filterPanel.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        }).playOn(filterPanel);
+    }
+
 
     Button lastSorted;
     private void updateSort(Button btn) {

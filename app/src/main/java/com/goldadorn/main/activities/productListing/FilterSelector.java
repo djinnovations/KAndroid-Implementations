@@ -95,19 +95,29 @@ public class FilterSelector extends BaseActivity {
                 price.setMaxVal("INR "+price.getMax());
                 price.setMinVal("INR "+price.getMin());
                 price.setId(price.getMin()+price.getMax());
+                selectorHelper.removePrice();
                 selectorHelper.add(price);
             }
         });
         rangebar.setFormatter(new IRangeBarFormatter() {
             @Override
             public String format(String s) {
+
                 if(Integer.parseInt(s)>=1000) {
-                    int value =(Integer.parseInt(s)* 50)/1000;
-                    return value  + "k+";
+                    double value =(Double.parseDouble(s)* 50)/1000;
+                    String valueString = value  +"";
+                    valueString = valueString.substring(0,3);
+                    valueString = Double.parseDouble(valueString)+"";
+                    valueString += "k+";
+                    return valueString;
                 }
                 else {
-                    int value =(Integer.parseInt(s)* 50)/1000;
-                    return value  + "k";
+                    double value =(Double.parseDouble(s)* 50)/1000;
+                    String valueString = value  + "";
+                    valueString = valueString.substring(0,3);
+                    valueString = Double.parseDouble(valueString)+"";
+                    valueString += "k";
+                    return valueString;
                 }
             }
         });
@@ -118,8 +128,11 @@ public class FilterSelector extends BaseActivity {
     RecyclerViewHelper.OnItemClick filterItemClick = new RecyclerViewHelper.OnItemClick(){
         @Override
         public void onItemClick(Object o) {
-            if(o instanceof IIDInterface)
-                selectorHelper.add((IIDInterface)o);
+            if(o instanceof IIDInterface) {
+                if(o instanceof FilterPrice)
+                    selectorHelper.removePrice();
+                selectorHelper.add((IIDInterface) o);
+            }
         }
     };
 
