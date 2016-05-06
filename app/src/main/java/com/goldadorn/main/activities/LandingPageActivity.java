@@ -1,39 +1,36 @@
 package com.goldadorn.main.activities;
 
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
 import com.goldadorn.main.dj.model.UserProfile;
 import com.goldadorn.main.dj.model.UserSession;
+import com.goldadorn.main.dj.server.RequestJson;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
 import com.google.android.gms.plus.model.people.Person;
@@ -43,14 +40,12 @@ import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.json.JSONObject;
 
-import java.util.Arrays;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LandingPageActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class LandingPageActivity extends BaseActivity /*implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener*/ {
 
     @Bind(R.id.createAccount)
     Button createAccount;
@@ -89,6 +84,7 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
     private boolean mIntentInProgress = false;
     /**************************************************************/
 
+    private SocialLoginUtil mSocialLoginInstance;
 
     @OnClick(R.id.createAccount)
     void onClickCreateAccount() {
@@ -102,17 +98,27 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
 
     @OnClick(R.id.loginWithFacebookButton)
     void onClickLoginWithFacebookButton() {
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList(permissionArr));
+        //LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList(permissionArr));
+        if (checkNetwork()){
+            mSocialLoginInstance.onFacebookLogin(this);
+        }
+
     }
 
     @OnClick(R.id.loginWithGoogleButton)
     void onClickLoginWithGoogleButton() {
-        googleLoginClicked();
+        //googleLoginClicked();
+        if (checkNetwork()){
+            mSocialLoginInstance.onGoogleLogin(this);
+        }
     }
 
     @OnClick(R.id.loginWithTwitterButton)
     void onClickLoginWithTwitterButton() {
 
+        if (checkNetwork()){
+            mSocialLoginInstance.onTwitterLogin(this);
+        }
     }
 
 
@@ -120,28 +126,42 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //initialize fb sdk before performing any other operation.
-        FacebookSdk.sdkInitialize(this);
+        //FacebookSdk.sdkInitialize(this);
 
         setContentView(R.layout.activity_app_landing_page);
         ButterKnife.bind(this);
         TypefaceHelper.setFont(loginAccount, createAccount, orLabel);
 
-        initializeFbAndGoogle();
-        setFbCallBacks();
+        /*initializeFbAndGoogle();
+        setFbCallBacks();*/
+        mSocialLoginInstance = SocialLoginUtil.getInstance(getApplicationContext());
+
     }
 
 
-    private void initializeFbAndGoogle() {
+    private boolean checkNetwork(){
 
-        /*************************************Facebook stuffs********************************************/
+        if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()){
+            return true;
+        }
+        else {
+            final Snackbar snackbar = Snackbar.make(loginAccount, Constants.ERR_MSG_NETWORK, Snackbar.LENGTH_SHORT);
+            ColoredSnackbar.alert(snackbar).show();
+            return false;
+        }
+    }
+
+    /*private void initializeFbAndGoogle() {
+
+        *//*************************************Facebook stuffs********************************************//*
         //FacebookSdk.sdkInitialize(this);
         // Initialize the SDK before executing any other operations,
         // especially, if you're using Facebook UI elements.
 
         mFbCallbackManager = CallbackManager.Factory.create();
-        /********************************************************************************************/
+        *//********************************************************************************************//*
 
-        /**************************************Gmail stuffs**********************************************/
+        *//**************************************Gmail stuffs**********************************************//*
 
         mGoogleSignInOpt = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(Plus.SCOPE_PLUS_LOGIN, new Scope("email"))
@@ -153,12 +173,12 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
 
-        /*************************************************************************************************/
+        *//*************************************************************************************************//*
         mUserSession = UserSession.getUserSession();
-    }
+    }*/
 
 
-    private void setFbCallBacks() {
+    /*private void setFbCallBacks() {
 
         LoginManager.getInstance().registerCallback(mFbCallbackManager,
                 new FacebookCallback<LoginResult>() {
@@ -180,7 +200,7 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
                         Toast.makeText(LandingPageActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-    }
+    }*/
 
     private void setResultListenerFb(LoginResult loginResult) {
 
@@ -280,18 +300,20 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == GMAIL_RC_SIGN_IN && resultCode == RESULT_OK) {
+        /*if (requestCode == GMAIL_RC_SIGN_IN && resultCode == RESULT_OK) {
 
             Log.d(Constants.TAG, "onActivity result - Result_Ok");
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            handleSignInResult(result);/*
+
         }
 
-        mFbCallbackManager.onActivityResult(requestCode, resultCode, data);
+        mFbCallbackManager.onActivityResult(requestCode, resultCode, data);*/
+        mSocialLoginInstance.handleActivityResult(requestCode, resultCode, data);
     }
 
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    /*private void handleSignInResult(GoogleSignInResult result) {
 
         if (result.isSuccess()) {
             // Signed in successfully.
@@ -306,7 +328,7 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
             // Signed out.
             isSignedIn = false;
         }
-    }
+    }*/
 
 
     private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
@@ -326,7 +348,9 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
             /** Unable to fetch email-id, user-name through facebook login **/
             LoginResult mFbLoginResult = loginResults.getFaceBookLoginResult();
 
-            setResultListenerFb(mFbLoginResult);
+            //setResultListenerFb(mFbLoginResult);
+
+            authWithServer(mFbLoginResult);
             /*
             Log.d(Constants.TAG, "userName: " + user_name);
             Log.d(Constants.TAG, "userId: " + user_id_fb);
@@ -342,6 +366,13 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
 
         //Intent loggedInActivityIntent = new Intent(this, LoggedInScreenActivity.class);
         //startActivity(loggedInActivityIntent);
+
+    }
+
+    private void authWithServer(LoginResult mFbLoginResult) {
+        GraphRequest req = new GraphRequest();
+        String version = req.getVersion();
+        RequestJson reqJson = RequestJson.getInstance();
 
     }
 
@@ -396,19 +427,21 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
     public void onStart() {
         super.onStart();
         // make sure to initiate connection
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
+        mSocialLoginInstance.onActivityStart(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         // disconnect api if it is connected
-        if (mGoogleApiClient.isConnected())
-            mGoogleApiClient.disconnect();
+        /*if (mGoogleApiClient.isConnected())
+            mGoogleApiClient.disconnect();*/
+        mSocialLoginInstance.onActivityStop();
     }
 
 
-    @Override
+    /*@Override
     public void onConnectionFailed(ConnectionResult result) {
         // TODO Auto-generated method stub
         Log.d(Constants.TAG, "on connection failed");
@@ -465,16 +498,18 @@ public class LandingPageActivity extends BaseActivity implements GoogleApiClient
 
         Log.d(Constants.TAG, "on connection suspended");
         mGoogleApiClient.connect();
-    }
+    }*/
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mGoogleApiClient.isConnected()) {
+        /*if (mGoogleApiClient.isConnected()) {
             googleLogout();
-        }
-        clearPermissionByFb();
+        }*/
+        //clearPermissionByFb();
+        mSocialLoginInstance.performGoogleLogout();
+        //mSocialLoginInstance.clearFbPermission();
     }
 
 

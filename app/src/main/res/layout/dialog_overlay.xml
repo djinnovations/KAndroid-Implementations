@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <TextView
+        android:id="@+id/tvOverlayInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Hang On!"
+        android:textColor="@color/colorAccent"
+        android:textSize="20sp" />
+
+    <com.rey.material.widget.ProgressView
+        android:id="@+id/progressBar"
+        android:layout_width="@dimen/tinyProgressBar"
+        android:layout_height="@dimen/tinyProgressBar"
+        android:layout_centerInParent="true"
+        android:visibility="visible"
+        app:pv_autostart="true"
+        app:pv_circular="true"
+        app:pv_progressMode="indeterminate"
+        app:pv_progressStyle="@style/Theme.AppCompat.NoActionBar"
+        tools:visibility="visible" />
+
+</RelativeLayout>
