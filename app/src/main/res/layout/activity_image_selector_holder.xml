@@ -35,39 +35,15 @@
         app:rtl_tabIndicatorHeight="0dp"/>
 
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_below="@+id/appBarLayout"
         android:layout_marginTop="10dp"
+        android:id="@+id/mainHolder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activities.MainActivity"
-        tools:showIn="@layout/app_bar_main">
-        <FrameLayout
-
-            android:id="@+id/mainHolder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-        </FrameLayout>
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/select"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            app:fab_size="normal"
-            app:fab_colorNormal="@color/fabButtonNormal"
-            app:fab_colorPressed="@color/fabButtonPressed"/>
-
-
-
-    </RelativeLayout>
+        tools:showIn="@layout/app_bar_main"/>
 
 
 

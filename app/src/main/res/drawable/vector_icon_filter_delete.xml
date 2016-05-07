@@ -1,0 +1,4 @@
+<vector android:height="24dp" android:viewportHeight="512.0"
+    android:viewportWidth="512.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="@color/buttonNormalStart" android:pathData="M256,0C114.8,0 0,114.8 0,256s114.8,256 256,256s256,-114.8 256,-256S397.2,0 256,0zM358.6,313.4c12.5,12.5 12.5,32.8 0,45.3C352.4,364.9 344.2,368 336,368s-16.4,-3.1 -22.6,-9.4L256,301.3l-57.4,57.4C192.4,364.9 184.2,368 176,368s-16.4,-3.1 -22.6,-9.4c-12.5,-12.5 -12.5,-32.8 0,-45.3L210.8,256l-57.4,-57.4c-12.5,-12.5 -12.5,-32.8 0,-45.3c12.5,-12.5 32.8,-12.5 45.3,0L256,210.8l57.4,-57.4c12.5,-12.5 32.8,-12.5 45.3,0c12.5,12.5 12.5,32.8 0,45.3L301.3,256L358.6,313.4z"/>
+</vector>

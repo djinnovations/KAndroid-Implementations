@@ -124,11 +124,12 @@ public class HomePage extends BaseHorizontalFragmentViewPager
         public TabIndicatorRecyclerViewAdapter(ViewPager viewPager, DataManager dataManager) {
             super(viewPager,dataManager);
         }
-        protected  ViewHolder getViewHolder(View view)
+        protected  ViewHolder getViewHolder(View view, int var2)
         {
             return new MyViewHolder(view);
         }
-        protected View getView(ViewGroup parent)
+        @Override
+        protected View getView(ViewGroup parent, int var2)
         {
             return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_tab_view, parent, false);
         }

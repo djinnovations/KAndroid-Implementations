@@ -1,5 +1,6 @@
 package com.goldadorn.main.modules.people;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,12 +15,16 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
+import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
 import com.squareup.picasso.Picasso;
+
+import org.apache.http.cookie.Cookie;
 
 import java.util.List;
 
@@ -97,7 +102,47 @@ public class FindPeopleFragment extends DefaultVerticalListView
     {
         return new PeopleItemHolder(view);
     }
+    private int offset=0;
+    @Override
+    protected DataManager createDataManager()
+    {
+        return new DefaultProjectDataManager1(getActivity(),this,getApp().getCookies());
+    }
+    public class DefaultProjectDataManager1 extends com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager
+    {
+        public DefaultProjectDataManager1(Context context, IDataManagerDelegate delegate, List<Cookie> cookies)
+        {
+            super(context,delegate,cookies);
+        }
+        @Override
+        protected void updatePagingData(BaseDataParser loadedDataVO)
+        {
 
+            try
+            {
+                if(loadedDataVO!=null && loadedDataVO instanceof PeopleResult)
+                {
+                    PeopleResult result = (PeopleResult) loadedDataVO;
+                    if(result.offset!=-1 && offset != result.offset) {
+                        offset = result.offset;
+                        pageData.curruntPage += 1;
+                        pageData.totalPage += 1;
+                    }
+                    else
+                    {
+                        pageData.totalPage=pageData.curruntPage;
+                    }
+                }
+                else
+                {
+                    pageData.totalPage=pageData.curruntPage;
+                }
+            }catch (Exception e)
+            {
+                pageData.curruntPage=pageData.totalPage=1;
+            }
+        }
+    }
     public Class getLoadedDataParsingAwareClass()
     {
         return PeopleResult.class;
@@ -105,7 +150,7 @@ public class FindPeopleFragment extends DefaultVerticalListView
     public String getNextDataURL(PageData pageData)
     {
         if(pageData.curruntPage==1)
-            return getApp().getUrlHelper().getFindPeopleServiceURL();
+            return getApp().getUrlHelper().getFindPeopleServiceURL(offset);
         else
             return null;
     }
@@ -164,7 +209,7 @@ public class FindPeopleFragment extends DefaultVerticalListView
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followPeope(people, position);
+                    followPeope(people, getAdapterPosition());
                 }
             }
         };
@@ -223,18 +268,20 @@ public class FindPeopleFragment extends DefaultVerticalListView
 
     public static class PeopleResult extends CodeDataParser
     {
-        List<People> data;
+        List<People> people;
+        public int offset;
+
         public List<?> getList()
         {
-            return data;
+            return people;
         }
         public Object getData()
         {
-            return data;
+            return this;
         }
         public void setData(Object data)
         {
-            this.data=(List<People>)data;
+            this.people=(List<People>)data;
         }
     }
 }

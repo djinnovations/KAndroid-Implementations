@@ -257,18 +257,18 @@ public class CommentsView extends DefaultVerticalListView
 
     public static class CommentResult extends CodeDataParser
     {
-        List<Comment> data;
+        List<Comment> comments;
         public List<?> getList()
         {
-            return data;
+            return comments;
         }
         public Object getData()
         {
-            return data;
+            return comments;
         }
         public void setData(Object data)
         {
-            this.data=(List<Comment>)data;
+            this.comments=(List<Comment>)data;
         }
     }
 

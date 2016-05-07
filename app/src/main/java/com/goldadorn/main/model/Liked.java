@@ -13,6 +13,8 @@ public class Liked implements IParseableObject {
     private int userId;
     private String userName;
     private String profilePic;
+    private int isFollow;
+
 
     public boolean isSelf() {
         return isSelf;
@@ -54,5 +56,13 @@ public class Liked implements IParseableObject {
 
     public String getProfilePic() {
         return profilePic;
+    }
+
+    public int getIsFollow() {
+        return isFollow;
+    }
+
+    public void setIsFollow(int isFollow) {
+        this.isFollow = isFollow;
     }
 }

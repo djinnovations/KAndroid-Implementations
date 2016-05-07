@@ -46,6 +46,9 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
         {
             String stringValue = value.toString();
             stringValue = stringValue.trim();
+            //stringValue = stringValue.replace(",\"msg\":null","");
+
+
             if(stringValue.indexOf("[")==0) {
                 stringValue = "{"+'"'+"data"+'"'+":"+stringValue+"}";
                 super.dataHandler(url, stringValue, status);
@@ -56,7 +59,7 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
                 super.dataHandler(url, stringValue, status);
             }
             else
-                super.dataHandler(url,value,status);
+                super.dataHandler(url,stringValue,status);
         }
         else
             super.dataHandler(url,value,status);

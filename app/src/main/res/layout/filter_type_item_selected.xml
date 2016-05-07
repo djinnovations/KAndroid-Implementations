@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="productType"
+            type="com.goldadorn.main.model.FilterType"/>
+    </data>
+
+    <RelativeLayout android:layout_width="100dp"
+        android:layout_height="wrap_content">
+
+        <com.goldadorn.main.activities.productListing.DiamondImageView
+            android:id="@+id/image"
+            android:layout_marginTop="-14dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            app:imageUrl="@{productType.image}"
+            app:siRadius="8dp"
+            app:siBorderWidth="1dp"
+            app:siBorderColor="@color/avtarBorderColor"
+            app:siSquare="true"
+            tools:background="#ff0000"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_marginTop="-15dp"
+            android:textSize="10sp"
+            android:textColor="#ffffff"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/image"
+            tools:text="ABC"
+            app:fontName="@{@string/font_name_text_normal}"
+            android:text="@{productType.prodType}"
+            android:layout_width="match_parent"
+            android:maxLines="2"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/vector_icon_filter_delete"/>
+    </RelativeLayout>
+</layout>
+

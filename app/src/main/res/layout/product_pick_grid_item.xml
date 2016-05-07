@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="product"
+            type="com.goldadorn.main.model.FilterProductListing"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_margin="@dimen/padding_default"
+        app:cardCornerRadius="@dimen/feedCardCornerRadius"
+        android:layout_gravity="center"
+        android:elevation="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="@color/productFilterItemBackgraound"
+            android:orientation="vertical" android:layout_width="match_parent"
+            android:layout_height="225dp">
+            <ImageView
+                android:background="#ffffff"
+                app:imageUrl="@{product.image}"
+                android:layout_width="match_parent"
+                android:layout_height="140dp" />
+            <TextView
+                tools:text="Product Name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center_vertical|center_horizontal"
+                app:fontName="@{@string/font_name_text_normal}"
+                android:text="@{product.prodName}"/>
+
+            <TextView
+                tools:text="INR 30000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+                app:fontName="@{@string/font_name_text_normal}"
+                android:text="@{product.price}"/>
+
+            <LinearLayout
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:gravity="right"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    tools:text="300"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{product.likeCount}"/>
+                <ImageView
+                    android:gravity="right"
+                    android:src="@drawable/vector_icon_product_like_count"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <data>
+        <variable
+            name="collection"
+            type="com.goldadorn.main.model.FilterCollection"/>
+    </data>
+
+    <RelativeLayout android:layout_width="120dp"
+
+        android:layout_height="wrap_content">
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/image"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:imageUrl="@{collection.image}"
+            app:siRadius="8dp"
+            app:siBorderWidth="1dp"
+            app:siBorderColor="@color/avtarBorderColor"
+            app:siSquare="true"
+            tools:background="#ff0000"
+            android:layout_margin="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+
+        <TextView
+            app:fontName="@{@string/font_name_text_normal}"
+            android:layout_margin="5dp"
+            android:gravity="center_horizontal"
+            android:layout_below="@+id/image"
+            tools:text="ABC"
+            android:text="@{collection.collName}"
+            android:layout_width="match_parent"
+            android:maxLines="2"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</layout>
+

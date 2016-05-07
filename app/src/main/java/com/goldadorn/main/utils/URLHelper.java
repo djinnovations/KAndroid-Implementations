@@ -12,11 +12,17 @@ import java.util.List;
  */
 public class URLHelper {
     // Private constructor prevents instantiation from other classes
-    public final String  endPoint;
+    public final String endPointSocial;
+    public final String  endPointCommercial;
     public final String  iamgeEndPoint;
     public final String  websiteEndPoint;
 
     public final String  htmlEndPoint;
+    public final String productImageEndPoint;
+    public final String collectionImageEndPoint;
+    public final String productTypesImageEndPoint;
+
+
 
     public List<Cookie> getCookies() {
         return cookies;
@@ -25,10 +31,15 @@ public class URLHelper {
     private List<Cookie> cookies;
 
     private URLHelper() {
-        endPoint= BuildConfig.END_POINT;
+
+        endPointCommercial= BuildConfig.END_POINT_COMERCIAL;
+        endPointSocial = BuildConfig.END_POINT;
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
+        productImageEndPoint= BuildConfig.PRODUCT_IMAGE_END_POINT;
+        collectionImageEndPoint=BuildConfig.COLLECTION_IMAGE_END_POINT;
         websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
+        productTypesImageEndPoint=BuildConfig.PRODUCT_TYPES_IMAGE_END_POINT;
     }
 
     public void setCookies(List<Cookie> cookies) {
@@ -42,6 +53,21 @@ public class URLHelper {
     public String getWebSiteProductEndPoint() {
         return websiteEndPoint;
     }
+
+    public String getProductsLikes() {
+        return endPointSocial+VERB.GET_PRODUCTS_LIKES;
+    }
+
+    public String getDesignersFilter(int offset) {
+        return endPointSocial+VERB.GET_DESIGNERS_FILTER+"/"+offset;
+    }
+    public String getCollectionData(int offset) {
+        return endPointCommercial+VERB.GET_SCROLL_DATA+"/c/"+offset;
+    }
+    public String getProductType(int offset) {
+        return endPointCommercial+VERB.GET_SCROLL_DATA+"/t/"+offset;
+    }
+
 
     /**
      * SingletonHolder is loaded on the first execution of Singleton.getInstance()
@@ -69,100 +95,118 @@ public class URLHelper {
         else if(url!=null && url.trim().startsWith(".../")) {
             url = url.trim().replace(".../", "");
         }
-        if(url!=null)
-            return getInstance().iamgeEndPoint+url;
+        if(url!=null) {
+            if(url.indexOf("products/")!=-1) {
+                url = getInstance().productImageEndPoint + url;
+                url = url.replace("/products/","/");
+                return url;
+            }
+            else
+                return getInstance().iamgeEndPoint + url;
+        }
         return null;
     }
 
     public String getLoginServiceURL()
     {
-        return endPoint+VERB.LOGIN;
+        return endPointSocial +VERB.LOGIN;
+    }
+    public String getForgotPasswordServiceURL()
+    {
+        return endPointSocial +VERB.FORGOTPASSWORD;
     }
 
     public String getCreatePostServiceURL()
     {
-        return endPoint+VERB.CREATE_POST;
+        return endPointSocial +VERB.CREATE_POST;
     }
 
     public String getSetBasicProfileURL()
     {
-        return "http://demo.eremotus-portal.com/goldadorn_dev/rest/setbasicprofile";
-
-        //return endPoint+VERB.SET_BASIC_PROFILE;
+        return endPointSocial+VERB.SET_BASIC_PROFILE;
     }
 
-    public String getFindPeopleServiceURL()
+    public String getFindPeopleServiceURL(int offset)
     {
-        return endPoint+VERB.PEOPLE;
+        return endPointSocial +VERB.PEOPLE+"/"+offset;
     }
     public String getSocialFeedServiceURL()
     {
-        return endPoint+VERB.SOCIAL_FEED;
+        return endPointSocial +VERB.SOCIAL_FEED;
     }
     public String getFolderServiceURL()
     {
-        return endPoint+VERB.FETCH_GALLERY;
+        return endPointSocial +VERB.FETCH_GALLERY;
     }
+
+    public String getApplyfilterServiceURL()
+    {
+        return endPointCommercial +VERB.APPLY_FILTER;
+    }
+
+
     public String getSocialFeedRefreshServiceURL()
     {
-        return endPoint+VERB.SOCIAL_FEED;
+        return endPointSocial +VERB.SOCIAL_FEED;
     }
     public String getUsersSocialFeedServiceURL()
     {
-        return endPoint+VERB.FETCH_TIME_LINE;
+        return endPointSocial +VERB.FETCH_TIME_LINE;
     }
     public String getLogoutServiceURL()
     {
-        return endPoint+VERB.LOGOUT;
+        return endPointSocial +VERB.LOGOUT;
     }
     public String getRegisterServiceURL()
     {
-        return endPoint+VERB.REGISTER;
+        return endPointSocial +VERB.REGISTER;
     }
     public String getLikeAPostServiceURL()
     {
-        return endPoint+VERB.LIKE;
+        return endPointSocial +VERB.LIKE;
     }
     public String getFollowPeopleServiceURL()
     {
-        return endPoint+VERB.FOLLOW;
+        return endPointSocial +VERB.FOLLOW;
     }
 
     public String getCommentOnPostServiceURL()
     {
-        return endPoint+VERB.COMMENT;
+        return endPointSocial +VERB.COMMENT;
     }
     public String getFetchCommentsServiceURL()
     {
-        return endPoint+VERB.FETCH_COMMENTS;
+        return endPointSocial +VERB.FETCH_COMMENTS;
     }
     public String getFetchLikesServiceURL()
     {
-        return endPoint+VERB.FETCH_LIKES;
+        return endPointSocial +VERB.FETCH_LIKES;
     }
 
     public String getPollPostServiceURL()
     {
-        return endPoint+VERB.POLL;
+        return endPointSocial +VERB.POLL;
     }
     public String getVoteBof3PostServiceURL()
     {
-        return endPoint+VERB.VOTE_BOF_3;
+        return endPointSocial +VERB.VOTE_BOF_3;
     }
     public String getFetchVotersServiceURL()
     {
-        return endPoint+VERB.FETCH_VOTERS;
+        return endPointSocial +VERB.FETCH_VOTERS;
     }
 
     public String getNotificationsUrl()
     {
-        return endPoint+VERB.FETCH_NOTIFICATIONS;
+        return endPointSocial +VERB.FETCH_NOTIFICATIONS;
     }
 
     public static class VERB
     {
         public static final String REGISTER="register";
         public static final String LOGIN="login";
+        public static final String FORGOTPASSWORD="forgotpassword";
+
         public static final String LOGOUT="logout";
         public static final String PEOPLE="people";
         public static final String SOCIAL_FEED="socialfeed";
@@ -180,13 +224,20 @@ public class URLHelper {
         public static final String FETCH_VOTERS="fetchvoters";
         public static final String FETCH_NOTIFICATIONS="notifications";
         public static final String FETCH_GALLERY="fetchgallery";
+        public static final String APPLY_FILTER="applyfilter";
 
+
+        public static final String GET_PRODUCTS_LIKES = "getproductslikes";
+        public static String GET_DESIGNERS_FILTER="getdesignersfilter";
+        public static String GET_SCROLL_DATA="getscrolldata";
 
     }
     public static class LOGIN_PARAM
     {
         public static final String USER_NAME="login_userId";
         public static final String PASSWORD="login_password";
+        public static final String USERNAME="username";
+
     }
     public static class LIKE_A_POST
     {

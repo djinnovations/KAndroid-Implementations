@@ -16,8 +16,10 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.WebActivity;
+import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -110,9 +112,16 @@ public class SimpleImageArray extends HorizontalViewPager
         int id = item.getItemId();
         if(id==R.id.nav_buy)
         {
+            String pid = imageURL.substring(imageURL.indexOf("/products/")+10,imageURL.length());
+            pid = pid.substring(0,pid.indexOf("/"));
+
+            Product product = new Product(Integer.parseInt(pid));
+            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            /*
             String profuctLink= URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
             NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME,profuctLink,WebActivity.class);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
+            */
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -120,8 +129,9 @@ public class SimpleImageArray extends HorizontalViewPager
 
     protected String isProductLink(String path)
     {
-        if(path!=null && path.equals("")==false && path.indexOf("galink_")!=-1)
+        if(path!=null && path.equals("")==false && path.indexOf("/products/")!=-1)
         {
+            /*
             String link = path.substring(path.indexOf("galink_") + "galink_".length());
             link = link.substring(0,link.indexOf("."));
             try{
@@ -136,7 +146,8 @@ public class SimpleImageArray extends HorizontalViewPager
             if(link.indexOf("_")!=-1)
                 link = link.replaceAll("_","-");
             return link;
-
+            */
+            return path;
         }
         return null;
     }

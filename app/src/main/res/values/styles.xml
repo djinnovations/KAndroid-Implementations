@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/appBGColor</item>
@@ -9,10 +9,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@color/controlColor</item>
-        <item name="colorControlActivated">@color/controlColor</item>
-        <item name="colorControlHighlight">@color/controlColor</item>
-
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:buttonStyle">@style/button</item>
         <item name="android:titleTextStyle">@style/Toolbar.TitleText</item>
         <item name="titleTextAppearance">@style/Toolbar.TitleText</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
@@ -27,14 +27,15 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:buttonStyle">@style/button</item>
         <item name="colorControlNormal">@color/controlColor</item>
         <item name="colorControlActivated">@color/controlColor</item>
         <item name="colorControlHighlight">@color/controlColor</item>
+
+        <item name="android:buttonStyle">@style/button</item>
         <item name="android:actionBarStyle">@style/toolbarStyle</item>
 
     </style>
@@ -78,7 +79,7 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBar.Showcase">
+    <style name="AppTheme.NoActionBar.Showcase" parent="Theme.AppCompat.Light">
 
     </style>
     <style name="AppTheme.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">

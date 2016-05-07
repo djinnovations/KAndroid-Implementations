@@ -46,9 +46,6 @@ public class ServerFolderActivity extends BaseActivity{
     @Bind(R.id.layoutParent)
     ViewGroup layoutParent;
 
-    @Bind(R.id.select)
-    FloatingActionButton select;
-
     private ImageSelectorFragment mActivePage;
 
     @Bind(R.id.indicator)
@@ -70,10 +67,6 @@ public class ServerFolderActivity extends BaseActivity{
         String title = getPageTitle();
         setTitle("");
 
-        int iconSize = 4;
-        Drawable icon = IconsUtils.getFontIconDrawable(this, FontAwesome.Icon.faw_check, R.color.white, iconSize);
-        select.setIconDrawable(icon);
-        select.setVisibility(View.GONE);
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),title, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ImageSelectorFragment.class);
         mActivePage = (ImageSelectorFragment)BaseFragment.newInstance(navigationObject);
@@ -87,11 +80,6 @@ public class ServerFolderActivity extends BaseActivity{
 
     protected String getPageTitle() {
         return "Select from our collections";
-    }
-
-    @OnClick(R.id.select)
-    void onPostNow() {
-
     }
 
     @Subscribe
