@@ -2,11 +2,14 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
+import com.goldadorn.main.model.ProductInfo;
+import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.response.CreatePostForBuyResponse;
@@ -138,6 +141,24 @@ public class UIController {
         new Thread(runnable).start();
     }
 
+
+    public static void addToCartNewProduct(final Context context, Product product, ProductInfo mProductInfo, ProductOptions mProductOptions, final IResultListener<ProductResponse> listener) {
+        final ProductResponse response =ProductResponse.getAddToListResponseNew(product,mProductInfo,mProductOptions);
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.addToCartNew(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+
     public static void removeFromCart(final Context context, Product product, final IResultListener<ProductResponse> listener) {
         final ProductResponse response = new ProductResponse();
         response.product = product;
@@ -185,6 +206,7 @@ public class UIController {
             response.userId = p.userId;
         } else if (model instanceof User) {
             User p = (User) model;
+            Log.e("iii",p.id+"");
             response.userId = p.id;
         } else {
             throw new IllegalArgumentException("Undefined model to like");
@@ -214,7 +236,10 @@ public class UIController {
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.follow(context, response, 0);
+                if(follow)
+                    Api.follow(context, response, 0);
+                else
+                    Api.Unfollow(context, response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -294,6 +319,24 @@ public class UIController {
         };
         new Thread(runnable).start();
     }
+
+    public static void deleteFromWhishlist(final Context context,Product product,final IResultListener<ProductResponse> listener) {
+        final ProductResponse response = ProductResponse.deleteWishlistReponse(product);
+        Runnable runnable = new Runnable() {
+            public void run() {
+                Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+                Api.deleteWishList(context, response, 0);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (listener != null) listener.onResult(response);
+                    }
+                });
+            }
+        };
+        new Thread(runnable).start();
+    }
+
     public static void addToWhishlist(final Context context,Product product,final IResultListener<ProductResponse> listener){
        final ProductResponse response=ProductResponse.getAddToListResponse(product);
         Runnable runnable = new Runnable() {

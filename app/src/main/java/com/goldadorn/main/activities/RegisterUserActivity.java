@@ -1,53 +1,51 @@
 package com.goldadorn.main.activities;
 
     import android.content.Context;
-    import android.content.SharedPreferences;
-    import android.graphics.drawable.Drawable;
-    import android.os.Bundle;
-    import android.os.Handler;
-    import android.support.design.widget.Snackbar;
-    import android.support.design.widget.TextInputLayout;
-    import android.text.Editable;
-    import android.text.Html;
-    import android.text.TextUtils;
-    import android.text.TextWatcher;
-    import android.text.method.LinkMovementMethod;
-    import android.view.View;
-    import android.view.ViewGroup;
-    import android.view.WindowManager;
-    import android.widget.Button;
-    import android.widget.EditText;
-    import android.widget.RadioButton;
-    import android.widget.RadioGroup;
-    import android.widget.TextView;
-    import android.widget.Toast;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
+import android.text.Editable;
+import android.text.Html;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
-    import com.androidquery.callback.AjaxStatus;
-    import com.goldadorn.main.R;
-    import com.goldadorn.main.icons.IconsUtils;
-    import com.goldadorn.main.model.LoginResult;
-    import com.goldadorn.main.model.User;
-    import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
-    import com.goldadorn.main.utils.TypefaceHelper;
-    import com.goldadorn.main.utils.URLHelper;
-    import com.goldadorn.main.utils.IDUtils;
-    import com.goldadorn.main.utils.NetworkResultValidator;
-    import com.goldadorn.main.views.ColoredSnackbar;
-    import com.google.gson.Gson;
-    import com.kimeeo.library.actions.Action;
-    import com.kimeeo.library.ajax.ExtendedAjaxCallback;
-    import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-    import com.rey.material.widget.ProgressView;
+import com.androidquery.callback.AjaxStatus;
+import com.goldadorn.main.R;
+import com.goldadorn.main.icons.IconsUtils;
+import com.goldadorn.main.model.LoginResult;
+import com.goldadorn.main.model.User;
+import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
+import com.goldadorn.main.utils.URLHelper;
+import com.goldadorn.main.views.ColoredSnackbar;
+import com.google.gson.Gson;
+import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.rey.material.widget.ProgressView;
 
-    import org.apache.http.cookie.Cookie;
+import org.apache.http.cookie.Cookie;
 
-    import java.util.HashMap;
-    import java.util.List;
-    import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-    import butterknife.Bind;
-    import butterknife.ButterKnife;
-    import butterknife.OnClick;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
     public class RegisterUserActivity extends BaseActivity {
 
@@ -186,7 +184,7 @@ package com.goldadorn.main.activities;
                     LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
                     if (loginResult.getSuccess()) {
-                        User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
+                        User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
                         user.setName(loginResult.getUsername());
                         user.setImageUrl(loginResult.getUserpic());
                         getApp().setUser(user);

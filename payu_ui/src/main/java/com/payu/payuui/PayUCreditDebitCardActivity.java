@@ -84,7 +84,8 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
         payuConfig = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
         payuConfig = null != payuConfig ? payuConfig : new PayuConfig();
 
-        (amountTextView = (TextView) findViewById(R.id.text_view_amount)).setText(PayuConstants.AMOUNT + ": " + mPaymentParams.getAmount());
+        int amount=Integer.valueOf(Math.round(Float.valueOf(mPaymentParams.getAmount())));
+        (amountTextView = (TextView) findViewById(R.id.text_view_amount)).setText("Amount: Rs " + amount+"/-");
         (transactionIdTextView = (TextView) findViewById(R.id.text_view_transaction_id)).setText(PayuConstants.TXNID + ": " + mPaymentParams.getTxnId());
 
         // lets not show the save card check box if user credentials is not found!

@@ -55,10 +55,18 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     };
     private View.OnClickListener mDeleteClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (v.getTag() != null && v.getTag() instanceof Product) {
                 Product p = (Product) v.getTag();
                 //TODO kiran delete click
+                UIController.deleteFromWhishlist(mContext, p, new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        if (result.success) {
+                            Toast.makeText(mContext, "Product successfully deleted from Wishlist.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
     };
@@ -125,14 +133,35 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             WishlistViewHolder vh = new WishlistViewHolder(getLayoutInflater().inflate(R.layout.layout_wishlist_item, parent, false)) {
             };
-            vh.addToCart.setOnClickListener(mAddToCartClick);
-            vh.delete.setOnClickListener(mDeleteClick);
+            vh.addToCart.setVisibility(View.INVISIBLE);
+            //vh.addToCart.setOnClickListener(mAddToCartClick);
+            vh.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    if (v.getTag() != null && v.getTag() instanceof Product) {
+                        Product p = (Product) v.getTag();
+                        //TODO kiran delete click
+                        UIController.deleteFromWhishlist(mContext, p, new IResultListener<ProductResponse>() {
+                            @Override
+                            public void onResult(ProductResponse result) {
+                                if (result.success) {
+                                    products.remove(v.getTag());
+                                    notifyDataSetChanged();
+                                    Toast.makeText(mContext, "Product successfully deleted from Wishlist.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+
             return vh;
         }
 
         @Override
         public void onBindViewHolder(WishlistViewHolder holder, int position) {
             Product p = products.get(position);
+
             holder.name.setText(p.name);
             holder.description.setText(p.description);
             Picasso.with(WishListManagerActivity.this).load(p.getImageUrl()).into(holder.image);
@@ -149,6 +178,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         public void changeData(ArrayList<Product> products) {
             this.products.clear();
             this.products.addAll(products);
+            notifyDataSetChanged();
         }
     }
 

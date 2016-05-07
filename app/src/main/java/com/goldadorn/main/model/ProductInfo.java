@@ -11,14 +11,24 @@ import java.util.Locale;
 
 public class ProductInfo  {
     public final int id;
-    public String code;
-    public String sizeUnit, weightUnits;
+    public String code,description;
+    public String sizeUnit, weightUnits,metalType,metalPurityInUnits,metalWeightUnits,metalColor;
+    public int metalPurity=0;
     public float size, height, width;
     public float weight;
     public int imageCount;
     public ArrayList<String> images = new ArrayList<>();
     public String productType;
+    public Double productDefaultPrice=0.0;
+    public float productmaking_charges=0,metalrate=0,metalWeight=0;
     public final ArrayList<StoneDetail> stonesDetails= new ArrayList<>();
+
+
+   /* "metalWeight": 1.52,
+            "metalRate": 2227.8,  metalPrice":754.0,
+            "productMakChargesPerUnit": 500,
+            "stonePrice": 30690, stonePrice":897.08,*/
+
 
     public ProductInfo(int id) {
         this.id = id;
@@ -29,6 +39,9 @@ public class ProductInfo  {
         ProductInfo p = new ProductInfo(obj.getInt(Constants.JsonConstants.PRODUCT_ID));
         p.height = (float) obj.getDouble("productHeight");
         p.width = (float) obj.getDouble("productWidth");
+        if(obj.has("productDescription")){
+            p.description=obj.getString("productDescription");
+        }
         p.size = (float) obj.getDouble("productSize");
         p.weight = (float) obj.getDouble("productWeight");
         p.sizeUnit = obj.getString("sizeUnits");
@@ -36,6 +49,15 @@ public class ProductInfo  {
         p.imageCount = obj.getInt("productNumImages");
         p.productType = obj.getString("productType");
         p.code = obj.getString("productCode");
+        p.metalWeight=(float) obj.getDouble("metalWeight");
+        p.metalrate=(float) obj.getDouble("metalRate");
+        p.metalType=obj.getString("metalType");
+        p.metalColor=obj.getString("metalColor");
+        p.metalPurity=obj.getInt("metalPurity");
+        p.metalPurityInUnits=obj.getString("metalPurityUnits");
+        p.metalWeightUnits=obj.getString("metalWeightUnits");
+        p.productmaking_charges=(float) obj.getDouble("productMakChargesPerUnit");
+        p.productDefaultPrice=obj.getDouble("productDefaultPrice");
         if (obj.has(Constants.JsonConstants.PROSTONEDETAILS)) {
             JSONArray stonedetailsarray = obj.optJSONArray(Constants.JsonConstants.PROSTONEDETAILS);
             if(stonedetailsarray!=null)

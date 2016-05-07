@@ -9,6 +9,7 @@ import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -113,8 +114,9 @@ public class LoginPageActivity extends BaseActivity {
                 LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
                 if (loginResult.getSuccess()) {
-                    User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
+                    User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
                     user.setName(loginResult.getUsername());
+                    Log.e("iiii",loginResult.getUserid()+"");
                     user.setImageUrl(loginResult.getUserpic());
                     getApp().setUser(user);
 
@@ -122,6 +124,7 @@ public class LoginPageActivity extends BaseActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
                     sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
                             .putString(AppSharedPreferences.LoginInfo.USER_NAME, userName.getText().toString())
+                            .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid()))
                             .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
 
                     gotoApp();

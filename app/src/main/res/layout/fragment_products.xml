@@ -6,17 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+
     <LinearLayout
         android:id="@+id/text_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <FrameLayout
+       <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="260dp">
 
         </FrameLayout>
+
+
 
         <TextView
             android:id="@+id/product_name"
@@ -52,6 +55,7 @@
     <FrameLayout
         android:id="@+id/cards_data"
         android:layout_width="match_parent"
+        android:layout_gravity="top"
         android:layout_height="wrap_content">
 
         <com.lorentzos.flingswipe.SwipeFlingAdapterView
@@ -59,6 +63,8 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
             android:layout_height="match_parent"
             app:SwipeFlingStyle="@style/SwipeFling"/>
 
@@ -136,6 +142,7 @@
         android:id="@+id/cards_end"
         android:layout_width="match_parent"
         android:layout_height="260dp"
+        android:layout_gravity="top"
         android:visibility="gone">
 
         <TextView

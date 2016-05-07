@@ -157,9 +157,9 @@ public class ImageFilePath
     }
 
     public static String getImageUrlForCollection(int collid){
-        return ApiFactory.IMAGE_URL_HOST+"collections/"+collid+"/"+collid+".jpg";
+        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"collections/"+collid+"/"+collid+".jpg";
     }
     public static String getImageUrlForProduct(int productid){
-        return ApiFactory.IMAGE_URL_HOST+"products/"+productid+"/"+productid+"-1.jpg";
+        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }
 }

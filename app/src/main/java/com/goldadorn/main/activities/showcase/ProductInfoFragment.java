@@ -3,6 +3,7 @@ package com.goldadorn.main.activities.showcase;
 
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.Bind;
@@ -33,6 +35,13 @@ import butterknife.ButterKnife;
  * Created by Vijith Menon on 18/3/16.
  */
 public class ProductInfoFragment extends Fragment {
+
+
+    public static final String MAKING_CHARGES="makingcharges";
+    public static final String VAT="VAT";
+    public static final String DISCOUNT="Discount";
+    public static final String GRAND_TOTAL="GrandTotal";
+
     @Bind(R.id.product_owner_name)
     TextView mProductOwnerName;
     @Bind(R.id.followButton)
@@ -52,6 +61,9 @@ public class ProductInfoFragment extends Fragment {
 
     private User mUser;
     private Product mProduct;
+    View mChileview=null;
+
+    private float mTotalPrice=0;
 
     ProductActivity mProductActivity;
 
@@ -78,6 +90,7 @@ public class ProductInfoFragment extends Fragment {
 
         if (mUser != null) {
             mProductOwnerName.setText(mUser.name);
+            followButton.setSelected(mUser.isFollowed);
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
@@ -89,6 +102,12 @@ public class ProductInfoFragment extends Fragment {
                                 public void onResult(LikeResponse result) {
                                     v.setEnabled(false);
                                     v.setSelected(result.success != isFollowing);
+                                    if (isFollowing) {
+                                        mUser.followers_cnt = mUser.followers_cnt - 1;
+                                    } else {
+                                        mUser.followers_cnt = mUser.followers_cnt + 1;
+                                    }
+                                    mProductActivity.mFollower();
                                 }
                             });
                 }
@@ -97,9 +116,15 @@ public class ProductInfoFragment extends Fragment {
             view.findViewById(R.id.owner_layout).setVisibility(View.GONE);
         }
         bindCollectionUI(mProductActivity.mCollection);
-        if (mProductActivity != null && mProductActivity.mProductInfo != null)
+        if (mProductActivity != null && mProductActivity.mProductInfo != null) {
             bindProductInfo(mProductActivity.mProductInfo);
-        mdescription.setText(mProduct.description);
+
+        }
+
+
+
+        //mdescription.setText(mProduct.description);
+
     }
 
     @SuppressLint("StringFormatInvalid")
@@ -108,6 +133,7 @@ public class ProductInfoFragment extends Fragment {
             mProductDetail.setText(getString(R.string.product_desc, summary.code,
                     summary.getDisplayHeight(), summary.getDisplayWidth(),
                     summary.getDisplayWeight()));
+            mdescription.setText(summary.description);
             List<StoneDetail> rows = summary.stonesDetails;
 //            rows.clear();
 //            StoneDetail det = new StoneDetail();
@@ -149,6 +175,26 @@ public class ProductInfoFragment extends Fragment {
                 int childPos = 1;
                 int pos = 0;
                 String type = "";
+                /*Add the gold details*/
+
+                mChileview = mTableContainer.getChildAt(childPos);
+                View mGoldHeading = getRowView(summary.metalType, mChileview, mTableContainer);
+                mTableContainer.addView(mGoldHeading);
+                childPos++;
+
+                StoneDetail details = new StoneDetail();
+                details.color=summary.metalType;
+                details.clarity=summary.metalPurity+""+summary.metalPurityInUnits;
+                details.number=-1;
+                details.metalWeightUnits=summary.metalWeightUnits;
+                details.price= summary.metalrate;
+                details.weight=summary.metalWeight;
+                View mGoldDetails = getRowView(details, mChileview, mTableContainer);
+                mTableContainer.addView(mGoldDetails);
+                childPos++;
+
+
+                 /*Add the remain metal details*/
                 do {
                     StoneDetail detail = rows.get(pos);
                     View child = mTableContainer.getChildAt(childPos);
@@ -165,6 +211,23 @@ public class ProductInfoFragment extends Fragment {
                         mTableContainer.addView(v);
                     }
                 } while (pos < rows.size());
+                /*Caliculate the total,vat,making charges and discount*/
+                childPos++;
+                mChileview = mTableContainer.getChildAt(childPos);
+                View mMakingChanrges = makingVatTotal(MAKING_CHARGES, mChileview, mTableContainer);
+                mTableContainer.addView(mMakingChanrges);
+                childPos++;
+                mChileview = mTableContainer.getChildAt(childPos);
+                View mVat = makingVatTotal(VAT, mChileview, mTableContainer);
+                mTableContainer.addView(mVat);
+                childPos++;
+                mChileview = mTableContainer.getChildAt(childPos);
+                View mDiscount = makingVatTotal(DISCOUNT, mChileview, mTableContainer);
+                mTableContainer.addView(mDiscount);
+                childPos++;
+                mChileview = mTableContainer.getChildAt(childPos);
+                View mGrandTotal = makingVatTotal(GRAND_TOTAL, mChileview, mTableContainer);
+                mTableContainer.addView(mGrandTotal);
 
 
                 if (mTableContainer.getChildCount() > childPos) {
@@ -193,11 +256,25 @@ public class ProductInfoFragment extends Fragment {
             holder.setTextColor(grey);
             holder.setTextSize(getResources().getDimensionPixelSize(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
-            holder.component.setText(detail.stoneFactor);
-            holder.rate.setText(detail.rateunit + " " + detail.price);
+            if(detail.number==-1){
+                holder.component.setText(detail.color+" - "+detail.clarity);
+                holder.rate.setText(detail.price+"/"+detail.metalWeightUnits);
+            }else {
+                holder.component.setText(detail.color + "-" + detail.clarity + " : " + detail.number + " nos.");
+                holder.rate.setText(detail.price+"");
+            }
+
+            holder.weight.setText(" " + detail.weight);
+            float mValue= detail.price * detail.weight;
+            holder.price.setText(" " + ((int)mValue));
+            holder.offer_price.setText(" " + ((int)mValue));
+            mTotalPrice=mTotalPrice+mValue;
+
+           /* holder.rate.setText(detail.rateunit + " " + detail.price);
             holder.weight.setText(detail.weightunit + " " + detail.weight);
-            holder.price.setText(detail.rateunit + " " + detail.price);
-            holder.offer_price.setText(detail.rateunit + " " + detail.price);
+            float mValue= detail.price * detail.weight;
+            holder.price.setText(detail.rateunit + " " + mValue);
+            holder.offer_price.setText(detail.rateunit + " " + 0.00);*/
         } else {
             holder.itemView.setBackgroundColor(grey);
             holder.setTextColor(gold);
@@ -208,6 +285,70 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setText("");
             holder.offer_price.setText("");
         }
+        return holder.itemView;
+    }
+
+
+    private View makingVatTotal(String mType,View convertView, LinearLayout parent){
+        TableRowHolder holder = null;
+        if (convertView == null) {
+            LayoutInflater mInflater = LayoutInflater.from(getContext());
+            convertView = mInflater.inflate(R.layout.table_row_discount, parent, false);
+            holder = new TableRowHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (TableRowHolder) convertView.getTag();
+        }
+        holder.itemView.setBackgroundColor(Color.WHITE);
+        if(mType.equalsIgnoreCase(MAKING_CHARGES)){
+            holder.component.setTextColor(getResources().getColor(R.color.controlColor));
+            //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
+            holder.component.setTypeface(null, Typeface.BOLD);
+            mTotalPrice=mTotalPrice+mProductActivity.mProductInfo.productmaking_charges;
+            holder.component.setText("Making \nCharges");
+            holder.rate.setText("");
+            holder.weight.setText(" ");
+            holder.price.setText(" "+mProductActivity.mProductInfo.productmaking_charges);
+            holder.offer_price.setText(" " +mProductActivity.mProductInfo.productmaking_charges);
+        }else if(mType.equalsIgnoreCase(VAT)){
+            holder.component.setTextColor(getResources().getColor(R.color.controlColor));
+            //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
+            holder.component.setTypeface(null, Typeface.BOLD);
+            double mVat=(mTotalPrice/1.01)*0.01;
+            DecimalFormat df = new DecimalFormat("#.##");
+            holder.component.setText(VAT);
+            holder.rate.setText("");
+            holder.weight.setText(" ");
+            holder.price.setText(" "+String.valueOf(((int)mVat)));
+            holder.offer_price.setVisibility(View.GONE);
+            holder.offer_price.setText(" " + String.valueOf(((int)mVat)));
+        }else if(mType.equalsIgnoreCase(DISCOUNT)){
+            holder.component.setTextColor(getResources().getColor(R.color.red));
+            holder.component.setTypeface(null, Typeface.BOLD);
+            holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
+            holder.offer_price.setTypeface(null, Typeface.BOLD);
+
+            holder.component.setText(DISCOUNT+" \n0%");
+            holder.rate.setText("");
+            holder.weight.setText(" ");
+            holder.price.setText(" ");
+            holder.offer_price.setVisibility(View.VISIBLE);
+            holder.offer_price.setText(" 0.0" );
+        }else{
+            holder.component.setTextColor(getResources().getColor(R.color.controlColor));
+            holder.component.setTypeface(null, Typeface.BOLD);
+            holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
+            holder.offer_price.setTypeface(null, Typeface.BOLD);
+
+            holder.component.setText("Grand \nTotal");
+            holder.rate.setText("");
+            holder.weight.setText(" ");
+            holder.price.setText(" ");
+            holder.price.setVisibility(View.GONE);
+            holder.offer_price.setVisibility(View.VISIBLE);
+            holder.offer_price.setText(" "+ (int)mTotalPrice);
+        }
+
         return holder.itemView;
     }
 
@@ -248,6 +389,16 @@ public class ProductInfoFragment extends Fragment {
             weight.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
             price.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
             offer_price.setTextSize(TypedValue.COMPLEX_UNIT_PX, size);
+        }
+    }
+
+    public void mFollower(){
+
+        if (mProductActivity.mUser != null) {
+            mUser=mProductActivity.mUser;
+            followButton.setSelected(mUser.isFollowed);
+        } else {
+
         }
     }
 }

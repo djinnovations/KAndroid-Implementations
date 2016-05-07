@@ -8,6 +8,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.model.Product;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -61,6 +63,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             pvh.bindUI(product);
         }
 
+
     }
 
     public void setVisibility(int visibility) {
@@ -95,22 +98,25 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         public void bindUI(Product product) {
             name.setText(product.name);
             quantityText.removeTextChangedListener(this);
-            quantityText.setText(product.quantity + "");
+            Log.e("iiii",product.orderQty + "");
+            quantityText.setText(product.orderQty + "");
             quantityText.addTextChangedListener(this);
 
             Picasso.with(image.getContext()).load(product.getImageUrl()).placeholder(R.mipmap.ic_launcher).fit().into(image);
 
-
-            SpannableStringBuilder sbr = new SpannableStringBuilder(product.priceUnit + ". " + (product.unitPrice * product.quantity));
+            //remove 0 at end the end
+            DecimalFormat format = new DecimalFormat("0.#");
+            System.out.println(format.format(product.pricePaid));
+            int pricee= Integer.parseInt(format.format(product.pricePaid));
+            SpannableStringBuilder sbr = new SpannableStringBuilder("Rs " + (pricee * product.orderQty));
             sbr.append("/-");
             int start = sbr.length();
-            sbr.append("\n").append("(").append(product.quantity + " * " + product.unitPrice).append(")");
+            sbr.append("\n").append("(").append(product.orderQty + " * " + product.pricePaid).append(")");
             int end = sbr.length();
             sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             price.setText(sbr);
         }
-
         public void remove() {
             if (popupMenu != null) {
                 popupMenu.dismiss();
@@ -151,7 +157,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
 
         private void changeQuantity(int newQuantity) {
-            product.quantity = newQuantity;
+            product.orderQty = newQuantity;
             bindUI(product);
             quatityChangeListener.onQuantityChanged(product);
         }

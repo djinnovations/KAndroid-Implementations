@@ -60,6 +60,7 @@ public class AppStartActivity extends BaseActivity {
         logo.setImageResource(res);
         */
 
+
         ProgressView progressBar = (ProgressView) findViewById(R.id.progressBar);
         progressBar.setProgress(0f);
         progressBar.start();
@@ -180,7 +181,7 @@ public class AppStartActivity extends BaseActivity {
                 LoginResult loginResult = gson.fromJson((String) json, LoginResult.class);
 
                 if (loginResult.getSuccess()) {
-                    User user = new User(loginResult.getUserid(), User.TYPE_INDIVIDUAL);
+                    User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
                     user.setName(loginResult.getUsername());
                     user.setImageUrl(loginResult.getUserpic());
                     getApp().setUser(user);

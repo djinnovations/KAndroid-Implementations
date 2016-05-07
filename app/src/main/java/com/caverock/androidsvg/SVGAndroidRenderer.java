@@ -17,14 +17,6 @@
 package com.caverock.androidsvg;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Stack;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -74,6 +66,14 @@ import com.caverock.androidsvg.SVG.SvgRadialGradient;
 import com.caverock.androidsvg.SVG.TextContainer;
 import com.caverock.androidsvg.SVG.TextSequence;
 import com.caverock.androidsvg.SVG.Unit;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * The rendering part of AndroidSVG.
@@ -3391,9 +3391,20 @@ public class SVGAndroidRenderer
       statePop();
 
       // Create shader instance
-      RadialGradient  gr = new RadialGradient(_cx, _cy, _r, colours, positions, tileMode); 
-      gr.setLocalMatrix(m);
-      paint.setShader(gr);
+      // Madhu changed the code
+      try {
+         if (_r > 0) {
+            RadialGradient gr = new RadialGradient(_cx, _cy, _r, colours, positions, tileMode);
+            gr.setLocalMatrix(m);
+            paint.setShader(gr);
+         } else {
+            RadialGradient gr = new RadialGradient(_cx, _cy, 0, colours, positions, tileMode);
+            gr.setLocalMatrix(m);
+            paint.setShader(gr);
+         }
+      }catch(IllegalArgumentException e){
+         e.printStackTrace();
+      }
    }
 
 

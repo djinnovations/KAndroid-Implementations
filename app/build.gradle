@@ -29,6 +29,7 @@ android {
         targetSdkVersion 23
         versionCode 5
         versionName "1.5"
+        multiDexEnabled true
         /*March 5 2016 1:46:58*/
     }
     buildTypes {
@@ -113,4 +114,5 @@ dependencies {
 
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
+    compile 'com.android.support:multidex:1.0.0'
 }

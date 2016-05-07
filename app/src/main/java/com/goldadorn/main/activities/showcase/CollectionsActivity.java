@@ -28,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
@@ -50,7 +51,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Vijith Menon on 11/3/16.
  */
-public class CollectionsActivity extends BaseDrawerActivity {
+public class CollectionsActivity extends BaseDrawerActivity implements CollectionsFragment.UpdateLikes, ProductsFragment.UpdateProductCount {
     private final static String TAG = CollectionsActivity.class.getSimpleName();
 
     private final static String EXTRA_DESIGNER = "designer";
@@ -103,7 +104,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private final CollectionCallback mCollectionCallback = new CollectionCallback();
 
-    private Context mContext;
+    private static Context mContext;
     private Collection mCollection;
     private int mStartHeight, mCollapsedHeight;
     private ArrayList<CollectionChangeListener> mCollectionChangeListeners = new ArrayList<>(3);
@@ -111,6 +112,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private int mCurrentPosition = 0;
     private TabViewHolder mTabViewHolder;
     private Handler mHandler = new Handler();
+    private boolean isFirstTime = false;
 
     public static Intent getLaunchIntent(Context context, Collection collection) {
         Intent intent = new Intent(context, CollectionsActivity.class);
@@ -190,21 +192,25 @@ public class CollectionsActivity extends BaseDrawerActivity {
         mPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isFirstTime = false;
                 mCurrentPosition--;
                 if (mCurrentPosition < 0) mCurrentPosition = mCollectionAdapter.getItemCount() - 1;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 mHandler.removeCallbacks(mCollectionChangeRunnable);
                 mHandler.postDelayed(mCollectionChangeRunnable, 100);
+                mTabViewHolder.setSelected(0);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isFirstTime = false;
                 mCurrentPosition++;
                 if (mCurrentPosition > mCollectionAdapter.getItemCount() - 1) mCurrentPosition = 0;
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 mHandler.removeCallbacks(mCollectionChangeRunnable);
                 mHandler.postDelayed(mCollectionChangeRunnable, 100);
+                mTabViewHolder.setSelected(0);
             }
         });
 
@@ -221,6 +227,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 new TabViewHolder.TabClickListener() {
                     @Override
                     public void onTabClick(int position) {
+                        isFirstTime = false;
                         configureUI(position);
                     }
                 });
@@ -239,6 +246,18 @@ public class CollectionsActivity extends BaseDrawerActivity {
         return value;
     }
 
+    @Override
+    protected void onResume() {
+        if (mCollection != null) {
+            isFirstTime = false;
+            Log.e("iii--Notnull--", "" + mCollection.id);
+            bindOverlay(mCollection);
+        } else {
+            Log.e("iii--null--", "");
+        }
+        super.onResume();
+    }
+
     public void registerCollectionChangeListener(CollectionChangeListener listener) {
         if (!mCollectionChangeListeners.contains(listener)) mCollectionChangeListeners.add(
                 listener);
@@ -251,6 +270,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private Runnable mCollectionChangeRunnable = new Runnable() {
         @Override
         public void run() {
+            Log.e("iii--", mCurrentPosition + "");
             onCollectionChange(mCollectionAdapter.getCollection(mCurrentPosition));
         }
     };
@@ -258,7 +278,12 @@ public class CollectionsActivity extends BaseDrawerActivity {
     private void onCollectionChange(Collection collection) {
         if (collection != null && !collection.equals(mCollection)) {
             mCollection = collection;
+            Log.e("iii--clID--", mCollection.id + "");
             bindOverlay(mCollection);
+            if (!isFirstTime) {
+                isFirstTime = true;
+                configureUI(mUIState);
+            }
             for (CollectionChangeListener l : mCollectionChangeListeners)
                 l.onCollectionChange(mCollection);
         }
@@ -266,7 +291,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
     private void bindOverlay(Collection collection) {
         mOverlayViewHolder.name.setText(collection.name);
-        User user = UserInfoCache.getInstance(mContext).getUserInfo(collection.userId, true);
+        User user = UserInfoCache.getInstance(mContext).getUserInfoDB(collection.userId, true);
         String t = "";
         if (user != null) {
             mOverlayViewHolder.followButton.setSelected(user.isFollowed);
@@ -318,6 +343,16 @@ public class CollectionsActivity extends BaseDrawerActivity {
         }
     }
 
+    @Override
+    public void updateCollectionCount(int count) {
+
+    }
+
+    @Override
+    public void updateProductCounts(int count) {
+        //mTabViewHolder.productsCount(count);
+    }
+
     private class CollectionsPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private int height;
@@ -366,6 +401,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
 
         public Collection getCollection(int position) {
             cursor.moveToPosition(position);
+            Collection mCollection = Collection.extractFromCursor(cursor);
             return Collection.extractFromCursor(cursor);
         }
     }
@@ -391,6 +427,13 @@ public class CollectionsActivity extends BaseDrawerActivity {
                 if (otpFlag) {
                     otpFlag = false;
                     mHandler.post(mCollectionChangeRunnable);
+                    mRecyclerView.smoothScrollToPosition(mCollection.selectedPos);
+                    mCurrentPosition = mCollection.selectedPos;
+
+                    //mHandler.removeCallbacks(mCollectionChangeRunnable);
+                    // mHandler.postDelayed(mCollectionChangeRunnable, 100);
+
+                    // configureUI(mUIState);
                 }
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }
@@ -445,6 +488,7 @@ public class CollectionsActivity extends BaseDrawerActivity {
             ButterKnife.bind(this, itemView);
             like.setOnClickListener(this);
             followButton.setOnClickListener(this);
+            share.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -462,28 +506,46 @@ public class CollectionsActivity extends BaseDrawerActivity {
         public void onClick(final View v) {
             if (v.equals(like)) {
                 v.setEnabled(false);
-                Collection collection = (Collection) v.getTag();
+                final Collection collection = (Collection) v.getTag();
                 final boolean isLiked = v.isSelected();
                 UIController.like(v.getContext(), collection, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
+                                ShowcaseActivity.isCollectionLike = true;
                                 v.setEnabled(true);
                                 v.setSelected(result.success != isLiked);
+                                if (isLiked) {
+                                    collection.likecount = collection.likecount - 1;
+                                    likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                    //Toast.makeText(mContext,((String.format(Locale.getDefault(), "%d", collection.likecount))),Toast.LENGTH_SHORT).show();
+                                } else {
+                                    collection.likecount = collection.likecount + 1;
+                                    likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                    // Toast.makeText(mContext,((String.format(Locale.getDefault(), "%d", collection.likecount))),Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
             } else if (v.equals(followButton)) {
                 v.setEnabled(false);
-                User user = (User) v.getTag();
-                final boolean isFollowed = v.isSelected();
-                UIController.follow(v.getContext(), user, !isFollowed,
+                final User user = (User) v.getTag();
+                final boolean isFollowing = v.isSelected();
+                UIController.follow(mContext, user, !isFollowing,
                         new IResultListener<LikeResponse>() {
+
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                v.setSelected(result.success != isFollowed);
+                                v.setSelected(result.success != isFollowing);
+                                if (isFollowing) {
+                                    user.followers_cnt = user.followers_cnt - 1;
+                                } else {
+                                    user.followers_cnt = user.followers_cnt + 1;
+                                }
                             }
                         });
+            } else if (v.equals(share)) {
+                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -10,8 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:padding="@dimen/padding_default_half"
-        android:weightSum="50">
+        >
 
         <TextView
             android:id="@+id/colom_component"
@@ -23,7 +25,7 @@
             android:id="@+id/colom_rate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="8"/>
+            android:layout_weight="11"/>
 
         <TextView
             android:id="@+id/colom_weight"
@@ -34,14 +36,17 @@
         <TextView
             android:id="@+id/colom_price"
             android:layout_width="0dp"
+            android:gravity="right"
             android:layout_height="wrap_content"
             android:layout_weight="8"/>
 
         <TextView
             android:id="@+id/colom_offer_price"
             android:layout_width="0dp"
+            android:gravity="right"
+            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:layout_weight="11"/>
+            android:layout_weight="8"/>
     </LinearLayout>
 
     <View

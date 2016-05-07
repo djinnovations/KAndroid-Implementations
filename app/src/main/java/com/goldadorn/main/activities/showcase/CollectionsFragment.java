@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.showcase;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -11,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private CollectionCallback mCollectionCallback = new CollectionCallback();
     private User mUser;
+    private UpdateLikes updateLikes;
 
     public static CollectionsFragment newInstance(User user) {
         CollectionsFragment f = new CollectionsFragment();
@@ -75,6 +78,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         getShowcaseActivity().registerUserChangeListener(this);
 
         getLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+
     }
 
     @Override
@@ -109,11 +113,13 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         private View.OnClickListener mCollectionClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 startActivity(CollectionsActivity
                         .getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
             }
         };
-        private View.OnClickListener mLikeClick = new View.OnClickListener() {
+       /* private View.OnClickListener mLikeClick = new View.OnClickListener() {
 
             @Override
             public void onClick(final View v) {
@@ -135,7 +141,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                     Toast.makeText(v.getContext(), "Something wrong happened!", Toast.LENGTH_SHORT).show();
                 }
             }
-        };
+        };*/
 
         public CollectionsAdapter(Context context) {
             this.context = context;
@@ -148,9 +154,40 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         public CollectionHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View layoutView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.layout_showcase_brand_item, parent, false);
-            CollectionHolder rcv = new CollectionHolder(layoutView);
+            final CollectionHolder rcv = new CollectionHolder(layoutView);
             rcv.itemView.setOnClickListener(mCollectionClick);
-            rcv.like.setOnClickListener(mLikeClick);
+            rcv.like.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    try {
+                        v.setEnabled(false);
+                        final Collection collection = (Collection) v.getTag();
+                        final boolean isLiked = v.isSelected();
+                        UIController.like(v.getContext(), collection, !isLiked, new
+                                IResultListener<LikeResponse>() {
+                                    @Override
+                                    public void onResult(LikeResponse result) {
+                                        v.setEnabled(true);
+                                        v.setSelected(result.success != isLiked);
+                                        likeMap.put(collection.id, v.isSelected());
+                                        if(isLiked){
+                                            collection.likecount=collection.likecount-1;
+                                            rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                        }else{
+                                            collection.likecount=collection.likecount+1;
+                                            rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                        }
+
+
+
+                                    }
+                                });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(v.getContext(), "Something wrong happened!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             return rcv;
         }
 
@@ -162,10 +199,12 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
             holder.extra.setText(String.format(Locale.getDefault(), "%d Products", collection.productcount));
             holder.itemView.setTag(position);
+
             Boolean t = likeMap.get(collection.id);
             holder.like.setSelected(t == null ? collection.isLiked : t);
             holder.like.setTag(collection);
             holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
+            Log.e("iii",collection.getImageUrl());
             Picasso.with(context).load(collection.getImageUrl()).into(holder.image);
 
         }
@@ -173,12 +212,15 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public int getItemCount() {
+
             return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         public Collection getCollection(int position) {
             cursor.moveToPosition(position);
-            return Collection.extractFromCursor(cursor);
+            Collection mCollection=Collection.extractFromCursor(cursor);
+            mCollection.selectedPos=position;
+            return mCollection;
         }
 
         public void changeCursor(Cursor cursor) {
@@ -223,12 +265,29 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
+            Log.e("iiii---",data.getCount()+"");
             mCollectionAdapter.changeCursor(data);
+            updateLikes.updateCollectionCount(data.getCount());
         }
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
             if (cursor != null) cursor.close();
         }
+    }
+
+    public interface UpdateLikes {
+        public void updateCollectionCount(int count);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            updateLikes = (UpdateLikes) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onViewSelected");
+        }
+
     }
 }

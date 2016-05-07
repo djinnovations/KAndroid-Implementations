@@ -10,6 +10,7 @@ public class AppSharedPreferences {
         public static final String IS_INTRO_SEEN ="introSeen";
         public static final String USER_NAME ="userName";
         public static final String PASSWORD ="password";
+        public static final String USER_ID ="userid";
         public static final String IS_LOGIN_DONE ="isLoginDone";
         public static final String SELECTED_CITY ="selectedCityName";
         public static final String SELECTED_CITY_ID ="selectedCityId";

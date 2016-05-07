@@ -3,6 +3,7 @@ package com.goldadorn.main.server;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
@@ -10,6 +11,7 @@ import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.model.OptionValue;
+import com.goldadorn.main.model.StoneDetail;
 import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.CreatePostForBuyResponse;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -56,10 +58,12 @@ public class ApiFactory extends ExtractResponse {
     private static final int SEARCH_TAG_TYPE = 18;
     private static final int WISHLIST_TYPE = 19;
     private static final int BUY_NOBUY_TYPE = 20;
-
+    private static final int GET_WISHLIST = 21;
+    private static final int DELETE_WISHLIST = 22;
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/goldadorn_dev/";
+    public static final String IMAGE_URL_COLLECTIONS_HOST = "http://demo.eremotus-portal.com/";
     private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
     private static final String HOST_NAME_PROD = "demo.eremotus-portal.com";
     public static final String HOST_NAME = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV;
@@ -91,6 +95,19 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("wish");
+                break;
+            }
+            case GET_WISHLIST: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("fetchwishes");
+                break;
+            }
+            case DELETE_WISHLIST: {
+                builder.appendPath("goldadorn_dev");
+                builder.appendPath("rest");
+                builder.appendPath("deletewishlistitem");
+                builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
                 break;
             }
             case BUY_NOBUY_TYPE: {
@@ -147,6 +164,7 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
                 builder.appendPath("getcartdetails");
+
                 builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
                 break;
@@ -286,18 +304,45 @@ public class ApiFactory extends ExtractResponse {
         }
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = WISHLIST_TYPE;
+            urlBuilder.mUrlType = GET_WISHLIST;
 
             urlBuilder.mResponse = response;
             ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
             paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = WISHLIST_TYPE;
+            paramsBuilder.mApiType = GET_WISHLIST;
 
 
             Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+    protected static void deleteWishList(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = DELETE_WISHLIST;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = DELETE_WISHLIST;
+
+
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getProductBasicInfo " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;
@@ -703,6 +748,75 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
+
+    protected static void addToCartNew(Context context, ProductResponse response) throws IOException, JSONException {
+        if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return;
+        }
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = ADD_CART_TYPE;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = ADD_CART_TYPE;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("prodId", response.productId);
+            jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
+            jsonObject.put("primaryMetal", response.primaryMetal);
+            jsonObject.put("primaryMetalPurity", response.primaryMetalPurity);
+            jsonObject.put("primaryMetalColor", response.primaryMetalColor);
+            jsonObject.put("size", response.size);
+            jsonObject.put("priceUnits", response.priceUnits);
+            jsonObject.put("totalPrice", response.productDefaultPrice);
+            jsonObject.put("metalPrice", response.metalrate);
+            jsonObject.put("stonePrice", response.stonePrice);
+            jsonObject.put("makingCharges", response.productmaking_charges);
+            jsonObject.put("metalWeight", response.metalWeight);
+            jsonObject.put("orderQty", 1);
+            jsonObject.put("VAT", 0.0);
+            for (int i=0;i<response.stonesDetails.size();i++){
+                StoneDetail mStone=response.stonesDetails.get(i);
+                jsonObject.put(mStone.stoneFactor, mStone.type);
+            }
+
+            Log.e("iii",response.productId+"--"+response.userId+"---"+((Application) context.getApplicationContext()).getUser().id);
+
+            /*try {
+                for (Map.Entry<OptionKey, OptionValue> entry : response.product.customisations.entrySet()) {
+                    if (entry.getKey() != null && entry.getValue() != null) {
+                        jsonObject.put(entry.getKey().keyID,
+                                entry.getValue().valueId);
+                    }
+
+                }
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }*/
+
+            L.d("iiiaddToCart BODY " + jsonObject.toString());
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("addToCart " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            extractBasicResponse(context, response);
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+        }
+    }
+
+
+
+
+
     protected static void removeFromCart(Context context, ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
@@ -795,7 +909,7 @@ public class ApiFactory extends ExtractResponse {
             } else if (response.userId != -1) {
                 builder.add("designer", response.userId + "");
             }
-            L.d("LIKE JSON " + builder.toString());
+            L.d("LIKE JSON " + builder.build().toString());
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
@@ -833,7 +947,7 @@ public class ApiFactory extends ExtractResponse {
                 builder.add("collection", response.collectionId + "");
                 builder.add("designer", response.userId + "");
             } else if (response.userId != -1) {
-                builder.add("designerid", response.userId + "");
+                builder.add("designer", response.userId + "");
             }
             L.d("unLike JSON " + builder.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());

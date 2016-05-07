@@ -55,6 +55,8 @@ public class Constants {
         public static final String PRIMARYMETAL = "primaryMetal";
         public static final String PRIMARYMETALCOLOR = "primaryMetalColor";
         public static final String PRIMARYMETALPURITY = "primaryMetalPurity";
+        public static final String METALPURITY = "Metal Purity";
+        public static final String METALCOLOUR = "Metal Color";
         public static final String PRIMARYMETALPRICE = "primaryMetalPrice";
         public static final String PRIMARYMETALPRICEUNITS = "primaryMetalPriceUnits";
         public static final String STONEPRICE = "stonePrice";

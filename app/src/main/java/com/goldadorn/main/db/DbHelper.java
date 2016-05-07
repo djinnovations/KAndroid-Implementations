@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.Product;
@@ -131,8 +132,8 @@ public class DbHelper {
                         cv.put(Tables.Users.NAME, userObj.optString(Constants.JsonConstants.USERNAME));
                         cv.put(Tables.Users.TRENDING, userObj.optInt(Constants.JsonConstants.ISTRENDING));
                         cv.put(Tables.Users.FEATURED, userObj.optInt(Constants.JsonConstants.ISFEATURED));
-                        cv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt(Constants.JsonConstants.FOLLOWERS));
-                        cv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt(Constants.JsonConstants.FOLLOWING));
+                        cv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt("followerCount"));
+                        cv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt("followingCount"));
                         cv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES));
                         cv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT));
                         cv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT));
@@ -184,6 +185,16 @@ public class DbHelper {
         }
     }
 
+    public static void updateInsertLikes(Context context,int mUser_d,int FollwerCount,int isFollow) {
+        ContentValues collcv = new ContentValues();
+       // collcv.put(Tables.Users._ID, mUser_d);
+        collcv.put(Tables.Users.COUNT_FOLLOWERS, FollwerCount);
+        collcv.put(Tables.Users.IS_FOLLOWING, isFollow);
+
+        int updatecollcnt = context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Users._ID + " = ? ", new String[]{(mUser_d) + ""});
+
+    }
+
     public static void writeProductShowcaseData(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONArray userlist = new JSONArray(response.responseContent);
@@ -212,7 +223,12 @@ public class DbHelper {
                             ContentValues collcv = new ContentValues();
                             collcv.put(Tables.Collections._ID, collObj.optLong(Constants.JsonConstants.COLLECTION_ID));
                             collcv.put(Tables.Collections.USER_ID, userId);
-                            collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED));
+
+                            /*Cursor cursor = context.getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{Constants.JsonConstants.COLLECTION_ID + ""}, null);
+                            if (cursor != null && cursor.moveToFirst()) {
+                                collcv.put(Tables.Collections.IS_LIKED, cursor.getInt(cursor.getColumnIndex(Tables.Collections.IS_LIKED)));
+                            }*/
+
                             collcv.put(Tables.Collections.NAME, collObj.optString(Constants.JsonConstants.COLLECTIONTITLE, null));
                             collcv.put(Tables.Collections.IMAGE_ASPECT_RATIO, collObj.optDouble(Constants.JsonConstants.COLLECTIONIMAGEAR));
                             collcv.put(Tables.Collections.DESCRIPTION, collObj.optString(Constants.JsonConstants.COLLECTIONDESC, null));
@@ -230,7 +246,78 @@ public class DbHelper {
         }
     }
 
+
+
+    public static void writeFollow(Context context, LikeResponse response) {
+        Log.e("iiii--follow-",response.userId+"");
+        ContentValues cv = new ContentValues();
+        if (response.productId != -1) {
+            cv.put(Tables.Products.IS_LIKED, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
+
+        } else if (response.collectionId != -1) {
+            cv.put(Tables.Collections.IS_LIKED, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Collections.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
+        } else if (response.userId != -1) {
+            cv.put(Tables.Users.IS_FOLLOWING, 1);
+            Cursor cursor = context.getContentResolver().query(Tables.Users.CONTENT_URI, null, Tables.Users._ID + " = ? ", new String[]{response.userId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Users.COUNT_FOLLOWERS, (cursor.getInt(cursor.getColumnIndex(Tables.Users.COUNT_FOLLOWERS)) + 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
+        }
+    }
+
+    public static void writeUnFollow(Context context, LikeResponse response) {
+        Log.e("iiii--Unfollow-",response.userId+"");
+        ContentValues cv = new ContentValues();
+        if (response.productId != -1) {
+            cv.put(Tables.Products.IS_LIKED, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{response.productId + ""});
+        } else if (response.collectionId != -1) {
+            cv.put(Tables.Collections.IS_LIKED, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Collections.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Collections._ID + " = ? ", new String[]{response.collectionId + ""});
+        } else if (response.userId != -1) {
+            cv.put(Tables.Users.IS_FOLLOWING, 0);
+            Cursor cursor = context.getContentResolver().query(Tables.Users.CONTENT_URI, null, Tables.Users._ID + " = ? ", new String[]{response.userId + ""}, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                cv.put(Tables.Users.COUNT_FOLLOWERS, (cursor.getInt(cursor.getColumnIndex(Tables.Users.COUNT_FOLLOWERS)) - 1));
+            }
+            if (cursor != null)
+                cursor.close();
+            context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
+        }
+    }
+
+
     public static void writeLike(Context context, LikeResponse response) {
+        Log.e("iiii---",response.userId+"");
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
             cv.put(Tables.Products.IS_LIKED, 1);
