@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -51,7 +52,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Vijith Menon on 6/3/16.
  */
-public class ShowcaseActivity extends BaseDrawerActivity {
+public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsFragment.UpdateLikes,ProductsFragment.UpdateProductCount{
     private final static int UISTATE_COLLECTION = 0;
     private final static int UISTATE_PRODUCT = 1;
     private final static int UISTATE_SOCIAL = 2;
@@ -115,6 +116,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
     private Handler mHandler = new Handler();
+    public static boolean isCollectionLike=false;
 
 
     @Override
@@ -128,7 +130,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
 
         final DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mStartHeight = (int) (.7f * dm.heightPixels);
-        mCollapsedHeight = (int) (.25f * dm.heightPixels);
+        mCollapsedHeight = (int) (.28f * dm.heightPixels);
 
         mPagerDummy.getLayoutParams().height = mStartHeight;
         mRecyclerView.getLayoutParams().height = mStartHeight;
@@ -142,10 +144,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
-        mRecyclerView.setAdapter(mShowCaseAdapter =
-                new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
-        mRecyclerView.setLayoutManager(
-                new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
@@ -156,7 +156,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (mVerticalOffset != verticalOffset) {
-                    Log.d(TAG, "offset : " + verticalOffset);
+                    Log.d(TAG, "offset : " + verticalOffset+"--"+mStartHeight+"---"+mCollapsedHeight);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
                     topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
@@ -195,6 +195,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 mHandler.removeCallbacks(mUserChangeRunnable);
                 mHandler.postDelayed(mUserChangeRunnable, 100);
+                configureUI(mUIState);
+                mTabViewHolder.setSelected(0);
             }
         });
         mNext.setOnClickListener(new View.OnClickListener() {
@@ -205,6 +207,8 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 mHandler.removeCallbacks(mUserChangeRunnable);
                 mHandler.postDelayed(mUserChangeRunnable, 100);
+                configureUI(mUIState);
+                mTabViewHolder.setSelected(0);
             }
         });
 
@@ -219,14 +223,11 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     @Override
                     public void onResult(TimelineResponse result) {
                         mProgressFrame.setVisibility(View.GONE);
-//                        if (mUser == null) {
-//                            User user = mShowCaseAdapter.getUser(0);
-//                            if (user != null)
-//                                onUserChange(user);
-//                        }
+                        getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
                     }
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+
     }
 
 
@@ -244,11 +245,50 @@ public class ShowcaseActivity extends BaseDrawerActivity {
         super.onDestroy();
     }
 
+
+
+
+    @Override
+    protected void onResume() {
+        if(mUser!=null){
+            Log.e("iii--Notnull--",""+mUser.id);
+            mUser= UserInfoCache.getInstance(mContext).getUserInfoDB(mUser.id, true);
+            bindOverlay(mUser);
+            if(isCollectionLike) {
+                isCollectionLike=false;
+                UIController.getShowCase(mContext,
+                        new IResultListener<TimelineResponse>() {
+                            @Override
+                            public void onResult(TimelineResponse result) {
+                                mProgressFrame.setVisibility(View.GONE);
+                                getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+                            }
+                        });
+            }
+        }else{
+            Log.e("iii--null--","");
+        }
+        super.onResume();
+
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean value = super.onCreateOptionsMenu(menu);
         //menu.findItem(R.id.nav_my_overflow).setVisible(false);
         return value;
+    }
+
+    @Override
+    public void updateCollectionCount(int count) {
+        Log.d("updateCount: ", count + "");
+        mTabViewHolder.collectionCount(count);
+    }
+
+    @Override
+    public void updateProductCounts(int count) {
+       // mTabViewHolder.productsCount(count);
     }
 
     private void onUserChange(User user) {
@@ -326,6 +366,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             if (cursor != null) cursor.close();
             this.cursor = data;
             mShowCaseAdapter.changeCursor(data);
+            Log.e("iiiii--","enter");
             if (data.getCount() > 0) {
                 if (otpFlag) {
                     otpFlag = false;
@@ -413,7 +454,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
     }
 
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.brand_name)
         TextView brandName;
@@ -474,7 +515,7 @@ public class ShowcaseActivity extends BaseDrawerActivity {
             Context context = v.getContext();
             if (id == R.id.likeButton) {
                 v.setEnabled(false);
-                User user = (User) v.getTag();
+                final User user = (User) v.getTag();
                 final boolean isLiked = v.isSelected();
                 UIController.like(context, user, !isLiked, new IResultListener<LikeResponse>() {
 
@@ -482,11 +523,20 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     public void onResult(LikeResponse result) {
                         v.setEnabled(true);
                         v.setSelected(result.success != isLiked);
+                        if(isLiked){
+                            user.likes_cnt=user.likes_cnt-1;
+                            mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+                           // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", user.likes_cnt))),Toast.LENGTH_SHORT).show();
+                        }else{
+                            user.likes_cnt=user.likes_cnt+1;
+                            mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+                            //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", user.likes_cnt))),Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             } else if (id == R.id.followButton) {
                 v.setEnabled(false);
-                User user = (User) v.getTag();
+                final User user = (User) v.getTag();
                 final boolean isFollowing = v.isSelected();
                 UIController.follow(context, user, !isFollowing, new IResultListener<LikeResponse>() {
 
@@ -494,12 +544,22 @@ public class ShowcaseActivity extends BaseDrawerActivity {
                     public void onResult(LikeResponse result) {
                         v.setEnabled(true);
                         v.setSelected(result.success != isFollowing);
+                        if (isFollowing) {
+                            user.followers_cnt = user.followers_cnt - 1;
+                            mOverlayVH.followersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
+                            //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
+                        } else {
+                            user.followers_cnt = user.followers_cnt + 1;
+                            mOverlayVH.followersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
+                            //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             } else if (id == R.id.shareButton) {
-                Toast.makeText(v.getContext(), "share click!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
                 //// TODO: 30/3/16 share click
             }
         }
     }
+
 }

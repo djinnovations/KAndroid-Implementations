@@ -224,7 +224,6 @@ public class Application extends BaseApplication {
         Mint.addExtraData("User ID", user.id + "");
         Mint.addExtraData("User Photo", user.getImageUrl());
         Mint.addExtraData("User Name", user.getName());
-
     }
 
     public void setUser(User user) {

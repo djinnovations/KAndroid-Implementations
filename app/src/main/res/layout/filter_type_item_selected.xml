@@ -9,7 +9,7 @@
     </data>
 
     <RelativeLayout android:layout_width="100dp"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content">
 
         <com.goldadorn.main.activities.productListing.DiamondImageView
             android:id="@+id/image"
@@ -27,9 +27,9 @@
             android:layout_centerHorizontal="true" />
 
         <TextView
+            android:layout_marginTop="-15dp"
             android:textSize="10sp"
             android:textColor="#ffffff"
-            android:layout_margin="5dp"
             android:gravity="center_horizontal"
             android:layout_below="@+id/image"
             tools:text="ABC"

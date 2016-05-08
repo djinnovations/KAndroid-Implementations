@@ -78,7 +78,7 @@
                 android:layout_marginTop="-35dp"
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
-                app:tickStart="1"
+                app:tickStart="3"
                 app:tickInterval="1"
                 app:tickEnd="1000"
                 app:connectingLineColor="@color/colorAccent"
@@ -90,11 +90,10 @@
                 android:layout_marginRight="20dp"/>
             <Button
                 android:layout_marginTop="-20dp"
-                style="?android:attr/borderlessButtonStyle"
                 android:id="@+id/addRange"
                 android:layout_gravity="center_horizontal"
                 android:text="Add Price Range"
-                android:textColor="@color/colorPrimary"
+                android:layout_marginBottom="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -166,7 +165,7 @@
                 android:layout_below="@+id/title"
                 android:id="@+id/selectorRecyclerView"
                 android:layout_width="wrap_content"
-                android:layout_height="120dp"/>
+                android:layout_height="130dp"/>
 
 
             <Button

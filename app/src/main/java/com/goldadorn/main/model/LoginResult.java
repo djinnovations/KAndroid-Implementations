@@ -4,13 +4,11 @@ import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.IParseableObject;
 
-import java.net.HttpRetryException;
-
 /**
  * Created by bhavinpadhiyar on 2/17/16.
  */
 public class LoginResult extends ServerError implements IParseableObject {
-    private int userid;
+    private String userid;
     private String username;
     private String userpic;
     private String userpicFinal=null;
@@ -19,7 +17,7 @@ public class LoginResult extends ServerError implements IParseableObject {
         userpic= URLHelper.parseImageURL(userpic);
     }
 
-    public void setUserid(int userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 
@@ -34,7 +32,7 @@ public class LoginResult extends ServerError implements IParseableObject {
         this.userpic = userpic;
     }
 
-    public int getUserid() {
+    public String getUserid() {
         return userid;
     }
 

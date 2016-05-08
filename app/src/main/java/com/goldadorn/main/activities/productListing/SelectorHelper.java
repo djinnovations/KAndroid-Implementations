@@ -80,31 +80,33 @@ public class SelectorHelper implements IViewProvider {
         recyclerView.setVisibility(View.GONE);
     }
 
+    public void remove(Object o)
+    {
+        try {
+            for (int i = 0; i < dataManager.size(); i++) {
+                if(dataManager.get(i)==o)
+                {
+                    dataManager.remove(i);
+                    if(onRemoveListner!=null)
+                        onRemoveListner.remove(o);
+                    if(recyclerView !=null && dataManager.size()!=0)
+                        recyclerView.setVisibility(View.VISIBLE);
+                    else if(recyclerView !=null && dataManager.size()==0)
+                        recyclerView.setVisibility(View.GONE);
+                    break;
+                }
+            }
+        }catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     RecyclerViewHelper.OnItemClick selector = new RecyclerViewHelper.OnItemClick()
     {
         @Override
         public void onItemClick(Object o)
         {
-            try {
-                for (int i = 0; i < dataManager.size(); i++) {
-                    if(dataManager.get(i)==o)
-                    {
-                        dataManager.remove(i);
-                        if(onRemoveListner!=null)
-                            onRemoveListner.remove(o);
-                        if(recyclerView !=null && dataManager.size()!=0)
-                            recyclerView.setVisibility(View.VISIBLE);
-                        else if(recyclerView !=null && dataManager.size()==0)
-                            recyclerView.setVisibility(View.GONE);
-                        break;
-                    }
-                }
-            }catch (Exception e) {
-                System.out.println(e);
-            }
-
-
-
+            remove(o);
         }
     };
     /*
@@ -170,6 +172,17 @@ public class SelectorHelper implements IViewProvider {
     public void onRemoveListner(OnRemoveListner onRemoveListner) {
         this.onRemoveListner=onRemoveListner;
     }
+
+    public void removePrice() {
+        for (int i = 0; i < dataManager.size(); i++) {
+            if(dataManager.get(i) instanceof FilterPrice)
+            {
+                dataManager.remove(i);
+                break;
+            }
+        }
+    }
+
     public interface OnRemoveListner
     {
         void remove(Object o);

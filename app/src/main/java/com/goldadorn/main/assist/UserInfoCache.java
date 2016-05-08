@@ -304,6 +304,21 @@ public class UserInfoCache {
         }
     }
 
+
+    public User getUserInfoDB(int id, boolean force) {
+       /* if (mValid && mCache.containsKey(id)) {
+            return mCache.get(id);
+        } else {*/
+        if(id!=0) {
+            if (force) {
+                return getBasicInfo(id);
+            } else
+                return null;
+        }else
+            return null;
+      //  }
+    }
+
     //
 
     protected void finalize() throws Throwable {

@@ -18,6 +18,7 @@ public class Collection implements Serializable {
     public int likecount = 0, productcount = 0;
     public boolean isTrending,isFeatured;
     public boolean isLiked;
+    public int selectedPos=0;
 
     public Collection(int id) {
         this.id = id;

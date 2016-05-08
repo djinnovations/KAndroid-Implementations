@@ -183,109 +183,106 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     private String getParam(int offset)
     {
-        if(filters==null || filters.size()==0) {
-            String val = "{\"offset\" :" + offset;
-            val += ",\"sort\" : \""+ sort+"\"}";
-            return val;
-        }
-        else
-        {
-            List<Designer> designerList = new ArrayList<>();
-            List<FilterCollection> collectionList = new ArrayList<>();
-            List<FilterPrice> priceList = new ArrayList<>();
-            List<FilterType> typeList = new ArrayList<>();
-            for (Parcelable filter : filters) {
-                if(filter instanceof Designer)
-                    designerList.add((Designer)filter);
-                else if(filter instanceof FilterCollection)
-                    collectionList.add((FilterCollection)filter);
-                else if(filter instanceof FilterPrice)
-                    priceList.add((FilterPrice)filter);
-                else if(filter instanceof FilterType)
-                    typeList.add((FilterType)filter);
-            }
-
-            String val ="{";
-            String priceRanges=null;
-            if(priceList.size()!=0)
-            {
-                priceRanges ="\"priceRanges\":[";
-                for (int i = 0; i < priceList.size(); i++) {
-                    priceRanges+="{";
-                    priceRanges+="\"min\":"+priceList.get(i).getMin();
-                    priceRanges+=",\"max\":"+priceList.get(i).getMax();
-                    priceRanges+="}";
-                    if(i!=priceList.size()-1)
-                        priceRanges+=",";
+        if(offset!=-1) {
+            if (filters == null || filters.size() == 0) {
+                String val = "{\"offset\" :" + offset;
+                val += ",\"sort\" : \"" + sort + "\"}";
+                return val;
+            } else {
+                List<Designer> designerList = new ArrayList<>();
+                List<FilterCollection> collectionList = new ArrayList<>();
+                List<FilterPrice> priceList = new ArrayList<>();
+                List<FilterType> typeList = new ArrayList<>();
+                for (Parcelable filter : filters) {
+                    if (filter instanceof Designer)
+                        designerList.add((Designer) filter);
+                    else if (filter instanceof FilterCollection)
+                        collectionList.add((FilterCollection) filter);
+                    else if (filter instanceof FilterPrice)
+                        priceList.add((FilterPrice) filter);
+                    else if (filter instanceof FilterType)
+                        typeList.add((FilterType) filter);
                 }
-                priceRanges+="]";
-            }
 
-            String prodTypes=null;
-            if(typeList.size()!=0)
-            {
-                prodTypes ="\"prodTypes\":[";
-                for (int i = 0; i < typeList.size(); i++) {
-                    prodTypes+="\""+typeList.get(i).getProdType()+"\"";
-                    if(i!=typeList.size()-1)
-                        prodTypes+=",";
+                String val = "{";
+                String priceRanges = null;
+                if (priceList.size() != 0) {
+                    priceRanges = "\"priceRanges\":[";
+                    for (int i = 0; i < priceList.size(); i++) {
+                        priceRanges += "{";
+                        priceRanges += "\"min\":" + priceList.get(i).getMin();
+                        priceRanges += ",\"max\":" + priceList.get(i).getMax();
+                        priceRanges += "}";
+                        if (i != priceList.size() - 1)
+                            priceRanges += ",";
+                    }
+                    priceRanges += "]";
                 }
-                prodTypes+="]";
-            }
 
-            String desgnIds=null;
-            if(designerList.size()!=0)
-            {
-                desgnIds ="\"desgnIds\":[";
-                for (int i = 0; i < designerList.size(); i++) {
-                    desgnIds+=designerList.get(i).getDesignerId();
-                    if(i!=designerList.size()-1)
-                        desgnIds+=",";
+                String prodTypes = null;
+                if (typeList.size() != 0) {
+                    prodTypes = "\"prodTypes\":[";
+                    for (int i = 0; i < typeList.size(); i++) {
+                        prodTypes += "\"" + typeList.get(i).getProdType() + "\"";
+                        if (i != typeList.size() - 1)
+                            prodTypes += ",";
+                    }
+                    prodTypes += "]";
                 }
-                desgnIds+="]";
-            }
 
-            String collIds=null;
-            if(collectionList.size()!=0)
-            {
-                collIds ="\"collIds\":[";
-                for (int i = 0; i < collectionList.size(); i++) {
-                    collIds+=collectionList.get(i).getCollId();
-                    if(i!=collectionList.size()-1)
-                        collIds+=",";
+                String desgnIds = null;
+                if (designerList.size() != 0) {
+                    desgnIds = "\"desgnIds\":[";
+                    for (int i = 0; i < designerList.size(); i++) {
+                        desgnIds += designerList.get(i).getDesignerId();
+                        if (i != designerList.size() - 1)
+                            desgnIds += ",";
+                    }
+                    desgnIds += "]";
                 }
-                collIds+="]";
-            }
-            if(priceRanges!=null)
-                val +=priceRanges+",";
-            if(prodTypes!=null)
-                val +=prodTypes+",";
-            if(desgnIds!=null)
-                val +=desgnIds+",";
-            if(collIds!=null)
-                val +=collIds+",";
-            val +="\"offset\" : "+offset;
-            val +=",\"sort\" : \""+sort+"\"}";
-            /*
-            {
-                "priceRanges":
-                [
+
+                String collIds = null;
+                if (collectionList.size() != 0) {
+                    collIds = "\"collIds\":[";
+                    for (int i = 0; i < collectionList.size(); i++) {
+                        collIds += collectionList.get(i).getCollId();
+                        if (i != collectionList.size() - 1)
+                            collIds += ",";
+                    }
+                    collIds += "]";
+                }
+                if (priceRanges != null)
+                    val += priceRanges + ",";
+                if (prodTypes != null)
+                    val += prodTypes + ",";
+                if (desgnIds != null)
+                    val += desgnIds + ",";
+                if (collIds != null)
+                    val += collIds + ",";
+                val += "\"offset\" : " + offset;
+                val += ",\"sort\" : \"" + sort + "\"}";
+                /*
                 {
-                    "min": 1000,
-                        "max": 10000
-                },
-                {
-                    "min": 6000,
-                        "max": 13000
-                }
-                ],
-                "desgnIds": [11,12],
-                "collIds": [13,14,15],
-                "prodTypes": ["Pendants","Rings"],
-                "offset" : 10
-            }*/
-            return val;
+                    "priceRanges":
+                    [
+                    {
+                        "min": 1000,
+                            "max": 10000
+                    },
+                    {
+                        "min": 6000,
+                            "max": 13000
+                    }
+                    ],
+                    "desgnIds": [11,12],
+                    "collIds": [13,14,15],
+                    "prodTypes": ["Pendants","Rings"],
+                    "offset" : 10
+                }*/
+                return val;
+            }
         }
+        return null;
     }
 
     private int offset = 0;
@@ -315,6 +312,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                 }
                 else
                 {
+                    offset = result.offset;
                     pageData.totalPage=pageData.curruntPage;
                 }
             }
@@ -328,7 +326,9 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     public String getNextDataURL(PageData pageData)
     {
-        return getApp().getUrlHelper().getApplyfilterServiceURL();
+        if(pageData.curruntPage!=pageData.totalPage)
+            return getApp().getUrlHelper().getApplyfilterServiceURL();
+        return null;
     }
 
     @Override

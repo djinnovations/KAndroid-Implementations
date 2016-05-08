@@ -91,6 +91,11 @@
     <string name="product">product</string>
     <string name="quantity">quantity</string>
     <string name="price">price</string>
+
+    <string name="Product">Product</string>
+    <string name="Quantity">Quantity</string>
+    <string name="Price">Price</string>
+
     <string name="customize">customize</string>
 
     <string name="font_name_edit_text">din-regular.ttf</string>

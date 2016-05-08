@@ -67,6 +67,7 @@ public class User implements Serializable {
         info.isLiked = cursor.getInt(cursor.getColumnIndex(Users.IS_LIKED)) == 1;
         info.isFollowed = cursor.getInt(cursor.getColumnIndex(Users.IS_FOLLOWING)) == 1;
         info.dataVersion = cursor.getLong(cursor.getColumnIndex(Users.DATAVERSION));
+
         return info;
     }
 

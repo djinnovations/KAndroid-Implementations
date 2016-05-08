@@ -66,6 +66,18 @@ public class Api {
         }
     }
 
+    public static void deleteWishList(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.deleteWishList(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     public static void addToWishlist(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
@@ -228,6 +240,18 @@ public class Api {
         }
     }
 
+    public static void addToCartNew(Context context, ProductResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.addToCartNew(context, response);
+            if (response.success && response.responseContent != null) {
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
     public static void removeFromCart(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
@@ -283,6 +307,20 @@ public class Api {
             generateUserCredentials(context, response);
             ApiFactory.follow(context, response);
             if (response.success && response.responseContent != null) {
+                DbHelper.writeFollow(context, response);
+            }
+        } catch (Exception e) {
+            extractException(context, response, e);
+            e.printStackTrace();
+        }
+    }
+
+    public static void Unfollow(Context context, LikeResponse response, int retryCount) {
+        try {
+            generateUserCredentials(context, response);
+            ApiFactory.follow(context, response);
+            if (response.success && response.responseContent != null) {
+                DbHelper.writeUnFollow(context, response);
             }
         } catch (Exception e) {
             extractException(context, response, e);

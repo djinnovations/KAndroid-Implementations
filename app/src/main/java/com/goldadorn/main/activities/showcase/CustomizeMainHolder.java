@@ -50,6 +50,19 @@ class CustomizeMainHolder extends ViewHolder {
                 }
             }
         });
+
+        addRemoveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (extraLayout.getVisibility() == View.VISIBLE) {
+                    extraLayout.setVisibility(View.GONE);
+                } else {
+                    extraLayout.setVisibility(View.VISIBLE);
+                    populateExtraLayout();
+                }
+            }
+        });
+
     }
 
     public void bindUI(Map.Entry<OptionKey, ArrayList<OptionValue>> option) {
@@ -81,7 +94,10 @@ class CustomizeMainHolder extends ViewHolder {
             TextView tv = (TextView) v.findViewById(R.id.name);
             CircleCheckedTextView image = (CircleCheckedTextView) v.findViewById(R.id.image);
             image.setText(s.getDisplayString());
-            tv.setText(s.getDisplayString());
+            if(data.getKey().keyID.equalsIgnoreCase("Metal Purity List"))
+                tv.setText(s.getDisplayString()+"K");
+            else
+                tv.setText(s.getDisplayString());
             v.setVisibility(View.VISIBLE);
             if (child == null) {
                 extraLayout.addView(v);

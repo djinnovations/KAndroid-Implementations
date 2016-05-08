@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.utils.ImageFilePath;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONObject;
 
@@ -19,14 +20,26 @@ import java.util.Map;
 public class Product implements Serializable {
     public final int id;
     public int transid;
-    public int userId, collectionId;
+    public int productId=-1;
+    public int userId, collectionId=-1;
     public String name, description;
     public long unitPrice;
     public String priceUnit = " RS";
     public float image_a_r = 1;
 
-    public int quantity, maxQuantity = 10;
+    public int quantity;
+    public int maxQuantity = 10;
     public int likecount;
+
+    @SerializedName("orderQty")
+    public int orderQty;
+
+    @SerializedName("pricePaid")
+    public Double pricePaid;
+
+    /*"primaryMetal":"Gold",
+            "primaryMetalPurity":18,
+            "primaryMetalColor":"Rose",*/
 
 
     public final HashMap<OptionKey, OptionValue> customisations = new HashMap<>();
@@ -47,8 +60,15 @@ public class Product implements Serializable {
         return unitPrice * quantity;
     }
 
+    public long getTotalPriceNew() {
+        return (long)(pricePaid * orderQty);
+    }
+
     public String getDisplayPrice() {
-        return priceUnit + ". " + unitPrice;
+        if(priceUnit!=null && unitPrice>0)
+            return priceUnit + ". " + unitPrice;
+        else
+            return "";
     }
 
     @Override
@@ -65,6 +85,7 @@ public class Product implements Serializable {
     public static Product extractFromCursor(Cursor cursor) {
         Product t = new Product(cursor.getInt(cursor.getColumnIndex(Tables.Products._ID)));
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Products.USER_ID));
+        t.productId=cursor.getInt(cursor.getColumnIndex(Tables.Products._ID));
         t.collectionId = cursor.getInt(cursor.getColumnIndex(Tables.Products.COLLECTION_ID));
         t.name = cursor.getString(cursor.getColumnIndex(Tables.Products.NAME));
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Products.DESCRIPTION));
@@ -85,6 +106,8 @@ public class Product implements Serializable {
         p.priceUnit = productInfo.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
         p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.quantity = 1;
+        p.orderQty = productInfo.optInt("orderQty");
+        p.pricePaid=productInfo.optDouble("pricePaid");
 
         // alternate customisation
         OptionValue v;

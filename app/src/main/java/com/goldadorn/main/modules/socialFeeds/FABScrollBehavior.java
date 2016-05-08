@@ -76,8 +76,6 @@ public class FABScrollBehavior extends CoordinatorLayout.Behavior {
                 }
             }).playOn(child);
 
-
-
         }
         else if(dyConsumed < 0 && child.getVisibility() == View.GONE)
         {

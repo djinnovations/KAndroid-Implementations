@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,11 +51,11 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
         ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
         ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
-        ((TextView) mContainer_header_row.getChildAt(0)).setText(R.string.product);
-        ((TextView) mContainer_header_row.getChildAt(1)).setText(R.string.quantity);
-        SpannableStringBuilder sbr = new SpannableStringBuilder(getString(R.string.price));
+        ((TextView) mContainer_header_row.getChildAt(0)).setText(R.string.Product);
+        ((TextView) mContainer_header_row.getChildAt(1)).setText(R.string.Quantity);
+        SpannableStringBuilder sbr = new SpannableStringBuilder(getString(R.string.Price));
         int start = sbr.length();
-        sbr.append("\n").append("(quantity * unit price)");
+        sbr.append("\n").append("(Quantity * Unit price)");
         int end = sbr.length();
 //        sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
@@ -68,6 +69,10 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             public void onResult(ProductResponse result) {
                 try {
                     if (result.success && result.productArray != null) {
+                        for (int i=0;i<result.productArray.size();i++){
+                            Product p=result.productArray.get(i);
+
+                        }
                         mCart.addAll(result.productArray);
                         onCartChanged();
                     }
@@ -84,15 +89,21 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         int totalUnits = 0;
         String currency = null;
         for (Product p : mCart) {
-            mCostTotal = mCostTotal + p.getTotalPrice();
-            totalUnits = totalUnits + p.quantity;
+            mCostTotal = mCostTotal + p.getTotalPriceNew();
+            totalUnits = totalUnits + p.orderQty;
             currency = p.priceUnit;
+            Log.e("iii---",p.transid+"--"+mCostTotal+"--"+p.orderQty);
         }
         mCostTotal = mCostTotal + mCostShipping + mCostTax;
         int t = totalUnits > 0 ? 1 : 0;
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
+        Log.e("iii---",t+"--"+mCostTotal);
+        /*Madhu*/
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs "+ (mCostTax * t) + "/-");
+        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText("Rs " + (mCostShipping * t) + "/-");
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText("Rs " + (mCostTotal * t) + "/-");
+      /*  ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostShipping * t) + "/-");
-        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");*/
     }
 
     private void onCartChanged() {

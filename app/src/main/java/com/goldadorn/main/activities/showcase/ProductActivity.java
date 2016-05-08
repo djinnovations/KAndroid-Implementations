@@ -108,6 +108,7 @@ public class ProductActivity extends BaseDrawerActivity {
     Collection mCollection;
     public ProductInfo mProductInfo;
     public ProductOptions mProductOptions;
+    private ProductInfoFragment mProInfoFragment = null;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -140,6 +141,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 return;
             }
         }
+
         ArrayList<String> data = new ArrayList<>(1);
         data.add(mProduct.getImageUrl());
 
@@ -199,7 +201,7 @@ public class ProductActivity extends BaseDrawerActivity {
         bindOverlay();
 
         ProductResponse response = new ProductResponse();
-        response.productId = 68;
+        response.productId = mProduct.id;
         response.product = mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
@@ -208,9 +210,9 @@ public class ProductActivity extends BaseDrawerActivity {
                         if (result.success) {
                             mProductInfo = result.info;
                             mProductAdapter.changeData(mProductInfo.images);
-                            ProductInfoFragment f = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
-                            if (f != null)
-                                f.bindProductInfo(mProductInfo);
+                            mProInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                            if (mProInfoFragment != null)
+                                mProInfoFragment.bindProductInfo(mProductInfo);
 
                         }
                     }
@@ -247,15 +249,20 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
-        mUser = UserInfoCache.getInstance(mContext).getUserInfo(mProduct.userId, true);
+        mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
+        Log.e("iiii--",mUser.id+"--"+mUser.isFollowed+"---"+mUser.followers_cnt);
         if (mUser != null) {
             mOverlayVH.mProductOwner.setText("By " + mUser.getName());
+            mOverlayVH.followButton.setTag(mUser);
+            mOverlayVH.followButton.setSelected(mUser.isFollowed);
         } else {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
         mOverlayVH.mProductCost.setText(mProduct.getDisplayPrice());
         mOverlayVH.mProductCost2.setText(mProduct.getDisplayPrice());
+
+
         mTabViewHolder.setCounts(-1, -1);
     }
 
@@ -301,7 +308,7 @@ public class ProductActivity extends BaseDrawerActivity {
             mFrame.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
-            f = new ProductInfoFragment();
+            mProInfoFragment = new ProductInfoFragment();
         } else {
             id = R.id.frame_no_scroll_dummy;
             f = new ProductCustomiseFragment();
@@ -313,11 +320,31 @@ public class ProductActivity extends BaseDrawerActivity {
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, f, "" + uiState);
             fragmentTransaction.commit();
+        }else{
+            FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(id, mProInfoFragment, "" + uiState);
+            fragmentTransaction.commit();
         }
     }
 
     public void addToCart() {
+        Log.e("iii",mProduct.id+"");
         UIController.addToCart(mContext, mProduct,
+                new IResultListener<ProductResponse>() {
+
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        Toast.makeText(mContext,
+                                result.success ? "Added to cart successfully!" :
+                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    public void addToCartNew() {
+        Log.e("iii",mProduct.id+"");
+        UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
                 new IResultListener<ProductResponse>() {
 
                     @Override
@@ -485,22 +512,31 @@ public class ProductActivity extends BaseDrawerActivity {
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
                                 v.setSelected(result.success != isLiked);
+                                if(isLiked){
+                                    mProduct.likecount=mProduct.likecount-1;
+                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                   // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                }else{
+                                    mProduct.likecount=mProduct.likecount+1;
+                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                    //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
             } else if (v == shareButton) {
                 //todo like click
-                Toast.makeText(v.getContext(), "Share click!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
                 startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
             } else if (v == wishlistButton) {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                            Toast.makeText(mContext, "Added to wishlist "+result.success, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else if (v == cartButton) {
-                addToCart();
+                addToCartNew();
             } else if (v == followButton) {
                 v.setEnabled(false);
                 final boolean isFollowing = v.isSelected();
@@ -511,6 +547,18 @@ public class ProductActivity extends BaseDrawerActivity {
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
                                 v.setSelected(result.success != isFollowing);
+                                if (isFollowing) {
+                                    mUser.followers_cnt = mUser.followers_cnt - 1;
+                                    mUser.isFollowed=false;
+                                    //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
+                                } else {
+                                    mUser.followers_cnt = mUser.followers_cnt + 1;
+                                    mUser.isFollowed=true;
+                                    //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
+                                }
+                                if(mProInfoFragment!=null){
+                                    mProInfoFragment.mFollower();
+                                }
                             }
                         });
             }
@@ -555,10 +603,10 @@ public class ProductActivity extends BaseDrawerActivity {
                                    ObjectAsyncLoader.Result data) {
             mCollection = (Collection) data.object;
             if (mCollection != null) {
-                ProductInfoFragment f =
+                mProInfoFragment =
                         (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(
                                 "" + UISTATE_PRODUCT);
-                if (f != null) f.bindCollectionUI(mCollection);
+                if (mProInfoFragment != null) mProInfoFragment.bindCollectionUI(mCollection);
                 mOverlayVH.mProductCollection.setText(mCollection.name);
             } else {
                 mOverlayVH.mProductCollection.setText("");
@@ -569,6 +617,17 @@ public class ProductActivity extends BaseDrawerActivity {
         @Override
         public void onLoaderReset(Loader<ObjectAsyncLoader.Result> loader) {
 
+        }
+    }
+
+    public void mFollower(){
+        mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
+        if (mUser != null) {
+            mOverlayVH.followButton.setTag(mUser);
+            mOverlayVH.followButton.setSelected(mUser.isFollowed);
+        } else {
+            mOverlayVH.mProductOwner.setText("");
+            mOverlayVH.followButton.setVisibility(View.GONE);
         }
     }
 }

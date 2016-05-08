@@ -22,7 +22,7 @@ android {
             buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
             buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
             buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
-            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
+            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/  "'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
         }
 
@@ -47,8 +47,9 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 5
-        versionName "1.5"
+        versionCode 8
+        versionName "1.8"
+        multiDexEnabled true
         /*March 5 2016 1:46:58*/
     }
     buildTypes {
@@ -128,6 +129,8 @@ dependencies {
     compile project(':payu_ui')
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
+    compile 'com.android.support:multidex:1.0.0'
+
     //Permission
     compile 'com.github.kimeeo:TedPermission:064cbbbeba'
     compile 'com.appyvet:materialrangebar:1.3'
@@ -141,4 +144,6 @@ dependencies {
     compile('com.twitter.sdk.android:twitter:1.13.1@aar') {
         transitive = true;
     }
+
+    //compile 'com.ovenbits:quickactionview:1.0.0'
 }
