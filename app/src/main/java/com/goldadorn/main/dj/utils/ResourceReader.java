@@ -9,13 +9,21 @@ import android.os.Build;
  */
 public class ResourceReader {
 
-    private Context mContext;
+    private static ResourceReader ourInstance;
+    private static Context mContext;
 
-    public ResourceReader(Context mContext) {
+    private ResourceReader(Context mContext) {
 
-        this.mContext = mContext;
+        ResourceReader.mContext = mContext;
     }
 
+    public static ResourceReader getInstance(Context appContext) {
+
+        if (ourInstance == null) {
+            ourInstance = new ResourceReader(appContext);
+        }
+        return ourInstance;
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     public int getColorFromResource(int colorResId){

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -24,7 +25,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
@@ -33,12 +33,13 @@ import com.facebook.login.LoginResult;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.LandingPageActivity;
 import com.goldadorn.main.activities.LoginPageActivity;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
-import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -87,7 +88,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     private SocialLoginUtil() {
 
-        FacebookSdk.sdkInitialize(mContext);
+        //FacebookSdk.sdkInitialize(mContext);
         initializeFbAndGlTw();
         setFbCallBacks();
     }
@@ -100,7 +101,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private CallbackManager mFbCallbackManager;
     private final String[] permissionArr = new String[]{"user_location", "user_birthday", "email"};
     /*******************************************************/
-    private UserSession mUserSession;
+    //private UserSession mUserSession;
     /*****************
      * Gmail stuffs
      ***********************/
@@ -150,7 +151,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this).build();
 
         /*************************************************************************************************/
-        mUserSession = UserSession.getUserSession();
+        //mUserSession = UserSession.getUserSession();
     }
 
 
@@ -270,7 +271,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         TextView tvTemp = (TextView) overLay.findViewById(R.id.tvOverlayInfo);
         if (infoMsg != null) {
             tvTemp.setText(infoMsg);
-            tvTemp.setTextColor(new ResourceReader(mContext).getColorFromResource(colorResId));
+            tvTemp.setTextColor(ResourceReader.getInstance(mContext).getColorFromResource(colorResId));
         }
         else tvTemp.setVisibility(View.GONE);
         dialog.setContentView(overLay);
@@ -292,7 +293,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                     public void onSuccess(LoginResult loginResult) {
                         Log.d(Constants.TAG, "Login successs");
                         //// TODO: 5/4/2016
-                        onSuccessfulLogin(new FbGoogleTweetLoginResult(null, loginResult, null,Constants.PLATFORM_FACEBOOK));
+                        onSuccessfulLogin(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK));
                     }
 
                     @Override
@@ -401,8 +402,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                             message = response.getString(ApiKeys.MESSAGE);
                             Log.d(Constants.TAG, "status: "+status);
                             Log.d(Constants.TAG, "message: "+message);
-                            dialog.dismiss();
-                            evaluateResults(status, message);
+                            //dialog.dismiss();
+                            evaluateResults(status, message, dialog);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             dialog.dismiss();
@@ -431,11 +432,11 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     }
 
-    private void evaluateResults(String status, String message) {
+    private void evaluateResults(String status, String message, Dialog dialog) {
         //it would have been better if I had a boolean status field for comparison;
         // since string comparison is not good practice
         if (status.equalsIgnoreCase(ApiKeys.RESPONSE_SUCCESS)){
-            doSuccessOperation();
+            doSuccessOperation(dialog);
         }
         else if (status.equalsIgnoreCase(ApiKeys.RESPONSE_FAIL)){
             //genericInfo(message);
@@ -443,9 +444,34 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    private void doSuccessOperation() {
+    private void doSuccessOperation(final Dialog dialog) {
         //// TODO: 5/6/2016
         genericInfo("Auth from server successful");
+
+        new Thread() {
+
+            @Override
+            public void run() {
+                super.run();
+                //genericInfo("Auth from server successful");
+                SharedPreferences sharedPreferences = mActivity.getSharedPreferences(AppSharedPreferences.LoginInfo.NAME,
+                        Context.MODE_PRIVATE);
+                sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true).commit();
+
+                dismissOverlayView(dialog);
+                mContext.startActivity(new Intent(mActivity, MainActivity.class));
+            }
+        };
+    }
+
+    private void dismissOverlayView(final Dialog dialog) {
+
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        });
     }
 
     private void genericInfo(String info) {

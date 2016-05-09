@@ -2,90 +2,139 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/layoutParent"
-    android:background="@color/appBGColor"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/appBGColor"
     android:fitsSystemWindows="true"
     tools:context=".activities.MainActivity">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" android:orientation="vertical">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/appBarLayout"
-        android:theme="@style/AppTheme.AppBarOverlay"><RelativeLayout
-        android:layout_width="match_parent"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:layout_height="?attr/actionBarSize">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:theme="@style/toolbarStyle"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:elevation="15dp"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
-
-
-
-        </android.support.v7.widget.Toolbar>
-
-
-
-    </RelativeLayout>
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:indeterminate="true"
-            android:visibility="gone"
-            android:progressDrawable="@drawable/drawable_progress_webview" />
-    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
-        android:orientation="horizontal"
-        android:elevation="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-    <com.nshmura.recyclertablayout.RecyclerTabLayout
-        android:id="@+id/indicator"
-        android:layout_width="210dp"
-        android:layout_height="65dp"
-        android:layout_marginLeft="50dp"
-
-        app:rtl_tabIndicatorColor="#ff000000"
-        app:rtl_tabIndicatorHeight="0dp"/>
-        <View
-            android:layout_toRightOf="@+id/indicator"
-            android:layout_marginTop="10dp"
-            android:layout_width=".5dp"
-            android:layout_height="40dp"
-            android:background="@color/colorPrimary"
-            />
-    </RelativeLayout>
-    <View
         android:layout_width="match_parent"
-        android:id="@+id/disableApp"
-        android:visibility="gone"
-        android:background="@color/darkDisable"
-        android:elevation="17dp"
-        android:layout_height="68dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/transViewNotify"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="40dp"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/transViewSearch"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignTop="@+id/transViewNotify"
+            android:layout_marginRight="40dp"
+            android:layout_toLeftOf="@+id/transViewNotify"
+            android:visibility="invisible" />
+
+        <View
+            android:id="@+id/transViewPeople"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:visibility="visible" />
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:elevation="15dp"
+                    android:theme="@style/toolbarStyle"
+                    app:popupTheme="@style/AppTheme.PopupOverlay">
 
 
+                </android.support.v7.widget.Toolbar>
 
-    <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_below="@+id/appBarLayout"
-        android:layout_height="match_parent" />
 
-</RelativeLayout>
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:indeterminate="true"
+                android:progressDrawable="@drawable/drawable_progress_webview"
+                android:visibility="gone" />
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="16dp"
+            android:orientation="horizontal">
+
+            <com.nshmura.recyclertablayout.RecyclerTabLayout
+                android:id="@+id/indicator"
+                android:layout_width="210dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="50dp"
+
+                app:rtl_tabIndicatorColor="#ff000000"
+                app:rtl_tabIndicatorHeight="0dp" />
+
+            <View
+                android:layout_width=".5dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/indicator"
+                android:background="@color/colorPrimary" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/disableApp"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:background="@color/darkDisable"
+            android:elevation="17dp"
+            android:visibility="gone" />
+
+
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/appBarLayout"
+            android:layout_marginTop="10dp">
+
+            <View
+                android:id="@+id/transView"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:visibility="invisible"></View>
+        </FrameLayout>
+
+        <View
+            android:id="@+id/transViewPost"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="60dp"
+            android:layout_marginRight="60dp"
+            android:visibility="visible" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

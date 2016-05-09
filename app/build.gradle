@@ -44,6 +44,12 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/maven/com.nineoldandroids/library/pom.xml'
+        exclude 'META-INF/maven/com.nineoldandroids/library/pom.properties'
+    }
+
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
@@ -68,6 +74,10 @@ android {
 repositories {
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
+    maven(){
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -145,5 +155,8 @@ dependencies {
         transitive = true;
     }
 
+    compile ('com.github.worker8:tourguide:1.0.17-SNAPSHOT@aar'){
+        transitive=true
+    }
     //compile 'com.ovenbits:quickactionview:1.0.0'
 }

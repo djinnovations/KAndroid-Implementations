@@ -29,4 +29,5 @@ public class Constants {
     public static final String ERR_MSG_1 = "Something went wrong";
     public static final String ERR_MSG_NETWORK = "network error";
 
+    public static final String COACH_MARK_PREF_NAME = "gold_adorn_coach_mark";
 }

@@ -2,13 +2,20 @@ package com.goldadorn.main.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -18,6 +25,9 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
+import com.goldadorn.main.dj.support.CoachMarkManager;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.ResourceReader;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -43,6 +53,11 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
+import tourguide.tourguide.ChainTourGuide;
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.Sequence;
+import tourguide.tourguide.ToolTip;
 
 public class MainActivity extends BaseDrawerActivity  {
     private BaseFragment activePage;
@@ -57,6 +72,30 @@ public class MainActivity extends BaseDrawerActivity  {
 
     @Bind(R.id.indicator)
     View indicator;
+
+    @Bind(R.id.transView)
+    View transView;
+    @Bind(R.id.transViewSearch)
+    View transViewSearch;
+    @Bind(R.id.transViewNotify)
+    View transViewNotify;
+    @Bind(R.id.transViewPeople)
+    View transViewPeople;
+    @Bind(R.id.transViewPost)
+    View transViewPost;
+
+    private ResourceReader resRdr;
+    private CoachMarkManager coachMarkMgr;
+
+    private final String msgWelcome = "You have landed on the social feed\n"
+            +"where you can see all the social\nactivity happening in the app";
+    private final String msgSearch = "for designers, products\ncollections, trends and more";
+    private final String msgNotification = "check here";
+    private final String msgPeople = "See the user community at GoldAdorn";
+    private final String msgPost = "Create a Post";
+
+
+
 
     public View getPageIndicator()
     {
@@ -81,6 +120,17 @@ public class MainActivity extends BaseDrawerActivity  {
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)
             action(navigationDataObject);
+
+        resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if (!coachMarkMgr.getScreen1Status())
+                testTourGuide();
+            }
+        }, 3000);
     }
 
 
@@ -304,5 +354,147 @@ public class MainActivity extends BaseDrawerActivity  {
         {
             ((HomePage)activePage).updateComments();
         }
+    }
+
+    private void testTourGuide() {
+        Animation toolTipAnimation = new TranslateAnimation(0f, 0f, 200f, 0f);
+        toolTipAnimation.setDuration(1000);
+        toolTipAnimation.setFillAfter(true);
+        toolTipAnimation.setInterpolator(new BounceInterpolator());
+
+        Animation mEnterAnimation = new AlphaAnimation(0f, 1f);
+        mEnterAnimation.setDuration(600);
+        mEnterAnimation.setFillAfter(true);
+
+        Animation mExitAnimation = new AlphaAnimation(1f, 0f);
+        mExitAnimation.setDuration(600);
+        mExitAnimation.setFillAfter(true);
+
+        Pointer pointer = new Pointer().setColor(Color.RED).setGravity(Gravity.CENTER);
+
+        /*ToolTip toolTip = new ToolTip()
+                .setTitle("Next Button")
+                .setDescription("Click on Next button to proceed...")
+                .setTextColor(resRdr.getColorFromResource(R.color.white))
+                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                .setShadow(true)
+                .setGravity(Gravity.CENTER)
+                .setEnterAnimation(toolTipAnimation);
+
+        Overlay overlay = new Overlay()
+                .setBackgroundColor(Color.parseColor("#AAFF0000"))
+                .setStyle(Overlay.Style.Rectangle);
+
+        TourGuide mTourGuideHandler = TourGuide.init(this).with(TourGuide.Technique.Click)
+                .setPointer(pointer)
+                .setToolTip(toolTip)
+                .setOverlay(new Overlay())
+                .playOn(transView);*/
+
+        Log.d(Constants.TAG, "transNotify - testTourGuide: "+transViewNotify);
+        Log.d(Constants.TAG, "transSearch - testTourGuide: "+transViewSearch);
+        Log.d(Constants.TAG, "transview - testTourGuide: "+transView);
+
+        ChainTourGuide tourGuideMain = ChainTourGuide.init(this)
+                .setToolTip(new ToolTip()
+                        .setTitle("Welcome To Gold Adorn")
+                        .setDescription(msgWelcome)
+                        .setTextColor(resRdr.getColorFromResource(R.color.white))
+                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setShadow(true)
+                        .setEnterAnimation(toolTipAnimation)
+                        .setGravity(Gravity.CENTER)
+                )
+                .setOverlay(null)
+                // note that there is not Overlay here, so the default one will be used
+                .playLater(transView);
+
+
+        ChainTourGuide tourGuidePeople = ChainTourGuide.init(this)
+                .setPointer(pointer)
+                .setToolTip(new ToolTip()
+                        .setTitle("People")
+                        .setTextColor(resRdr.getColorFromResource(R.color.white))
+                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setShadow(true)
+                        .setDescription(msgPeople)
+                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                )
+                .setOverlay(new Overlay()
+                        .setBackgroundColor(Color.parseColor("#AAE2E4E7"))
+                        .setStyle(Overlay.Style.Circle)
+                        .setEnterAnimation(mEnterAnimation)
+                        .setExitAnimation(mExitAnimation)
+                )
+                .playLater(transViewPeople);
+
+        ChainTourGuide tourGuideSearch = ChainTourGuide.init(this)
+                .setPointer(pointer)
+                .setToolTip(new ToolTip()
+                        .setTitle("Search")
+                        .setTextColor(resRdr.getColorFromResource(R.color.white))
+                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setShadow(true)
+                        .setDescription(msgSearch)
+                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                )
+                .setOverlay(new Overlay()
+                        .setBackgroundColor(Color.parseColor("#AAE2E4E7"))
+                        .setStyle(Overlay.Style.Circle)
+                        .setEnterAnimation(mEnterAnimation)
+                        .setExitAnimation(mExitAnimation)
+                )
+                .playLater(transViewSearch);
+
+
+        ChainTourGuide tourGuideNotification = ChainTourGuide.init(this)
+                .setPointer(pointer)
+                .setToolTip(new ToolTip()
+                        .setTitle("Notification")
+                        .setTextColor(resRdr.getColorFromResource(R.color.white))
+                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setShadow(true)
+                        .setDescription(msgNotification)
+                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                )
+                .setOverlay(new Overlay()
+                        .setBackgroundColor(Color.parseColor("#AAE2E4E7"))
+                        .setStyle(Overlay.Style.Circle)
+                        .setEnterAnimation(mEnterAnimation)
+                        .setExitAnimation(mExitAnimation)
+                )
+                .playLater(transViewNotify);
+
+        ChainTourGuide tourGuidePost = ChainTourGuide.init(this)
+                .setPointer(pointer)
+                .setToolTip(new ToolTip()
+                        .setTitle("Post")
+                        .setTextColor(resRdr.getColorFromResource(R.color.white))
+                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setShadow(true)
+                        .setDescription(msgPost)
+                        .setGravity(Gravity.TOP | Gravity.LEFT)
+                )
+                .setOverlay(new Overlay()
+                        .setBackgroundColor(Color.parseColor("#AAE2E4E7"))
+                        .setStyle(Overlay.Style.Circle)
+                        .setEnterAnimation(mEnterAnimation)
+                        .setExitAnimation(mExitAnimation)
+                )
+                .playLater(transViewPost);
+
+        Sequence sequence = new Sequence.SequenceBuilder()
+                .add(tourGuideMain, tourGuidePeople, tourGuideSearch,
+                        tourGuideNotification, tourGuidePost)
+                .setDefaultOverlay(new Overlay()
+                        .setEnterAnimation(mEnterAnimation)
+                        .setExitAnimation(mExitAnimation)
+                )
+                .setDefaultPointer(null)
+                .setContinueMethod(Sequence.ContinueMethod.Overlay)
+                .build();
+
+        //coachMarkMgr.setScreen1Status(true);
+        ChainTourGuide.init(this).playInSequence(sequence);
     }
 }
