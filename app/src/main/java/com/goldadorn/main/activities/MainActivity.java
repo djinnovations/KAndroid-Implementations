@@ -121,18 +121,23 @@ public class MainActivity extends BaseDrawerActivity  {
         if(navigationDataObject !=null)
             action(navigationDataObject);
 
+        tourThisScreen();
+    }
+
+
+    private void tourThisScreen() {
+
         resRdr = ResourceReader.getInstance(getApplicationContext());
         coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                if (!coachMarkMgr.getScreen1Status())
-                testTourGuide();
+                if (!coachMarkMgr.getHomeScreenTourGuideStatus())
+                    testTourGuide();
             }
-        }, 3000);
+        }, 2000);
     }
-
 
 
     @Override
@@ -418,7 +423,7 @@ public class MainActivity extends BaseDrawerActivity  {
                         .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
                         .setShadow(true)
                         .setDescription(msgPeople)
-                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                        .setGravity(Gravity.BOTTOM | Gravity.CENTER)
                 )
                 .setOverlay(new Overlay()
                         .setBackgroundColor(Color.parseColor("#AAE2E4E7"))
@@ -494,7 +499,7 @@ public class MainActivity extends BaseDrawerActivity  {
                 .setContinueMethod(Sequence.ContinueMethod.Overlay)
                 .build();
 
-        //coachMarkMgr.setScreen1Status(true);
+        coachMarkMgr.setHomeScreenTourGuideStatus(true);
         ChainTourGuide.init(this).playInSequence(sequence);
     }
 }

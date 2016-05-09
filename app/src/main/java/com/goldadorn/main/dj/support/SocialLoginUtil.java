@@ -120,9 +120,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     private void initializeFbAndGlTw() {
 
-        /*TwitterAuthConfig authConfig =
-                new TwitterAuthConfig("consumerKey",
-                        "consumerSecret");*/
         TwitterAuthConfig authConfig =
                 new TwitterAuthConfig(Constants.API_KEY_TW,
                         Constants.API_SECRET_TW);
@@ -130,11 +127,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         Fabric.with(mContext, new Twitter(authConfig));
         twitCore = Twitter.getInstance().core;
         twitAuthClient = new TwitterAuthClient();
-        /*************************************Facebook stuffs********************************************/
-        //FacebookSdk.sdkInitialize(this);
-        // Initialize the SDK before executing any other operations,
-        // especially, if you're using Facebook UI elements.
 
+        /*************************************Facebook stuffs********************************************/
         mFbCallbackManager = CallbackManager.Factory.create();
         /********************************************************************************************/
 
@@ -151,7 +145,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 .addOnConnectionFailedListener(this).build();
 
         /*************************************************************************************************/
-        //mUserSession = UserSession.getUserSession();
     }
 
 
@@ -333,30 +326,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
             GoogleSignInResult mGoogleResult = loginResults.getmGoogleLoginResult();
             GoogleSignInAccount mGoogleProfile = mGoogleResult.getSignInAccount();
+            genericInfo("Google back-end Auth not yet implement; your signed in successful using Google");
 
-            /*UserProfile mUserProfie = getGplusProfile( mGoogleProfile.getId(),mGoogleProfile.getEmail());
-                    new UserProfile(mGoogleProfile.getId(),  Constants.PLATFORM_GOOGLE,
-                    mGoogleProfile.getDisplayName(), mGoogleProfile.getEmail(),
-                    mGoogleProfile.,);
-            mUserSession.setUserProfile(mUserProfie);*/
         } else if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_FACEBOOK)) {
 
-            /** Unable to fetch email-id, user-name through facebook login **/
             LoginResult mFbLoginResult = loginResults.getFaceBookLoginResult();
-
-            //setResultListenerFb(mFbLoginResult);
-
             authWithServer(mFbLoginResult, true);
-            /*
-            Log.d(Constants.TAG, "userName: " + user_name);
-            Log.d(Constants.TAG, "userId: " + user_id_fb);
-            Log.d(Constants.TAG, "email id: " + email_id);
-
-            UserProfile mUserProfie = new UserProfile(user_id_fb, user_name,
-                    email_id, Ibek_AppConstants.LOGIN_PLATFORM_FACEBOOK);
-            mUserSession.setUserProfile(mUserProfie);
-
-            *//************Dont use facebook login******************************************************/
 
         }else if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_TWITTER)){
 
@@ -364,6 +339,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             String ver = twitCore.getVersion();
             Log.d(Constants.TAG, "token - onSuccessfulLogin: "+token);
             Log.d(Constants.TAG, "version - onSuccessfulLogin: "+ver);
+            genericInfo("Twitter back-end Auth not yet implement; your signed in successful using twiiter");
         }
 
         //Intent loggedInActivityIntent = new Intent(this, LoggedInScreenActivity.class);
@@ -446,7 +422,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     private void doSuccessOperation(final Dialog dialog) {
         //// TODO: 5/6/2016
-        genericInfo("Auth from server successful");
 
         new Thread() {
 
@@ -459,9 +434,10 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true).commit();
 
                 dismissOverlayView(dialog);
-                mContext.startActivity(new Intent(mActivity, MainActivity.class));
+                mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                mActivity.finish();
             }
-        };
+        }.start();
     }
 
     private void dismissOverlayView(final Dialog dialog) {
@@ -469,13 +445,14 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                genericInfo("Auth from server successful");
                 dialog.dismiss();
             }
         });
     }
 
     private void genericInfo(String info) {
-        Toast.makeText(mContext, info, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, info, Toast.LENGTH_LONG).show();
     }
 
 

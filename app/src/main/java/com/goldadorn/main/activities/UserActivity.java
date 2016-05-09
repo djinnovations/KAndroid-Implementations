@@ -1,17 +1,25 @@
 package com.goldadorn.main.activities;
 
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.support.CoachMarkManager;
+import com.goldadorn.main.dj.utils.ResourceReader;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -19,17 +27,16 @@ import com.goldadorn.main.modules.timeLine.HeaderItemHolder;
 import com.goldadorn.main.modules.timeLine.MyTimeLineFragment;
 import com.goldadorn.main.modules.timeLine.UsersTimeLineFragment;
 import com.goldadorn.main.utils.IDUtils;
-import com.goldadorn.main.utils.URLHelper;
-import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.fragments.BaseFragment;
-import com.kimeeo.library.listDataView.dataManagers.PageData;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import tourguide.tourguide.Overlay;
+import tourguide.tourguide.Pointer;
+import tourguide.tourguide.ToolTip;
+import tourguide.tourguide.TourGuide;
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
@@ -38,6 +45,15 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
     private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
 
     TextView titleText;
+
+    //Author DJphy
+    @Bind(R.id.transView)
+    View transView;
+    private ResourceReader resRdr;
+    private CoachMarkManager coachMarkMgr;
+
+    private final String msgTimeLine = "You are on a user's timeline\n"
+            +"all the recent activities of the \n user can be viewed here";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +110,62 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         mAppBarLayout.addOnOffsetChangedListener(this);
         startAlphaAnimation(titleText, 0, View.INVISIBLE);
 
-
+        tourThisScreen();
     }
 
+    private void tourThisScreen() {
+
+        resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                if (!coachMarkMgr.getTimeLineTourGuideStatus())
+                    testTourGuide();
+            }
+        }, 2000);
+    }
+
+
+    private void testTourGuide() {
+
+        Animation toolTipAnimation = new TranslateAnimation(0f, 0f, 200f, 0f);
+        toolTipAnimation.setDuration(1000);
+        toolTipAnimation.setFillAfter(true);
+        toolTipAnimation.setInterpolator(new BounceInterpolator());
+
+        Animation mEnterAnimation = new AlphaAnimation(0f, 1f);
+        mEnterAnimation.setDuration(600);
+        mEnterAnimation.setFillAfter(true);
+
+        ToolTip toolTip = new ToolTip()
+                .setTitle("Time line")
+                .setDescription(msgTimeLine)
+                .setTextColor(resRdr.getColorFromResource(R.color.white))
+                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                .setShadow(true)
+                .setEnterAnimation(mEnterAnimation)
+                .setGravity(Gravity.BOTTOM | Gravity.CENTER);
+
+        Pointer pointer = new Pointer().setColor(Color.RED).setGravity(Gravity.CENTER);
+
+        final TourGuide tg = TourGuide.init(this)
+                .setToolTip(toolTip)
+                .setOverlay(new Overlay()
+                        .setBackgroundColor(Color.parseColor("#AAE2E4E7")))
+                .setPointer(pointer)
+                .playOn(transView);
+
+        tg.getOverlay().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                tg.cleanUp();
+            }
+        });
+        coachMarkMgr.setTimeLineTourGuideStatus(true);
+    }
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {

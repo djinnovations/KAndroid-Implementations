@@ -26,7 +26,8 @@ public class CoachMarkManager {
 
     private final String PREF_NAME = Constants.COACH_MARK_PREF_NAME;
 
-    private final String KEY_IS_SCREEN1_DONE = "screen_one";
+    private final String KEY_IS_HOMESCREEN_DONE = "screen_home";
+    private final String KEY_IS_TIMELINE_DONE = "screen_timeline";
 
     private CoachMarkManager(Context appContext) {
 
@@ -46,20 +47,36 @@ public class CoachMarkManager {
     }
 
 
-    public void setScreen1Status(boolean isDone) {
+    public void setHomeScreenTourGuideStatus(boolean isDone) {
 
-        editor.putBoolean(KEY_IS_SCREEN1_DONE, isDone);
+        editor.putBoolean(KEY_IS_HOMESCREEN_DONE, isDone);
         editor.commit();
 
-        Log.d(Constants.TAG, "screen 1 coach mark stat: " + isDone);
+        Log.d(Constants.TAG, "home screen coach mark stat: " + isDone);
     }
 
 
-    public boolean getScreen1Status() {
+    public boolean getHomeScreenTourGuideStatus() {
 
-        boolean stat = pref.getBoolean(KEY_IS_SCREEN1_DONE, false);
-        Log.d(Constants.TAG, "screen 1 coach mark stat - CoachMarkManager: " + stat);
+        boolean stat = pref.getBoolean(KEY_IS_HOMESCREEN_DONE, false);
+        Log.d(Constants.TAG, "home screen coach mark stat - CoachMarkManager: " + stat);
         return stat;
     }
 
+
+    public void setTimeLineTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_TIMELINE_DONE, isDone);
+        editor.commit();
+
+        Log.d(Constants.TAG, "timeline coach mark stat: " + isDone);
+    }
+
+
+    public boolean getTimeLineTourGuideStatus() {
+
+        boolean stat = pref.getBoolean(KEY_IS_TIMELINE_DONE, false);
+        Log.d(Constants.TAG, "timeline coach mark stat - CoachMarkManager: " + stat);
+        return stat;
+    }
 }
