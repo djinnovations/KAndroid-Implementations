@@ -56,7 +56,7 @@ public class CoachMarkManager {
     }
 
 
-    public boolean getHomeScreenTourGuideStatus() {
+    public boolean isHomeScreenTourDone() {
 
         boolean stat = pref.getBoolean(KEY_IS_HOMESCREEN_DONE, false);
         Log.d(Constants.TAG, "home screen coach mark stat - CoachMarkManager: " + stat);
@@ -73,7 +73,7 @@ public class CoachMarkManager {
     }
 
 
-    public boolean getTimeLineTourGuideStatus() {
+    public boolean isTimeLineTourdone() {
 
         boolean stat = pref.getBoolean(KEY_IS_TIMELINE_DONE, false);
         Log.d(Constants.TAG, "timeline coach mark stat - CoachMarkManager: " + stat);

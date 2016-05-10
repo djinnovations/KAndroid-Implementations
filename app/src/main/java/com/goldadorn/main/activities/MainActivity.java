@@ -2,20 +2,13 @@ package com.goldadorn.main.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -25,9 +18,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
-import com.goldadorn.main.dj.support.CoachMarkManager;
-import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -53,11 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import tourguide.tourguide.ChainTourGuide;
-import tourguide.tourguide.Overlay;
-import tourguide.tourguide.Pointer;
-import tourguide.tourguide.Sequence;
-import tourguide.tourguide.ToolTip;
 
 public class MainActivity extends BaseDrawerActivity  {
     private BaseFragment activePage;
@@ -84,16 +70,16 @@ public class MainActivity extends BaseDrawerActivity  {
     @Bind(R.id.transViewPost)
     View transViewPost;
 
-    private ResourceReader resRdr;
-    private CoachMarkManager coachMarkMgr;
-
-    private final String msgWelcome = "You have landed on the social feed\n"
-            +"where you can see all the social\nactivity happening in the app";
-    private final String msgSearch = "for designers, products\ncollections, trends and more";
-    private final String msgNotification = "check here";
-    private final String msgPeople = "See the user community at GoldAdorn";
-    private final String msgPost = "Create a Post";
-
+//    private ResourceReader resRdr;
+//    private CoachMarkManager coachMarkMgr;
+//
+//    private final String msgWelcome = "You have landed on the social feed\n"
+//            +"where you can see all the social\nactivity happening in the app";
+//    private final String msgSearch = "for designers, products\ncollections, trends and more";
+//    private final String msgNotification = "check here";
+//    private final String msgPeople = "See the user community at GoldAdorn";
+//    private final String msgPost = "Create a Post";
+    private AppTourGuideHelper mTourHelper;
 
 
 
@@ -127,14 +113,17 @@ public class MainActivity extends BaseDrawerActivity  {
 
     private void tourThisScreen() {
 
-        resRdr = ResourceReader.getInstance(getApplicationContext());
-        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());
+        /*resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                if (!coachMarkMgr.getHomeScreenTourGuideStatus())
-                    testTourGuide();
+                /*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*/
+                mTourHelper.displayHomeTour(MainActivity.this, new View[]{ transView, transViewPeople, transViewSearch,
+                        transViewNotify, transViewPost});
             }
         }, 2000);
     }
@@ -361,7 +350,7 @@ public class MainActivity extends BaseDrawerActivity  {
         }
     }
 
-    private void testTourGuide() {
+    /*private void testTourGuide() {
         Animation toolTipAnimation = new TranslateAnimation(0f, 0f, 200f, 0f);
         toolTipAnimation.setDuration(1000);
         toolTipAnimation.setFillAfter(true);
@@ -377,7 +366,7 @@ public class MainActivity extends BaseDrawerActivity  {
 
         Pointer pointer = new Pointer().setColor(Color.RED).setGravity(Gravity.CENTER);
 
-        /*ToolTip toolTip = new ToolTip()
+        *//*ToolTip toolTip = new ToolTip()
                 .setTitle("Next Button")
                 .setDescription("Click on Next button to proceed...")
                 .setTextColor(resRdr.getColorFromResource(R.color.white))
@@ -394,7 +383,7 @@ public class MainActivity extends BaseDrawerActivity  {
                 .setPointer(pointer)
                 .setToolTip(toolTip)
                 .setOverlay(new Overlay())
-                .playOn(transView);*/
+                .playOn(transView);*//*
 
         Log.d(Constants.TAG, "transNotify - testTourGuide: "+transViewNotify);
         Log.d(Constants.TAG, "transSearch - testTourGuide: "+transViewSearch);
@@ -501,5 +490,5 @@ public class MainActivity extends BaseDrawerActivity  {
 
         coachMarkMgr.setHomeScreenTourGuideStatus(true);
         ChainTourGuide.init(this).playInSequence(sequence);
-    }
+    }*/
 }

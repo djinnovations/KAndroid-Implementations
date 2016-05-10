@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.squareup.picasso.Picasso;
@@ -232,13 +233,15 @@ public class NotificationsActivity extends BaseActivity {
             Picasso.with(context).load(imageUrl).into(holder.person);
             // todo nithin get timestamp
             long timestamp = object.optLong("timestamp",System.currentTimeMillis());
-            holder.time.setText(DateUtils.getRelativeDateTimeString(context,timestamp,DateUtils.SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL));
+            holder.time.setText(DateUtils.getRelativeDateTimeString(context,timestamp,DateUtils.
+                    SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL));
             holder.data.setText(createString(object));
 //            holder.content.setImageResource(R.drawable.slide_1_image);
             return convertView;
         }
 
         private String createString(JSONObject object) {
+            Log.d(Constants.TAG, "notification list obj resonse - createString: "+object);
             StringBuilder builder = new StringBuilder();
             String typeLabel = null;
             String type = "";
