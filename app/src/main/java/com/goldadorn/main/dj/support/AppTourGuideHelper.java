@@ -78,6 +78,8 @@ public class AppTourGuideHelper {
         if (coachMarkMgr.isHomeScreenTourDone())
             return;
 
+        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+        int toolTipTextColor = Color.WHITE;
         Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
                 .setGravity(Gravity.CENTER);
         Pointer pointer1 = new Pointer().setColor(Color.WHITE)
@@ -93,8 +95,8 @@ public class AppTourGuideHelper {
                 .setToolTip(new ToolTip()
                         .setTitle("Welcome To Gold Adorn")
                         .setDescription(msgWelcome)
-                        .setTextColor(resRdr.getColorFromResource(R.color.white))
-                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setTextColor(toolTipTextColor)
+                        .setBackgroundColor(toolTipBgColor)
                         .setShadow(true)
                         .setEnterAnimation(bounceAnim)
                         .setGravity(Gravity.CENTER)
@@ -108,8 +110,8 @@ public class AppTourGuideHelper {
                 .setPointer(pointer)
                 .setToolTip(new ToolTip()
                         .setTitle("People")
-                        .setTextColor(resRdr.getColorFromResource(R.color.white))
-                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setTextColor(toolTipTextColor)
+                        .setBackgroundColor(toolTipBgColor)
                         .setShadow(true)
                         .setDescription(msgPeople)
                         .setGravity(Gravity.BOTTOM | Gravity.CENTER)
@@ -121,8 +123,8 @@ public class AppTourGuideHelper {
                 .setPointer(pointer)
                 .setToolTip(new ToolTip()
                         .setTitle("Search")
-                        .setTextColor(resRdr.getColorFromResource(R.color.white))
-                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setTextColor(toolTipTextColor)
+                        .setBackgroundColor(toolTipBgColor)
                         .setShadow(true)
                         .setDescription(msgSearch)
                         .setGravity(Gravity.BOTTOM | Gravity.LEFT)
@@ -135,8 +137,8 @@ public class AppTourGuideHelper {
                 .setPointer(pointer)
                 .setToolTip(new ToolTip()
                         .setTitle("Notification")
-                        .setTextColor(resRdr.getColorFromResource(R.color.white))
-                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setTextColor(toolTipTextColor)
+                        .setBackgroundColor(toolTipBgColor)
                         .setShadow(true)
                         .setDescription(msgNotification)
                         .setGravity(Gravity.BOTTOM | Gravity.LEFT)
@@ -148,8 +150,8 @@ public class AppTourGuideHelper {
                 .setPointer(pointer1)
                 .setToolTip(new ToolTip()
                         .setTitle("Post")
-                        .setTextColor(resRdr.getColorFromResource(R.color.white))
-                        .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                        .setTextColor(toolTipTextColor)
+                        .setBackgroundColor(toolTipBgColor)
                         .setShadow(true)
                         .setDescription(msgPost)
                         .setGravity(Gravity.TOP | Gravity.LEFT)
@@ -182,7 +184,7 @@ public class AppTourGuideHelper {
                 .setTitle("Time line")
                 .setDescription(msgTimeLine)
                 .setTextColor(Color.WHITE)
-                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorAccent))
+                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
                 /*.setTextColor(Color.BLACK)
                 .setBackgroundColor(Color.parseColor(toolTipBgColor))*/
                 .setShadow(true)
@@ -191,7 +193,7 @@ public class AppTourGuideHelper {
 
 
         Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))/*.setColor(Color.RED)*/
-                .setGravity(Gravity.CENTER);
+                .setGravity(Gravity.BOTTOM);
 
         final TourGuide tg = TourGuide.init(timeLineActivity)
                 .setToolTip(toolTip)
