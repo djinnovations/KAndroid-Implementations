@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -184,11 +185,15 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     private String getParam(int offset)
     {
         if(offset!=-1) {
+            Log.d("dj", "getParams - ProductsFrag ---offset != -1");
             if (filters == null || filters.size() == 0) {
+                Log.d("dj", "getParams - ProductsFrag--filters null or size == 0");
                 String val = "{\"offset\" :" + offset;
                 val += ",\"sort\" : \"" + sort + "\"}";
+                Log.d("dj", "getParams - val: "+val);
                 return val;
             } else {
+                Log.d("dj", "getParams - ProductsFrag ---else filter not null");
                 List<Designer> designerList = new ArrayList<>();
                 List<FilterCollection> collectionList = new ArrayList<>();
                 List<FilterPrice> priceList = new ArrayList<>();
@@ -217,6 +222,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             priceRanges += ",";
                     }
                     priceRanges += "]";
+                    Log.d("dj", "getParams - priceRanges: "+priceRanges);
                 }
 
                 String prodTypes = null;
@@ -228,6 +234,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             prodTypes += ",";
                     }
                     prodTypes += "]";
+                    Log.d("dj", "getParams - prodTypes: "+prodTypes);
                 }
 
                 String desgnIds = null;
@@ -239,6 +246,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             desgnIds += ",";
                     }
                     desgnIds += "]";
+                    Log.d("dj", "getParams - desgnIds: "+desgnIds);
                 }
 
                 String collIds = null;
@@ -250,6 +258,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             collIds += ",";
                     }
                     collIds += "]";
+                    Log.d("dj", "getParams - collIds: "+collIds);
                 }
                 if (priceRanges != null)
                     val += priceRanges + ",";
@@ -261,6 +270,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                     val += collIds + ",";
                 val += "\"offset\" : " + offset;
                 val += ",\"sort\" : \"" + sort + "\"}";
+                Log.d("dj", "getParams - final built string param: "+val);
                 /*
                 {
                     "priceRanges":
