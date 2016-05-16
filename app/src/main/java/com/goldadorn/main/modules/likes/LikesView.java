@@ -120,6 +120,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
         Map<String, Object> params = new HashMap<>();
 
         try {
+
             String param="{\"postid\":"+getPostID()+",\"offset\":"+offset+"}";
             params.put(AQuery.POST_ENTITY,new StringEntity(param));
         }catch (Exception e){}
