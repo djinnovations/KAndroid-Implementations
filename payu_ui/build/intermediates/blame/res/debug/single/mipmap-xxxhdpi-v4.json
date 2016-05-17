@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\visa.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\visa.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\maestro.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\maestro.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\discover.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\discover.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\jcb.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\jcb.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\app_bar_next.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\app_bar_next.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\amex.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\amex.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\diner.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\diner.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\trash.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\trash.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\master.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\master.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\laser.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\laser.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\debug\\mipmap-xxxhdpi-v4\\card.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\src\\main\\res\\mipmap-xxxhdpi\\card.png"
+    }
+]
