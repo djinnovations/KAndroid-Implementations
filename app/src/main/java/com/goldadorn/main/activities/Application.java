@@ -76,6 +76,7 @@ public class Application extends BaseApplication {
     public void setCookies(List<Cookie> cookies) {
         this.cookies = cookies;
         URLHelper.getInstance().setCookies(cookies);
+        Log.e("iii","iii");
     }
 
 
