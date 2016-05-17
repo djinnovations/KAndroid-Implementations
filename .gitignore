@@ -15,5 +15,5 @@
 /.idea/libraries
 .DS_Store
 /build
-/payu_ui/build
+#/payu_ui/build
 /captures
