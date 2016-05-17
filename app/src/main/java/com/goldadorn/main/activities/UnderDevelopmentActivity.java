@@ -31,7 +31,7 @@ public class UnderDevelopmentActivity extends BaseActivity {
         if (id == android.R.id.home)
         {
             finish();
-        }
+       }
         return super.onOptionsItemSelected(item);
     }
 }
