@@ -152,12 +152,12 @@
             android:name=".activities.showcase.ShowcaseActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.showcase.CollectionsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.showcase.ProductActivity"
             android:launchMode="singleTop"

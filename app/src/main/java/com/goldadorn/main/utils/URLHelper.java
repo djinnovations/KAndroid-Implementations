@@ -58,9 +58,15 @@ public class URLHelper {
         return endPointSocial+VERB.GET_PRODUCTS_LIKES;
     }
 
-    public String getDesignersFilter(int offset) {
+    /*public String getDesignersFilter(int offset) {
         return endPointSocial+VERB.GET_DESIGNERS_FILTER+"/"+offset;
+    }*/
+
+    public String getDesignersFilter(int offset) {
+        String newEndPoint = "http://goldadorn.cloudapp.net/goldadorn_dev/rest/";
+        return newEndPoint+VERB.GET_DESIGNERS_FILTER+"/"+offset;
     }
+
     public String getCollectionData(int offset) {
         return endPointCommercial+VERB.GET_SCROLL_DATA+"/c/"+offset;
     }
@@ -106,6 +112,33 @@ public class URLHelper {
         }
         return null;
     }
+
+    public static String parseImageURLDesignersTemp(String url)
+    {
+        if(url!=null && url.trim().startsWith("../")) {
+            url = url.trim().replace("../", "");
+        }
+        else if(url!=null && url.trim().startsWith(":../")) {
+            url = url.trim().replace(":../", "");
+        }
+        else if(url!=null && url.trim().startsWith(".../")) {
+            url = url.trim().replace(".../", "");
+        }
+        if(url!=null) {
+            if(url.indexOf("products/")!=-1) {
+                url = getInstance().productImageEndPoint + url;
+                url = url.replace("/products/","/");
+                return url;
+            }
+            else{
+                String newEndPointImages = "http://goldadorn.cloudapp.net/goldadorn_dev/";
+                return newEndPointImages + url;
+            }
+
+        }
+        return null;
+    }
+
 
     public String getLoginServiceURL()
     {
