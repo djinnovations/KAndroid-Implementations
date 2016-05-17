@@ -12,11 +12,14 @@ android {
         devVersion {
             applicationId "com.goldadorn.main"
             //goldadorn.cloudapp.net  demo.eremotus-portal.com
+
             //added by DJphy (Darshan)
             buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/sociallogin"'
 
+            //buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
+            //both debug and live are referring to GA (changed at 16/o5/16 6:30 pm)
+            buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
 
-            buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
             buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'

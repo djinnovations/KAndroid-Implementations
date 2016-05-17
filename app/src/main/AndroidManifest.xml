@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.goldadorn.main"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-            android:installLocation="auto"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.goldadorn.main"
+    android:installLocation="auto">
 
     <uses-sdk tools:overrideLibrary="com.liangfeizc.flowlayout" />
 
@@ -24,7 +24,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_kog4ARrlvcjSwC1cFa7vRjojCCeIzpeb" />
@@ -36,7 +36,7 @@
             android:name=".activities.AppStartActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -152,12 +152,13 @@
             android:name=".activities.showcase.ShowcaseActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase" />
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".activities.showcase.CollectionsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar.Showcase" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.showcase.ProductActivity"
             android:launchMode="singleTop"
@@ -192,12 +193,10 @@
             android:name=".db.GoldProvider"
             android:authorities="${applicationId}" />
 
-        <activity android:name=".activities.TestActivity" >
-        </activity>
+        <activity android:name=".activities.TestActivity"></activity>
         <activity
             android:name=".activities.cart.PaymentTestActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -209,7 +208,7 @@
 
         <receiver
             android:name="io.branch.referral.InstallListener"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
