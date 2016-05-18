@@ -23,16 +23,16 @@ public class RequestJson {
     }
 
 
-    public Map<String, String> getFbLoginReqMap(String accessToken, String graphVersion){
+    public Map<String, String> getSocialLoginReqMap(String accessToken, String socialMedia){
 
         try {
             Map<String, String> req = new HashMap<>();
-            req.put(ApiKeys.CLIENT_SECRET, Constants.CLIENT_SECRET_FB);
+            /*req.put(ApiKeys.CLIENT_SECRET, Constants.CLIENT_SECRET_FB);
             req.put(ApiKeys.CLIENT_ID, Constants.CLIENT_ID_FB);
-            req.put(ApiKeys.GRAPH_VERSION, graphVersion);
+            req.put(ApiKeys.GRAPH_VERSION, graphVersion);*/
             req.put(ApiKeys.ACCESS_TOKEN, accessToken);
-            req.put(ApiKeys.SOCIAL_MEDIUM, Constants.PLATFORM_FACEBOOK);
-            Log.d("dj", "requestMap - getFbLoginReqMap: "+req);
+            req.put(ApiKeys.SOCIAL_MEDIUM, socialMedia);
+            Log.d("dj", "requestMap - getSocialLoginReqMap: "+req);
             return req;
         } catch (Exception e) {
             e.printStackTrace();

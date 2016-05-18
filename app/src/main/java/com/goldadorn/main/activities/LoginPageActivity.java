@@ -114,7 +114,7 @@ public class LoginPageActivity extends BaseActivity {
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
 
-        if (id == SocialLoginUtil.twLoginCall || id == SocialLoginUtil.fbLoginCall || id == SocialLoginUtil.glLoginCall){
+        if (id == SocialLoginUtil.socialLoginCall){
             mSocialLoginInstance.serverCallEndsCustom(id, url, json, status);
         }
 

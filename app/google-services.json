@@ -24,10 +24,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-64306724-3"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,
@@ -51,7 +48,7 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.goldadorn.main",
-            "certificate_hash": "4393169EA3109525C60FE907ADF7C496E35F4EC2"
+            "certificate_hash": "A62C37270EB9AF8177D269EE474C42069343CC2E"
           }
         },
         {
@@ -66,10 +63,7 @@
       ],
       "services": {
         "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-64306724-3"
-          }
+          "status": 1
         },
         "appinvite_service": {
           "status": 1,

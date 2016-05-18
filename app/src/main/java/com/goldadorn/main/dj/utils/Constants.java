@@ -11,7 +11,7 @@ public class Constants {
 
     public static final String ENDPOINT_SOCIAL_LOGIN = BuildConfig.END_POINT_SOCIAL_LOGIN;
 
-    public static final String PLATFORM_GOOGLE = "gl";
+    public static final String PLATFORM_GOOGLE = "go";
     public static final String PLATFORM_FACEBOOK = "fb";
     public static final String PLATFORM_TWITTER = "tw";
     public final static String TAG = "dj";
@@ -22,6 +22,8 @@ public class Constants {
     //// TODO: 5/6/2016  change the values; for testing using DJphy (Darshan) account
     public static final String API_KEY_TW = "XMIqXGDZWxxAtiuZh9ZN1CQJ4";
     public static final String API_SECRET_TW = "5ylrV8w5kETXKqbQDTygEgSVWslRD32usq0tJUxM91zFjMJP2u";
+
+    public static final String OAUTH_CLIENT_ID_GL = "1067734393749-ojd6omgjp0f9a797918vpnic2k8uhovp.apps.googleusercontent.com";
 
     public static final int CURRENT_API_LEVEL = Build.VERSION.SDK_INT;
     public static final int REQUEST_TIMEOUT_SOCIAL_LOGIN = 6000;
