@@ -228,7 +228,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     Callback<TwitterSession> mCallBackTwit = new Callback<TwitterSession>() {
         @Override
         public void success(Result<TwitterSession> result) {
-            onSuccessfulLogin(new FbGoogleTweetLoginResult(null, null, result, Constants.PLATFORM_TWITTER));
+            //onSuccessfulLogin(new FbGoogleTweetLoginResult(null, null, result, Constants.PLATFORM_TWITTER));
         }
 
         @Override
@@ -346,9 +346,9 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
+    /*private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
         // TODO Auto-generated method stub
-        /*if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_GOOGLE)) {
+        if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_GOOGLE)) {
 
             GoogleSignInResult mGoogleResult = loginResults.getmGoogleLoginResult();
             GoogleSignInAccount mGoogleProfile = mGoogleResult.getSignInAccount();
@@ -366,12 +366,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             Log.d(Constants.TAG, "token - onSuccessfulLogin: "+token);
             Log.d(Constants.TAG, "version - onSuccessfulLogin: "+ver);
             genericInfo("Twitter back-end Auth not yet implement; your signed in successful using twiiter");
-        }*/
+        }
 
         //Intent loggedInActivityIntent = new Intent(this, LoggedInScreenActivity.class);
         //startActivity(loggedInActivityIntent);
 
-    }
+    }*/
 
 
     /*private void authWithServer(com.facebook.login.LoginResult mFbLoginResult, boolean isFb) {
@@ -600,25 +600,27 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             public void run() {
                 super.run();
                 //genericInfo("Auth from server successful");
-                User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
-                user.setName(loginResult.getUsername());
-                Log.e("iiii", loginResult.getUserid() + "");
-                user.setImageUrl(loginResult.getUserpic());
-                ((Application) mActivity.getApplication()).setUser(user);
 
-                ((Application) mActivity.getApplication()).setCookies(cookies);
+            }
+        }.start();
+
+        User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
+        user.setName(loginResult.getUsername());
+        Log.e("iiii", loginResult.getUserid() + "");
+        user.setImageUrl(loginResult.getUserpic());
+        ((Application) mActivity.getApplication()).setUser(user);
+
+        ((Application) mActivity.getApplication()).setCookies(cookies);
                 /*SharedPreferences sharedPreferences = mAppContext.getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
                 sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
                         .putString(AppSharedPreferences.LoginInfo.USER_NAME, loginResult.getUsername().trim())
                         .putBoolean(AppSharedPreferences.LoginInfo.IS_SOCIAL_LOGIN, true)
                         .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid())).commit();*/
 
-                dismissOverlayView();
+        dismissOverlayView();
                 /*mActivity.startActivity(new Intent(mActivity, MainActivity.class));
                 mActivity.finish();*/
-                new Action(mActivity).launchActivity(MainActivity.class, true);
-            }
-        }.start();
+        new Action(mActivity).launchActivity(MainActivity.class, true);
     }
 
 
@@ -676,7 +678,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         if (result.isSuccess()) {
             // Signed in successfully.
             isSignedIn = true;
-            onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
+            //onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
             Toast.makeText(mAppContext, "Your logged in as: "
