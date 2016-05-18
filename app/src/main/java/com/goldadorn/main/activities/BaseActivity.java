@@ -8,9 +8,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -154,6 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         action(data.navigationDataObject);
     }
     public boolean action(NavigationDataObject navigationDataObject) {
+        Log.d("dj", "action - BaseActivity; navDataObj type: "+navigationDataObject.getActionType());
         Action action =new Action(this);
         if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_LOGOUT)) {
             logout();
@@ -162,9 +165,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY))
         {
             String url =(String) navigationDataObject.getActionValue();
+            Log.d("dj", "action - BaseActivity : ACTION_TYPE_WEB_ACTIVITY - url: "+url);
             if(url!=null && url.equals("")==false)
             {
                 Class target = navigationDataObject.getView();
+                Log.d("dj", "menuAction: - target: "+target.toString());
                 if(target==null)
                     target = WebActivity.class;
                 Map<String, Object> data=new HashMap<>();
@@ -178,6 +183,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME))
         {
             String url =(String) navigationDataObject.getActionValue();
+            Log.d("dj", "action - BaseActivity; ACTION_TYPE_WEB_CHROME- url: "+url);
             if(url!=null && url.equals("")==false)
             {
                 Class target = navigationDataObject.getView();
@@ -198,6 +204,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     public void openUri(Activity activity, Uri uri) {
                         Intent intent = new Intent(activity, targetWeb);
                         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+                        Log.d("dj", "action - BaseActivity; - CustomTabActivityHelper.CustomTabFallback-url: "+uri.toString());
                         intent.putExtra("URL", uri.toString());
                         activity.startActivity(intent);
                     }

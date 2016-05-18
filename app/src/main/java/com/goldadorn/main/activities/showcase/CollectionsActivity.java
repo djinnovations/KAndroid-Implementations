@@ -250,10 +250,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     protected void onResume() {
         if (mCollection != null) {
             isFirstTime = false;
-            Log.e("iii--Notnull--", "" + mCollection.id);
             bindOverlay(mCollection);
         } else {
-            Log.e("iii--null--", "");
         }
         super.onResume();
     }
@@ -270,7 +268,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private Runnable mCollectionChangeRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.e("iii--", mCurrentPosition + "");
             onCollectionChange(mCollectionAdapter.getCollection(mCurrentPosition));
         }
     };
@@ -278,7 +275,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private void onCollectionChange(Collection collection) {
         if (collection != null && !collection.equals(mCollection)) {
             mCollection = collection;
-            Log.e("iii--clID--", mCollection.id + "");
             bindOverlay(mCollection);
             if (!isFirstTime) {
                 isFirstTime = true;

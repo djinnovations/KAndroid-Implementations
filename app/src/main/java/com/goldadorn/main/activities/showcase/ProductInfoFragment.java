@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,6 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.Bind;
@@ -135,28 +135,7 @@ public class ProductInfoFragment extends Fragment {
                     summary.getDisplayWeight()));
             mdescription.setText(summary.description);
             List<StoneDetail> rows = summary.stonesDetails;
-//            rows.clear();
-//            StoneDetail det = new StoneDetail();
-//            det.type = "a";
-//            det.stoneFactor = "1";
-//            det.rateunit = "Kiran";
-//            rows.add(det);
-//            det = new StoneDetail();
-//            det.type = "a";
-//            det.stoneFactor = "2";
-//            rows.add(det);
-//            det = new StoneDetail();
-//            det.type = "a";
-//            det.stoneFactor = "3";
-//            rows.add(det);
-//            det = new StoneDetail();
-//            det.type = "b";
-//            det.stoneFactor = "1";
-//            rows.add(det);
-//            det = new StoneDetail();
-//            det.type = "b";
-//            det.stoneFactor = "2";
-//            rows.add(det);
+
             if (rows.size() == 0) {
                 mTableContainer.setVisibility(View.GONE);
             } else {
@@ -266,9 +245,9 @@ public class ProductInfoFragment extends Fragment {
 
             holder.weight.setText(" " + detail.weight);
             float mValue= detail.price * detail.weight;
-            holder.price.setText(" " + ((int)mValue));
+            holder.price.setText(" " + Math.round(mValue));
             holder.offer_price.setText(" " + ((int)mValue));
-            mTotalPrice=mTotalPrice+mValue;
+            mTotalPrice=mTotalPrice+Math.round(mValue);
 
            /* holder.rate.setText(detail.rateunit + " " + detail.price);
             holder.weight.setText(detail.weightunit + " " + detail.weight);
@@ -304,18 +283,20 @@ public class ProductInfoFragment extends Fragment {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
-            mTotalPrice=mTotalPrice+mProductActivity.mProductInfo.productmaking_charges;
+            mTotalPrice=mTotalPrice+(int)(mProductActivity.mProductInfo.productmaking_charges*mProductActivity.mProductInfo.weight);
             holder.component.setText("Making \nCharges");
             holder.rate.setText("");
             holder.weight.setText(" ");
-            holder.price.setText(" "+mProductActivity.mProductInfo.productmaking_charges);
-            holder.offer_price.setText(" " +mProductActivity.mProductInfo.productmaking_charges);
+            float makingChanges=Math.round(mProductActivity.mProductInfo.productmaking_charges*mProductActivity.mProductInfo.weight);
+            holder.price.setText(" "+(int)makingChanges);
+            holder.offer_price.setText(" " +(int)makingChanges);
         }else if(mType.equalsIgnoreCase(VAT)){
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
-            double mVat=(mTotalPrice/1.01)*0.01;
-            DecimalFormat df = new DecimalFormat("#.##");
+            Log.e("iii--",mTotalPrice+"");
+            double mVat=(mTotalPrice)*0.01;
+            mTotalPrice=mTotalPrice+((float)(mTotalPrice*0.01));
             holder.component.setText(VAT);
             holder.rate.setText("");
             holder.weight.setText(" ");
@@ -333,7 +314,7 @@ public class ProductInfoFragment extends Fragment {
             holder.weight.setText(" ");
             holder.price.setText(" ");
             holder.offer_price.setVisibility(View.VISIBLE);
-            holder.offer_price.setText(" 0.0" );
+            holder.offer_price.setText(" 0" );
         }else{
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             holder.component.setTypeface(null, Typeface.BOLD);

@@ -83,7 +83,17 @@
         android:paddingTop="@dimen/padding_default_2x"
         android:text="No item added in cart"
         android:visibility="visible"/>
-
+    <TextView
+        android:id="@+id/zero_cart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_default_2x"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default"
+        android:paddingTop="@dimen/padding_default_2x"
+        android:textSize="12sp"
+        android:text="Note : To remove a product from cart, please set the quantity as 0"
+        android:visibility="visible"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
