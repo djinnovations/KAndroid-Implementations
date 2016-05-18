@@ -138,14 +138,28 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         //// TODO: 5/6/2016  
         mGoogleSignInOpt = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestScopes(Plus.SCOPE_PLUS_LOGIN, new Scope("email"))
-                .requestIdToken(Constants.OAUTH_CLIENT_ID_GL)
+                .requestIdToken(Constants.OAUTH_WEBCLIENT_ID_GL)
                 .build();
+
 
         // Initializing google plus api client
         mGoogleApiClient = new GoogleApiClient.Builder(mAppContext)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOpt)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
+
+
+        /*mGoogleSignInOpt = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(Constants.OAUTH_WEBCLIENT_ID_GL)
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(mAppContext)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOpt)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();*/
+
 
         /*************************************************************************************************/
     }
@@ -463,6 +477,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void serverCallEndsCustom(int id, String url, Object json, AjaxStatus status) {
 
+        Log.d(Constants.TAG, "serverCallEndsCustom - social login response: "+json);
         boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                 getViewForSnackBar(), mActivity);
         List<Cookie> cookies = status.getCookies();
@@ -488,6 +503,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 dismissOverlayView();
             }
         }
+        dismissOverlayView();
 
     }
 
@@ -645,6 +661,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d(Constants.TAG, "onActivity result - Social Logins ActResultCallback ");
+        Log.d(Constants.TAG, "onActivity result - Social Logins resultCode: "+resultCode);
         if (requestCode == GMAIL_RC_SIGN_IN && resultCode == Activity.RESULT_OK) {
 
             Log.d(Constants.TAG, "onActivity result GoogleSignIn - Result_Ok");
@@ -663,7 +680,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             // Signed in successfully.
             isSignedIn = true;
             //onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
-            authFromServer(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE), Constants.PLATFORM_GOOGLE);
+           authFromServer(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE), Constants.PLATFORM_GOOGLE);
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
             Toast.makeText(mAppContext, "Your logged in as: "
