@@ -21,6 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -29,8 +31,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.LandingPageActivity;
 import com.goldadorn.main.activities.LoginPageActivity;
 import com.goldadorn.main.activities.MainActivity;
@@ -39,7 +41,11 @@ import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.model.LoginResult;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -52,6 +58,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.plus.Plus;
+import com.google.gson.Gson;
+import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -61,10 +70,13 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
+import org.apache.http.cookie.Cookie;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -75,12 +87,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
     private static SocialLoginUtil ourInstance;
-    private static Context mContext;
+    private static Context mAppContext;
 
     public static SocialLoginUtil getInstance(Context appContext) {
 
         if (ourInstance == null) {
-            mContext = appContext;
+            mAppContext = appContext;
             ourInstance = new SocialLoginUtil();
         }
         return ourInstance;
@@ -88,13 +100,14 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     private SocialLoginUtil() {
 
-        //FacebookSdk.sdkInitialize(mContext);
+        //FacebookSdk.sdkInitialize(mAppContext);
         initializeFbAndGlTw();
         setFbCallBacks();
     }
 
 
     private Activity mActivity;
+    private Dialog dialog;
     /*****************
      * Facebook stuffs
      ***********************/
@@ -124,7 +137,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 new TwitterAuthConfig(Constants.API_KEY_TW,
                         Constants.API_SECRET_TW);
 
-        Fabric.with(mContext, new Twitter(authConfig));
+        Fabric.with(mAppContext, new Twitter(authConfig));
         twitCore = Twitter.getInstance().core;
         twitAuthClient = new TwitterAuthClient();
 
@@ -139,7 +152,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 .build();
 
         // Initializing google plus api client
-        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
+        mGoogleApiClient = new GoogleApiClient.Builder(mAppContext)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOpt)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
@@ -260,11 +273,11 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         tempParams.dimAmount = 0.0f;
 
-        View overLay = LayoutInflater.from(mContext).inflate(R.layout.dialog_overlay, null);
+        View overLay = LayoutInflater.from(mAppContext).inflate(R.layout.dialog_overlay, null);
         TextView tvTemp = (TextView) overLay.findViewById(R.id.tvOverlayInfo);
         if (infoMsg != null) {
             tvTemp.setText(infoMsg);
-            tvTemp.setTextColor(ResourceReader.getInstance(mContext).getColorFromResource(colorResId));
+            tvTemp.setTextColor(ResourceReader.getInstance(mAppContext).getColorFromResource(colorResId));
         }
         else tvTemp.setVisibility(View.GONE);
         dialog.setContentView(overLay);
@@ -281,23 +294,24 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private void setFbCallBacks() {
 
         LoginManager.getInstance().registerCallback(mFbCallbackManager,
-                new FacebookCallback<LoginResult>() {
+                new FacebookCallback<com.facebook.login.LoginResult>() {
                     @Override
-                    public void onSuccess(LoginResult loginResult) {
+                    public void onSuccess(com.facebook.login.LoginResult loginResult) {
                         Log.d(Constants.TAG, "Login successs");
                         //// TODO: 5/4/2016
-                        onSuccessfulLogin(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK));
+                        authFromServer(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK),
+                                Constants.PLATFORM_FACEBOOK);
                     }
 
                     @Override
                     public void onCancel() {
-                        Toast.makeText(mContext, "Login Cancelled", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mAppContext, "Login Cancelled", Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onError(FacebookException exception) {
                         //probably no network connection at the moment (most of the times)
-                        //Toast.makeText(mContext, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mAppContext, exception.getMessage(), Toast.LENGTH_LONG).show();
                         setErrSnackBar(Constants.ERR_MSG_NETWORK);
                     }
                 });
@@ -320,9 +334,21 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
+    private View getViewForSnackBar(){
+
+        View viewForSnackBar = null;
+        if (mActivity instanceof LandingPageActivity){
+            viewForSnackBar = ((LandingPageActivity) mActivity).loginAccount;
+        }else if (mActivity instanceof LoginPageActivity){
+            viewForSnackBar = ((LoginPageActivity) mActivity).layoutParent;
+        }
+        return viewForSnackBar;
+    }
+
+
     private void onSuccessfulLogin(FbGoogleTweetLoginResult loginResults) {
         // TODO Auto-generated method stub
-        if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_GOOGLE)) {
+        /*if (loginResults.getLoginPlatform().equals(Constants.PLATFORM_GOOGLE)) {
 
             GoogleSignInResult mGoogleResult = loginResults.getmGoogleLoginResult();
             GoogleSignInAccount mGoogleProfile = mGoogleResult.getSignInAccount();
@@ -340,7 +366,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             Log.d(Constants.TAG, "token - onSuccessfulLogin: "+token);
             Log.d(Constants.TAG, "version - onSuccessfulLogin: "+ver);
             genericInfo("Twitter back-end Auth not yet implement; your signed in successful using twiiter");
-        }
+        }*/
 
         //Intent loggedInActivityIntent = new Intent(this, LoggedInScreenActivity.class);
         //startActivity(loggedInActivityIntent);
@@ -348,7 +374,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
-    private void authWithServer(LoginResult mFbLoginResult, boolean isFb) {
+    /*private void authWithServer(com.facebook.login.LoginResult mFbLoginResult, boolean isFb) {
 
         final Dialog dialog = displayOverlay(null, R.color.colorAccent);
         dialog.show();
@@ -358,7 +384,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         RequestJson reqJsonInstance = RequestJson.getInstance();
         JSONObject json = null;
         if (isFb){
-            json = reqJsonInstance.getFbLoginReqJson(mFbLoginResult.getAccessToken().getToken(), version);
+            json = reqJsonInstance.getFbLoginReqMap(mFbLoginResult.getAccessToken().getToken(), version);
         }
         else {
             //// TODO: 5/6/2016  for google
@@ -403,12 +429,130 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 Constants.REQUEST_TIMEOUT_SOCIAL_LOGIN,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+        RequestQueue requestQueue = Volley.newRequestQueue(mAppContext);
         requestQueue.add(loginRequest);
+
+    }*/
+
+
+
+    public static final int fbLoginCall = IDUtils.generateViewId();
+    public static int glLoginCall = IDUtils.generateViewId();
+    public static int twLoginCall = IDUtils.generateViewId();
+
+    protected void authFromServer(FbGoogleTweetLoginResult loginResults, String platform) {
+
+        displayOverlayDialog();
+        GraphRequest req = new GraphRequest();
+        String version = req.getVersion();
+
+        RequestJson reqJsonInstance = RequestJson.getInstance();
+        JSONObject json = null;
+        //String url = getUrlHelper().getLoginServiceURL();
+        ExtendedAjaxCallback ajaxCallback = null;
+        Map<String, String> paramsMap = null;
+        if (mActivity instanceof LoginPageActivity){
+            ajaxCallback = ((LoginPageActivity) mActivity).getAjaxCallBackCustom(fbLoginCall);
+        }
+        else if (mActivity instanceof LandingPageActivity){
+            ajaxCallback = ((LandingPageActivity) mActivity).getAjaxCallBackCustom(fbLoginCall);
+        }
+        if (platform.equals(Constants.PLATFORM_FACEBOOK)){
+            com.facebook.login.LoginResult fbResult = loginResults.getFaceBookLoginResult();
+            paramsMap = reqJsonInstance.getFbLoginReqMap(fbResult.getAccessToken().getToken(), version);
+            ajaxCallback.setParams(paramsMap);
+        }
+        else if (platform.equals(Constants.PLATFORM_GOOGLE)){
+            //// TODO: 5/6/2016  for google
+            //json =
+        }
+        else if (platform.equals(Constants.PLATFORM_TWITTER)){
+
+        }
+
+        getAQuery().ajax(Constants.ENDPOINT_SOCIAL_LOGIN, paramsMap, String.class, ajaxCallback);
+    }
+
+
+    public void serverCallEndsCustom(int id, String url, Object json, AjaxStatus status) {
+
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    getViewForSnackBar(), mActivity);
+            List<Cookie> cookies = status.getCookies();
+            if (success) {
+                Gson gson = new Gson();
+                com.goldadorn.main.model.LoginResult loginResult = gson.fromJson((String) json, com.goldadorn.main.model.LoginResult.class);
+
+                if (loginResult.getSuccess()) {
+
+                    if (id == fbLoginCall) {
+                        doSuccessOperation(loginResult, status.getCookies());
+                    }
+                    else if (id == glLoginCall){
+
+                    }
+                    else if (id == twLoginCall){
+
+                    }
+
+                } else {
+                    setErrSnackBar(loginResult.getMsg());
+                    dismissOverlayView();
+                }
+            }
 
     }
 
-    private void evaluateResults(String status, String message, Dialog dialog) {
+
+
+    /*public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == loginServiceCall) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+            List<Cookie> cookies = status.getCookies();
+            if (success) {
+                Gson gson = new Gson();
+                com.goldadorn.main.model.LoginResult loginResult = gson.fromJson((String) json, com.goldadorn.main.model.LoginResult.class);
+
+                if (loginResult.getSuccess()) {
+                    User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
+                    user.setName(loginResult.getUsername());
+                    Log.e("iiii",loginResult.getUserid()+"");
+                    user.setImageUrl(loginResult.getUserpic());
+                    getApp().setUser(user);
+
+                    getApp().setCookies(cookies);
+                    SharedPreferences sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
+                    sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
+                            .putString(AppSharedPreferences.LoginInfo.USER_NAME, userName.getText().toString())
+                            .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid()))
+                            .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
+
+                    gotoApp();
+                } else {
+                    final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);
+                    ColoredSnackbar.alert(snackbar).show();
+                }
+                stopProgress(loginResult.getSuccess());
+            } else {
+                stopProgress(success);
+            }
+        } else
+            super.serverCallEnds(id, url, json, status);
+    }*/
+
+
+
+
+
+
+    private AQuery aQuery;
+    private AQuery getAQuery() {
+        if(aQuery==null)
+            aQuery = new AQuery(mActivity);
+        return aQuery;
+    }
+
+    /*private void evaluateResults(String status, String message, Dialog dialog) {
         //it would have been better if I had a boolean status field for comparison;
         // since string comparison is not good practice
         if (status.equalsIgnoreCase(ApiKeys.RESPONSE_SUCCESS)){
@@ -418,9 +562,9 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             //genericInfo(message);
             setErrSnackBar(message);
         }
-    }
+    }*/
 
-    private void doSuccessOperation(final Dialog dialog) {
+    /*private void doSuccessOperation(final Dialog dialog) {
         //// TODO: 5/6/2016
 
         new Thread() {
@@ -438,9 +582,47 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 mActivity.finish();
             }
         }.start();
+    }*/
+
+
+    private void displayOverlayDialog(){
+        dialog = displayOverlay(null, R.color.colorAccent);
+        dialog.show();
     }
 
-    private void dismissOverlayView(final Dialog dialog) {
+
+    private void doSuccessOperation(final LoginResult loginResult, final List<Cookie> cookies) {
+        //// TODO: 5/6/2016
+
+        new Thread() {
+
+            @Override
+            public void run() {
+                super.run();
+                //genericInfo("Auth from server successful");
+                User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
+                user.setName(loginResult.getUsername());
+                Log.e("iiii", loginResult.getUserid() + "");
+                user.setImageUrl(loginResult.getUserpic());
+                ((Application) mActivity.getApplication()).setUser(user);
+
+                ((Application) mActivity.getApplication()).setCookies(cookies);
+                /*SharedPreferences sharedPreferences = mAppContext.getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
+                sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
+                        .putString(AppSharedPreferences.LoginInfo.USER_NAME, loginResult.getUsername().trim())
+                        .putBoolean(AppSharedPreferences.LoginInfo.IS_SOCIAL_LOGIN, true)
+                        .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid())).commit();*/
+
+                dismissOverlayView();
+                /*mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                mActivity.finish();*/
+                new Action(mActivity).launchActivity(MainActivity.class, true);
+            }
+        }.start();
+    }
+
+
+    private void dismissOverlayView() {
 
         mActivity.runOnUiThread(new Runnable() {
             @Override
@@ -452,7 +634,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     }
 
     private void genericInfo(String info) {
-        Toast.makeText(mContext, info, Toast.LENGTH_LONG).show();
+        Toast.makeText(mAppContext, info, Toast.LENGTH_LONG).show();
     }
 
 
@@ -497,7 +679,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
-            Toast.makeText(mContext, "Your logged in as: "
+            Toast.makeText(mAppContext, "Your logged in as: "
                     + accountInfo.getDisplayName(), Toast.LENGTH_LONG).show();
         } else {
             // Signed out.

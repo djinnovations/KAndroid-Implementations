@@ -6,6 +6,9 @@ import com.goldadorn.main.dj.utils.Constants;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by COMP on 5/6/2016.
  */
@@ -20,16 +23,16 @@ public class RequestJson {
     }
 
 
-    public JSONObject getFbLoginReqJson(String accessToken, String graphVersion){
+    public Map<String, String> getFbLoginReqMap(String accessToken, String graphVersion){
 
         try {
-            JSONObject req = new JSONObject();
+            Map<String, String> req = new HashMap<>();
             req.put(ApiKeys.CLIENT_SECRET, Constants.CLIENT_SECRET_FB);
             req.put(ApiKeys.CLIENT_ID, Constants.CLIENT_ID_FB);
             req.put(ApiKeys.GRAPH_VERSION, graphVersion);
             req.put(ApiKeys.ACCESS_TOKEN, accessToken);
             req.put(ApiKeys.SOCIAL_MEDIUM, Constants.PLATFORM_FACEBOOK);
-            Log.d("dj", "requestJson - getFbLoginReqJson: "+req);
+            Log.d("dj", "requestMap - getFbLoginReqMap: "+req);
             return req;
         } catch (Exception e) {
             e.printStackTrace();

@@ -35,9 +35,9 @@ public class NetworkResultValidator {
 
 
 
-    public static boolean isResultOK(String url, String value,final AjaxStatus status,String msg,View hostPort,Context context)
+    public static boolean isResultOK(String url, String value,final AjaxStatus status,String msg,View hostPort,Context activityContext)
     {
-        return isResultOK( url,  value,   status, msg, hostPort, context,null);
+        return isResultOK( url,  value,   status, msg, hostPort, activityContext,null);
     }
     public static boolean isResultOK(String url, String value,final AjaxStatus status,String msg,View view,Context context,ExtendedAjaxCallback callBack)
     {

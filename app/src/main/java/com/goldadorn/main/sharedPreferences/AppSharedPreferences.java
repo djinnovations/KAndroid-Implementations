@@ -17,8 +17,8 @@ public class AppSharedPreferences {
         public static final String IS_SOCIAL_LOGIN = "social_login";
         public static final String SOCIAL_LOGIN_PLATFORM = "login_platform";
 
-        public static final String SELECTED_CITY ="selectedCityName";
-        public static final String SELECTED_CITY_ID ="selectedCityId";
+        //public static final String SELECTED_CITY ="selectedCityName";
+        //public static final String SELECTED_CITY_ID ="selectedCityId";
     }
     public class AppRater
     {

@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.ConnectionDetector;
@@ -13,6 +14,7 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -102,6 +104,18 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     }
 
 
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == SocialLoginUtil.twLoginCall || id == SocialLoginUtil.fbLoginCall || id == SocialLoginUtil.glLoginCall){
+            mSocialLoginInstance.serverCallEndsCustom(id, url, json, status);
+        }else
+        super.serverCallEnds(id, url, json, status);
+    }
+
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId){
+        return getAjaxCallback(requestId);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

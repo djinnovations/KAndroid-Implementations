@@ -113,6 +113,11 @@ public class LoginPageActivity extends BaseActivity {
     }
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+
+        if (id == SocialLoginUtil.twLoginCall || id == SocialLoginUtil.fbLoginCall || id == SocialLoginUtil.glLoginCall){
+            mSocialLoginInstance.serverCallEndsCustom(id, url, json, status);
+        }
+
         if (id == loginServiceCall) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             List<Cookie> cookies = status.getCookies();
@@ -351,5 +356,10 @@ public class LoginPageActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId){
+       return getAjaxCallback(requestId);
     }
 }
