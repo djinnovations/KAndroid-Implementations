@@ -515,7 +515,7 @@ public class ProductActivity extends BaseDrawerActivity {
                                 if(isLiked){
                                     mProduct.likecount=mProduct.likecount-1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
-                                   // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
                                 }else{
                                     mProduct.likecount=mProduct.likecount+1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
@@ -532,7 +532,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                            Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else if (v == cartButton) {

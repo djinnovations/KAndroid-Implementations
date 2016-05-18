@@ -50,14 +50,14 @@ public class ExtractResponse {
 
     protected static void extractGetWishlist(ProductResponse response) throws JSONException {
         if (response.responseContent != null && response.productArray != null) {
-            JSONArray productArray = new JSONArray(response.responseContent);
+            JSONObject json=new JSONObject(response.responseContent);
+            JSONArray productArray = json.getJSONArray("wishes");
             for (int i = 0; i < productArray.length(); i++) {
                 response.productArray.add(new Product(productArray.getJSONObject(i).optInt("productId")));
                 response.idsForProducts.put(productArray.getJSONObject(i).optInt("productId"));
             }
         }
     }
-
     protected static void extractBasicProfile(ObjectResponse<ProfileData> response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject jsonObject = new JSONObject(response.responseContent);

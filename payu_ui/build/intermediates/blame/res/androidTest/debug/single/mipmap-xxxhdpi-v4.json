@@ -1,50 +1,98 @@
 [
     {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\ic_launcher.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\ic_launcher.png"
-    },
-    {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\amex.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\amex.png"
-    },
-    {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\laser.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\laser.png"
-    },
-    {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\diner.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\diner.png"
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\trash.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\trash.png"
     },
     {
         "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\master.png",
         "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\master.png"
     },
     {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\discover.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\discover.png"
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\maestro.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\maestro.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\discover.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\discover.png"
     },
     {
         "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\maestro.png",
         "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\maestro.png"
     },
     {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\visa.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\visa.png"
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\trash.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\trash.png"
     },
     {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\jcb.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\jcb.png"
-    },
-    {
-        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\trash.png",
-        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\trash.png"
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\amex.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\amex.png"
     },
     {
         "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\card.png",
         "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\card.png"
     },
     {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\laser.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\laser.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\ic_launcher.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\ic_launcher.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\jcb.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\jcb.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\amex.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\amex.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\diner.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\diner.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\diner.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\diner.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\laser.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\laser.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\master.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\master.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\discover.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\discover.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\card.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\card.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\jcb.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\jcb.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\app_bar_next.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\app_bar_next.png"
+    },
+    {
         "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\app_bar_next.png",
         "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\app_bar_next.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\ic_launcher.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\visa.png",
+        "source": "C:\\Venkatbackup\\Madhu\\New\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\visa.png"
+    },
+    {
+        "merged": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap-xxxhdpi-v4\\visa.png",
+        "source": "E:\\Work\\Workspace\\goldadorn\\payu_ui\\build\\intermediates\\bundles\\debug\\res\\mipmap-xxxhdpi-v4\\visa.png"
     }
 ]
