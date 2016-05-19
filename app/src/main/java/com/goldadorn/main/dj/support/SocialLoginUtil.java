@@ -300,6 +300,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                     public void onSuccess(com.facebook.login.LoginResult loginResult) {
                         Log.d(Constants.TAG, "Login successs");
                         //// TODO: 5/4/2016
+                        Toast.makeText(mAppContext, "Hi "
+                                /*+ loginResult.*/+ ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
                         authFromServer(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK),
                                 Constants.PLATFORM_FACEBOOK);
                     }
@@ -633,7 +635,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                genericInfo("Auth from server successful");
+                genericInfo("Authorization successful");
                 dialog.dismiss();
             }
         });
@@ -687,8 +689,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
            authFromServer(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE), Constants.PLATFORM_GOOGLE);
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
-            Toast.makeText(mAppContext, "Your logged in as: "
-                    + accountInfo.getDisplayName(), Toast.LENGTH_LONG).show();
+            Toast.makeText(mAppContext, "Hi "
+                    + accountInfo.getDisplayName()+ ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
         } else {
             // Signed out.
             isSignedIn = false;
