@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.SocialPost;
 import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
@@ -88,10 +89,12 @@ abstract public class PostUpdateHelper {
             post =item;
             posision = pos;
             String url = getURL();
+            Log.d(Constants.TAG,"like a post url: "+url);
             ExtendedAjaxCallback ajaxCallback =getAjaxCallback(pos);
             Map params=new HashMap<>();
             fillParams(item,params);
             ajaxCallback.setParams(params);
+            Log.d(Constants.TAG,"like a post requestJson: "+params);
             ajaxCallback.setClazz(String.class);
             getAQuery().ajax(url, params, String.class, ajaxCallback);
             isCallInprogress=true;

@@ -481,6 +481,9 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                 getViewForSnackBar(), mActivity);
         List<Cookie> cookies = status.getCookies();
+        for (Cookie coo: cookies){
+            Log.d(Constants.TAG, "serverCallEndsCustom - social login cookies: "+coo);
+        }
         if (success) {
             Gson gson = new Gson();
             com.goldadorn.main.model.LoginResult loginResult = gson.fromJson((String) json, com.goldadorn.main.model.LoginResult.class);
@@ -619,6 +622,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 /*mActivity.startActivity(new Intent(mActivity, MainActivity.class));
                 mActivity.finish();*/
                 new Action(mActivity).launchActivity(MainActivity.class, true);
+                Log.d(Constants.TAG, "must have started the main activity");
             }
         }.start();
     }

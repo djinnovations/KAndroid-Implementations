@@ -119,6 +119,7 @@ public class LoginPageActivity extends BaseActivity {
         }
 
         if (id == loginServiceCall) {
+            Log.d(Constants.TAG, "serverCallEnds - normal login response: "+json);
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             List<Cookie> cookies = status.getCookies();
             if (success) {
@@ -251,9 +252,10 @@ public class LoginPageActivity extends BaseActivity {
 
     @OnClick(R.id.loginWithTwitterButton)
     void onClickLoginWithTwitterButton() {
-        if (checkNetwork()){
+        android.widget.Toast.makeText(getApplicationContext(), "Feature Coming Soon", android.widget.Toast.LENGTH_SHORT).show();
+        /*if (checkNetwork()){
             mSocialLoginInstance.onTwitterLogin(this);
-        }
+        }*/
     }
 
 

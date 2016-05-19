@@ -19,6 +19,7 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
 import java.security.MessageDigest;
@@ -80,9 +81,10 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
 
     @OnClick(R.id.loginWithTwitterButton)
     void onClickLoginWithTwitterButton() {
-        if (checkNetwork()){
+        android.widget.Toast.makeText(getApplicationContext(), "Feature Coming Soon", android.widget.Toast.LENGTH_SHORT).show();
+        /*if (checkNetwork()){
             mSocialLoginInstance.onTwitterLogin(this);
-        }
+        }*/
     }
 
 

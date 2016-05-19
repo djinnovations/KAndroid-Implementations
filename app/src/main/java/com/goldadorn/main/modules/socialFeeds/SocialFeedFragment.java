@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -28,7 +27,6 @@ import com.goldadorn.main.activities.ImageZoomActivity;
 import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
-import com.goldadorn.main.activities.WebActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
@@ -50,7 +48,6 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
-import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -159,7 +156,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
         EventBus.getDefault().post(new AppActions(navigationDataObject));
     }
 
-    private void followPeope(SocialPost post,int pos) {
+    private void followPeople(SocialPost post, int pos) {
         followHelper.update(post, pos);
     }
 
@@ -1251,7 +1248,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
                         //followButton.setSelected(false);
                     }
                     YoYo.with(Techniques.Landing).duration(300).playOn(followButton);
-                    followPeope(socialPost, getAdapterPosition());
+                    followPeople(socialPost, getAdapterPosition());
                 }
                 else if(v==likesLabel)
                 {
