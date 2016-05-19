@@ -229,6 +229,32 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     }
 
 
+    private void setResultListenerFb(com.facebook.login.LoginResult loginResult) {
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                loginResult.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v(Constants.TAG, "fb loginResult response: " + response.toString());
+                        try {
+                            String name = "N/A";
+                            name = object.getString("name");
+                            Toast.makeText(mAppContext, "Hi "
+                                + name + ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender,location,birthday");
+        request.setParameters(parameters);
+        request.executeAsync();
+    }
+
+
     Callback<TwitterSession> mCallBackTwit = new Callback<TwitterSession>() {
         @Override
         public void success(Result<TwitterSession> result) {
@@ -298,10 +324,9 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 new FacebookCallback<com.facebook.login.LoginResult>() {
                     @Override
                     public void onSuccess(com.facebook.login.LoginResult loginResult) {
-                        Log.d(Constants.TAG, "Login successs");
+                        Log.d(Constants.TAG, "Login fb successs");
                         //// TODO: 5/4/2016
-                        Toast.makeText(mAppContext, "Hi "
-                                /*+ loginResult.*/+ ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
+                        setResultListenerFb(loginResult);
                         authFromServer(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK),
                                 Constants.PLATFORM_FACEBOOK);
                     }
@@ -479,12 +504,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void serverCallEndsCustom(int id, String url, Object json, AjaxStatus status) {
 
-        Log.d(Constants.TAG, "serverCallEndsCustom - social login response: "+json);
+        Log.d(Constants.TAG, "serverCallEndsCustom - social login response: " + json);
         boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                 getViewForSnackBar(), mActivity);
         List<Cookie> cookies = status.getCookies();
-        for (Cookie coo: cookies){
-            Log.d(Constants.TAG, "serverCallEndsCustom - social login cookies: "+coo);
+        for (Cookie coo : cookies) {
+            Log.d(Constants.TAG, "serverCallEndsCustom - social login cookies: " + coo);
         }
         if (success) {
             Gson gson = new Gson();
@@ -667,7 +692,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.d(Constants.TAG, "onActivity result - Social Logins ActResultCallback ");
-        Log.d(Constants.TAG, "onActivity result - Social Logins resultCode: "+resultCode);
+        Log.d(Constants.TAG, "onActivity result - Social Logins resultCode: " + resultCode);
         if (requestCode == GMAIL_RC_SIGN_IN && resultCode == Activity.RESULT_OK) {
 
             Log.d(Constants.TAG, "onActivity result GoogleSignIn - Result_Ok");
@@ -686,11 +711,11 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             // Signed in successfully.
             isSignedIn = true;
             //onSuccessfulLogin(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE));
-           authFromServer(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE), Constants.PLATFORM_GOOGLE);
+            authFromServer(new FbGoogleTweetLoginResult(result, null, null, Constants.PLATFORM_GOOGLE), Constants.PLATFORM_GOOGLE);
 
             GoogleSignInAccount accountInfo = result.getSignInAccount();
             Toast.makeText(mAppContext, "Hi "
-                    + accountInfo.getDisplayName()+ ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
+                    + accountInfo.getDisplayName() + ", Welcome to Gold Adorn\nAuthorizing...please wait", Toast.LENGTH_LONG).show();
         } else {
             // Signed out.
             isSignedIn = false;
