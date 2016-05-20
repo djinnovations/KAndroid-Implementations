@@ -131,7 +131,9 @@ dependencies {
     compile 'com.nshmura:recyclertablayout:0.1.3'
     compile 'com.github.ahorn:android-rss:v1.0-rc1'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.5'
-    compile project(':kandroid')
+    compile (project(':kandroid')){
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }
     compile 'com.mikepenz:iconics-core:2.5.3@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     compile 'org.greenrobot:eventbus:3.0.0'
@@ -148,10 +150,12 @@ dependencies {
     //    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
     compile(name: 'CustomBrowser-release', ext: 'aar')
     compile(name: 'PayU-release', ext: 'aar')
-    compile project(':payu_ui')
+    compile (project(':payu_ui')){
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
 
     //Permission
     compile 'com.github.kimeeo:TedPermission:064cbbbeba'

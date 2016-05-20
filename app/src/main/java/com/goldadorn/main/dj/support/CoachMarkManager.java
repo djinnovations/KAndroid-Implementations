@@ -28,6 +28,10 @@ public class CoachMarkManager {
 
     private final String KEY_IS_HOMESCREEN_DONE = "screen_home";
     private final String KEY_IS_TIMELINE_DONE = "screen_timeline";
+    private final String KEY_IS_SHOWCASE_DONE = "screen_showcase";
+    private final String KEY_IS_COLLECTION_DONE = "screen_collection";
+    private final String KEY_IS_PRODUCTS_DONE = "screen_product";
+
 
     private CoachMarkManager(Context appContext) {
 
@@ -51,7 +55,6 @@ public class CoachMarkManager {
 
         editor.putBoolean(KEY_IS_HOMESCREEN_DONE, isDone);
         editor.commit();
-
         Log.d(Constants.TAG, "home screen coach mark stat: " + isDone);
     }
 
@@ -68,7 +71,6 @@ public class CoachMarkManager {
 
         editor.putBoolean(KEY_IS_TIMELINE_DONE, isDone);
         editor.commit();
-
         Log.d(Constants.TAG, "timeline coach mark stat: " + isDone);
     }
 
@@ -79,4 +81,54 @@ public class CoachMarkManager {
         Log.d(Constants.TAG, "timeline coach mark stat - CoachMarkManager: " + stat);
         return stat;
     }
+
+
+    public void setShowcaseTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_SHOWCASE_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "showcase coach mark stat: " + isDone);
+    }
+
+
+    public boolean isShowcaseTourdone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_SHOWCASE_DONE, false);
+        Log.d(Constants.TAG, "showcase coach mark stat - CoachMarkManager: " + stat);
+        return stat;
+    }
+
+
+
+    public void setCollectionTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_COLLECTION_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "collection coach mark stat: " + isDone);
+    }
+
+
+    public boolean isCollectionTourdone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_COLLECTION_DONE, false);
+        Log.d(Constants.TAG, "collection coach mark stat - CoachMarkManager: " + stat);
+        return stat;
+    }
+
+
+    public void setProductTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_PRODUCTS_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "product coach mark stat: " + isDone);
+    }
+
+
+    public boolean isProductTourdone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_PRODUCTS_DONE, false);
+        Log.d(Constants.TAG, "product coach mark stat - CoachMarkManager: " + stat);
+        return stat;
+    }
+
 }

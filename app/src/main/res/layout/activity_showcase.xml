@@ -6,6 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/transViewMain"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_above="@+id/transViewMainHelper"
+            android:layout_marginBottom="40dp"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/transViewMainHelper"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/transViewSwipeUp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="visible" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -40,7 +68,15 @@
             <FrameLayout
                 android:id="@+id/frame_scroll_dummy"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <View
+                    android:id="@+id/transViewProds"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="visible" />
+
+                </FrameLayout>
         </android.support.v4.widget.NestedScrollView>
 
         <FrameLayout

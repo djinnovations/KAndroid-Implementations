@@ -35,6 +35,7 @@ import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -118,6 +119,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private Handler mHandler = new Handler();
     public static boolean isCollectionLike=false;
 
+    //Author DJphy
+    private AppTourGuideHelper mTourHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,6 +231,32 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
 
+
+        tourThisScreen();
+    }
+
+
+    @Bind(R.id.transViewMain)
+    View transViewMain;
+    @Bind(R.id.transViewSwipeUp)
+    View transViewSwipeUp;
+    @Bind(R.id.transViewProds)
+    View transViewProds;
+
+    private void tourThisScreen() {
+
+        /*resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                /*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*/
+                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{ transViewMain, transViewSwipeUp, transViewProds});
+            }
+        }, 1500);
     }
 
 
