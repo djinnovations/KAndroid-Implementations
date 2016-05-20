@@ -574,13 +574,15 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
             super.serverCallEnds(id, url, json, status);
     }*/
 
-
-    private AQuery aQuery;
-
     private AQuery getAQuery() {
-        if (aQuery == null)
-            aQuery = new AQuery(mActivity);
-        return aQuery;
+
+        if (mActivity instanceof LoginPageActivity){
+            return ((LoginPageActivity) mActivity).getAQueryCustom();
+        }
+        else if (mActivity instanceof LandingPageActivity){
+            return ((LandingPageActivity) mActivity).getAQueryCustom();
+        }
+        else return null;
     }
 
     /*private void evaluateResults(String status, String message, Dialog dialog) {

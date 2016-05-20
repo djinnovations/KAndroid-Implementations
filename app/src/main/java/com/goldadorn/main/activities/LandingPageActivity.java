@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
@@ -126,6 +127,10 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
 
     public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId){
         return getAjaxCallback(requestId);
+    }
+
+    public AQuery getAQueryCustom(){
+        return getAQuery();
     }
 
     @Override
