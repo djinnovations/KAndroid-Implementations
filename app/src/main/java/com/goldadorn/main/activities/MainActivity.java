@@ -20,6 +20,7 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -108,14 +109,14 @@ public class MainActivity extends BaseDrawerActivity  {
         if(navigationDataObject !=null)
             action(navigationDataObject);
 
-        logAnalytics();
+        logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
 
         tourThisScreen();
     }
 
-    private void logAnalytics() {
-        getApp().getFbAnalyticsInstance().logCustomEvent(this, AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
-    }
+    /*private void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }*/
 
 
     private void tourThisScreen() {
@@ -177,6 +178,7 @@ public class MainActivity extends BaseDrawerActivity  {
                 intent= new Intent(MainActivity.this, PostBestOfActivity.class);
             if(intent!=null)
             {
+                logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
                 socialPostHost = new WeakReference<>(data.host);
                 People people = getApp().getPeople();
                 intent.putExtra("NAME", people.getUserName());
@@ -302,6 +304,7 @@ public class MainActivity extends BaseDrawerActivity  {
 
                 stopUploadProgress(true);
 
+                logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
             }
             else {

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
@@ -87,7 +88,13 @@ public class FindPeopleFragment extends DefaultVerticalListView
         gotoUser((People) baseObject);
     }
 
+    private void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
+    }
     public void onViewCreated(View view) {
+
+        logEventsAnalytics(GAAnalyticsEventNames.PEOPLE);
+
         followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
     }
     public int getListItemViewType(int position,Object item)

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.squareup.picasso.Picasso;
@@ -68,6 +69,9 @@ public class NotificationsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifications);
         ButterKnife.bind(this);
+
+        logEventsAnalytics(GAAnalyticsEventNames.NOTIFICATION);
+
         mAdapter = new NotificationsAdapter(this);
         notificationsList.setAdapter(mAdapter);
         refresh();

@@ -28,6 +28,7 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -337,7 +338,15 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
         closeMenu();
     }
+
+    private void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
+    }
+
     public void onViewCreated(View view) {
+
+        logEventsAnalytics(GAAnalyticsEventNames.SOCIAL_FEED);
+
         ButterKnife.bind(this, view);
 
         if(getAppMainActivity()!=null) {

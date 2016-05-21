@@ -39,6 +39,7 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.DisplayProperties;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -128,6 +129,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
+
+        logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);

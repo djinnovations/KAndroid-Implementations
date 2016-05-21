@@ -42,6 +42,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
@@ -123,6 +124,9 @@ public class ProductActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+
+        logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         BitmapDrawable d = (BitmapDrawable) (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
                 getDrawable(R.drawable.ic_menu_black_24dp) : getResources().getDrawable(
@@ -361,6 +365,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
                     @Override
                     public void onResult(ProductResponse result) {
+                        logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
                         Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();

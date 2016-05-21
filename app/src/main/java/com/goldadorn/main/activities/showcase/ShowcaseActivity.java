@@ -37,6 +37,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -125,6 +126,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
+
+        logEventsAnalytics(GAAnalyticsEventNames.SHOWCASE);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);

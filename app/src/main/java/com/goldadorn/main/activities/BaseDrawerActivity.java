@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -159,6 +160,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    logEventsAnalytics(GAAnalyticsEventNames.NAVIGATION_SLIDER_MENU);
                     drawerLayout.openDrawer(GravityCompat.START);
                 }
             });

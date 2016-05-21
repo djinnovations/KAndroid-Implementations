@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -85,6 +87,10 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         });
     }
 
+    private void logEventsAnalytics(String eventName) {
+        ((Application) getActivity().getApplication()).getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
+    }
+
     private void bindCostUi() {
         mCostTotal = 0;
         int totalUnits = 0;
@@ -95,14 +101,13 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             currency = p.priceUnit;
             Log.e("iii---",p.transid+"--"+mCostTotal+"--"+p.orderQty);
 
-
-
             if(p.orderQty==0){
                 UIController.removeFromCart(getContext(), p, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
                         if (result.success) {
                             mCart.remove(p);
+                            logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_REMOVED);
                             //   notifyDataSetChanged();
                             Log.e("REMOVED ITEM---","REMOVED "+ mCart.size());
                             onCartChanged();

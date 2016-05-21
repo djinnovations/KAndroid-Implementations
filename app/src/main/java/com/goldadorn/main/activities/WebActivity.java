@@ -6,6 +6,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.ResourceReader;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.webView.ApplicationDefaultWebView;
@@ -17,9 +19,6 @@ import java.util.Map;
 import butterknife.ButterKnife;
 
 public class WebActivity extends BaseActivity{
-
-
-
 
 
     @Override
@@ -38,6 +37,8 @@ public class WebActivity extends BaseActivity{
 
         String title = getIntent().getExtras().getString("TITLE");
 
+        logAppropriateValue(title);
+
         if(title==null)
             title = url;
 
@@ -53,6 +54,15 @@ public class WebActivity extends BaseActivity{
 
         BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
+    }
+
+
+    private void logAppropriateValue(String title){
+
+        if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
+                .getStringFromResource(R.string.contactUs))){
+            logEventsAnalytics(GAAnalyticsEventNames.CONTACT_US);
+        }
     }
 
     @Override

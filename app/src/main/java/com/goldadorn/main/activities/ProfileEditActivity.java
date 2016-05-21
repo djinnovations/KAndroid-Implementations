@@ -24,6 +24,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ObjectResponse;
@@ -184,6 +185,9 @@ public class ProfileEditActivity extends BaseActivity {
         setContentView(R.layout.activity_profile_edit);
         mContext = this;
         ButterKnife.bind(this);
+
+        logEventsAnalytics(GAAnalyticsEventNames.PROFILE);
+
         mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
         setupDOB();
 
@@ -243,7 +247,6 @@ public class ProfileEditActivity extends BaseActivity {
         });
 
         setupStyle();
-
 
     }
 

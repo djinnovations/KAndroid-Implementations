@@ -13,6 +13,7 @@ import android.util.Log;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -110,6 +111,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
         if (id == logoutCallToken) {
+            logEventsAnalytics(GAAnalyticsEventNames.LOGOUT);
             SharedPreferences sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
             sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false)
                     .putString(AppSharedPreferences.LoginInfo.USER_NAME, "")
@@ -255,5 +257,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         //overridePendingTransition  (R.anim.right_slide_in, R.anim.right_slide_out);
+    }
+
+
+    protected void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
     }
 }

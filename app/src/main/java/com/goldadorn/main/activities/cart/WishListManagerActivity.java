@@ -18,9 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -76,10 +78,18 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         return in;
     }
 
+
+    private void logEventsAnalytics(String eventName) {
+        ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
+
+        logEventsAnalytics(GAAnalyticsEventNames.WISHLIST);
+
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage("Loading");

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -53,6 +54,9 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity);
         ButterKnife.bind(this);
+
+        logEventsAnalytics(GAAnalyticsEventNames.TIMELINE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

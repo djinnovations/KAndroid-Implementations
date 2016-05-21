@@ -17,8 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Address;
 import com.goldadorn.main.model.Product;
 
@@ -66,12 +68,18 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         return in;
     }
 
+    private void logEventsAnalytics(String eventName) {
+        ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_cart_manager);
         ButterKnife.bind(this);
+
+        logEventsAnalytics(GAAnalyticsEventNames.CART_VIEWED);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage("Loading");
