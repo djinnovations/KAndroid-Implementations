@@ -36,6 +36,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -119,8 +120,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private Handler mHandler = new Handler();
     public static boolean isCollectionLike=false;
 
-    //Author DJphy
-    private AppTourGuideHelper mTourHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -235,13 +234,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         tourThisScreen();
     }
 
-
+    //Author DJphy
     @Bind(R.id.transViewMain)
     View transViewMain;
     @Bind(R.id.transViewSwipeUp)
     View transViewSwipeUp;
     @Bind(R.id.transViewProds)
     View transViewProds;
+
+    private AppTourGuideHelper mTourHelper;
 
     private void tourThisScreen() {
 
@@ -254,6 +255,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
                 /*if (!coachMarkMgr.isHomeScreenTourDone())
                     testTourGuide();*/
+                Log.d(Constants.TAG, "tour showcase");
                 mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{ transViewMain, transViewSwipeUp, transViewProds});
             }
         }, 1500);

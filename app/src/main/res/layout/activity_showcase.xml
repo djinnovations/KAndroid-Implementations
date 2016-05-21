@@ -15,14 +15,13 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_above="@+id/transViewMainHelper"
-            android:layout_marginBottom="40dp"
-            android:visibility="visible" />
+            android:layout_marginBottom="85dp"
+            android:visibility="invisible" />
 
         <View
             android:id="@+id/transViewMainHelper"
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:layout_gravity="center"
             android:visibility="invisible" />
     </RelativeLayout>
 
@@ -30,7 +29,7 @@
         android:id="@+id/transViewSwipeUp"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="45dp"
         android:layout_gravity="bottom|center_horizontal"
         android:visibility="visible" />
 
@@ -69,12 +68,25 @@
                 android:id="@+id/frame_scroll_dummy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <View
-                    android:id="@+id/transViewProds"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:visibility="visible" />
+                    android:layout_height="wrap_content">
+                    <View
+                        android:id="@+id/transViewProds"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_marginBottom="30dp"
+                        android:layout_above="@+id/transViewProdsHelper"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:id="@+id/transViewProdsHelper"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:visibility="invisible" />
+
+                </RelativeLayout>
 
                 </FrameLayout>
         </android.support.v4.widget.NestedScrollView>

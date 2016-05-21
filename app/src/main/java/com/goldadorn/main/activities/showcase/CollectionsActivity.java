@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +36,9 @@ import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.DisplayProperties;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -177,6 +181,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabViewHolder.setSides(-p);
+                    if ((verticalOffset*-1) - lastStep > 250){
+                        lastStep = (verticalOffset*-1);
+                        checkOutTour(verticalOffset);
+                    }
+
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -231,6 +240,52 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                         configureUI(position);
                     }
                 });
+
+
+        setUpGuideListener();
+    }
+
+
+    //Author DJphy
+    @Bind(R.id.transViewColl)
+    View transViewColl;
+    private DisplayProperties disProp;
+
+    private void setUpGuideListener() {
+
+        disProp = DisplayProperties.getInstance(getBaseContext(), 1);
+        limit = Math.round(limit * disProp.getYPixelsPerCell());
+        Log.d(Constants.TAG, "limit allowed: " + limit);
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+    }
+
+    private AppTourGuideHelper mTourHelper;
+    private boolean isTourInProgress = false;
+    private int lastStep;
+
+    private void tourThisScreen() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isTourInProgress = true;
+                Log.d(Constants.TAG, "tour collection");
+                mTourHelper.displayCollectionScreenTour(CollectionsActivity.this, transViewColl);
+            }
+        }, 100);
+    }
+
+    int limit = 30;
+
+    private void checkOutTour(int offset) {
+
+        if (isTourInProgress)
+            return;
+        offset = -1 * offset;
+        Log.d(Constants.TAG, "offset: " + offset);
+        if (offset > limit) {
+            tourThisScreen();
+        }
     }
 
     @Override

@@ -40,6 +40,8 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
@@ -232,7 +234,29 @@ public class ProductActivity extends BaseDrawerActivity {
         configureUI(UISTATE_CUSTOMIZE);
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
+
+        tourThisScreen();
     }
+
+
+    @Bind(R.id.transViewProducts)
+    View transViewProducts;
+
+    private AppTourGuideHelper mTourHelper;
+
+    private void tourThisScreen() {
+
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d(Constants.TAG, "tour product activity");
+                mTourHelper.displayProductsTour(ProductActivity.this, transViewProducts);
+            }
+        }, 1500);
+    }
+
 
     public void addCustomisation(OptionKey key, OptionValue value) {
         mProduct.addCustomisation(key, value);
@@ -244,6 +268,8 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         });
     }
+
+
 
     private void bindOverlay() {
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));

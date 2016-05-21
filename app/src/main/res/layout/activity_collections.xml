@@ -5,6 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <View
+            android:id="@+id/transViewColl"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_below="@+id/transViewCollHelper"
+            android:layout_marginTop="100dp"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/transViewCollHelper"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
