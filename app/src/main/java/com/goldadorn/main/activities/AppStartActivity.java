@@ -74,7 +74,7 @@ public class AppStartActivity extends BaseActivity {
             else
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
-        initFacebookSdk();
+        //initFacebookSdk();
     }
 
     private void initFacebookSdk() {

@@ -6,11 +6,13 @@ import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.support.GAFacebookAnalytics;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -91,6 +93,8 @@ public class Application extends BaseApplication {
         }
         return super.getSystemService(name);
     }
+
+
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -189,7 +193,25 @@ public class Application extends BaseApplication {
         configMainMenu();
         //dont remove this code
         initGoogleAnalytics();
+        initFacebook();
     }
+
+    private GAFacebookAnalytics mFbAnalyticsInstance;
+    private void initFacebook() {
+
+        FacebookSdk.sdkInitialize(this);
+        GAFacebookAnalytics.activateApp(this);
+    }
+
+    public GAFacebookAnalytics getFbAnalyticsInstance(){
+
+        if (mFbAnalyticsInstance == null){
+            mFbAnalyticsInstance = new GAFacebookAnalytics();
+        }
+        return mFbAnalyticsInstance;
+    }
+
+
     private Tracker mTracker;
 
     /**

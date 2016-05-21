@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
@@ -107,7 +108,13 @@ public class MainActivity extends BaseDrawerActivity  {
         if(navigationDataObject !=null)
             action(navigationDataObject);
 
+        logAnalytics();
+
         tourThisScreen();
+    }
+
+    private void logAnalytics() {
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
     }
 
 
