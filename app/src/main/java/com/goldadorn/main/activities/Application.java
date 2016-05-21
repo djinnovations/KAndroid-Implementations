@@ -1,7 +1,9 @@
 package com.goldadorn.main.activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.goldadorn.main.R;
@@ -90,6 +92,11 @@ public class Application extends BaseApplication {
         return super.getSystemService(name);
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        MultiDex.install(base);
+        super.attachBaseContext(base);
+    }
 
     public URLHelper getUrlHelper() {
         return URLHelper.getInstance();
