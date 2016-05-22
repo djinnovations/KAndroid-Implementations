@@ -1038,10 +1038,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             String selection = Tables.Products._ID + "=?";
             String[] selArgs = new String[]{id.trim()};
 
-            CursorLoader cursorLoader = new CursorLoader(getContext(), Tables.Products.CONTENT_URI, null, selection, selArgs, null);
-            Cursor prodCursor = cursorLoader.loadInBackground();
+            //CursorLoader cursorLoader = new CursorLoader(getContext(), Tables.Products.CONTENT_URI, null, selection, selArgs, null);
+            //Cursor prodCursor = cursorLoader.loadInBackground();
+            Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
+
             prodCursor.moveToFirst();
-            Log.d(Constants.TAG, "cursor - zoomImages: " + prodCursor);
+            Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
 
             Product product = Product.extractFromCursor(prodCursor);
             startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
