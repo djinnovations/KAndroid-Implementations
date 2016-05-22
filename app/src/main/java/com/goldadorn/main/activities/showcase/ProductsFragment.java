@@ -462,8 +462,8 @@ public class ProductsFragment extends Fragment {
                 selection = Products.USER_ID + " = ?";
                 selArgs = new String[]{String.valueOf(mUser == null ? -1 : mUser.id)};
             }
-            return new CursorLoader(getContext(), Products.CONTENT_URI, null, selection, selArgs,
-                    null);
+            return new CursorLoader(getContext(), Products.CONTENT_URI, null, selection, selArgs, null);
+
         }
 
         @Override
