@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
@@ -345,6 +347,7 @@ public class SocialFeedFragment extends DefaultVerticalListView
 
     public void onViewCreated(View view) {
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Social feed");
         logEventsAnalytics(GAAnalyticsEventNames.SOCIAL_FEED);
 
         ButterKnife.bind(this, view);

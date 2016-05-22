@@ -127,6 +127,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: SHOWCASE");
         logEventsAnalytics(GAAnalyticsEventNames.SHOWCASE);
 
         drawerLayout.setBackgroundColor(Color.WHITE);

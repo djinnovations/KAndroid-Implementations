@@ -3,9 +3,11 @@ package com.goldadorn.main.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.ResourceReader;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -61,6 +63,7 @@ public class WebActivity extends BaseActivity{
 
         if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
                 .getStringFromResource(R.string.contactUs))){
+            Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CONTACT_US");
             logEventsAnalytics(GAAnalyticsEventNames.CONTACT_US);
         }
     }

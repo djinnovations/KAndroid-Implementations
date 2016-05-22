@@ -130,6 +130,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: COLLECTION_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
 
         drawerLayout.setBackgroundColor(Color.WHITE);
@@ -276,7 +277,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                 Log.d(Constants.TAG, "tour collection");
                 mTourHelper.displayCollectionScreenTour(CollectionsActivity.this, transViewColl);
             }
-        }, 100);
+        }, 50);
     }
 
     int limit = 30;

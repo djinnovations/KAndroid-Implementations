@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
@@ -111,6 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
     public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
         if (id == logoutCallToken) {
+            Log.d(com.goldadorn.main.dj.utils.Constants.TAG_APP_EVENT, "AppEventLog: LOGOUT");
             logEventsAnalytics(GAAnalyticsEventNames.LOGOUT);
             SharedPreferences sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
             sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false)
@@ -153,6 +155,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             pd=null;
         }
     }
+
+
+    private void postLog(String paramName){
+
+        Bundle bundle = new Bundle();
+        bundle.putString(AppEventsConstants.EVENT_PARAM_LEVEL, paramName);
+        Log.d(com.goldadorn.main.dj.utils.Constants.TAG_APP_EVENT, "AppEventLog: Nav_Slidemenu and itemSelected: "+paramName);
+        logEventsAnalytics(GAAnalyticsEventNames.NAVIGATION_SLIDER_MENU, bundle);
+    }
+
+
     @Subscribe
     public void onEvent(AppActions data) {
         action(data.navigationDataObject);
@@ -161,6 +174,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.d("dj", "action - BaseActivity; navDataObj type: "+navigationDataObject.getActionType());
         Action action =new Action(this);
         if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_LOGOUT)) {
+            postLog(GAAnalyticsEventNames.LOGOUT);
             logout();
             return true;
         }
@@ -177,6 +191,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Map<String, Object> data=new HashMap<>();
                 data.put("URL",url);
                 data.put("TITLE", navigationDataObject.getName());
+                postLog(navigationDataObject.getName());
                 action.launchActivity(target, null, data, false);
                 return true;
             }
@@ -194,6 +209,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Map<String, Object> data=new HashMap<>();
                 data.put("URL",url);
                 data.put("TITLE", navigationDataObject.getName());
+                postLog(navigationDataObject.getName());
                 //action.launchActivity(target, null, data, false);
 
 
@@ -230,6 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     data = new HashMap<>();
                 if(data.get("TITLE")==null)
                     data.put("TITLE", navigationDataObject.getName());
+                postLog(navigationDataObject.getName());
                 action.launchActivity(target, null, data, false);
                 //overridePendingTransition  (R.anim.right_slide_in, R.anim.right_slide_out);
                 return true;
@@ -238,13 +255,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE))
         {
-
+            postLog("Share");
             Map<String,String> map =(Map<String,String>) navigationDataObject.getParam();
             action.textShare(map.get(Action.ATTRIBUTE_DATA),map.get(Action.ATTRIBUTE_TITLE));
             return true;
         }
         else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL))
         {
+            postLog(navigationDataObject.getName());
             String url =(String) navigationDataObject.getActionValue();
             if(url!=null && url.equals("")==false)
             {
@@ -262,5 +280,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void logEventsAnalytics(String eventName) {
         getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }
+
+    protected void logEventsAnalytics(String eventName, Bundle bundle){
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName, bundle);
+    }
+
+    protected void logEventsAnalytics(String eventName, double valueToSum){
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName, valueToSum);
+    }
+
+    protected void logEventsAnalytics(String eventName, double valueToSum, Bundle bundle){
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName, valueToSum, bundle);
     }
 }

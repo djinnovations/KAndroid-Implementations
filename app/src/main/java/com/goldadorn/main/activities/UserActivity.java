@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -55,6 +57,7 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         setContentView(R.layout.user_activity);
         ButterKnife.bind(this);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: TIMELINE");
         logEventsAnalytics(GAAnalyticsEventNames.TIMELINE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

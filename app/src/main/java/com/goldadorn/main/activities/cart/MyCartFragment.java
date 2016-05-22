@@ -16,6 +16,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
@@ -107,6 +108,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                     public void onResult(ProductResponse result) {
                         if (result.success) {
                             mCart.remove(p);
+                            Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CART_PRODUCT_REMOVED");
                             logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_REMOVED);
                             //   notifyDataSetChanged();
                             Log.e("REMOVED ITEM---","REMOVED "+ mCart.size());

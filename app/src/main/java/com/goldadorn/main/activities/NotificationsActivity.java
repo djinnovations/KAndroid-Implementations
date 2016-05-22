@@ -70,6 +70,7 @@ public class NotificationsActivity extends BaseActivity {
         setContentView(R.layout.activity_notifications);
         ButterKnife.bind(this);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Notification");
         logEventsAnalytics(GAAnalyticsEventNames.NOTIFICATION);
 
         mAdapter = new NotificationsAdapter(this);

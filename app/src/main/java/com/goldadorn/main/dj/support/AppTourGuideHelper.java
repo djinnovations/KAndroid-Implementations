@@ -301,13 +301,17 @@ public class AppTourGuideHelper {
     }
 
 
-
-    TourGuide tg;
+    private boolean collectionTour = false;
+    private TourGuide tg;
     public void displayCollectionScreenTour (Activity collectionActivity, View centeredView){
 
         if (coachMarkMgr.isCollectionTourdone())
             return;
-        tg = null;
+        if (collectionTour)
+            return;
+
+        collectionTour = true;
+
         try {
             ToolTip toolTip = new ToolTip()
                     .setDescription(msgSwipeRightLeft)
@@ -343,7 +347,6 @@ public class AppTourGuideHelper {
         coachMarkMgr.setCollectionTourGuideStatus(true);
         //// TODO: 21-05-2016
     }
-
 
 
     public void displayProductsTour(Activity productActivity, View centeredView){

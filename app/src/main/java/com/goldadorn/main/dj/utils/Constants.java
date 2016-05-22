@@ -11,10 +11,12 @@ public class Constants {
 
     public static final String ENDPOINT_SOCIAL_LOGIN = BuildConfig.END_POINT_SOCIAL_LOGIN;
 
+    public final static String TAG = "dj";
+    public final static String TAG_APP_EVENT = "djAppEvent";
+
     public static final String PLATFORM_GOOGLE = "go";
     public static final String PLATFORM_FACEBOOK = "fb";
     public static final String PLATFORM_TWITTER = "tw";
-    public final static String TAG = "dj";
 
 
     public static final String CLIENT_ID_FB = "406364016222124";

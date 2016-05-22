@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -125,6 +126,7 @@ public class ProductActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
 
         drawerLayout.setBackgroundColor(Color.WHITE);
@@ -279,6 +281,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
+        Log.d(Constants.TAG, "user ID: "+mProduct.userId);
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         Log.e("iiii--",mUser.id+"--"+mUser.isFollowed+"---"+mUser.followers_cnt);
         if (mUser != null) {
@@ -358,20 +361,20 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
-    public void addToCart() {
+    /*public void addToCart() {
         Log.e("iii",mProduct.id+"");
         UIController.addToCart(mContext, mProduct,
                 new IResultListener<ProductResponse>() {
 
                     @Override
                     public void onResult(ProductResponse result) {
-                        logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
+
                         Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();
                     }
                 });
-    }
+    }*/
 
     public void addToCartNew() {
         Log.e("iii",mProduct.id+"");
@@ -380,6 +383,9 @@ public class ProductActivity extends BaseDrawerActivity {
 
                     @Override
                     public void onResult(ProductResponse result) {
+                        logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
+                        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
+                        //logEventsAnalytics(AppEventsConstants.EVENT_NAME_ADDED_TO_CART);
                         Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();

@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.people;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
@@ -93,6 +95,7 @@ public class FindPeopleFragment extends DefaultVerticalListView
     }
     public void onViewCreated(View view) {
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: People");
         logEventsAnalytics(GAAnalyticsEventNames.PEOPLE);
 
         followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);

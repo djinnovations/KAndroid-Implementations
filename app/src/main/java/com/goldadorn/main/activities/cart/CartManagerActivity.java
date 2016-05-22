@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,10 +17,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Address;
 import com.goldadorn.main.model.Product;
@@ -80,6 +83,8 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         ButterKnife.bind(this);
 
         logEventsAnalytics(GAAnalyticsEventNames.CART_VIEWED);
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Cart viewed");
+        //logEventsAnalytics(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT);
 
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage("Loading");
@@ -245,6 +250,8 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     @Override
     public void setPaymentDone(boolean done) {
         mPaymentSuccess = done;
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CHECKOUT_SUCCESSFUL");
+        logEventsAnalytics(GAAnalyticsEventNames.CHECKOUT_SUCCESSFUL);
         if (done) {
             configureUI(UISTATE_FINAL);
         }

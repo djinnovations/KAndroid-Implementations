@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -178,6 +180,7 @@ public class MainActivity extends BaseDrawerActivity  {
                 intent= new Intent(MainActivity.this, PostBestOfActivity.class);
             if(intent!=null)
             {
+                Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Create_post_initiation");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
                 socialPostHost = new WeakReference<>(data.host);
                 People people = getApp().getPeople();
@@ -304,6 +307,7 @@ public class MainActivity extends BaseDrawerActivity  {
 
                 stopUploadProgress(true);
 
+                Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
             }

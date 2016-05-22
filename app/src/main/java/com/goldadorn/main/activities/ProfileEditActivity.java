@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.UIController;
@@ -186,6 +188,7 @@ public class ProfileEditActivity extends BaseActivity {
         mContext = this;
         ButterKnife.bind(this);
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PROFILE");
         logEventsAnalytics(GAAnalyticsEventNames.PROFILE);
 
         mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
