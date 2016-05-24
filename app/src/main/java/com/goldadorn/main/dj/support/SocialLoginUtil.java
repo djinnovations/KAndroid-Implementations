@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +32,7 @@ import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.utils.IDUtils;
@@ -90,6 +91,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private SocialLoginUtil() {
 
         //FacebookSdk.sdkInitialize(mAppContext);
+        Log.d(Constants.TAG, "Social login new Obj creation");
         initializeFbAndGlTw();
         setFbCallBacks();
     }
@@ -147,6 +149,12 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOpt)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mGoogleApiClient.connect();
+            }
+        }, 200);
 
 
         /*mGoogleSignInOpt = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -169,7 +177,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
         if (isSignedIn) {
             if (mGoogleApiClient.isConnected()) {
-                //googleLogout();
+                performGoogleLogout();
                 //// TODO: 5/4/2016
             }
         } else {
@@ -181,32 +189,49 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void performGoogleLogout() {
 
-        if (mGoogleApiClient.isConnected()) {
+        Log.d(Constants.TAG, "performGoogleLogout called; signed in stat"+isSignedIn);
+        if (!isSignedIn)
+            return;
+        /*if (mGoogleApiClient.isConnected()) {*/
+            Log.d(Constants.TAG, "performGoogleLogout pt 1");
             Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
                     new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status status) {
                             // // TODO: 5/4/2016
+                            Log.d(Constants.TAG, "performGoogleLogout success");
                             processRevokeRequest();
                             isSignedIn = false;
                         }
                     });
-        }
+        //}
     }
 
 
     public boolean isGoogleConnected() {
+        if (!mGoogleApiClient.isConnected()){
+            mGoogleApiClient.connect();
+        }
         return mGoogleApiClient.isConnected();
     }
 
 
     public void onFacebookLogin(Activity mActivity) {
+        if (isFbSignedIn) {
+            performFbLogout();
+            return;
+        }
         LoginManager.getInstance().logInWithReadPermissions(mActivity, Arrays.asList(permissionArr));
     }
 
-
+    private boolean isFbSignedIn;
     public void performFbLogout() {
         //// TODO: 5/6/2016
+        if (!isFbSignedIn)
+            return;
+        LoginManager.getInstance().logOut();
+        Log.d(Constants.TAG, "performFbLogout success: ");
+        isFbSignedIn = false;
     }
 
     public void clearFbPermission() {
@@ -279,13 +304,13 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void onActivityStart(Activity mActivity) {
         this.mActivity = mActivity;
-        mGoogleApiClient.connect();
+        //mGoogleApiClient.connect();
     }
 
 
     public void onActivityStop() {
-        if (mGoogleApiClient.isConnected())
-            mGoogleApiClient.disconnect();
+        /*if (mGoogleApiClient.isConnected())
+            mGoogleApiClient.disconnect();*/
     }
 
 
@@ -327,6 +352,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                         Log.d(Constants.TAG, "Login fb successs");
                         //// TODO: 5/4/2016
                         setResultListenerFb(loginResult);
+                        isFbSignedIn = true;
                         authFromServer(new FbGoogleTweetLoginResult(null, loginResult, null, Constants.PLATFORM_FACEBOOK),
                                 Constants.PLATFORM_FACEBOOK);
                     }
@@ -651,7 +677,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 /*mActivity.startActivity(new Intent(mActivity, MainActivity.class));
                 mActivity.finish();*/
                 new Action(mActivity).launchActivity(MainActivity.class, true);
-                Log.d(Constants.TAG, "must have started the main activity");
             }
         }.start();
     }
@@ -675,7 +700,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     private void processRevokeRequest() {
 
-        if (mGoogleApiClient.isConnected()) {
+        /*if (mGoogleApiClient.isConnected()) {*/
             Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient)
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
@@ -686,7 +711,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                         }
 
                     });
-        }
+       // }
 
     }
 

@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.post;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -86,6 +87,12 @@ public class PostNormalActivity extends AbstractPostActivity {
     {
         imageSelector1 =  new GalleryImageSelector(this,this,previewIamge,trigger);
         imageSelector1.setMaxSize(maxImageSize);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        imageSelector1.onRequestPermResult(requestCode, permissions, grantResults);
     }
 }
 

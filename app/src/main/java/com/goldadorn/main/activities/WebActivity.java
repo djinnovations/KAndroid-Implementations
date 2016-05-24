@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
-import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.webView.ApplicationDefaultWebView;

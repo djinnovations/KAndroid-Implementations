@@ -26,4 +26,7 @@ public class GAAnalyticsEventNames {
     public static final String LOGOUT = "Logout";
     public static final String WISHLIST = "Wishlist";
     public static final String CONTACT_US = "Contact_Us";
+    public static final String POST_NORMAL = "Post_Product_Image";
+    public static final String POST_BONB = "BONB_Product_Image";
+    public static final String POST_BOT = "BOT_Product_Image";
 }

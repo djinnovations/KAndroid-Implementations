@@ -13,7 +13,7 @@ import android.view.animation.TranslateAnimation;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 
 import tourguide.tourguide.ChainTourGuide;
 import tourguide.tourguide.Overlay;

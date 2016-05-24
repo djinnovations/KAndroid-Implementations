@@ -73,6 +73,9 @@ public class NotificationsActivity extends BaseActivity {
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Notification");
         logEventsAnalytics(GAAnalyticsEventNames.NOTIFICATION);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
+
         mAdapter = new NotificationsAdapter(this);
         notificationsList.setAdapter(mAdapter);
         refresh();
@@ -225,28 +228,76 @@ public class NotificationsActivity extends BaseActivity {
                 holder.person = (CircularImageView) convertView.findViewById(R.id.userImage);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.content = (ImageView) convertView.findViewById(R.id.contentImage);
+                holder.ivPostImage = (ImageView) convertView.findViewById(R.id.contentImage);
                 convertView.setTag(holder);
             } else {
                 holder = (NotificationHolder) convertView.getTag();
             }
             JSONObject object = getItem(position);
 
-            // todo nithin get person mImage
-            String imageUrl = object.optString("image");
-            if(!TextUtils.isEmpty(imageUrl))
-            Picasso.with(context).load(imageUrl).into(holder.person);
+            // todo people Image
+            if (!object.isNull("profilePic")){
+                try {
+                    String peopleImageUrl = object.getString("profilePic");
+                    //if(!TextUtils.isEmpty(imageUrl))
+                    Picasso.with(context).load(URLHelper.parseImageURL(peopleImageUrl)).placeholder(R.drawable
+                            .vector_image_place_holder_profile_dark).into(holder.person);
+                }catch (Exception ex){
+                    Picasso.with(context).load(R.drawable
+                            .vector_image_place_holder_profile_dark).into(holder.person);
+                }
+            }else Picasso.with(context).load(R.drawable
+                    .vector_image_place_holder_profile_dark).into(holder.person);
+
+            //todo post Image
+            if (!object.isNull("postImage")){
+                try {
+                    JSONArray postImageJsonArr = object.getJSONArray("postImage");
+                    String urlToUse = getPostImageUrl(postImageJsonArr);
+                    if (urlToUse != null) {
+                        Log.d(Constants.TAG, "postImage url- : "+urlToUse);
+                        Picasso.with(context).load(urlToUse).into(holder.ivPostImage);
+                    }else if (urlToUse == null){
+
+                    } else if (urlToUse.equals("BOT")){
+                        Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
             // todo nithin get timestamp
             long timestamp = object.optLong("timestamp",System.currentTimeMillis());
             holder.time.setText(DateUtils.getRelativeDateTimeString(context,timestamp,DateUtils.
                     SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL));
             holder.data.setText(createString(object));
-//            holder.content.setImageResource(R.drawable.slide_1_image);
+//            holder.ivPostImage.setImageResource(R.drawable.slide_1_image);
             return convertView;
         }
 
+
+        private String getPostImageUrl(JSONArray jsonArray){
+            Log.d(Constants.TAG, "jsonArr length postImage url; getPostImageUrl- : "+jsonArray.length());
+            if (jsonArray.length() > 1){
+                return "BOT";
+            }else if (jsonArray.length() == 0){
+                return null;
+            }
+            else{
+                try {
+                    String imageUrl = jsonArray.getString(0);
+                    return URLHelper.parseImageURL(imageUrl);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        }
+
         private String createString(JSONObject object) {
-            Log.d(Constants.TAG, "notification list obj resonse - createString: "+object);
+            //Log.d(Constants.TAG, "notification list obj resonse - createString: "+object);
             StringBuilder builder = new StringBuilder();
             String typeLabel = null;
             String type = "";
@@ -302,6 +353,6 @@ public class NotificationsActivity extends BaseActivity {
         CircularImageView person;
         TextView data;
         TextView time;
-        ImageView content;
+        ImageView ivPostImage;
     }
 }

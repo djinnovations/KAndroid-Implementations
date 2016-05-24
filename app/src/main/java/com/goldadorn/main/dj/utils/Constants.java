@@ -3,6 +3,7 @@ package com.goldadorn.main.dj.utils;
 import android.os.Build;
 
 import com.goldadorn.main.BuildConfig;
+import com.goldadorn.main.utils.URLHelper;
 
 /**
  * Created by COMP on 5/4/2016.
@@ -10,6 +11,15 @@ import com.goldadorn.main.BuildConfig;
 public class Constants {
 
     public static final String ENDPOINT_SOCIAL_LOGIN = BuildConfig.END_POINT_SOCIAL_LOGIN;
+    public static final String ENDPOINT_PRODUCT_BASIC_INFO = BuildConfig.END_POINT_COMERCIAL +
+            URLHelper.VERB.GET_BASIC_PRODUCT + "/";
+
+
+    public static final int REQUEST_READ_EXTERNAL_STORAGE = 2901;
+    public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2902;
+    public static final int REQUEST_CAMERA = 2903;
+    public static final int REQUEST_SMS_READ = 2904;
+    public static final int REQUEST_SMS_RECEIVE = 2905;
 
     public final static String TAG = "dj";
     public final static String TAG_APP_EVENT = "djAppEvent";
@@ -35,5 +45,13 @@ public class Constants {
     public static final String ERR_MSG_1 = "Something went wrong";
     public static final String ERR_MSG_NETWORK = "network error";
 
+    public static final String INFO_MSG_PERM_DENIED = "Operation terminated!, cannot continue without the permission";
+    public static final String INFO_MSG_READ_GALLERY = "Please grant permission to access your gallery to pick images to post";
+    public static final String INFO_MSG_CAMERA = "Please grant permission to access your camera to click a pic to post";
+    public static final String INFO_MSG_WRITE = "Picture captured for uploading will be stored into the device";
+
+
+
     public static final String COACH_MARK_PREF_NAME = "gold_adorn_coach_mark";
+
 }

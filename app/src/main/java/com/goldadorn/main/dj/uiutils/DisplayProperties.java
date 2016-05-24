@@ -1,9 +1,11 @@
-package com.goldadorn.main.dj.utils;
+package com.goldadorn.main.dj.uiutils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+
+import com.goldadorn.main.dj.utils.Constants;
 
 public class DisplayProperties {
 

@@ -33,6 +33,7 @@ import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mixpanel.android.util.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -365,9 +366,14 @@ public class ProfileEditActivity extends BaseActivity {
         }
         mCity.setSelection(selected);
 
-        Picasso.with(ProfileEditActivity.this).load(mProfileData.imageUrl).into(mImage);
-
-        //        mImage.setImageDrawable(null);
+        Log.d(Constants.TAG, "profilePic url - ProfileEditActivity(bindUI()): "+mProfileData.imageUrl);
+        try {
+            Picasso.with(this).load(mProfileData.imageUrl).placeholder(R.drawable
+                    .vector_image_place_holder_profile_dark).into(mImage);
+        }catch (Exception ex){
+            Picasso.with(this).load(R.drawable
+                    .vector_image_place_holder_profile_dark).into(mImage);
+        }
 
     }
 

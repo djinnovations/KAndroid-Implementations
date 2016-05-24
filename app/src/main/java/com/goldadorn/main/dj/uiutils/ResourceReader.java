@@ -1,8 +1,10 @@
-package com.goldadorn.main.dj.utils;
+package com.goldadorn.main.dj.uiutils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+
+import com.goldadorn.main.dj.utils.Constants;
 
 /**
  * Created by COMP on 2/9/2016.

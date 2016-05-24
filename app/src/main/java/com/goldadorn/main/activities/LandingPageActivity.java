@@ -76,6 +76,10 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     @OnClick(R.id.loginWithGoogleButton)
     void onClickLoginWithGoogleButton() {
         if (checkNetwork()){
+            if (!mSocialLoginInstance.isGoogleConnected()){
+                android.widget.Toast.makeText(getApplicationContext(), "Not yet! connected to Google", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
             mSocialLoginInstance.onGoogleLogin(this);
         }
     }
@@ -159,7 +163,6 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSocialLoginInstance.performGoogleLogout();
     }
 
 }

@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.utils.ImageFilePath;
 import com.google.gson.annotations.SerializedName;
 
@@ -81,6 +82,26 @@ public class Product implements Serializable {
     public String getImageUrl() {
         return ImageFilePath.getImageUrlForProduct(id);
     }
+
+
+    public static Product extractFromProductTemp(ProductTemp productTemp, boolean isLiked, int likecount){
+
+        Product thisProduct = new Product(productTemp.getProductId());
+        thisProduct.userId = productTemp.getUserId();
+        thisProduct.productId = productTemp.getProductId();
+        thisProduct.collectionId = productTemp.getCollectionId();
+        thisProduct.name = productTemp.getProductName();
+        thisProduct.description = productTemp.getProductDescription();
+        thisProduct.likecount = likecount;
+        thisProduct.unitPrice = productTemp.getProductDefaultPrice();
+        thisProduct.priceUnit = productTemp.getCostUnits();
+        thisProduct.isLiked = isLiked;
+        thisProduct.image_a_r = productTemp.getAspectRatio();
+        if (thisProduct.image_a_r == 0)
+            thisProduct.image_a_r = 1;
+        return thisProduct;
+    }
+
 
     public static Product extractFromCursor(Cursor cursor) {
         Product t = new Product(cursor.getInt(cursor.getColumnIndex(Tables.Products._ID)));

@@ -35,6 +35,7 @@ import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.rey.material.widget.ProgressView;
@@ -247,6 +248,10 @@ public class LoginPageActivity extends BaseActivity {
     @OnClick(R.id.loginWithGoogleButton)
     void onClickLoginWithGoogleButton() {
         if (checkNetwork()){
+            if (!mSocialLoginInstance.isGoogleConnected()){
+                android.widget.Toast.makeText(getApplicationContext(), "Not yet! connected to Google", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
             mSocialLoginInstance.onGoogleLogin(this);
         }
     }
@@ -329,7 +334,6 @@ public class LoginPageActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mSocialLoginInstance.performGoogleLogout();
     }
 
 

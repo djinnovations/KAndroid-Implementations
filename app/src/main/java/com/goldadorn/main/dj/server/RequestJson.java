@@ -2,8 +2,8 @@ package com.goldadorn.main.dj.server;
 
 import android.util.Log;
 
+import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.utils.Constants;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -39,4 +39,36 @@ public class RequestJson {
             return null;
         }
     }
+
+
+    public static ProductTemp parseProduct(JSONObject json) {
+
+        int productId;
+        int userId;
+        int collectionId;
+        String productName;
+        String productDescription;
+        int productDefaultPrice;
+        String costUnits;
+        float aspectRatio;
+        ProductTemp productTemp;
+
+        try {
+            productId = json.getInt("productId");
+            userId = json.getInt("userId");
+            collectionId = json.getInt("collectionId");
+            productName = json.getString("productName");
+            productDescription = json.getString("productName");
+            productDefaultPrice = json.getInt("productDefaultPrice");
+            costUnits = json.getString("costUnits");
+            aspectRatio = json.getInt("aspectRatio");
+            productTemp = new ProductTemp(productId, userId, collectionId, productName,
+                    productDescription, productDefaultPrice, costUnits,aspectRatio);
+            return productTemp;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

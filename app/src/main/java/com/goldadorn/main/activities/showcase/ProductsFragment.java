@@ -24,6 +24,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables.Products;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
@@ -105,6 +106,8 @@ public class ProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        Log.d(Constants.TAG, "prod frag");
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -456,9 +459,11 @@ public class ProductsFragment extends Fragment {
             String selection;
             String[] selArgs;
             if (mMode == MODE_COLLECTION) {
+                Log.d(Constants.TAG, "mode collection; prod frag");
                 selection = Products.COLLECTION_ID + " = ?";
                 selArgs = new String[]{String.valueOf(mCollection == null ? -1 : mCollection.id)};
             } else {
+                Log.d(Constants.TAG, "mode prod/user; prod frag");
                 selection = Products.USER_ID + " = ?";
                 selArgs = new String[]{String.valueOf(mUser == null ? -1 : mUser.id)};
             }

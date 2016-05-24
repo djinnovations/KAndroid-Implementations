@@ -1,11 +1,11 @@
 package com.goldadorn.main.modules.socialFeeds;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.CursorLoader;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,6 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -31,9 +39,11 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
-import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.ProductTemp;
+import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -54,6 +64,7 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
+import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -64,6 +75,7 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1035,18 +1047,31 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             id = id.substring(0, id.indexOf("/"));
             Log.d(Constants.TAG, "ID - zoomImages: " + id);
 
-            String selection = Tables.Products._ID + "=?";
+            if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST){
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: Normal post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_NORMAL);
+            }
+            else if (socialPost.getPostType() == SocialPost.POST_TYPE_POLL){
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: BONB post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_BONB);
+            }
+            else if (socialPost.getPostType() == SocialPost.POST_TYPE_BEST_OF){
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: BOT post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_BOT);
+            }
+            /*String selection = Tables.Products._ID + "=?";
             String[] selArgs = new String[]{id.trim()};
 
-            //CursorLoader cursorLoader = new CursorLoader(getContext(), Tables.Products.CONTENT_URI, null, selection, selArgs, null);
-            //Cursor prodCursor = cursorLoader.loadInBackground();
             Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
+            prodCursor.moveToFirst();*/
 
-            prodCursor.moveToFirst();
-            Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
-
+            //Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
+            /*
             Product product = Product.extractFromCursor(prodCursor);
-            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));*/
+
+            productInfoFromServer(socialPost, id.trim());
+
             /*
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
             NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME,profuctLink,WebActivity.class);
@@ -1064,6 +1089,115 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             EventBus.getDefault().post(new AppActions(navigationDataObject));
         }
     }
+
+
+    private Dialog displayOverlay(String infoMsg, int colorResId) {
+
+        Dialog dialog = new Dialog(getActivity());
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		/*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*/
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0.0f;
+
+        View overLay = LayoutInflater.from(getContext()).inflate(R.layout.dialog_overlay, null);
+        TextView tvTemp = (TextView) overLay.findViewById(R.id.tvOverlayInfo);
+        if (infoMsg != null) {
+            tvTemp.setText(infoMsg);
+            tvTemp.setTextColor(ResourceReader.getInstance(getContext()).getColorFromResource(colorResId));
+        } else tvTemp.setVisibility(View.GONE);
+        dialog.setContentView(overLay);
+        dialog.setCancelable(false);
+
+        dialog.getWindow().setAttributes(tempParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
+    }
+
+
+
+    private void productInfoFromServer(final SocialPost socialPost, String productId) {
+
+        final Dialog dialog = displayOverlay(null, R.color.colorAccent);
+        dialog.show();
+
+
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, Constants.ENDPOINT_PRODUCT_BASIC_INFO+productId,
+                null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                Log.d(Constants.TAG, "response - productInfoFromServer: " + response);
+                String status = "N/A";
+                String message = "N/A";
+
+                try {
+                    /*status = response.getString(ApiKeys.STATUS);
+                    message = response.getString(ApiKeys.MESSAGE);
+                    Log.d(Constants.TAG, "status: " + status);
+                    Log.d(Constants.TAG, "message: " + message);*/
+                    //dialog.dismiss();
+                    /*String json_string = new Gson().toJson(response);
+
+                    Gson gson = new Gson();
+                    ProductTemp productTemp = gson.fromJson(json_string, ProductTemp.class);*/
+                    ProductTemp productTemp = RequestJson.parseProduct(response);
+                    if (productTemp != null){
+                        Log.d(Constants.TAG, "productTemp - productInfoFromServer: " + productTemp.toString());
+                        evaluateResults(productTemp, socialPost, dialog);
+                    }else setErrSnackBar(Constants.ERR_MSG_1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    dialog.dismiss();
+                    //genericInfo(Constants.ERR_MSG_1);
+                    setErrSnackBar(Constants.ERR_MSG_1);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                dialog.dismiss();
+                Log.d(Constants.TAG, "volley error: ");
+                error.printStackTrace();
+                //genericInfo(Constants.ERR_MSG_1);
+                setErrSnackBar(Constants.ERR_MSG_NETWORK);
+            }
+        });
+
+        loginRequest.setRetryPolicy(new DefaultRetryPolicy(
+                Constants.REQUEST_TIMEOUT_SOCIAL_LOGIN,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(loginRequest);
+
+    }
+
+
+
+    private void setErrSnackBar(String errMsg) {
+
+        if (mFloatingActionsMenu != null) {
+            final Snackbar snackbar = Snackbar.make(mFloatingActionsMenu, errMsg,
+                    Snackbar.LENGTH_SHORT);
+            ColoredSnackbar.alert(snackbar).show();
+        }
+    }
+
+
+    private void evaluateResults(ProductTemp productTemp, SocialPost socialPost, Dialog dialog) {
+
+        Product product = Product.extractFromProductTemp(productTemp, socialPost.getIsLiked() == 1, socialPost.getLikeCount());
+        dialog.dismiss();
+        startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+    }
+
 
     public class NormalPostItemHolder extends PostItemHolder {
 

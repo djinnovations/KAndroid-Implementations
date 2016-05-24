@@ -1,7 +1,9 @@
 package com.goldadorn.main.modules.modulesCore;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.goldadorn.main.dj.utils.Constants;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.dataManagers.aQuery.DefaultJSONDataManager;
@@ -47,7 +49,7 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
             String stringValue = value.toString();
             stringValue = stringValue.trim();
 
-            //
+            Log.d(Constants.TAG, "social feed: "+stringValue);
             // stringValue = stringValue.replace(",\"msg\":null","");
 
 
