@@ -259,6 +259,7 @@ public class ImageSelector {
                 } else {
                     // TODO: 24-05-2016
                     Log.d(Constants.TAG, "read perm already granted");
+                    selectAPicture();
 
                 }
                 return;
