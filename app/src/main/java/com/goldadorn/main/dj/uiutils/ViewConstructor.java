@@ -48,13 +48,12 @@ public class ViewConstructor {
     }
 
 
-    public AlertDialog displayInfo(Activity activity, String title, String infoMsg, String positiveBtnText, boolean showTwoOptions,
-                                   final InfoDisplayListener mInfoListener){
+    public AlertDialog displayInfo(Activity activity, String title, String infoMsg, String positiveBtnText,
+                                   String negativeBtnText, boolean showTwoOptions, final InfoDisplayListener mInfoListener){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(infoMsg).setPositiveButton(positiveBtnText,
                 new DialogInterface.OnClickListener() {
-
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -63,15 +62,14 @@ public class ViewConstructor {
                 }).setTitle(title);
 
         if(showTwoOptions){
-
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(negativeBtnText, new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                     dialog.dismiss();
                 }
             });
+            builder.setCancelable(false);
         }
 
         AlertDialog alert = builder.create();
@@ -80,19 +78,19 @@ public class ViewConstructor {
 
 
         Button btnPositive = (alert.getButton(DialogInterface.BUTTON_POSITIVE));
-        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2);
+        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
-
+        btnPositive.setAllCaps(false);
         if(showTwoOptions){
 
             Button btnNegative = (alert.getButton(DialogInterface.BUTTON_NEGATIVE));
-            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell*2);
+            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell*2.2f);
             btnNegative.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
-            builder.setCancelable(false);
+            btnNegative.setAllCaps(false);
         }
 
         ((TextView) alert.findViewById(android.R.id.message)).
-                setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 3);
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.7f);
 
         return alert;
     }

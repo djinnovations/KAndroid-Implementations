@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -42,6 +43,7 @@ import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
@@ -377,10 +379,8 @@ public class ProductActivity extends BaseDrawerActivity {
     }*/
 
     public void addToCartNew() {
-        Log.e("iii",mProduct.id+"");
         UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
                 new IResultListener<ProductResponse>() {
-
                     @Override
                     public void onResult(ProductResponse result) {
                         logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
@@ -389,6 +389,22 @@ public class ProductActivity extends BaseDrawerActivity {
                         Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                        if (result.success){
+                            confirmedToCart();
+                        }
+                    }
+                });
+    }
+
+
+    private void confirmedToCart(){
+        Log.d("iii","product id that was pushed to cart: "+mProduct.id);
+        ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
+                    @Override
+                    public void onPositiveSelection(DialogInterface alertDialog) {
+                        alertDialog.dismiss();
+                        menuAction(R.id.nav_cart);
                     }
                 });
     }

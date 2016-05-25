@@ -33,7 +33,7 @@ public class AlertWindowUtils {
 
     public void genericPermissionInfoDialog(Activity activity, String message) {
 
-        mViewConstructor.displayInfo(activity, "Permission info", message, "OKAY",
+        mViewConstructor.displayInfo(activity, "Permission info", message, "OKAY", "",
 
                 false, new ViewConstructor.InfoDisplayListener() {
                     @Override

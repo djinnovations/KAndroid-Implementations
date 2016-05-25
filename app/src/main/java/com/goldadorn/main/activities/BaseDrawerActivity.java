@@ -93,7 +93,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         menuAction(id);
     }
 
-    private void menuAction(int id) {
+    protected void menuAction(int id) {
 
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
         if (navigationDataObject != null) {

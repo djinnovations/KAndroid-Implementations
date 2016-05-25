@@ -13,6 +13,7 @@ import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.support.GAFacebookAnalytics;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -35,6 +36,7 @@ import com.kimeeo.library.model.BaseApplication;
 import com.kimeeo.library.model.IFragmentData;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.splunk.mint.Mint;
 
 import org.apache.http.cookie.Cookie;
@@ -194,6 +196,12 @@ public class Application extends BaseApplication {
         //dont remove this code
         initGoogleAnalytics();
         initFacebook();
+        initMixPanel();
+    }
+
+    private void initMixPanel(){
+        Log.d("dj","mix panel init");
+        mMixPanelInstance = MixpanelAPI.getInstance(this, Constants.MIX_PANEL_PROJECT_TOKEN);
     }
 
     private GAFacebookAnalytics mFbAnalyticsInstance;
@@ -210,6 +218,16 @@ public class Application extends BaseApplication {
         }
         return mFbAnalyticsInstance;
     }
+
+    private MixpanelAPI mMixPanelInstance;
+    public MixpanelAPI getMixPanelInstance(){
+        if (mMixPanelInstance == null){
+            mMixPanelInstance = MixpanelAPI.getInstance(this, Constants.MIX_PANEL_PROJECT_TOKEN);
+        }
+        return mMixPanelInstance;
+    }
+
+
 
 
     private Tracker mTracker;

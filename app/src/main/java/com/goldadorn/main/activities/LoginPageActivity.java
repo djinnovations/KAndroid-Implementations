@@ -38,6 +38,7 @@ import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -119,7 +120,6 @@ public class LoginPageActivity extends BaseActivity {
         if (id == SocialLoginUtil.socialLoginCall){
             mSocialLoginInstance.serverCallEndsCustom(id, url, json, status);
         }
-
         if (id == loginServiceCall) {
             Log.d(Constants.TAG, "serverCallEnds - normal login response: "+json);
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
@@ -142,6 +142,11 @@ public class LoginPageActivity extends BaseActivity {
                             .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid()))
                             .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
 
+                    MixpanelAPI.People people = getApp().getMixPanelInstance().getPeople();
+                    people.identify(loginResult.getUserid());
+                    people.initPushHandling(Constants.SENDER_ID_PROJECT_NUMBER);
+                    Log.d("dj","login tracked");
+                    getApp().getMixPanelInstance().track("Login_track");
                     gotoApp();
                 } else {
                     final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);

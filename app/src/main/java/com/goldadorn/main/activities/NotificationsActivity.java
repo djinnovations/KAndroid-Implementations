@@ -266,23 +266,26 @@ public class NotificationsActivity extends BaseActivity {
                     .vector_image_place_holder_profile_dark).into(holder.person);
 
             //todo post Image
-            if (!object.isNull("postImage")){
-                try {
-                    JSONArray postImageJsonArr = object.getJSONArray("postImage");
-                    String urlToUse = getPostImageUrl(postImageJsonArr);
-                    if (urlToUse != null) {
-                        Log.d(Constants.TAG, "postImage url- : "+urlToUse);
-                        Picasso.with(context).load(urlToUse).into(holder.ivPostImage);
-                    }else if (urlToUse == null){
 
-                    } else if (urlToUse.equals("BOT")){
-                        Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
+            if (!isBotPost(object)) {
+                if (!object.isNull("postImage")) {
+                    try {
+                        JSONArray postImageJsonArr = object.getJSONArray("postImage");
+                        String urlToUse = getPostImageUrl(postImageJsonArr);
+                        if (urlToUse != null) {
+                            Log.d(Constants.TAG, "postImage url- : " + urlToUse);
+                            Picasso.with(context).load(urlToUse).into(holder.ivPostImage);
+                        } else if (urlToUse == null) {
+
+                        } else if (urlToUse.equals("BOT")) {
+                            Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
+            }else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
 
             // todo nithin get timestamp
             long timestamp = object.optLong("timestamp",System.currentTimeMillis());
@@ -310,6 +313,24 @@ public class NotificationsActivity extends BaseActivity {
                     return null;
                 }
             }
+        }
+
+
+        private boolean isBotPost(JSONObject jsonObject){
+            if (!jsonObject.isNull("type")){
+                int type = 0;
+                try {
+                    type = jsonObject.getInt("type");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    type = 0;
+                }
+                if (type == 3){
+                    return true;
+                }
+                else return false;
+            }
+            return false;
         }
 
         private String createString(JSONObject object) {
