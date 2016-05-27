@@ -1,10 +1,15 @@
 package com.goldadorn.main.dj.uiutils;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -96,6 +101,12 @@ public class ViewConstructor {
     }
 
 
+
+
+
+
+
+
     public AlertDialog displayViewInfo(Activity activity, String title, int viewResId, String positiveBtnText, boolean showTwoOptions,
                                                           final InfoDisplayListener mInfoListener){
 
@@ -144,6 +155,57 @@ public class ViewConstructor {
         return alert;
     }
 
+
+    public interface DialogButtonClickListener{
+
+        void onPositiveBtnClicked(Dialog dialog, View btn);
+        void onNegativeBtnClicked(Dialog dialog, View btn);
+    }
+
+
+    public Dialog displayDialog(Activity activity, int layoutResId, String title, String bodyMsg,String positiveBtnText,
+                                String negativeBtnText, final DialogButtonClickListener listener){
+
+        final Dialog dialog = new Dialog(activity);dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        View tempView = LayoutInflater.from(appContext).inflate(R.layout.dj_custom_views, null);
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		/*tempParams.width = dialogWidthInPx;
+		tempParams.height = dialogHeightInPx;*/
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+
+        dialog.setContentView(layoutResId);
+        //dialog.setCancelable(false);
+        ((TextView) dialog.findViewById(R.id.tvTitle)).setText(title);
+        ((TextView) dialog.findViewById(R.id.tvInfoMsg)).setText(bodyMsg);
+        ((Button) dialog.findViewById(R.id.tvPositive)).setText(positiveBtnText);
+        ((Button) dialog.findViewById(R.id.tvPositive)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onPositiveBtnClicked(dialog, v);
+            }
+        });
+        ((Button) dialog.findViewById(R.id.tvNegative)).setText(negativeBtnText);
+        ((Button) dialog.findViewById(R.id.tvNegative)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onNegativeBtnClicked(dialog, v);
+            }
+        });
+
+        dialog.getWindow().setAttributes(tempParams);
+        //dialog.getWindow().setBackgroundDrawableResource(android.R.drawable.editbox_dropdown_dark_frame);
+/*		if(keyPadOnTop)
+			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);*/
+
+        return dialog;
+    }
 
 
 }

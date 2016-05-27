@@ -23,4 +23,8 @@
 
     <string name="icon_cart">{gol-poll}</string>
 
+
+    <string name="icon_cart_new">{faw-shopping_cart}</string>
+    <string name="icon_showcase_new">{faw-shopping_cart}</string>
+
 </resources>

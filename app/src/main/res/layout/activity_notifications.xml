@@ -38,6 +38,7 @@
         android:clipToPadding="false"
         android:visibility="invisible"
         android:padding="8dp"
+        android:scrollbars="none"
         android:scrollingCache="false"/>
 
     <LinearLayout

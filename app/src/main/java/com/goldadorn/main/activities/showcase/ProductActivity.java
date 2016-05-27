@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -398,7 +399,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     private void confirmedToCart(){
-        Log.d("iii","product id that was pushed to cart: "+mProduct.id);
+        /*Log.d("iii","product id that was pushed to cart: "+mProduct.id);
         ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
                     @Override
@@ -406,7 +407,24 @@ public class ProductActivity extends BaseDrawerActivity {
                         alertDialog.dismiss();
                         menuAction(R.id.nav_cart);
                     }
+                });*/
+
+        Dialog dialog = ViewConstructor.getInstance(getApplicationContext()).displayDialog(ProductActivity.this,
+                R.layout.dj_custom_views, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                "Go to Cart\n& Checkout", "Continue\nShopping", new ViewConstructor.DialogButtonClickListener() {
+                    @Override
+                    public void onPositiveBtnClicked(Dialog dialog, View btn) {
+                        dialog.dismiss();
+                        menuAction(R.id.nav_cart);
+                    }
+
+                    @Override
+                    public void onNegativeBtnClicked(Dialog dialog, View btn) {
+                        dialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "You can access your cart by selecting the cart option from the Slidemenu", Toast.LENGTH_LONG).show();
+                    }
                 });
+        dialog.show();
     }
 
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {

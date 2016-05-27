@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/White"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/ivTitleIcon"
+            style="@style/IconBgTransparent"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/tvTitle"
+            android:text="@string/icon_cart_new" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Title"
+            android:textColor="@color/Black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rlTitle"
+        android:gravity="center"
+        android:minHeight="80dp"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/tvInfoMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="Dialogs info msg here"
+            android:textColor="@color/Black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llBody"
+        android:weightSum="2">
+
+
+        <Button
+            android:id="@+id/tvNegative"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Negative"
+            android:textColor="@color/Black"
+            android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/tvPositive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Positive"
+            android:textColor="@color/Black"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
