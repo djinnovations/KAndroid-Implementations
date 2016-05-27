@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,12 +25,15 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mixpanel.android.util.StringUtils;
 import com.squareup.picasso.Picasso;
@@ -184,6 +188,10 @@ public class ProfileEditActivity extends BaseActivity {
         setContentView(R.layout.activity_profile_edit);
         mContext = this;
         ButterKnife.bind(this);
+
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PROFILE");
+        logEventsAnalytics(GAAnalyticsEventNames.PROFILE);
+
         mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
         setupDOB();
 
@@ -243,7 +251,6 @@ public class ProfileEditActivity extends BaseActivity {
         });
 
         setupStyle();
-
 
     }
 
@@ -359,9 +366,14 @@ public class ProfileEditActivity extends BaseActivity {
         }
         mCity.setSelection(selected);
 
-        Picasso.with(ProfileEditActivity.this).load(mProfileData.imageUrl).into(mImage);
-
-        //        mImage.setImageDrawable(null);
+        Log.d(Constants.TAG, "profilePic url - ProfileEditActivity(bindUI()): "+mProfileData.imageUrl);
+        try {
+            Picasso.with(this).load(mProfileData.imageUrl).placeholder(R.drawable
+                    .vector_image_place_holder_profile_dark).into(mImage);
+        }catch (Exception ex){
+            Picasso.with(this).load(R.drawable
+                    .vector_image_place_holder_profile_dark).into(mImage);
+        }
 
     }
 

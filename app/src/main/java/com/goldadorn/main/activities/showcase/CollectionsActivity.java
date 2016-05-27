@@ -35,6 +35,10 @@ import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -124,6 +128,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collections);
+
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: COLLECTION_SCREEN");
+        logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);
@@ -177,6 +185,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabViewHolder.setSides(-p);
+                    if ((verticalOffset*-1) - lastStep > 250){
+                        lastStep = (verticalOffset*-1);
+                        checkOutTour(verticalOffset);
+                    }
+
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -231,6 +244,52 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                         configureUI(position);
                     }
                 });
+
+
+        setUpGuideListener();
+    }
+
+
+    //Author DJphy
+    @Bind(R.id.transViewColl)
+    View transViewColl;
+    private DisplayProperties disProp;
+
+    private void setUpGuideListener() {
+
+        disProp = DisplayProperties.getInstance(getBaseContext(), 1);
+        limit = Math.round(limit * disProp.getYPixelsPerCell());
+        Log.d(Constants.TAG, "limit allowed: " + limit);
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+    }
+
+    private AppTourGuideHelper mTourHelper;
+    private boolean isTourInProgress = false;
+    private int lastStep;
+
+    private void tourThisScreen() {
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isTourInProgress = true;
+                Log.d(Constants.TAG, "tour collection");
+                mTourHelper.displayCollectionScreenTour(CollectionsActivity.this, transViewColl);
+            }
+        }, 50);
+    }
+
+    int limit = 30;
+
+    private void checkOutTour(int offset) {
+
+        if (isTourInProgress)
+            return;
+        offset = -1 * offset;
+        Log.d(Constants.TAG, "offset: " + offset);
+        if (offset > limit) {
+            tourThisScreen();
+        }
     }
 
     @Override
@@ -250,10 +309,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     protected void onResume() {
         if (mCollection != null) {
             isFirstTime = false;
-            Log.e("iii--Notnull--", "" + mCollection.id);
             bindOverlay(mCollection);
         } else {
-            Log.e("iii--null--", "");
         }
         super.onResume();
     }
@@ -270,7 +327,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private Runnable mCollectionChangeRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.e("iii--", mCurrentPosition + "");
             onCollectionChange(mCollectionAdapter.getCollection(mCurrentPosition));
         }
     };
@@ -278,7 +334,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private void onCollectionChange(Collection collection) {
         if (collection != null && !collection.equals(mCollection)) {
             mCollection = collection;
-            Log.e("iii--clID--", mCollection.id + "");
             bindOverlay(mCollection);
             if (!isFirstTime) {
                 isFirstTime = true;

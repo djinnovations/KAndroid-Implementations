@@ -3,9 +3,13 @@ package com.goldadorn.main.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.webView.ApplicationDefaultWebView;
@@ -17,9 +21,6 @@ import java.util.Map;
 import butterknife.ButterKnife;
 
 public class WebActivity extends BaseActivity{
-
-
-
 
 
     @Override
@@ -38,6 +39,8 @@ public class WebActivity extends BaseActivity{
 
         String title = getIntent().getExtras().getString("TITLE");
 
+        logAppropriateValue(title);
+
         if(title==null)
             title = url;
 
@@ -53,6 +56,16 @@ public class WebActivity extends BaseActivity{
 
         BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
+    }
+
+
+    private void logAppropriateValue(String title){
+
+        if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
+                .getStringFromResource(R.string.contactUs))){
+            Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CONTACT_US");
+            logEventsAnalytics(GAAnalyticsEventNames.CONTACT_US);
+        }
     }
 
     @Override

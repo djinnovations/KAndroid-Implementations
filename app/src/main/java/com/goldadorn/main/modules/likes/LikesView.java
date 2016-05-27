@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.UserActivity;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.Comment;
 import com.goldadorn.main.model.Liked;
@@ -123,6 +125,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
 
             String param="{\"postid\":"+getPostID()+",\"offset\":"+offset+"}";
             params.put(AQuery.POST_ENTITY,new StringEntity(param));
+            Log.d(Constants.TAG," LikesView getNextDataParams fetchlikeslist requestJson: "+param);
         }catch (Exception e){}
         return params;
     }

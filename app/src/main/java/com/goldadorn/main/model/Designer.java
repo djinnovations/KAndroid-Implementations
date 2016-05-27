@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.goldadorn.main.BR;
 import com.goldadorn.main.utils.URLHelper;
@@ -55,7 +56,8 @@ public class Designer extends BaseObservable implements IConfigurableObject,IIDI
 
     @Override
     public void config() {
-        setDesignerPic(URLHelper.parseImageURL(designerPic));
+        Log.d("dj", "config - url before parsing: "+designerPic);
+        setDesignerPic(URLHelper.parseImageURLDesignersTemp(designerPic));
         id =getType()+designerId+"";
     }
     public int getDesignerId() {
@@ -76,11 +78,13 @@ public class Designer extends BaseObservable implements IConfigurableObject,IIDI
     }
     @Bindable
     public String getDesignerPic() {
+        Log.d("dj", "getDesignerPic - url: "+designerPic);
         return designerPic;
     }
 
     public void setDesignerPic(String designerPic) {
         this.designerPic = designerPic;
+        Log.d("dj", "setDesignerPic - url: "+designerPic);
         notifyPropertyChanged(BR.designerPic);
     }
 

@@ -3,10 +3,11 @@ package com.goldadorn.main.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -14,10 +15,15 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -58,6 +64,30 @@ public class MainActivity extends BaseDrawerActivity  {
     @Bind(R.id.indicator)
     View indicator;
 
+    @Bind(R.id.transView)
+    View transView;
+    @Bind(R.id.transViewSearch)
+    View transViewSearch;
+    @Bind(R.id.transViewNotify)
+    View transViewNotify;
+    @Bind(R.id.transViewPeople)
+    View transViewPeople;
+    @Bind(R.id.transViewPost)
+    View transViewPost;
+
+//    private ResourceReader resRdr;
+//    private CoachMarkManager coachMarkMgr;
+//
+//    private final String msgWelcome = "You have landed on the social feed\n"
+//            +"where you can see all the social\nactivity happening in the app";
+//    private final String msgSearch = "for designers, products\ncollections, trends and more";
+//    private final String msgNotification = "check here";
+//    private final String msgPeople = "See the user community at GoldAdorn";
+//    private final String msgPost = "Create a Post";
+    private AppTourGuideHelper mTourHelper;
+
+
+
     public View getPageIndicator()
     {
         return indicator;
@@ -81,8 +111,33 @@ public class MainActivity extends BaseDrawerActivity  {
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)
             action(navigationDataObject);
+
+        logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
+
+        tourThisScreen();
     }
 
+    /*private void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }*/
+
+
+    private void tourThisScreen() {
+
+        /*resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                /*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*/
+                mTourHelper.displayHomeTour(MainActivity.this, new View[]{ transView, transViewPeople, transViewSearch,
+                        transViewNotify, transViewPost});
+            }
+        }, 2000);
+    }
 
 
     @Override
@@ -100,7 +155,14 @@ public class MainActivity extends BaseDrawerActivity  {
             snackbar.setAction("Yes", new View.OnClickListener() {
                 public void onClick(View v) {
                     snackbar.dismiss();
-                    finish();
+                    SocialLoginUtil.getInstance(getBaseApplication()).performFbLogout();
+                    SocialLoginUtil.getInstance(getBaseApplication()).performGoogleLogout();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 1500);
                 }
             });
             ColoredSnackbar.alert(snackbar).show();
@@ -126,6 +188,8 @@ public class MainActivity extends BaseDrawerActivity  {
                 intent= new Intent(MainActivity.this, PostBestOfActivity.class);
             if(intent!=null)
             {
+                Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Create_post_initiation");
+                logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
                 socialPostHost = new WeakReference<>(data.host);
                 People people = getApp().getPeople();
                 intent.putExtra("NAME", people.getUserName());
@@ -251,6 +315,8 @@ public class MainActivity extends BaseDrawerActivity  {
 
                 stopUploadProgress(true);
 
+                Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
+                logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -305,4 +371,5 @@ public class MainActivity extends BaseDrawerActivity  {
             ((HomePage)activePage).updateComments();
         }
     }
+
 }

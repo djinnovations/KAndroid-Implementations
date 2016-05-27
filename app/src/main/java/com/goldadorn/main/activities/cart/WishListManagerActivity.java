@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -18,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -76,10 +80,19 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         return in;
     }
 
+
+    private void logEventsAnalytics(String eventName) {
+        ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
+
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: WISHLIST_VIEWED");
+        logEventsAnalytics(GAAnalyticsEventNames.WISHLIST);
+
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage("Loading");

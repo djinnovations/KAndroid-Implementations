@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,8 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.utils.ConnectionDetector;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
@@ -30,8 +35,10 @@ import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -83,11 +90,14 @@ public class LoginPageActivity extends BaseActivity {
 
 
     @Bind(R.id.layoutParent)
-    ViewGroup layoutParent;
+    public ViewGroup layoutParent;
 
     @Bind(R.id.progressBar)
     ProgressView progressBar;
 
+
+    //Author DJphy
+    private SocialLoginUtil mSocialLoginInstance;
 
     @OnClick(R.id.createAccount)
     void onClickCreateAccount() {
@@ -106,7 +116,12 @@ public class LoginPageActivity extends BaseActivity {
     }
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+
+        if (id == SocialLoginUtil.socialLoginCall){
+            mSocialLoginInstance.serverCallEndsCustom(id, url, json, status);
+        }
         if (id == loginServiceCall) {
+            Log.d(Constants.TAG, "serverCallEnds - normal login response: "+json);
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             List<Cookie> cookies = status.getCookies();
             if (success) {
@@ -127,6 +142,11 @@ public class LoginPageActivity extends BaseActivity {
                             .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid()))
                             .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
 
+                    MixpanelAPI.People people = getApp().getMixPanelInstance().getPeople();
+                    people.identify(loginResult.getUserid());
+                    people.initPushHandling(Constants.SENDER_ID_PROJECT_NUMBER);
+                    Log.d("dj","login tracked");
+                    getApp().getMixPanelInstance().track("Login_track");
                     gotoApp();
                 } else {
                     final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);
@@ -224,17 +244,29 @@ public class LoginPageActivity extends BaseActivity {
 
     @OnClick(R.id.loginWithFacebookButton)
     void onClickLoginWithFacebookButton() {
-
+        //// TODO: 5/6/2016
+        if (checkNetwork()){
+            mSocialLoginInstance.onFacebookLogin(this);
+        }
     }
 
     @OnClick(R.id.loginWithGoogleButton)
     void onClickLoginWithGoogleButton() {
-
+        if (checkNetwork()){
+            if (!mSocialLoginInstance.isGoogleConnected()){
+                android.widget.Toast.makeText(getApplicationContext(), "Not yet! connected to Google", android.widget.Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mSocialLoginInstance.onGoogleLogin(this);
+        }
     }
 
     @OnClick(R.id.loginWithTwitterButton)
     void onClickLoginWithTwitterButton() {
-
+        android.widget.Toast.makeText(getApplicationContext(), "Feature Coming Soon", android.widget.Toast.LENGTH_SHORT).show();
+        /*if (checkNetwork()){
+            mSocialLoginInstance.onTwitterLogin(this);
+        }*/
     }
 
 
@@ -266,7 +298,49 @@ public class LoginPageActivity extends BaseActivity {
         });
 //        Intent in = new Intent(this, CartManagerActivity.class);
 //        startActivity(in);
+
+        //Author DJphy
+        mSocialLoginInstance = SocialLoginUtil.getInstance(getApplicationContext());
     }
+
+    private boolean checkNetwork(){
+
+        if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()){
+            return true;
+        }
+        else {
+            final Snackbar snackbar = Snackbar.make(loginAccount, Constants.ERR_MSG_NETWORK, Snackbar.LENGTH_SHORT);
+            ColoredSnackbar.alert(snackbar).show();
+            return false;
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        mSocialLoginInstance.handleActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mSocialLoginInstance.onActivityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mSocialLoginInstance.onActivityStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 
     private class LoginTextWatcher implements TextWatcher {
 
@@ -294,5 +368,14 @@ public class LoginPageActivity extends BaseActivity {
                     break;
             }
         }
+    }
+
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId){
+       return getAjaxCallback(requestId);
+    }
+
+    public AQuery getAQueryCustom(){
+        return getAQuery();
     }
 }

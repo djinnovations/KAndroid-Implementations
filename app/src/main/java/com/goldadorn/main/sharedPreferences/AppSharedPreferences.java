@@ -12,8 +12,13 @@ public class AppSharedPreferences {
         public static final String PASSWORD ="password";
         public static final String USER_ID ="userid";
         public static final String IS_LOGIN_DONE ="isLoginDone";
-        public static final String SELECTED_CITY ="selectedCityName";
-        public static final String SELECTED_CITY_ID ="selectedCityId";
+
+        //Author DJphy
+        public static final String IS_SOCIAL_LOGIN = "social_login";
+        public static final String SOCIAL_LOGIN_PLATFORM = "login_platform";
+
+        //public static final String SELECTED_CITY ="selectedCityName";
+        //public static final String SELECTED_CITY_ID ="selectedCityId";
     }
     public class AppRater
     {

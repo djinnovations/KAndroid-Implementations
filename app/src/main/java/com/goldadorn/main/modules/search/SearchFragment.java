@@ -2,14 +2,18 @@ package com.goldadorn.main.modules.search;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IQueryListener;
 import com.kimeeo.library.fragments.BaseFragment;
@@ -26,7 +30,15 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
     private final static boolean DEBUG = true;
 
 
+    private void logEventsAnalytics(String eventName) {
+        getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
+    }
+
     protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        /*logEventsAnalytics(GAAnalyticsEventNames.SEARCH);
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: SEARCH");*/
+        //logEventsAnalytics(AppEventsConstants.EVENT_NAME_SEARCHED);
         View rootView = inflater.inflate(R.layout.home_fragment_page_view, container, false);
         return rootView;
     }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -164,5 +165,10 @@ public class PostPollActivity extends AbstractPostActivity {
             trigger.setVisibility(View.GONE);
             Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        imageSelector1.onRequestPermResult(requestCode, permissions, grantResults);
     }
 }

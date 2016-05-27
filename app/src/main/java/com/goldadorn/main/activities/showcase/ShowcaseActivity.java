@@ -35,6 +35,9 @@ import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
@@ -123,6 +126,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
+
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: SHOWCASE");
+        logEventsAnalytics(GAAnalyticsEventNames.SHOWCASE);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayVH = new OverlayViewHolder(mBrandButtonsLayout);
@@ -228,6 +235,35 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
 
+
+        tourThisScreen();
+    }
+
+    //Author DJphy
+    @Bind(R.id.transViewMain)
+    View transViewMain;
+    @Bind(R.id.transViewSwipeUp)
+    View transViewSwipeUp;
+    @Bind(R.id.transViewProds)
+    View transViewProds;
+
+    private AppTourGuideHelper mTourHelper;
+
+    private void tourThisScreen() {
+
+        /*resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                /*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*/
+                Log.d(Constants.TAG, "tour showcase");
+                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{ transViewMain, transViewSwipeUp, transViewProds});
+            }
+        }, 1500);
     }
 
 

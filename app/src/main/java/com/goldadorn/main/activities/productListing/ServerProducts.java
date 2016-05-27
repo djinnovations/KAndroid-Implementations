@@ -197,7 +197,8 @@ public class ServerProducts extends BaseActivity {
             setTitle("Our Products");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),"", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);
+        NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),"",
+                NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);
         mActivePage = (ProductsFragment) BaseFragment.newInstance(navigationObject);
         mActivePage.setFilters(filters,sort);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();

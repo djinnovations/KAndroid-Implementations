@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
 //BINDING
 apply plugin: 'com.android.databinding'
@@ -11,18 +12,39 @@ android {
         devVersion {
             applicationId "com.goldadorn.main"
             //goldadorn.cloudapp.net  demo.eremotus-portal.com
-            buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
+
+
+            //added by DJphy (Darshan)
+            //buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/sociallogin"'
+            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
+
+
+            //buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
+            //both debug and live are referring to GA (changed at 16/o5/16 6:30 pm)
+            buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
+
+            //buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
+
+
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
+
             buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
             buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
             buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
-            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/  "'
+
+            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
+            //http://goldadorn.cloudapp.net/goldadorn_dev/html/
+
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
         }
 
-        live{
+        live {
             applicationId "com.goldadorn.main"
+
+            //added by DJphy (Darshan) (value to be changed for release version)
+            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/sociallogin"'
+
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
@@ -34,11 +56,17 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/maven/com.nineoldandroids/library/pom.xml'
+        exclude 'META-INF/maven/com.nineoldandroids/library/pom.properties'
+    }
+
+
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 8
-        versionName "1.8"
+        versionCode 10
+        versionName "2.0"
         multiDexEnabled true
         /*March 5 2016 1:46:58*/
     }
@@ -56,6 +84,12 @@ android {
 }
 
 repositories {
+    jcenter()
+    maven { url 'https://maven.fabric.io/public' }
+    mavenCentral()
+    maven(){
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -63,7 +97,6 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-
     final SUPPORT_LIBRARY_VERSION = '23.3.0'
     compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
@@ -76,7 +109,6 @@ dependencies {
     compile 'io.branch.sdk.android:library:1.+'
     compile files('libs/apache-mime4j-0.6.jar')
     compile files('libs/httpmime-4.0.1.jar')
-
     compile 'com.github.androidquery:androidquery:0.26.9'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.jakewharton:butterknife:7.0.1'
@@ -99,40 +131,52 @@ dependencies {
     compile 'com.nshmura:recyclertablayout:0.1.3'
     compile 'com.github.ahorn:android-rss:v1.0-rc1'
     compile 'com.simplecityapps:recyclerview-fastscroll:1.0.5'
-    compile project(':kandroid')
-
+    compile project(':kandroid')/*){
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }*/
     compile 'com.mikepenz:iconics-core:2.5.3@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
-
     compile 'com.github.paolorotolo:appintro:3.4.0'
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.liangfeizc:flowlayout:1.0.0@aar'
-    compile "com.splunk.mint:mint:4.4.0"
-
+    compile 'com.splunk.mint:mint:4.4.0'
     compile 'com.squareup.okio:okio:1.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-//    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
+    //    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
     compile(name: 'CustomBrowser-release', ext: 'aar')
     compile(name: 'PayU-release', ext: 'aar')
-    compile project(':payu_ui')
-
+    compile project(':payu_ui')/*){
+        exclude group: 'com.nineoldandroids', module: 'library'
+    }*/
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
-    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:multidex:1.0.1'
 
     //Permission
     compile 'com.github.kimeeo:TedPermission:064cbbbeba'
-
     compile 'com.appyvet:materialrangebar:1.3'
-
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-
-
     //compile 'com.ovenbits:quickactionview:1.0.0'
+
+    //Added by author dj
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    compile 'com.google.android.gms:play-services-plus:8.3.0'
+    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    compile('com.twitter.sdk.android:twitter:1.13.1@aar') {
+        transitive = true;
+        exclude group: 'com.nineoldandroids', module: 'library';
+    }
+    compile ('com.github.worker8:tourguide:1.0.17-SNAPSHOT@aar'){
+        transitive=true;
+        exclude group: 'com.nineoldandroids', module: 'library';
+    }
+    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-base:8.3.0'
+    compile 'com.github.markomilos:paginate:0.5.1'
 }

@@ -179,4 +179,10 @@ public class GalleryImageSelector extends ImageSelector
         Bitmap out = BitmapFactory.decodeFile(filePath,o);
         return out;
     }
+
+
+    public void onRequestPermResult(int requestCode, String permissions[], int[] grantResults){
+
+        super.onRequestPermissionsResultCustom(requestCode, permissions, grantResults);
+    }
 }

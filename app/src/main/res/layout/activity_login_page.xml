@@ -122,42 +122,42 @@
                 android:background="@color/colorPrimary"/>
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_marginTop="@dimen/padding_default_2x"
-        android:orientation="horizontal"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.mikepenz.iconics.view.IconicsButton
-            style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_small_height"
-            android:text="@string/icon_facebook"
-            android:layout_height="@dimen/circle_button_small_height"
-            android:id="@+id/loginWithFacebookButton"/>
+        <LinearLayout
+            android:layout_marginTop="@dimen/padding_default_2x"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/socialLoginButton"
+                android:layout_marginLeft="@dimen/padding_default_2x"
+                android:layout_marginRight="@dimen/padding_default_2x"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:text="@string/icon_facebook"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:id="@+id/loginWithFacebookButton"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
-            style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_small_height"
-            android:layout_height="@dimen/circle_button_small_height"
-            android:text="@string/icon_twitter"
-            android:id="@+id/loginWithTwitterButton"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/socialLoginButton"
+                android:layout_marginLeft="@dimen/padding_default_2x"
+                android:layout_marginRight="@dimen/padding_default_2x"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:text="@string/icon_twitter"
+                android:id="@+id/loginWithTwitterButton"/>
 
-        <com.mikepenz.iconics.view.IconicsButton
-            style="@style/socialLoginButton"
-            android:layout_marginLeft="@dimen/padding_default_2x"
-            android:layout_marginRight="@dimen/padding_default_2x"
-            android:layout_width="@dimen/circle_button_small_height"
-            android:layout_height="@dimen/circle_button_small_height"
-            android:text="@string/icon_google_plus"
-            android:id="@+id/loginWithGoogleButton"/>
+            <com.mikepenz.iconics.view.IconicsButton
+                style="@style/socialLoginButton"
+                android:layout_marginLeft="@dimen/padding_default_2x"
+                android:layout_marginRight="@dimen/padding_default_2x"
+                android:layout_width="@dimen/circle_button_small_height"
+                android:layout_height="@dimen/circle_button_small_height"
+                android:text="@string/icon_google_plus"
+                android:id="@+id/loginWithGoogleButton"/>
 
 
-    </LinearLayout>
+        </LinearLayout>
 
 
         <Button

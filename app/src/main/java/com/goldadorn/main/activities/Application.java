@@ -1,14 +1,19 @@
 package com.goldadorn.main.activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.support.GAFacebookAnalytics;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -31,6 +36,7 @@ import com.kimeeo.library.model.BaseApplication;
 import com.kimeeo.library.model.IFragmentData;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.splunk.mint.Mint;
 
 import org.apache.http.cookie.Cookie;
@@ -76,6 +82,7 @@ public class Application extends BaseApplication {
     public void setCookies(List<Cookie> cookies) {
         this.cookies = cookies;
         URLHelper.getInstance().setCookies(cookies);
+        Log.e("iii","iii");
     }
 
 
@@ -89,6 +96,13 @@ public class Application extends BaseApplication {
         return super.getSystemService(name);
     }
 
+
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        MultiDex.install(base);
+        super.attachBaseContext(base);
+    }
 
     public URLHelper getUrlHelper() {
         return URLHelper.getInstance();
@@ -181,7 +195,41 @@ public class Application extends BaseApplication {
         configMainMenu();
         //dont remove this code
         initGoogleAnalytics();
+        initFacebook();
+        initMixPanel();
     }
+
+    private void initMixPanel(){
+        Log.d("dj","mix panel init");
+        mMixPanelInstance = MixpanelAPI.getInstance(this, Constants.MIX_PANEL_PROJECT_TOKEN);
+    }
+
+    private GAFacebookAnalytics mFbAnalyticsInstance;
+    private void initFacebook() {
+
+        FacebookSdk.sdkInitialize(this);
+        GAFacebookAnalytics.activateApp(this);
+    }
+
+    public GAFacebookAnalytics getFbAnalyticsInstance(){
+
+        if (mFbAnalyticsInstance == null){
+            mFbAnalyticsInstance = new GAFacebookAnalytics();
+        }
+        return mFbAnalyticsInstance;
+    }
+
+    private MixpanelAPI mMixPanelInstance;
+    public MixpanelAPI getMixPanelInstance(){
+        if (mMixPanelInstance == null){
+            mMixPanelInstance = MixpanelAPI.getInstance(this, Constants.MIX_PANEL_PROJECT_TOKEN);
+        }
+        return mMixPanelInstance;
+    }
+
+
+
+
     private Tracker mTracker;
 
     /**
@@ -192,7 +240,7 @@ public class Application extends BaseApplication {
         if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
             // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-            mTracker = analytics.newTracker(R.xml.global_tracker);
+            mTracker = analytics.newTracker(R.xml.app_tracker);
         }
         return mTracker;
     }

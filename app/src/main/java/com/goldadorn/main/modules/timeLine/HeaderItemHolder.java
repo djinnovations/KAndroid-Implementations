@@ -203,7 +203,7 @@ public class HeaderItemHolder{
 
         }
 
-        people.setBackgroundPic("http://whatatimeline.com/covers/1330597507de0/balloons-sunset-view-facebook-cover.jpg");
+        people.setBackgroundPic("http://i.huffpost.com/gen/857659/images/o-FABULOUS-FINDS-APPRAISING-GOLD-JEWELRY-facebook.jpg");
         if(people.getBackgroundPic()!=null && people.getBackgroundPic().equals("")==false)
             Picasso.with(context).load(people.getBackgroundPic()).into(coverImage);
 

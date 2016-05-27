@@ -4,6 +4,7 @@
     <color name="colorPrimary">#866c52</color>
     <color name="colorPrimaryAlpha">#55866c52</color>
     <color name="controlColor">#000000</color>
+    <color name="colorBlackDimText">#595959</color>
 
     <color name="tabBGColor">#cecece</color>
 

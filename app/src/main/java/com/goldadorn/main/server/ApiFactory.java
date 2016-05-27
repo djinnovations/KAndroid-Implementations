@@ -62,11 +62,13 @@ public class ApiFactory extends ExtractResponse {
     private static final int DELETE_WISHLIST = 22;
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String IMAGE_URL_HOST = "http://demo.eremotus-portal.com/goldadorn_dev/";
+    public static final String IMAGE_URL_HOST = "http://goldadorn.cloudapp.net/goldadorn_dev/";
     public static final String IMAGE_URL_COLLECTIONS_HOST = "http://demo.eremotus-portal.com/";
     private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
     private static final String HOST_NAME_PROD = "demo.eremotus-portal.com";
+    private static final String HOST_NAME_DEV_SOCIAL = "goldadorn.cloudapp.net";
     public static final String HOST_NAME = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV;
+    private static final String HOST_NAME_SOCIAL = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV_SOCIAL;;
 
     private static String getUrl(Context context, UrlBuilder urlBuilder) {
         Uri.Builder builder = new Uri.Builder();
@@ -85,6 +87,65 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("addproductstocart");
                 break;
             }
+
+            case NOTIFY_PAYMENT_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("notifypaymentstatus");
+                break;
+            }
+
+            case REMOVE_CART_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("removeproductsfromcart");
+                break;
+            }
+            case CART_DETAIL_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("getcartdetails");
+
+                builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
+                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                break;
+            }
+            case PRODUCT_BASIC_INFO_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("getproductbasicinfo");
+                builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
+                break;
+            }
+            case PRODUCT_CUSTOMIZATION_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("getproductcustomization");
+                builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
+                break;
+            }
+            case PRODUCT_PRICE_CUSTOMIZATION_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("getpriceforcustomizedproduct");
+                break;
+            }
+            case PRODUCTS_TYPE: {
+                builder.appendPath("goldadorn_prod");
+                builder.appendPath("rest");
+                builder.appendPath("getproducts");
+                break;
+            }
+        }
+        return builder.build().toString();
+    }
+
+
+    private static String getUrlFromSocialAPI(Context context, UrlBuilder urlBuilder) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http");
+        builder.authority(HOST_NAME_SOCIAL);
+        switch (urlBuilder.mUrlType) {
             case SEARCH_TAG_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
@@ -116,26 +177,18 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("createpost");
                 break;
             }
-            case NOTIFY_PAYMENT_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("notifypaymentstatus");
-                break;
-            }
             case BASIC_PROFILE_GET_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("getbasicprofile");
                 break;
             }
-
             case FORGOT_PASSWORD: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("forgotpassword");
                 break;
             }
-
             case LIKE_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
@@ -154,52 +207,11 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("unlike");
                 break;
             }
-            case REMOVE_CART_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("removeproductsfromcart");
-                break;
-            }
-            case CART_DETAIL_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("getcartdetails");
-
-                builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
-                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
-                break;
-            }
             case GETDESIGNERS_SOCIAL_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
                 builder.appendPath("getdesignerssocial");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");
-                break;
-            }
-            case PRODUCT_BASIC_INFO_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("getproductbasicinfo");
-                builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
-                break;
-            }
-            case PRODUCT_CUSTOMIZATION_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("getproductcustomization");
-                builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
-                break;
-            }
-            case PRODUCT_PRICE_CUSTOMIZATION_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("getpriceforcustomizedproduct");
-                break;
-            }
-            case PRODUCTS_TYPE: {
-                builder.appendPath("goldadorn_prod");
-                builder.appendPath("rest");
-                builder.appendPath("getproducts");
                 break;
             }
             case PRODUCTS_SOCIAL_TYPE: {
@@ -220,6 +232,7 @@ public class ApiFactory extends ExtractResponse {
         }
         return builder.build().toString();
     }
+
 
     private static HashMap<String, String> getHeaders(Context context, ParamsBuilder paramsBuilder) {
         HashMap<String, String> headers = new HashMap<>();
@@ -285,7 +298,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("getSearchTags post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getSearchTags " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -312,7 +325,7 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = GET_WISHLIST;
 
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -339,7 +352,7 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = DELETE_WISHLIST;
 
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProductBasicInfo " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -374,7 +387,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("addToWishlist post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder),body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("addToWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -411,7 +424,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("buyorNobuy post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder),body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("buyorNobuy " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -438,7 +451,7 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = GETDESIGNERS_SOCIAL_TYPE;
 
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getDesignersSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -500,7 +513,7 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = PRODUCTS_SOCIAL_TYPE;
 
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getProductsSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -554,7 +567,7 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mApiType = BASIC_PROFILE_GET_TYPE;
 
 
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("getBasicProfile " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -591,7 +604,7 @@ public class ApiFactory extends ExtractResponse {
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("forgotPassword " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -836,7 +849,7 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("transId", response.product.transid);
-            jsonObject.put("userId", response.product.userId);
+            jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
@@ -911,7 +924,7 @@ public class ApiFactory extends ExtractResponse {
             }
             L.d("LIKE JSON " + builder.build().toString());
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("like " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -950,7 +963,7 @@ public class ApiFactory extends ExtractResponse {
                 builder.add("designer", response.userId + "");
             }
             L.d("unLike JSON " + builder.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("unLike " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -980,7 +993,7 @@ public class ApiFactory extends ExtractResponse {
             FormEncodingBuilder builder = new FormEncodingBuilder();
             builder.add("follow", response.userId + "");
             L.d("follow body " + builder.toString());
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("follow " + "Code :" + response.responseCode + " content", response.responseContent.toString());

@@ -1,7 +1,9 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -33,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -40,6 +43,10 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.ViewConstructor;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
@@ -121,6 +128,10 @@ public class ProductActivity extends BaseDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
+        logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
+
         drawerLayout.setBackgroundColor(Color.WHITE);
         BitmapDrawable d = (BitmapDrawable) (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ?
                 getDrawable(R.drawable.ic_menu_black_24dp) : getResources().getDrawable(
@@ -232,7 +243,29 @@ public class ProductActivity extends BaseDrawerActivity {
         configureUI(UISTATE_CUSTOMIZE);
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
+
+        tourThisScreen();
     }
+
+
+    @Bind(R.id.transViewProducts)
+    View transViewProducts;
+
+    private AppTourGuideHelper mTourHelper;
+
+    private void tourThisScreen() {
+
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                Log.d(Constants.TAG, "tour product activity");
+                mTourHelper.displayProductsTour(ProductActivity.this, transViewProducts);
+            }
+        }, 1500);
+    }
+
 
     public void addCustomisation(OptionKey key, OptionValue value) {
         mProduct.addCustomisation(key, value);
@@ -245,10 +278,13 @@ public class ProductActivity extends BaseDrawerActivity {
         });
     }
 
+
+
     private void bindOverlay() {
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
+        Log.d(Constants.TAG, "user ID: "+mProduct.userId);
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         Log.e("iiii--",mUser.id+"--"+mUser.isFollowed+"---"+mUser.followers_cnt);
         if (mUser != null) {
@@ -328,32 +364,67 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
-    public void addToCart() {
+    /*public void addToCart() {
         Log.e("iii",mProduct.id+"");
         UIController.addToCart(mContext, mProduct,
                 new IResultListener<ProductResponse>() {
 
                     @Override
                     public void onResult(ProductResponse result) {
+
                         Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }*/
+
+    public void addToCartNew() {
+        UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
+                new IResultListener<ProductResponse>() {
+                    @Override
+                    public void onResult(ProductResponse result) {
+                        logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
+                        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
+                        //logEventsAnalytics(AppEventsConstants.EVENT_NAME_ADDED_TO_CART);
+                        Toast.makeText(mContext,
+                                result.success ? "Added to cart successfully!" :
+                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                        if (result.success){
+                            confirmedToCart();
+                        }
                     }
                 });
     }
 
-    public void addToCartNew() {
-        Log.e("iii",mProduct.id+"");
-        UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
-                new IResultListener<ProductResponse>() {
+
+    private void confirmedToCart(){
+        /*Log.d("iii","product id that was pushed to cart: "+mProduct.id);
+        ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
+                    @Override
+                    public void onPositiveSelection(DialogInterface alertDialog) {
+                        alertDialog.dismiss();
+                        menuAction(R.id.nav_cart);
+                    }
+                });*/
+
+        Dialog dialog = ViewConstructor.getInstance(getApplicationContext()).displayDialog(ProductActivity.this,
+                R.layout.dj_custom_views, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                "Go to Cart\n& Checkout", "Continue\nShopping", new ViewConstructor.DialogButtonClickListener() {
+                    @Override
+                    public void onPositiveBtnClicked(Dialog dialog, View btn) {
+                        dialog.dismiss();
+                        menuAction(R.id.nav_cart);
+                    }
 
                     @Override
-                    public void onResult(ProductResponse result) {
-                        Toast.makeText(mContext,
-                                result.success ? "Added to cart successfully!" :
-                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                    public void onNegativeBtnClicked(Dialog dialog, View btn) {
+                        dialog.dismiss();
+                        Toast.makeText(getApplicationContext(), "You can access your cart by selecting the cart option from the Slidemenu", Toast.LENGTH_LONG).show();
                     }
                 });
+        dialog.show();
     }
 
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {
@@ -515,7 +586,7 @@ public class ProductActivity extends BaseDrawerActivity {
                                 if(isLiked){
                                     mProduct.likecount=mProduct.likecount-1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
-                                   // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
                                 }else{
                                     mProduct.likecount=mProduct.likecount+1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
@@ -532,7 +603,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                            Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else if (v == cartButton) {
