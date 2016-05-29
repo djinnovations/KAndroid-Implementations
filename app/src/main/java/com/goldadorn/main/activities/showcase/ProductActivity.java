@@ -263,7 +263,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 Log.d(Constants.TAG, "tour product activity");
                 mTourHelper.displayProductsTour(ProductActivity.this, transViewProducts);
             }
-        }, 1500);
+        }, 800);
     }
 
 

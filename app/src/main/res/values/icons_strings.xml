@@ -25,6 +25,6 @@
 
 
     <string name="icon_cart_new">{faw-shopping_cart}</string>
-    <string name="icon_showcase_new">{faw-shopping_cart}</string>
+    <string name="icon_showcase_new">{gmd-blur_circular}</string>
 
 </resources>

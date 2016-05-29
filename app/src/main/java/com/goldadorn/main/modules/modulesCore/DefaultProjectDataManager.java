@@ -1,14 +1,18 @@
 package com.goldadorn.main.modules.modulesCore;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
+import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.dj.utils.Constants;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.dataManagers.aQuery.DefaultJSONDataManager;
 
 import org.apache.http.cookie.Cookie;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +23,12 @@ import java.util.Map;
 public class DefaultProjectDataManager extends DefaultJSONDataManager
 {
     private IDataManagerDelegate delegate;
+    Context context;
     public DefaultProjectDataManager(Context context, IDataManagerDelegate delegate,List<Cookie> cookies)
     {
         super(context);
         //setCachingTime(15 * 60 * 1000);
+        this.context = context;
         setCachingTime(-1);
         this.delegate = delegate;
         setRefreshEnabled(true);
@@ -43,6 +49,8 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
         String getRefreshDataURL(PageData pageData);
         Class getLoadedDataParsingAwareClass();
     }
+
+    private String notifyCount;
     public void dataHandler(String url, Object value, Object status) {
         if(value!=null && value instanceof String)
         {
@@ -51,6 +59,25 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
 
             Log.d(Constants.TAG, "social feed: "+stringValue);
             // stringValue = stringValue.replace(",\"msg\":null","");
+            try {
+                JSONObject jsonObject = new JSONObject(stringValue);
+                notifyCount = jsonObject.isNull("noticount") ? null : jsonObject.getString("noticount");
+                Log.d(Constants.TAG, "notificationCount: "+notifyCount);
+                if (notifyCount != null){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (notifyCount.length() > 1){
+                                BaseDrawerActivity.displayUnreadData(context, "9+");
+                            }
+                            else BaseDrawerActivity.displayUnreadData(context, notifyCount);
+                        }
+                    }, 1200);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
 
             if(stringValue.indexOf("[")==0) {

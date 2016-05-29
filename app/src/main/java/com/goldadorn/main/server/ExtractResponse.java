@@ -2,7 +2,9 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
@@ -79,9 +81,34 @@ public class ExtractResponse {
             profileData.state = jsonObject.optString("state");
             profileData.city = jsonObject.optString("city");
             profileData.pincode = jsonObject.optString("pincode");
-            profileData.dob = jsonObject.optLong("birthday");
-            profileData.genderType = jsonObject.optInt("gender");
+            profileData.dob = getBdayInLong(jsonObject);
+            profileData.genderType = jsonObject.isNull("gender")? 0: getGenderTypeFromText(jsonObject.getString("gender"));
+            Log.d("dj","genderType: " +profileData.genderType);
+
         }
 
+    }
+
+
+    private static int getGenderTypeFromText(String code){
+
+        Log.d("dj","gender: " +code);
+        if (code.equals("Female")){
+            return 1;
+        }else if (code.equals("Male")) return 2;
+
+        return 0;
+    }
+
+
+    private static long getBdayInLong(JSONObject jsonObject){
+
+        try {
+            String dateFromServer = jsonObject.isNull("birthday")? "0": jsonObject.getString("birthday");
+            return DateTimeUtils.getDateInMillis(dateFromServer);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 }

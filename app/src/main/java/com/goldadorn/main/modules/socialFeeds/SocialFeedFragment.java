@@ -41,9 +41,10 @@ import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.server.RequestJson;
+import com.goldadorn.main.dj.gesture.SwipeHelper;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
-import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -100,6 +101,40 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new DividerDecoration(this.getActivity());
     }
+
+
+    private void setUpGesture(View view) {
+        Log.d("gest", "setUpGesture");
+        view.setOnTouchListener(new SwipeHelper(getActivity()){
+
+            @Override
+            public void onSwipeLeftToRight() {
+
+                Toast.makeText(getContext(), "swipe right", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSwipeRightToLeft() {
+
+                Toast.makeText(getContext(), "swipe left", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSwipeBottomToTop() {
+
+                Toast.makeText(getContext(), "SwipeTop", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSwipeTopToBottom() {
+
+                Toast.makeText(getContext(), "Swipe bottom", Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+    }
+
 
     public FloatingActionsMenu getFloatingActionsMenu() {
         return mFloatingActionsMenu;
@@ -451,10 +486,14 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
 
     protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view;
         if (getDataManager().getRefreshEnabled())
-            return inflater.inflate(R.layout.social_feed_fragment_recycler_with_swipe_refresh_layout, container, false);
+            view = inflater.inflate(R.layout.social_feed_fragment_recycler_with_swipe_refresh_layout, container, false);
         else
-            return inflater.inflate(R.layout.social_feed_fragment_recycler, container, false);
+            view = inflater.inflate(R.layout.social_feed_fragment_recycler, container, false);
+
+        //setUpGesture(view);
+        return view;
     }
 
     protected MainActivity getBaseActivity() {

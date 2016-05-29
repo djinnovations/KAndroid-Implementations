@@ -45,7 +45,7 @@ public class AppTourGuideHelper {
     private final String msgViewProduct = "Directly look through all products of a Designer";
     private final String msgSwipeRightLeft = "Swipe right to like and left to dislike.\n" +
             "Tap on a product to view its full details.";
-    private final String msgProductTab = "Tap on a tabs to know more about the product";
+    private final String msgProductTab = "Tap on a tab to know more about the product";
 
     private ResourceReader resRdr;
     private CoachMarkManager coachMarkMgr;

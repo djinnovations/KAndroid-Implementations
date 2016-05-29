@@ -57,26 +57,26 @@
         android:weightSum="2">
 
 
-        <Button
+        <TextView
             android:id="@+id/tvNegative"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="10dp"
             android:text="Negative"
             android:textColor="@color/Black"
             android:textSize="15sp" />
 
-        <Button
+        <TextView
             android:id="@+id/tvPositive"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="10dp"
             android:text="Positive"
             android:textColor="@color/Black"
             android:textSize="15sp" />

@@ -1,51 +1,53 @@
-<android.support.design.widget.CoordinatorLayout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".RecyclerFragment">
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/_fragment_recycler_empty_view"/>
+    <include layout="@layout/_fragment_recycler_empty_view" />
+
     <View
-        android:layout_width="match_parent"
         android:id="@+id/disableApp"
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@color/darkDisable"
-        android:layout_height="match_parent"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:clipChildren="true"
         android:clipToPadding="true"
         app:layout_anchor="@+id/swipeRefreshLayout"
         app:layout_anchorGravity="bottom|end"
-        app:layout_behavior="com.goldadorn.main.modules.socialFeeds.FABScrollBehavior"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        app:layout_behavior="com.goldadorn.main.modules.socialFeeds.FABScrollBehavior">
 
-        <include layout="@layout/post_fab"/>
+        <include layout="@layout/post_fab" />
     </RelativeLayout>
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:textSize="10sp"
         android:id="@+id/refreshTriger"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/padding_default"
         android:text="New Update Found"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
-</android.support.design.widget.CoordinatorLayout >
+        android:textSize="10sp"
+        android:visibility="gone" />
+</android.support.design.widget.CoordinatorLayout>

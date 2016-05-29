@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/nav_header_height"
-            android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/nav_header_height"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +32,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_home"/>
+                    android:src="@drawable/vector_icon_home" />
 
                 <TextView
                     android:id="@+id/labelHome"
@@ -44,7 +45,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/home"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
 
@@ -61,7 +62,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_time_line"/>
+                    android:src="@drawable/vector_icon_time_line" />
 
                 <TextView
                     android:id="@+id/labelTimeLine"
@@ -74,7 +75,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/timeline"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -96,7 +97,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_people"/>
+                    android:src="@drawable/vector_icon_people" />
 
                 <TextView
                     android:id="@+id/labelShowcase"
@@ -109,7 +110,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/showcase"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
 
@@ -126,7 +127,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_people"/>
+                    android:src="@drawable/vector_icon_people" />
 
                 <TextView
                     android:id="@+id/labelCart"
@@ -139,7 +140,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/cart"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageButton
                     android:id="@+id/nav_collections"
@@ -149,7 +150,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/vector_icon_people"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/labelCollection"
@@ -163,7 +164,7 @@
                     android:gravity="center_horizontal"
                     android:text="@string/collections"
                     android:textSize="16sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -187,7 +188,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/vector_icon_wishlist"
-                    android:tint="@android:color/white"/>
+                    android:tint="@android:color/white" />
 
                 <TextView
                     android:id="@+id/labelWishlist"
@@ -200,7 +201,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/wishlist"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -217,7 +218,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_shop_by"/>
+                    android:src="@drawable/vector_icon_shop_by" />
 
                 <TextView
                     android:id="@+id/labelshopBy"
@@ -230,7 +231,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/shopBy"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
 
 
@@ -248,7 +249,7 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_feeds"/>
+                    android:src="@drawable/vector_icon_feeds" />
 
                 <TextView
                     android:id="@+id/labelFeed"
@@ -261,7 +262,7 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/socialFeeds"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -270,7 +271,7 @@
             android:layout_height=".5dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
-            android:background="@color/socialLoginButtonNormalStart"/>
+            android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
             android:id="@+id/nav_share"
@@ -281,7 +282,7 @@
             android:gravity="left|center_vertical"
 
             android:text="@string/share"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_share_facebook"
@@ -292,7 +293,7 @@
             android:gravity="left|center_vertical"
             android:text="@string/inviteFacebookFriends"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
         <Button
@@ -304,7 +305,7 @@
             android:gravity="left|center_vertical"
             android:text="@string/rateAPP"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/nav_contact_us"
@@ -314,7 +315,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/contactUs"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <Button
@@ -325,7 +326,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/myProfile"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_order_tracking"
@@ -335,7 +336,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/orderTracking"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <Button
@@ -346,7 +347,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/aboutUS"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <Button
@@ -357,7 +358,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/faqs"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <Button
@@ -368,7 +369,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/shippingAndReturnPolicy"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
 
         <Button
@@ -379,7 +380,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/privacyPolicy"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_terms_conditions"
@@ -389,7 +390,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/termsAndConditions"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_settings"
@@ -399,7 +400,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/settings"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_logout"
@@ -410,7 +411,7 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/logout"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
     </LinearLayout>
 

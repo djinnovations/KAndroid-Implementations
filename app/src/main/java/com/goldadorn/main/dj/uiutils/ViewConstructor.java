@@ -184,21 +184,21 @@ public class ViewConstructor {
         //dialog.setCancelable(false);
         ((TextView) dialog.findViewById(R.id.tvTitle)).setText(title);
         ((TextView) dialog.findViewById(R.id.tvInfoMsg)).setText(bodyMsg);
-        ((Button) dialog.findViewById(R.id.tvPositive)).setText(positiveBtnText);
-        ((Button) dialog.findViewById(R.id.tvPositive)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) dialog.findViewById(R.id.tvPositive)).setText(positiveBtnText);
+        ((TextView) dialog.findViewById(R.id.tvPositive)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onPositiveBtnClicked(dialog, v);
             }
         });
-        ((Button) dialog.findViewById(R.id.tvNegative)).setText(negativeBtnText);
-        ((Button) dialog.findViewById(R.id.tvNegative)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) dialog.findViewById(R.id.tvNegative)).setText(negativeBtnText);
+        ((TextView) dialog.findViewById(R.id.tvNegative)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onNegativeBtnClicked(dialog, v);
             }
         });
-
+        dialog.setCancelable(false);
         dialog.getWindow().setAttributes(tempParams);
         //dialog.getWindow().setBackgroundDrawableResource(android.R.drawable.editbox_dropdown_dark_frame);
 /*		if(keyPadOnTop)

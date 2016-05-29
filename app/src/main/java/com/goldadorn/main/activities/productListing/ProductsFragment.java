@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.BR;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
@@ -23,7 +22,6 @@ import com.goldadorn.main.model.FilterCollection;
 import com.goldadorn.main.model.FilterPrice;
 import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.FilterType;
-import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.utils.ResultFormating;
@@ -39,13 +37,10 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.greenrobot.eventbus.EventBus;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.crypto.Mac;
 
 /**
  * Created by bhavinpadhiyar on 3/2/16.

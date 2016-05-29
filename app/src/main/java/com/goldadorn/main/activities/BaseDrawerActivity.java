@@ -1,6 +1,10 @@
 package com.goldadorn.main.activities;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,11 +20,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.uiutils.BadgeDrawable;
 import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -126,12 +129,89 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
+    static LayerDrawable icon;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        Log.d(Constants.TAG, "onCreateOptionsMenu: BaseDrawerActivity");
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem itemCart = menu.findItem(R.id.nav_my_notifications);
+        icon = (LayerDrawable) itemCart.getIcon();
+
         return true;
     }
+
+
+    public static void displayUnreadData(final Context context, final String count) {
+        if (count == null)
+            return;
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setBadgeCount(context, icon, count);
+
+            }
+        }, 100);
+    }
+
+  /*  private Drawable buildCounterDrawable(int count, int backgroundImageId) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.counter_menuitem, null);
+        view.setBackgroundResource(backgroundImageId);
+        TextView textView = (TextView) view.findViewById(R.id.count);
+
+        if (count == 0) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setText("" + count);
+        }
+
+        view.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+
+        view.setDrawingCacheEnabled(true);
+        view.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+
+        return new BitmapDrawable(getResources(), bitmap);
+    }*/
+
+
+    public static void setBadgeCount(Context context, LayerDrawable icon, String count) {
+
+        BadgeDrawable badge; // Reuse drawable if possible
+        badge = new BadgeDrawable(context);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_badge, badge);
+
+        Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge); //getting the layer 2
+        if (reuse != null && reuse instanceof BadgeDrawable) {
+            Log.d("dj", "reuse not null");
+            badge = (BadgeDrawable) reuse;
+        } else {
+            Log.d("dj", "reuse is null");
+            badge = new BadgeDrawable(context);
+            icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        }
+        Rect bounds = badge.copyBounds();
+        /*float width = bounds.right - bounds.left;
+        float height = bounds.bottom - bounds.top;*/
+        Log.d("dj", "badge right: "+bounds.right);
+        Log.d("dj", "badge left: "+bounds.left);
+        Log.d("dj", "badge top: "+bounds.top);
+        Log.d("dj", "badge bottom: "+bounds.bottom);
+        /*if (bounds.right == 0 && bounds.left == 0 && bounds.top == 0 && bounds.bottom == 0)
+            badge.setBounds(0, 0, 50, 50);*/
+        badge.setCount(count);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_badge, badge);
+    }
+
 
     protected void bindViews() {
 

@@ -2,6 +2,7 @@
     <string name="app_name">Goldadorn</string>
 
     <string name="fb_app_id">406364016222124</string>
+    <string name="gl_server_api_key">AIzaSyBS7zC9tJFmYzF8HmK-aQNMgV06mO09kLI</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

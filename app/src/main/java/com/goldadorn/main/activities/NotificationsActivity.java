@@ -100,94 +100,6 @@ public class NotificationsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refresh() {
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {
-                List<Cookie> cookies = getApp().getCookies();
-                try {
-
-                    HttpClient httpclient = new DefaultHttpClient();
-                    HttpPost httppost = new HttpPost(URLHelper.getInstance().getNotificationsUrl());
-                    Log.d("Notification url "," url "+URLHelper.getInstance().getNotificationsUrl());
-
-                    try {
-
-//                        List<NameValuePair> nameValuePairs = new ArrayList<>(2);
-                        String phpSession = "";
-
-                        if (cookies.isEmpty()) {
-                            Log.i("TAG", "None");
-                        } else {
-                            for (int i = 0; i < cookies.size(); i++) {
-                                phpSession += cookies.get(i).getName() + "=" + cookies.get(i).getValue() + ";";
-
-                            }
-                            Log.i("session", phpSession);
-                        }
-                        httppost.addHeader("Cookie", phpSession);
-//                        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-                        // Execute HTTP Post Request
-                        HttpResponse response = httpclient.execute(httppost);
-                        HttpEntity entity = response.getEntity();
-                        if (entity != null) {
-                            SoftReference<InputStream> instream = new SoftReference<>(
-                                    entity.getContent());
-                            String content = convertStreamToString(instream);
-                            Log.d("Response", content);
-//                            notificationJsons = new JSONArray("[  \n" +
-//                                    "   {  \n" +
-//                                    "      \"postid\":\"65\",\n" +
-//                                    "      \"commented\":\"\",\n" +
-//                                    "      \"commentcount\":4\n" +
-//                                    "   },\n" +
-//                                    "   {  \n" +
-//                                    "      \"postid\":\"65\",\n" +
-//                                    "      \"liked\":\"nithin, k\",\n" +
-//                                    "      \"likecount\":2\n" +
-//                                    "   },\n" +
-//                                    "   {  \n" +
-//                                    "      \"postid\":\"64\",\n" +
-//                                    "      \"liked\":\"nithin\",\n" +
-//                                    "      \"likecount\":1\n" +
-//                                    "   }\n" +
-//                                    "]");
-                            try {
-                                notificationJsons = new JSONArray(content);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            notificationsList.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(notificationJsons!=null && notificationJsons.length()>0){
-                                        notificationsList.setVisibility(View.VISIBLE);
-                                        emptyView.setVisibility(View.GONE);
-                                    }else{
-                                        notificationsList.setVisibility(View.INVISIBLE);
-                                        emptyView.setVisibility(View.VISIBLE);
-                                        progressBar.setVisibility(View.GONE);
-                                        emptyTextView.setVisibility(View.VISIBLE);
-                                    }
-                                    mAdapter.notifyDataSetChanged();
-                                }
-                            });
-                            instream.get().close();
-                        }
-                    } catch (Exception e) {
-                        // Catch Protocol Exception
-                    }
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();*/
-    }
-
-
 
 
     private final int notificationReg = IDUtils.generateViewId();
@@ -204,24 +116,6 @@ public class NotificationsActivity extends BaseActivity {
         getAQuery().ajax(url, paramsMap, String.class, ajaxCallback);
     }
 
-
-    public static String convertStreamToString(SoftReference<InputStream> is)
-            throws IOException {
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-        // this is storage overwritten on each iteration with bytes
-        int bufferSize = 32678;
-        byte[] buffer = new byte[bufferSize];
-
-        // we need to know how may bytes were read to write them to the
-        // byteBuffer
-        int len = 0;
-        while ((len = is.get().read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-
-        // and then we can return your byte array.
-        return byteBuffer.toString();
-    }
 
     private boolean firstTime = true;
     @Override
@@ -249,8 +143,6 @@ public class NotificationsActivity extends BaseActivity {
                         seenAllNotification = true;
                     }
                     offsetMain = offset;
-                    //mAdapter.notifyDataSetChanged();
-                    //notificationsList.
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

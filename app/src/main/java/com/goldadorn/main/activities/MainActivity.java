@@ -117,9 +117,6 @@ public class MainActivity extends BaseDrawerActivity  {
         tourThisScreen();
     }
 
-    /*private void logEventsAnalytics(String eventName) {
-        getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
-    }*/
 
 
     private void tourThisScreen() {

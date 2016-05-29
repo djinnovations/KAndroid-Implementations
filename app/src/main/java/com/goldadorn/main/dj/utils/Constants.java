@@ -38,6 +38,8 @@ public class Constants {
     //public static final String OAUTH_CLIENT_ID_GL = "1067734393749-ojd6omgjp0f9a797918vpnic2k8uhovp.apps.googleusercontent.com";
 
     public static final String OAUTH_WEBCLIENT_ID_GL = "1067734393749-0a02a40m8bib8f92o8o4n6i1fc5nng0t.apps.googleusercontent.com";
+    public static final String SERVER_KEY_GL = "AIzaSyBS7zC9tJFmYzF8HmK-aQNMgV06mO09kLI";
+
     public static final String MIX_PANEL_PROJECT_TOKEN = "7990b395d94157c30ca2d2e3a0e08a69";
     public static final String SENDER_ID_PROJECT_NUMBER = "1067734393749";
 

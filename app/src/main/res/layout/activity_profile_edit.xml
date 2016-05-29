@@ -2,12 +2,13 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@id/layoutParent"
+    style="@style/appackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@id/layoutParent"
     android:fitsSystemWindows="true"
-    style="@style/appackground"
     tools:context=".activities.MainActivity">
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,236 +29,267 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activities.MainActivity"
         tools:showIn="@layout/app_bar_main">
+
         <FrameLayout
 
             android:id="@+id/mainHolder"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-                <android.support.v4.widget.NestedScrollView
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:clipToPadding="false">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white"
-                    android:clipToPadding="false">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
+                    <TextView
+                        android:id="@+id/titleBasic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:text="@string/basic_profile"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/disabled_grey" />
+
+                    <EditText
+                        android:id="@+id/email"
+                        style="@style/FormEditText"
+                        android:hint="@string/hint_email"
+                        android:inputType="textEmailAddress" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:orientation="horizontal">
 
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/titleBasic"
-                            android:paddingBottom="8dp"
-                            android:text="@string/basic_profile"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:background="@color/disabled_grey"/>
 
                         <EditText
-                            android:id="@+id/email"
+                            android:id="@+id/first_name"
                             style="@style/FormEditText"
-                            android:hint="@string/hint_email"
-                            android:inputType="textEmailAddress"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-
-                            <EditText
-                                android:id="@+id/first_name"
-                                style="@style/FormEditText"
-                                android:layout_marginRight="4dp"
-                                android:layout_weight="1"
-                                android:hint="@string/hint_first_name"
-                                android:inputType="textPersonName"/>
-
-                            <EditText
-                                android:id="@+id/last_name"
-                                style="@style/FormEditText"
-                                android:layout_marginLeft="4dp"
-                                android:layout_weight="1"
-                                android:hint="@string/hint_last_name"
-                                android:inputType="textPersonName"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="4dp"
-                                android:layout_weight="1"
-                                android:layout_gravity="top"
-                                android:gravity="top"
-                                android:orientation="vertical">
-
-                                <Spinner
-                                    android:id="@+id/gender"
-                                    style="@style/FormEditText"
-                                    android:layout_weight="1"
-                                    android:entries="@array/gender"
-                                    android:prompt="@string/hint_gender"
-                                    android:spinnerMode="dropdown"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/dob"
-                                    style="@style/FormEditText"
-                                    android:layout_weight="1"
-                                    android:hint="@string/hint_birthday"
-                                    android:inputType="date"/>
-
-                                <EditText
-                                    android:id="@+id/phone"
-                                    style="@style/FormEditText"
-                                    android:layout_weight="1"
-                                    android:hint="@string/hint_phone_number"
-                                    android:inputType="phone"/>
-
-                            </LinearLayout>
-
-                            <RelativeLayout
-                                android:layout_gravity="top"
-                                android:gravity="top"
-                                android:layout_width="0dp"
-                                android:layout_weight="1"
-                                style="@style/FormEditText"
-                                android:layout_height="106dp"
-                                android:padding="1dp"
-                                android:layout_marginLeft="4dp">
-
-                                <ImageView
-                                    android:layout_margin="1dp"
-                                    android:id="@+id/image"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:src="@drawable/vector_icon_profile"
-                                    android:scaleType="centerCrop"/>
-
-                            </RelativeLayout>
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:id="@+id/titleAddress"
-                            android:paddingBottom="8dp"
-                            android:text="@string/address"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"/>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:background="@color/disabled_grey"/>
+                            android:layout_marginRight="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/hint_first_name"
+                            android:inputType="textPersonName" />
 
                         <EditText
-                            android:id="@+id/address1"
+                            android:id="@+id/last_name"
                             style="@style/FormEditText"
-                            android:hint="@string/address1"
-                            android:inputType="textPostalAddress"
-                            />
-
-                        <EditText
-                            android:id="@+id/address2"
-                            style="@style/FormEditText"
-                            android:hint="@string/address2"
-                            android:inputType="textPostalAddress"
-                            />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-
-                            <Spinner
-                                android:id="@+id/country"
-                                style="@style/FormEditText"
-                                android:layout_marginRight="4dp"
-                                android:layout_weight="1"
-                                android:entries="@array/country"
-                                android:prompt="@string/prompt_country"
-                                android:spinnerMode="dropdown"/>
-
-                            <Spinner
-                                android:id="@+id/state"
-                                style="@style/FormEditText"
-                                android:layout_marginLeft="4dp"
-                                android:layout_weight="1"
-                                android:entries="@array/states"
-                                android:prompt="@string/prompt_state"
-                                android:spinnerMode="dropdown"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-
-                            <Spinner
-                                android:id="@+id/city"
-                                style="@style/FormEditText"
-                                android:layout_marginRight="4dp"
-                                android:layout_weight="1"
-                                android:dropDownSelector="@drawable/arrow_cb"
-                                android:entries="@array/cities"
-                                android:prompt="@string/prompt_city"
-                                android:spinnerMode="dropdown"
-                                />
-
-                            <EditText
-                                android:id="@+id/zipcode"
-                                style="@style/FormEditText"
-                                android:layout_marginLeft="4dp"
-                                android:layout_weight="1"
-                                android:hint="@string/zipcode"
-                                android:inputType="number"
-                                android:maxLength="6"/>
-                        </LinearLayout>
-
-                        <Button
-                            android:id="@+id/doneButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Done"
-                            android:textSize="14sp"/>
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/hint_last_name"
+                            android:inputType="textPersonName" />
                     </LinearLayout>
-                </android.support.v4.widget.NestedScrollView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="top"
+                            android:layout_marginRight="4dp"
+                            android:layout_weight="1"
+                            android:gravity="top"
+                            android:orientation="vertical">
+
+                            <Spinner
+                                android:id="@+id/gender"
+                                style="@style/FormEditText"
+                                android:layout_weight="1"
+                                android:entries="@array/gender"
+                                android:prompt="@string/hint_gender"
+                                android:spinnerMode="dropdown" />
+
+                            <TextView
+                                android:id="@+id/dob"
+                                style="@style/FormEditText"
+                                android:layout_weight="1"
+                                android:inputType="date"
+                                android:text="@string/hint_birthday" />
+
+                            <EditText
+                                android:id="@+id/phone"
+                                style="@style/FormEditText"
+                                android:layout_weight="1"
+                                android:hint="@string/hint_phone_number"
+                                android:inputType="phone" />
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            style="@style/FormEditText"
+                            android:layout_width="0dp"
+                            android:layout_height="106dp"
+                            android:layout_gravity="top"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:gravity="top"
+                            android:padding="1dp">
+
+                            <ImageView
+                                android:id="@+id/image"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="1dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/vector_icon_profile" />
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/titleAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:paddingBottom="8dp"
+                        android:text="@string/address"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/disabled_grey" />
+
+                    <!--<EditText
+                        android:id="@+id/address1"
+                        style="@style/FormEditText"
+                        android:hint="@string/address1"
+                        android:inputType="textPostalAddress" />-->
+                    <com.seatgeek.placesautocomplete.PlacesAutocompleteTextView
+                        android:id="@+id/places_autocomplete"
+                        style="@style/FormEditTextAuto"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:hint="Address (autocomplete)"
+                        app:pacv_googleMapsApiKey="@string/gl_server_api_key" />
+
+                    <EditText
+                        android:id="@+id/address2"
+                        style="@style/FormEditText"
+                        android:hint="street/locality"
+                        android:inputType="textPostalAddress" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
 
-                <FrameLayout
-                    android:id="@+id/progress_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white"
-                    android:elevation="6dp"
-                    android:visibility="visible">
+                        <Spinner
+                            android:id="@+id/country"
+                            style="@style/FormEditText"
+                            android:layout_marginRight="4dp"
+                            android:layout_weight="1"
+                            android:entries="@array/country"
+                            android:prompt="@string/prompt_country"
+                            android:spinnerMode="dropdown" />
 
-                    <ProgressBar
+                        <EditText
+                            android:id="@+id/state"
+                            style="@style/FormEditText"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:hint="State"
+                            android:inputType="textCapWords" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/city"
+                            style="@style/FormEditText"
+                            android:layout_marginRight="4dp"
+                            android:layout_weight="1"
+                            android:hint="City"
+                            android:inputType="textCapWords" />
+
+                        <EditText
+                            android:id="@+id/zipcode"
+                            style="@style/FormEditText"
+                            android:layout_marginLeft="4dp"
+                            android:layout_weight="1"
+                            android:hint="@string/zipcode"
+                            android:inputType="number"
+                            android:maxLength="6" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvNote"
+                        android:layout_marginTop="@dimen/dp10"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"/>
+                        android:textSize="10sp"
+                        android:textColor="@color/disabled_grey"
+                        android:text="Note: In case the address identified is wrong, please enter manually"/>
 
-                </FrameLayout>
+
+                    <Button
+                        android:id="@+id/doneButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="Done"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
+
+
+            <!--<FrameLayout
+                android:id="@+id/progress_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:elevation="6dp"
+                android:visibility="visible">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>-->
+
+
+
+            <com.vlonjatg.progressactivity.ProgressActivity
+                android:id="@+id/progressActivity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:loadingBackgroundColor="#FFFFFF"
+                app:emptyBackgroundColor="#fbc02d"
+                app:errorBackgroundColor="@color/disabled_grey"
+                app:errorButtonTextColor="@color/white"
+                app:errorContentTextColor="@color/Red">
+
+               <!-- <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:text="@string/hello_world" />-->
+
+            </com.vlonjatg.progressactivity.ProgressActivity>
 
 
         </FrameLayout>

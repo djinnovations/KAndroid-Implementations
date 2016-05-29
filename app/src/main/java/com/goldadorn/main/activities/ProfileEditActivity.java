@@ -4,7 +4,10 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +28,8 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.ProfileData;
@@ -36,7 +41,15 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mixpanel.android.util.StringUtils;
+import com.seatgeek.placesautocomplete.DetailsCallback;
+import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
+import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
+import com.seatgeek.placesautocomplete.model.AddressComponent;
+import com.seatgeek.placesautocomplete.model.AddressComponentType;
+import com.seatgeek.placesautocomplete.model.Place;
+import com.seatgeek.placesautocomplete.model.PlaceDetails;
 import com.squareup.picasso.Picasso;
+import com.vlonjatg.progressactivity.ProgressActivity;
 
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -84,17 +97,17 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.image)
     ImageView mImage;
 
-    @Bind(R.id.address1)
-    EditText mAddress1;
+    @Bind(R.id.places_autocomplete)
+    PlacesAutocompleteTextView places_autocomplete;
     @Bind(R.id.address2)
     EditText mAddress2;
 
     @Bind(R.id.country)
     Spinner mCountry;
     @Bind(R.id.state)
-    Spinner mState;
+    EditText mState;
     @Bind(R.id.city)
-    Spinner mCity;
+    EditText mCity;
     @Bind(R.id.zipcode)
     EditText mPincode;
 
@@ -108,8 +121,8 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.doneButton)
     Button mDone;
 
-    @Bind(R.id.progress_frame)
-    View mProgress;
+    /*@Bind(R.id.progress_frame)
+    View mProgress;*/
 
     private File mImageFile;
     private ProfileData mProfileData;
@@ -119,41 +132,39 @@ public class ProfileEditActivity extends BaseActivity {
     Toolbar mToolbar;
 
 
-    public void setupStyle()
-    {
+    public void setupStyle() {
         View[] viewList = new View[14];
-        viewList[0]=mEmail;
-        viewList[1]=mFirstName;
-        viewList[2]=mLastName;
-        viewList[3]=mGender;
-        viewList[4]=mDob;
-        viewList[5]=mPhone;
-        viewList[6]=mAddress1;
-        viewList[7]=mAddress2;
-        viewList[8]=mCountry;
-        viewList[9]=mState;
-        viewList[10]=mCity;
-        viewList[11]=mPincode;
-        viewList[12]=titleBasic;
-        viewList[13]=titleAddress;
-
+        viewList[0] = mEmail;
+        viewList[1] = mFirstName;
+        viewList[2] = mLastName;
+        viewList[3] = mGender;
+        viewList[4] = mDob;
+        viewList[5] = mPhone;
+        viewList[6] = places_autocomplete;
+        viewList[7] = mAddress2;
+        viewList[8] = mCountry;
+        viewList[9] = mState;
+        viewList[10] = mCity;
+        viewList[11] = mPincode;
+        viewList[12] = titleBasic;
+        viewList[13] = titleAddress;
 
 
         TypefaceHelper.setFont(viewList);
 
 
-        SpinnerAdapter adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.gender)));
+        SpinnerAdapter adapter = new SpinnerAdapter(this, android.R.layout.simple_list_item_1, Arrays.asList(getResources().getStringArray(R.array.gender)));
         mGender.setAdapter(adapter);
 
 
-        adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.country)));
+        adapter = new SpinnerAdapter(this, android.R.layout.simple_list_item_1, Arrays.asList(getResources().getStringArray(R.array.country)));
         mCountry.setAdapter(adapter);
 
-        adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.states)));
+        /*adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.states)));
         mState.setAdapter(adapter);
 
         adapter = new SpinnerAdapter(this,android.R.layout.simple_list_item_1,Arrays.asList(getResources().getStringArray(R.array.cities)));
-        mCity.setAdapter(adapter);
+        mCity.setAdapter(adapter);*/
     }
 
 
@@ -163,7 +174,7 @@ public class ProfileEditActivity extends BaseActivity {
                 @Override
                 public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                     mCalendar.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                    mDob.setText(android.text.format.DateFormat.format("dd/M/yyyy", mCalendar));
+                    mDob.setText(android.text.format.DateFormat.format("MM/dd/yyyy", mCalendar));
                 }
             };
     private DatePickerDialog mDialog;
@@ -171,29 +182,30 @@ public class ProfileEditActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home)
-        {
+        if (id == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-
-
-
+    ResourceReader rsRdr;
+    @Bind(R.id.progressActivity)
+    ProgressActivity pga;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
+
+        rsRdr = ResourceReader.getInstance(getApplicationContext());
         mContext = this;
+
         ButterKnife.bind(this);
+        pga.showLoading();
 
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PROFILE");
         logEventsAnalytics(GAAnalyticsEventNames.PROFILE);
 
-        mFormat = new SimpleDateFormat("dd/M/yyyy", Locale.getDefault());
-        setupDOB();
+        mFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -203,32 +215,22 @@ public class ProfileEditActivity extends BaseActivity {
             public void onClick(View v) {
                 if (mProfileData == null)
                     mProfileData = new ProfileData();
-                mProfileData.email = mEmail.getText().toString();
-                mProfileData.firstName = mFirstName.getText().toString();
-                mProfileData.lastName = mLastName.getText().toString();
+                mProfileData.email = mEmail.getText().toString().trim();
+                mProfileData.firstName = mFirstName.getText().toString().trim();
+                mProfileData.lastName = mLastName.getText().toString().trim();
                 mProfileData.genderType = mGender.getSelectedItemPosition();
-                mProfileData.phone = mPhone.getText().toString();
-                mProfileData.address1 = mAddress1.getText().toString();
-                mProfileData.address2 = mAddress2.getText().toString();
-                mProfileData.country = mCountry.getSelectedItem().toString();
-                mProfileData.state = mState.getSelectedItem().toString();
-                mProfileData.city = mCity.getSelectedItem().toString();
-                mProfileData.pincode = mPincode.getText().toString();
+                mProfileData.phone = mPhone.getText().toString().trim();
+                mProfileData.address1 = addrLine1;
+                mProfileData.address2 = mAddress2.getText().toString().trim();
+                mProfileData.country = mCountry.getSelectedItem().toString().trim();
+                mProfileData.state = mState.getText().toString().trim();
+                mProfileData.city = mCity.getText().toString().trim();
+                mProfileData.pincode = mPincode.getText().toString().trim();
                 if (mCalendar != null)
                     mProfileData.dob = mCalendar.getTimeInMillis();
                 mProfileData.imageToUpload = mImageFile;
 
-
                 submitProfile(mProfileData);
-
-/*
-                UIController.setBasicProfileInfo(mContext, mProfileData, new IResultListener<ObjectResponse<ProfileData>>() {
-                    @Override
-                    public void onResult(ObjectResponse<ProfileData> result) {
-                        Toast.makeText(mContext, result.success ? "Profile Updated" : "Someething went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                */
 
             }
         });
@@ -240,32 +242,170 @@ public class ProfileEditActivity extends BaseActivity {
                         EasyImageConfig.REQ_SOURCE_CHOOSER);
             }
         });
+
+        setupStyle();
+        if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()) {
+            setUpCalendarAndBindUi();
+        }
+        else showNetworkErr();
+    }
+
+
+    private View.OnClickListener retryClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d("dj","network stat: "+ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable());
+            pga.showLoading();
+            if (!ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()){
+                showNetworkErr();
+                return;
+            }
+            setUpCalendarAndBindUi();
+        }
+    };
+
+
+    private void showNetworkErr(){
+        pga.showError(rsRdr.getDrawableFromResId(R.drawable._vector_icon_internet_connection),
+                null, "No network connection", "Retry", retryClick);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            pga.setBackground(new ColorDrawable(rsRdr.getColorFromResource(R.color.disabled_grey)));
+        }else pga.setBackgroundDrawable(new ColorDrawable(rsRdr.getColorFromResource(R.color.disabled_grey)));
+    }
+
+
+    private void setUpCalendarAndBindUi(){
+
+        setUpAutoComplete();
+        setupDOB();
         UIController.getBasicProfileInfo(mContext, new IResultListener<ObjectResponse<ProfileData>>() {
             @Override
             public void onResult(ObjectResponse<ProfileData> result) {
-                mProgress.setVisibility(View.GONE);
+                //mProgress.setVisibility(View.GONE);
                 if (result.success) {
                     bindUI(result.object);
                 }
             }
         });
+    }
 
-        setupStyle();
+
+
+    private String addrLine1;
+    DetailsCallback placeDetailsCallBack = new DetailsCallback() {
+        @Override
+        public void onSuccess(PlaceDetails placeDetails) {
+            Log.d("djplace", "complete address: " + places_autocomplete.getText());
+            String addLine2 = getSecondLineAddr(places_autocomplete.getText().toString().trim());
+            addrLine1 = getAddrLine1(places_autocomplete.getText().toString().trim());
+            mAddress2.setText(addLine2 == null ? "": addLine2);
+            places_autocomplete.setSelection(0);
+            for (AddressComponent component : placeDetails.address_components) {
+                for (AddressComponentType type : component.types) {
+                    switch (type) {
+                        case STREET_NUMBER:
+                            break;
+                        case ROUTE:
+                            /*places_autocomplete.setText(component.long_name);
+                            places_autocomplete.setSelection(places_autocomplete.getText().length());*/
+                            break;
+                        case NEIGHBORHOOD:
+                            break;
+                        case SUBLOCALITY_LEVEL_1:
+                            break;
+                        case SUBLOCALITY:
+                            break;
+                        case LOCALITY:
+                            mCity.setText(component.long_name);
+                            break;
+                        case ADMINISTRATIVE_AREA_LEVEL_1:
+                            mState.setText(component.long_name);
+                            break;
+                        case ADMINISTRATIVE_AREA_LEVEL_2:
+                            break;
+                        case COUNTRY:
+                            mCountry.setSelection(0, false);
+                            break;
+                        case POSTAL_CODE:
+                            Log.d("djplace", "pin: " + component.long_name);
+                            mPincode.setText(component.long_name);
+                            break;
+                        case POLITICAL:
+                            break;
+                    }
+                }
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+
+        }
+    };
+
+
+    public String getAddrLine1(String fullAddr) {
+
+        String[] addrArr = fullAddr.split(",");
+        return addrArr[0];
+    }
+
+    private String getSecondLineAddr(String fullAddr) {
+
+        String[] addrArr = fullAddr.split(",");
+        if (addrArr.length > 4) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < addrArr.length - 3; i++) {
+                sb.append(addrArr[i] + ",");
+            }
+            sb = sb.deleteCharAt(sb.length() - 1);
+            return sb.toString().trim();
+        }
+        return null;
+    }
+
+
+    private void setUpAutoComplete() {
+        places_autocomplete.setOnPlaceSelectedListener(
+                new OnPlaceSelectedListener() {
+                    @Override
+                    public void onPlaceSelected(final Place place) {
+                        // do something awesome with the selected place
+                        places_autocomplete.getDetailsFor(place, placeDetailsCallBack);
+                    }
+                }
+        );
 
     }
 
     final private int postCallToken = IDUtils.generateViewId();
-    protected void submitProfile(ProfileData mProfileData)
-    {
+
+
+
+    protected void submitProfile(ProfileData mProfileData) {
         MultipartEntity reqEntity = new MultipartEntity();
 
 
-        if(mProfileData.imageToUpload!=null && mProfileData.imageToUpload.exists()  && mProfileData.imageToUpload.canRead())
+        if (mProfileData.imageToUpload != null && mProfileData.imageToUpload.exists() && mProfileData.imageToUpload.canRead())
             reqEntity.addPart("file1", new FileBody(mProfileData.imageToUpload));
 
-        putStringBody(reqEntity,"prof_username",mProfileData.email);
-        putStringBody(reqEntity,"prof_fname",mProfileData.firstName);
-        putStringBody(reqEntity,"prof_gender",mProfileData.genderType+"");
+        int genderCode = mProfileData.genderType == 1 ? 2 : 1;
+        String genderText = genderCode == 2 ? "Male":"Female";
+
+        String bday = mDob.getText().toString().trim();
+        putStringBody(reqEntity, "prof_username", mProfileData.email);
+        putStringBody(reqEntity, "prof_fname", mProfileData.firstName);
+        putStringBody(reqEntity, "prof_gender", genderText);
+        putStringBody(reqEntity, "prof_address1", mProfileData.address1);
+        putStringBody(reqEntity, "prof_address2", mProfileData.address2);
+        putStringBody(reqEntity, "prof_lname", mProfileData.lastName);
+        putStringBody(reqEntity, "prof_birthday", bday);
+        putStringBody(reqEntity, "prof_phone", mProfileData.phone);
+        putStringBody(reqEntity, "prof_pincode", mProfileData.pincode);
+        putStringBody(reqEntity, "prof_city", mProfileData.city);
+        putStringBody(reqEntity, "prof_state", mProfileData.state);
+        putStringBody(reqEntity, "prof_country", mProfileData.country);
 
 
         Map<String, Object> params = new HashMap<>();
@@ -273,108 +413,88 @@ public class ProfileEditActivity extends BaseActivity {
 
 
         String url = getUrlHelper().getSetBasicProfileURL();
-        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(postCallToken);
         ajaxCallback.setClazz(String.class);
         ajaxCallback.setParams(params);
         ajaxCallback.method(AQuery.METHOD_POST);
+        Log.d("djplace","updateProfile reqJson: "+reqEntity);
         getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
-    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-        if(id== postCallToken)
-        {
+
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djplace","response setBasicProfile: "+json);
+        if (id == postCallToken) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
-            if(success)
-            {
+            if (success) {
                 Toast.makeText(ProfileEditActivity.this, "Profile has been updated", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
 
             }
 
-        }
-        else
-            super.serverCallEnds(id,url, json, status);
+        } else
+            super.serverCallEnds(id, url, json, status);
     }
+
     private void putStringBody(MultipartEntity reqEntity, String key, String value) {
         try {
-            if(value!=null && value.equals("")==false)
+            if (value != null)
                 reqEntity.addPart(key, new StringBody(value));
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
+
+
 
     private void bindUI(ProfileData profileData) {
         mProfileData = profileData;
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeZone(TimeZone.getDefault());
-        mCalendar.setTimeInMillis(mProfileData.dob);
+        mCalendar.setTimeInMillis(mProfileData.dob == 0? System.currentTimeMillis(): mProfileData.dob);
 
-        if(!TextUtils.isEmpty(mProfileData.email))
+        if (!TextUtils.isEmpty(mProfileData.email))
             mEmail.setText(mProfileData.email);
 
-        if(!TextUtils.isEmpty(mProfileData.firstName))
+        if (!TextUtils.isEmpty(mProfileData.firstName))
             mFirstName.setText(mProfileData.firstName);
 
-        if(!TextUtils.isEmpty(mProfileData.lastName))
+        if (!TextUtils.isEmpty(mProfileData.lastName))
             mLastName.setText(mProfileData.lastName);
 
         mDob.setText(mFormat.format(mCalendar.getTime()));
 
-        if(!TextUtils.isEmpty(mProfileData.phone))
+        if (!TextUtils.isEmpty(mProfileData.phone))
             mPhone.setText(mProfileData.phone);
 
         if(!TextUtils.isEmpty(mProfileData.address1))
-            mAddress1.setText(mProfileData.address1);
+            places_autocomplete.setText(mProfileData.address1);
 
-        if(!TextUtils.isEmpty(mProfileData.address2))
+        if (!TextUtils.isEmpty(mProfileData.address2))
             mAddress2.setText(mProfileData.address2);
 
-        if(!TextUtils.isEmpty(mProfileData.pincode))
+        if (!TextUtils.isEmpty(mProfileData.pincode))
             mPincode.setText(mProfileData.pincode);
 
+        if (!TextUtils.isEmpty(mProfileData.city))
+            mCity.setText(mProfileData.city);
+        if (!TextUtils.isEmpty(mProfileData.state))
+            mState.setText(mProfileData.state);
 
-        String[] array = getResources().getStringArray(R.array.gender);
-        int selected = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (i == mProfileData.genderType)
-                selected = i;
-        }
-        mGender.setSelection(selected);
+        mGender.setSelection(mProfileData.genderType == 2 ? 1: 0);
+        mCountry.setSelection(0);
 
-        array = getResources().getStringArray(R.array.country);
-        selected = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].equalsIgnoreCase(mProfileData.country))
-                selected = i;
-        }
-        mCountry.setSelection(selected);
 
-        array = getResources().getStringArray(R.array.states);
-        selected = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].equalsIgnoreCase(mProfileData.state))
-                selected = i;
-        }
-        mState.setSelection(selected);
-
-        array = getResources().getStringArray(R.array.cities);
-        selected = 0;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].equalsIgnoreCase(mProfileData.city))
-                selected = i;
-        }
-        mCity.setSelection(selected);
-
-        Log.d(Constants.TAG, "profilePic url - ProfileEditActivity(bindUI()): "+mProfileData.imageUrl);
+        Log.d(Constants.TAG, "profilePic url - bindUI()-ProfileEditActivity: " + mProfileData.imageUrl);
         try {
-            Picasso.with(this).load(mProfileData.imageUrl).placeholder(R.drawable
+            if (!TextUtils.isEmpty(mProfileData.imageUrl.trim()))
+            Picasso.with(this).load(mProfileData.imageUrl.trim()).placeholder(R.drawable
                     .vector_image_place_holder_profile_dark).into(mImage);
-        }catch (Exception ex){
+            else Log.d(Constants.TAG, "no profile pic loaded bindUI()-ProfileEditActivity: ");
+        } catch (Exception ex) {
             Picasso.with(this).load(R.drawable
                     .vector_image_place_holder_profile_dark).into(mImage);
         }
-
+        pga.showContent();
     }
 
     private void setupDOB() {
@@ -432,7 +552,7 @@ public class ProfileEditActivity extends BaseActivity {
             TextView view = (TextView) super.getView(position, convertView, parent);
 
             view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-            view.setPadding(0,0,0,0);
+            view.setPadding(0, 0, 0, 0);
             TypefaceHelper.setFont(view);
             return view;
         }
