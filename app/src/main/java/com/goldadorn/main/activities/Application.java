@@ -13,6 +13,7 @@ import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.support.GAFacebookAnalytics;
+import com.goldadorn.main.dj.support.MyPreferenceManager;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -85,6 +86,19 @@ public class Application extends BaseApplication {
         Log.e("iii","iii");
     }
 
+    private static Application ourInstance;
+    public static Application getInstance(){
+        return ourInstance;
+    }
+
+    private MyPreferenceManager mPrefInstance;
+    public MyPreferenceManager getPrefManager(){
+
+        if (mPrefInstance == null){
+            mPrefInstance = MyPreferenceManager.getInstance(this);
+        }
+        return mPrefInstance;
+    }
 
     @Override
     public Object getSystemService(String name) {
@@ -187,6 +201,7 @@ public class Application extends BaseApplication {
         menu.put(id, new NavigationDataObject(id, actionType));
     }
     public void configApplication() {
+        ourInstance = this;
         Mint.initAndStartSession(this, "9bccadcc");
         ExtendedAjaxCallback.setReuseHttpClient(true);
         Iconics.registerFont(new FontAwesome());

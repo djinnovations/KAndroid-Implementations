@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by COMP on 3/4/2016.
@@ -82,9 +83,9 @@ public class DateTimeUtils {
     public static String getNewDate(String inputDate, String inputDateFormat, String outputDateFormat) {
 
         try {
-            DateFormat dateFormat = new SimpleDateFormat(inputDateFormat);
+            DateFormat dateFormat = new SimpleDateFormat(inputDateFormat, Locale.getDefault());
             Date inputDateObj = dateFormat.parse(inputDate);
-            String newDateFormat = new SimpleDateFormat(outputDateFormat).format(inputDateObj);
+            String newDateFormat = new SimpleDateFormat(outputDateFormat, Locale.getDefault()).format(inputDateObj);
             Log.d("dj", "new date format string: " + newDateFormat);
             return newDateFormat;
         } catch (ParseException e) {
@@ -92,6 +93,15 @@ public class DateTimeUtils {
             return inputDate;
         }
 
+    }
+
+
+    public static String getCurrentDateTime(String inputDateFormat){
+
+        Date current = new Date();
+        DateFormat newFormat = new SimpleDateFormat(inputDateFormat, Locale.getDefault());
+        String currentFormatted = newFormat.format(current);
+        return currentFormatted;
     }
 
 

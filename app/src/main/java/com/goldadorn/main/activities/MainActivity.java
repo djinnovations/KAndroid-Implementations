@@ -76,7 +76,7 @@ public class MainActivity extends BaseDrawerActivity  {
     View transViewPost;
 
 //    private ResourceReader resRdr;
-//    private CoachMarkManager coachMarkMgr;
+//    private MyPreferenceManager coachMarkMgr;
 //
 //    private final String msgWelcome = "You have landed on the social feed\n"
 //            +"where you can see all the social\nactivity happening in the app";
@@ -122,7 +122,7 @@ public class MainActivity extends BaseDrawerActivity  {
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());
-        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        coachMarkMgr = MyPreferenceManager.getInstance(getApplicationContext());*/
         mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override

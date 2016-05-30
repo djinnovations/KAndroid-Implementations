@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.showcase;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -292,10 +293,25 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        getSupportLoaderManager().destroyLoader(mCollectionCallback.hashCode());
+        menuAction(R.id.nav_showcase);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 1000);
+    }
+
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getSupportLoaderManager().destroyLoader(mCollectionCallback.hashCode());
     }
 
     @Override

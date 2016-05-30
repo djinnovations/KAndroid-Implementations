@@ -252,7 +252,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());
-        coachMarkMgr = CoachMarkManager.getInstance(getApplicationContext());*/
+        coachMarkMgr = MyPreferenceManager.getInstance(getApplicationContext());*/
         mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -471,10 +471,12 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(user.imageUrl).into(image);
-            image.getLayoutParams().width = this.width;
-            image.getLayoutParams().height = this.height;
-            image.requestLayout();
+            if (!TextUtils.isEmpty(user.imageUrl)) {
+                Picasso.with(mContext).load(user.imageUrl).into(image);
+                image.getLayoutParams().width = this.width;
+                image.getLayoutParams().height = this.height;
+                image.requestLayout();
+            }
         }
 
         @Override

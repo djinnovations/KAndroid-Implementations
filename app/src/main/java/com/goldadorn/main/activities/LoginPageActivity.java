@@ -142,11 +142,12 @@ public class LoginPageActivity extends BaseActivity {
                             .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid()))
                             .putString(AppSharedPreferences.LoginInfo.PASSWORD, password.getText().toString()).commit();
 
-                    MixpanelAPI.People people = getApp().getMixPanelInstance().getPeople();
+                    /*MixpanelAPI.People people = getApp().getMixPanelInstance().getPeople();
                     people.identify(loginResult.getUserid());
-                    people.initPushHandling(Constants.SENDER_ID_PROJECT_NUMBER);
+                    people.initPushHandling(Constants.SENDER_ID_PROJECT_NUMBER);*/
                     Log.d("dj","login tracked");
                     getApp().getMixPanelInstance().track("Login_track");
+
                     gotoApp();
                 } else {
                     final Snackbar snackbar = Snackbar.make(layoutParent, loginResult.getMsg(), Snackbar.LENGTH_SHORT);

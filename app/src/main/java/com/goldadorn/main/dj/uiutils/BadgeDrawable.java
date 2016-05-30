@@ -15,7 +15,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.Constants;
 
 /**
- * Created by User on 29-05-2016.
+ * Created by DJphy on 29-05-2016.
  */
 public class BadgeDrawable extends Drawable {
 
@@ -31,7 +31,7 @@ public class BadgeDrawable extends Drawable {
     public BadgeDrawable(Context context) {
 
         Log.d("dj", "constructor pt1 BadgeDrawable");
-        mTextSize = /*context.getResources().getDimension(R.dimen.badge_text_size)*/ 22;
+        mTextSize = /*context.getResources().getDimension(R.dimen.badge_text_size)*/ 18;
         mBadgePaint = new Paint();
         mBadgePaint.setColor(ResourceReader.getInstance(context).getColorFromResource(R.color.colorPrimary));
         mBadgePaint.setAntiAlias(true);
@@ -73,8 +73,8 @@ public class BadgeDrawable extends Drawable {
             /*canvas.drawCircle(centerX, centerY, radius+9, mBadgePaint1);
             canvas.drawCircle(centerX, centerY, radius+7, mBadgePaint);*/
 
-            canvas.drawCircle(centerX, centerY, radius+9, mBadgePaint1);
-            canvas.drawCircle(centerX, centerY, radius+7, mBadgePaint);
+            canvas.drawCircle(centerX, centerY, radius+8, mBadgePaint1);
+            canvas.drawCircle(centerX, centerY, radius+6, mBadgePaint);
         }
         else{
             /*canvas.drawCircle(centerX, centerY, radius+10, mBadgePaint1);

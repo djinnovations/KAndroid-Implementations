@@ -117,6 +117,9 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
                 startActivity(CollectionsActivity
                         .getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
+
+                //suspicious code
+                getActivity().finish();
             }
         };
        /* private View.OnClickListener mLikeClick = new View.OnClickListener() {

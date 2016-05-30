@@ -1,14 +1,17 @@
 package com.goldadorn.main.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,6 +19,8 @@ import android.widget.Toast;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.support.gcm.Config;
+import com.goldadorn.main.dj.support.gcm.GcmIntentService;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -23,6 +28,8 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
@@ -59,6 +66,7 @@ public class AppStartActivity extends BaseActivity {
         int res = R.raw.logo_2;
         logo.setImageResource(res);
         */
+        setUpGCM();
 
 
         ProgressView progressBar = (ProgressView) findViewById(R.id.progressBar);
@@ -77,18 +85,83 @@ public class AppStartActivity extends BaseActivity {
         //initFacebookSdk();
     }
 
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private void setUpGCM() {
+
+        Application.getInstance().getPrefManager().clearNotificationMsgs();
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    String token = intent.getStringExtra("token");
+
+                    Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
+                    Log.d("dj", "GCM reg Token: " + token);
+                    Log.d("dj","GCM reg Token: "+token);
+
+                } else if (intent.getAction().equals(Config.SENT_TOKEN_TO_SERVER)) {
+                    // gcm registration id is stored in our server's MySQL
+
+                    Toast.makeText(getApplicationContext(), "GCM registration token is stored in server!", Toast.LENGTH_LONG).show();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    Toast.makeText(getApplicationContext(), "Push notification is received!", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+
+        if (checkPlayServices()) {
+            registerGCM();
+        }
+    }
+
+    // starting the service to register with GCM
+    private void registerGCM() {
+        Intent intent = new Intent(this, GcmIntentService.class);
+        intent.putExtra("key", "register");
+        startService(intent);
+    }
+
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i("djGcm", "This device is not supported. Google Play Services not installed!");
+                Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+
+
     private void initFacebookSdk() {
         FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
-    private void initMixpanel() {
+    /*private void initMixpanel() {
 
         if (((Application) this.getApplicationContext()).getUser() != null && ((Application) this.getApplicationContext()).getUser().id > 0) {
             String token = "7990b395d94157c30ca2d2e3a0e08a69";
             MixpanelAPI mixpanelAPI = MixpanelAPI.getInstance(this, token);
             mixpanelAPI.getPeople().identify(String.valueOf(((Application) this.getApplicationContext()).getUser().id));
         }
-    }
+    }*/
 
 
     @Override
@@ -217,5 +290,27 @@ public class AppStartActivity extends BaseActivity {
 
     private void gotoLandingPage() {
         new Action(this).launchActivity(LandingPageActivity.class, true);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+    }
+
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 }
