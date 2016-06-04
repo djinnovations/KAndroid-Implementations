@@ -22,6 +22,13 @@ import java.util.Map;
  */
 public class DefaultProjectDataManager extends DefaultJSONDataManager
 {
+
+    public interface NotificationCountChangeListener{
+
+        void onNotificationCountChanged(String count);
+    }
+
+
     private IDataManagerDelegate delegate;
     Context context;
     public DefaultProjectDataManager(Context context, IDataManagerDelegate delegate,List<Cookie> cookies)
@@ -52,6 +59,7 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
 
     private String notifyCount;
     public void dataHandler(String url, Object value, Object status) {
+        Log.d(Constants.TAG, "social feed url: "+url);
         if(value!=null && value instanceof String)
         {
             String stringValue = value.toString();
@@ -68,11 +76,21 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
                         @Override
                         public void run() {
                             if (notifyCount.length() > 1){
-                                BaseDrawerActivity.displayUnreadData(context, "9+");
+                                //BaseDrawerActivity.displayUnreadData(context, "9+");
+                                if (context instanceof BaseDrawerActivity){
+                                    ((BaseDrawerActivity) context).onNotificationCountChanged("9+");
+                                    return;
+                                }
                             }
-                            else BaseDrawerActivity.displayUnreadData(context, notifyCount);
+                            else {
+                                //BaseDrawerActivity.displayUnreadData(context, notifyCount);
+                                if (context instanceof BaseDrawerActivity){
+                                    ((BaseDrawerActivity) context).onNotificationCountChanged(notifyCount);
+                                    return;
+                                }
+                            }
                         }
-                    }, 1200);
+                    }, 500);
                 }
 
             } catch (JSONException e) {

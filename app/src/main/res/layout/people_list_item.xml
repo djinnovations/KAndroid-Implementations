@@ -19,6 +19,7 @@
         android:layout_alignParentLeft="true"
         app:border="true"
         app:border_color="@color/colorPrimary"
+        android:src="@drawable/vector_icon_people"
         app:border_width=".5dp"
         app:shadow="false"
         android:layout_centerHorizontal="true"/>

@@ -28,10 +28,12 @@ public class BadgeDrawable extends Drawable {
     private String mCount = "";
     private boolean mWillDraw = false;
 
+
     public BadgeDrawable(Context context) {
 
         Log.d("dj", "constructor pt1 BadgeDrawable");
-        mTextSize = /*context.getResources().getDimension(R.dimen.badge_text_size)*/ 18;
+        mTextSize = Constants.CURRENT_API_LEVEL >=21 ? 17 : 16;
+        //mTextSize = /*context.getResources().getDimension(R.dimen.badge_text_size)*/ 20;
         mBadgePaint = new Paint();
         mBadgePaint.setColor(ResourceReader.getInstance(context).getColorFromResource(R.color.colorPrimary));
         mBadgePaint.setAntiAlias(true);
@@ -41,6 +43,8 @@ public class BadgeDrawable extends Drawable {
         mBadgePaint1.setAntiAlias(true);
         mBadgePaint1.setStyle(Paint.Style.FILL);
 
+
+        Log.d("dj", "selected text size: "+mTextSize);
         mTextPaint = new Paint();
         mTextPaint.setColor(Color.WHITE);
         mTextPaint.setTypeface(Typeface.SANS_SERIF);
@@ -73,8 +77,8 @@ public class BadgeDrawable extends Drawable {
             /*canvas.drawCircle(centerX, centerY, radius+9, mBadgePaint1);
             canvas.drawCircle(centerX, centerY, radius+7, mBadgePaint);*/
 
-            canvas.drawCircle(centerX, centerY, radius+8, mBadgePaint1);
-            canvas.drawCircle(centerX, centerY, radius+6, mBadgePaint);
+            canvas.drawCircle(centerX, centerY, radius+7, mBadgePaint1);
+            canvas.drawCircle(centerX, centerY, radius+8, mBadgePaint);
         }
         else{
             /*canvas.drawCircle(centerX, centerY, radius+10, mBadgePaint1);

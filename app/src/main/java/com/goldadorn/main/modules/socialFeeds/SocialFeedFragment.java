@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.socialFeeds;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,6 +40,7 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
+import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.gesture.SwipeHelper;
@@ -105,7 +107,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     private void setUpGesture(View view) {
         Log.d("gest", "setUpGesture");
-        view.setOnTouchListener(new SwipeHelper(getActivity()){
+        view.setOnTouchListener(new SwipeHelper(getActivity()) {
 
             @Override
             public void onSwipeLeftToRight() {
@@ -1072,6 +1074,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     private void zoomImages(SocialPost socialPost, int index) {
+
         String imageURL = null;
         if (index == 0 && socialPost.getImage1() != null && socialPost.getImage1().equals("") == false)
             imageURL = socialPost.getImage1();
@@ -1080,36 +1083,36 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         else if (index == 2 && socialPost.getImage3() != null && socialPost.getImage3().equals("") == false)
             imageURL = socialPost.getImage3();
 
+
+        //DJphy
         if (imageURL != null && isProductLink(imageURL) != null) {
             Log.d(Constants.TAG, "Image URL - zoomImages: " + imageURL);
             String id = imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());
             id = id.substring(0, id.indexOf("/"));
             Log.d(Constants.TAG, "ID - zoomImages: " + id);
 
-            if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST){
+            if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEvent: Normal post");
                 logEventsAnalytics(GAAnalyticsEventNames.POST_NORMAL);
-            }
-            else if (socialPost.getPostType() == SocialPost.POST_TYPE_POLL){
+            } else if (socialPost.getPostType() == SocialPost.POST_TYPE_POLL) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEvent: BONB post");
                 logEventsAnalytics(GAAnalyticsEventNames.POST_BONB);
-            }
-            else if (socialPost.getPostType() == SocialPost.POST_TYPE_BEST_OF){
+            } else if (socialPost.getPostType() == SocialPost.POST_TYPE_BEST_OF) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEvent: BOT post");
                 logEventsAnalytics(GAAnalyticsEventNames.POST_BOT);
             }
-            /*String selection = Tables.Products._ID + "=?";
+            String selection = Tables.Products._ID + "=?";
             String[] selArgs = new String[]{id.trim()};
 
             Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
-            prodCursor.moveToFirst();*/
+            prodCursor.moveToFirst();
 
-            //Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
-            /*
-            Product product = Product.extractFromCursor(prodCursor);
-            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));*/
-
-            productInfoFromServer(socialPost, id.trim());
+            Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
+            if (prodCursor.getCount() != 0) {
+                Product product = Product.extractFromCursor(prodCursor);
+                startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            } else
+                productInfoFromServer(socialPost, id.trim());
 
             /*
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
@@ -1159,14 +1162,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
-
     private void productInfoFromServer(final SocialPost socialPost, String productId) {
 
         final Dialog dialog = displayOverlay(null, R.color.colorAccent);
         dialog.show();
 
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, Constants.ENDPOINT_PRODUCT_BASIC_INFO+productId,
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, Constants.ENDPOINT_PRODUCT_BASIC_INFO + productId,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -1186,10 +1188,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     Gson gson = new Gson();
                     ProductTemp productTemp = gson.fromJson(json_string, ProductTemp.class);*/
                     ProductTemp productTemp = RequestJson.parseProduct(response);
-                    if (productTemp != null){
+                    if (productTemp != null) {
                         Log.d(Constants.TAG, "productTemp - productInfoFromServer: " + productTemp.toString());
                         evaluateResults(productTemp, socialPost, dialog);
-                    }else setErrSnackBar(Constants.ERR_MSG_1);
+                    } else setErrSnackBar(Constants.ERR_MSG_1);
                 } catch (Exception e) {
                     e.printStackTrace();
                     dialog.dismiss();
@@ -1217,7 +1219,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         requestQueue.add(loginRequest);
 
     }
-
 
 
     private void setErrSnackBar(String errMsg) {

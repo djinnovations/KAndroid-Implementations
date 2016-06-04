@@ -88,137 +88,151 @@ public class AppTourGuideHelper {
         if (coachMarkMgr.isHomeScreenTourDone())
             return;
 
-        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
-        int toolTipTextColor = Color.WHITE;
-        Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
-                .setGravity(Gravity.CENTER);
-        Pointer pointer1 = new Pointer().setColor(Color.WHITE)
-                .setGravity(Gravity.CENTER);
+        try {
+            int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+            int toolTipTextColor = Color.WHITE;
+            Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
+                    .setGravity(Gravity.CENTER);
+            Pointer pointer1 = new Pointer().setColor(Color.WHITE)
+                    .setGravity(Gravity.CENTER);
 
-        Overlay overlay = new Overlay()
-                .setBackgroundColor(Color.parseColor(overLayBgColor))
-                .setStyle(Overlay.Style.Circle)
-                .setEnterAnimation(fadeInAnim)
-                .setExitAnimation(fadeOutAnim);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColor))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
 
-        ChainTourGuide tourGuideMain = ChainTourGuide.init(homeActivity)
-                .setToolTip(new ToolTip()
-                        .setTitle("Welcome To Gold Adorn")
-                        .setDescription(msgWelcome)
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setEnterAnimation(bounceAnim)
-                        .setGravity(Gravity.CENTER)
-                )
-                .setOverlay(null)
-                // note that there is not Overlay here, so the default one will be used
-                .playLater(viewsInSequence[0]);
-
-
-        ChainTourGuide tourGuidePeople = ChainTourGuide.init(homeActivity)
-                .setPointer(pointer)
-                .setToolTip(new ToolTip()
-                        .setTitle("People")
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgPeople)
-                        .setGravity(Gravity.BOTTOM | Gravity.CENTER)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[1]);
-
-        ChainTourGuide tourGuideSearch = ChainTourGuide.init(homeActivity)
-                .setPointer(pointer)
-                .setToolTip(new ToolTip()
-                        .setTitle("Search")
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgSearch)
-                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[2]);
+            ChainTourGuide tourGuideMain = ChainTourGuide.init(homeActivity)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Welcome To Gold Adorn")
+                            .setDescription(msgWelcome)
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setEnterAnimation(bounceAnim)
+                            .setGravity(Gravity.CENTER)
+                    )
+                    .setOverlay(null)
+                    // note that there is not Overlay here, so the default one will be used
+                    .playLater(viewsInSequence[0]);
 
 
-        ChainTourGuide tourGuideNotification = ChainTourGuide.init(homeActivity)
-                .setPointer(pointer)
-                .setToolTip(new ToolTip()
-                        .setTitle("Notification")
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgNotification)
-                        .setGravity(Gravity.BOTTOM | Gravity.LEFT)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[3]);
+            ChainTourGuide tourGuidePeople = ChainTourGuide.init(homeActivity)
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip()
+                            .setTitle("People")
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgPeople)
+                            .setGravity(Gravity.BOTTOM | Gravity.CENTER)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[1]);
 
-        ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
-                .setPointer(pointer1)
-                .setToolTip(new ToolTip()
-                        .setTitle("Post")
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgPost)
-                        .setGravity(Gravity.TOP | Gravity.LEFT)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[4]);
+            ChainTourGuide tourGuideSearch = ChainTourGuide.init(homeActivity)
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Search")
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgSearch)
+                            .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[2]);
 
-        Sequence sequence = new Sequence.SequenceBuilder()
-                .add(tourGuideMain, tourGuidePeople, tourGuideSearch,
-                        tourGuideNotification, tourGuidePost)
-                .setDefaultOverlay(new Overlay()
-                        .setEnterAnimation(fadeInAnim)
-                        .setExitAnimation(fadeOutAnim)
-                )
-                .setDefaultPointer(null)
-                .setContinueMethod(Sequence.ContinueMethod.Overlay)
-                .build();
 
-        ChainTourGuide.init(homeActivity).playInSequence(sequence);
+            ChainTourGuide tourGuideNotification = ChainTourGuide.init(homeActivity)
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Notification")
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgNotification)
+                            .setGravity(Gravity.BOTTOM | Gravity.LEFT)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[3]);
+
+            ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
+                    .setPointer(pointer1)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Post")
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgPost)
+                            .setGravity(Gravity.TOP | Gravity.LEFT)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[4]);
+
+            Sequence sequence = new Sequence.SequenceBuilder()
+                    .add(tourGuideMain, tourGuidePeople, tourGuideSearch,
+                            tourGuideNotification, tourGuidePost)
+                    .setDefaultOverlay(new Overlay()
+                            .setEnterAnimation(fadeInAnim)
+                            .setExitAnimation(fadeOutAnim)
+                    )
+                    .setDefaultPointer(null)
+                    .setContinueMethod(Sequence.ContinueMethod.Overlay)
+                    .build();
+
+            ChainTourGuide.init(homeActivity).playInSequence(sequence);
+        }catch (OutOfMemoryError ex){
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         coachMarkMgr.setHomeScreenTourGuideStatus(true);
     }
 
-
+    private TourGuide tgTimeLine;
     public void displayTimeLineTour(Activity timeLineActivity, View centeredView) {
 
         if (coachMarkMgr.isTimeLineTourdone())
             return;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setTitle("Time line")
+                    .setDescription(msgTimeLine)
+                    .setTextColor(Color.WHITE)
+                    .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
+                    /*.setTextColor(Color.BLACK)
+                    .setBackgroundColor(Color.parseColor(toolTipBgColor))*/
+                    .setShadow(true)
+                    .setEnterAnimation(fadeInAnim)
+                    .setGravity(Gravity.BOTTOM | Gravity.CENTER);
 
-        ToolTip toolTip = new ToolTip()
-                .setTitle("Time line")
-                .setDescription(msgTimeLine)
-                .setTextColor(Color.WHITE)
-                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
-                /*.setTextColor(Color.BLACK)
-                .setBackgroundColor(Color.parseColor(toolTipBgColor))*/
-                .setShadow(true)
-                .setEnterAnimation(fadeInAnim)
-                .setGravity(Gravity.BOTTOM | Gravity.CENTER);
 
+            Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))/*.setColor(Color.RED)*/
+                    .setGravity(Gravity.BOTTOM);
 
-        Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))/*.setColor(Color.RED)*/
-                .setGravity(Gravity.BOTTOM);
+            tgTimeLine = TourGuide.init(timeLineActivity)
+                    .setToolTip(toolTip)
+                    .setOverlay(new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColor)))
+                    .setPointer(pointer)
+                    .playOn(centeredView);
 
-        final TourGuide tg = TourGuide.init(timeLineActivity)
-                .setToolTip(toolTip)
-                .setOverlay(new Overlay()
-                        .setBackgroundColor(Color.parseColor(overLayBgColor)))
-                .setPointer(pointer)
-                .playOn(centeredView);
+            tgTimeLine.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        tg.getOverlay().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                tg.cleanUp();
-            }
-        });
+                    tgTimeLine.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgTimeLine != null)
+                tgTimeLine.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         coachMarkMgr.setTimeLineTourGuideStatus(true);
     }
 
@@ -230,79 +244,85 @@ public class AppTourGuideHelper {
         if (coachMarkMgr.isShowcaseTourdone())
             return;
 
-        Log.d(Constants.TAG, "displayShowcaseTour - isShowcaseTourdone()=false");
-        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
-        int toolTipTextColor = Color.WHITE;
-        Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
-                .setGravity(Gravity.CENTER);
-        Pointer pointer1 = new Pointer().setColor(Color.WHITE)
-                .setGravity(Gravity.CENTER);
+        try {
+            int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+            int toolTipTextColor = Color.WHITE;
+            Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
+                    .setGravity(Gravity.CENTER);
+            Pointer pointer1 = new Pointer().setColor(Color.WHITE)
+                    .setGravity(Gravity.CENTER);
 
-        Overlay overlay = new Overlay()
-                .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
-                .setStyle(Overlay.Style.Circle)
-                .setEnterAnimation(fadeInAnim)
-                .setExitAnimation(fadeOutAnim);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
 
 
-        ChainTourGuide tourGuideMain = ChainTourGuide.init(showcaseActivity)
-                .setPointer(pointer1)
-                .setToolTip(new ToolTip()
-                        .setTitle("Showcase")
-                        .setDescription(msgShowcaseWelcome)
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setEnterAnimation(bounceAnim)
-                        .setGravity(Gravity.CENTER)
-                )
-                .setOverlay(null)
-                // note that there is not Overlay here, so the default one will be used
-                .playLater(viewsInSequence[0]);
+            ChainTourGuide tourGuideMain = ChainTourGuide.init(showcaseActivity)
+                    .setPointer(pointer1)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Showcase")
+                            .setDescription(msgShowcaseWelcome)
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setEnterAnimation(bounceAnim)
+                            .setGravity(Gravity.CENTER)
+                    )
+                    .setOverlay(null)
+                    // note that there is not Overlay here, so the default one will be used
+                    .playLater(viewsInSequence[0]);
 
-        ChainTourGuide tourGuideSwipeUp = ChainTourGuide.init(showcaseActivity)
-                .setPointer(pointer)
-                .setToolTip(new ToolTip()
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgSwipeUp)
-                        .setGravity(Gravity.TOP | Gravity.CENTER)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[1]);
+            ChainTourGuide tourGuideSwipeUp = ChainTourGuide.init(showcaseActivity)
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip()
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgSwipeUp)
+                            .setGravity(Gravity.TOP | Gravity.CENTER)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[1]);
 
-        ChainTourGuide tourGuideProducts = ChainTourGuide.init(showcaseActivity)
-                .setPointer(pointer)
-                .setToolTip(new ToolTip()
-                        .setTitle("Browse Products")
-                        .setTextColor(toolTipTextColor)
-                        .setBackgroundColor(toolTipBgColor)
-                        .setShadow(true)
-                        .setDescription(msgViewProduct)
-                        .setGravity(Gravity.TOP | Gravity.RIGHT)
-                )
-                .setOverlay(overlay)
-                .playLater(viewsInSequence[2]);
+            ChainTourGuide tourGuideProducts = ChainTourGuide.init(showcaseActivity)
+                    .setPointer(pointer)
+                    .setToolTip(new ToolTip()
+                            .setTitle("Browse Products")
+                            .setTextColor(toolTipTextColor)
+                            .setBackgroundColor(toolTipBgColor)
+                            .setShadow(true)
+                            .setDescription(msgViewProduct)
+                            .setGravity(Gravity.TOP | Gravity.RIGHT)
+                    )
+                    .setOverlay(overlay)
+                    .playLater(viewsInSequence[2]);
 
-        Sequence sequence = new Sequence.SequenceBuilder()
-                .add(tourGuideMain, tourGuideSwipeUp, tourGuideProducts)
-                .setDefaultOverlay(new Overlay()
-                        .setEnterAnimation(fadeInAnim)
-                        .setExitAnimation(fadeOutAnim)
-                )
-                .setDefaultPointer(null)
-                .setContinueMethod(Sequence.ContinueMethod.Overlay)
-                .build();
+            Sequence sequence = new Sequence.SequenceBuilder()
+                    .add(tourGuideMain, tourGuideSwipeUp, tourGuideProducts)
+                    .setDefaultOverlay(new Overlay()
+                            .setEnterAnimation(fadeInAnim)
+                            .setExitAnimation(fadeOutAnim)
+                    )
+                    .setDefaultPointer(null)
+                    .setContinueMethod(Sequence.ContinueMethod.Overlay)
+                    .build();
 
-        ChainTourGuide.init(showcaseActivity).playInSequence(sequence);
-        //// TODO: 21-05-2016
+            ChainTourGuide.init(showcaseActivity).playInSequence(sequence);
+        }catch (OutOfMemoryError ex){
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         coachMarkMgr.setShowcaseTourGuideStatus(true);
     }
 
 
     private boolean collectionTour = false;
-    private TourGuide tg;
+    private TourGuide tgColl;
     public void displayCollectionScreenTour (Activity collectionActivity, View centeredView){
 
         if (coachMarkMgr.isCollectionTourdone())
@@ -325,66 +345,73 @@ public class AppTourGuideHelper {
             Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))/*.setColor(Color.RED)*/
                     .setGravity(Gravity.CENTER);
 
-            tg = TourGuide.init(collectionActivity)
+            tgColl = TourGuide.init(collectionActivity)
                     .setToolTip(toolTip)
                     .setOverlay(new Overlay()
                             .setBackgroundColor(Color.parseColor(overLayBgColorShowcase)))
                     .setPointer(pointer)
                     .playOn(centeredView);
 
-            tg.getOverlay().setOnClickListener(new View.OnClickListener() {
+            tgColl.getOverlay().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    tg.cleanUp();
+                    tgColl.cleanUp();
                 }
             });
         } catch (OutOfMemoryError e) {
-            if (tg != null)
-            tg.cleanUp();
+            if (tgColl != null)
+                tgColl.cleanUp();
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
 
         coachMarkMgr.setCollectionTourGuideStatus(true);
-        //// TODO: 21-05-2016
     }
 
 
+    private TourGuide tgProduct;
     public void displayProductsTour(Activity productActivity, View centeredView){
 
         if (coachMarkMgr.isProductTourdone())
             return;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setDescription(msgProductTab)
+                    .setTextColor(Color.WHITE)
+                    .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
+                    .setShadow(true)
+                    .setEnterAnimation(fadeInAnim)
+                    .setGravity(Gravity.TOP | Gravity.CENTER);
 
-        ToolTip toolTip = new ToolTip()
-                .setDescription(msgProductTab)
-                .setTextColor(Color.WHITE)
-                .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
-                .setShadow(true)
-                .setEnterAnimation(fadeInAnim)
-                .setGravity(Gravity.TOP | Gravity.CENTER);
 
+            Pointer pointer = new Pointer()./*setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*/
+                    setColor(Color.parseColor("#66FDFDFD"))
+                    .setGravity(Gravity.BOTTOM);
 
-        Pointer pointer = new Pointer()./*setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*/
-                setColor(Color.parseColor("#66FDFDFD"))
-                .setGravity(Gravity.BOTTOM);
+            tgProduct = TourGuide.init(productActivity)
+                    .setToolTip(toolTip)
+                    .setPointer(pointer)
+                    .setOverlay(new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                            .setStyle(Overlay.Style.Rectangle))
+                    .playOn(centeredView);
 
-        final TourGuide tg = TourGuide.init(productActivity)
-                .setToolTip(toolTip)
-                .setPointer(pointer)
-                .setOverlay(new Overlay()
-                        .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
-                        .setStyle(Overlay.Style.Rectangle))
-                .playOn(centeredView);
+            tgProduct.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-        tg.getOverlay().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                tg.cleanUp();
-            }
-        });
+                    tgProduct.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgProduct != null)
+                tgProduct.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
         coachMarkMgr.setProductTourGuideStatus(true);
-        //// TODO: 21-05-2016  
     }
-
 
 }

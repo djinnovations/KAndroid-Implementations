@@ -127,7 +127,6 @@ public class FindPeopleFragment extends DefaultVerticalListView
         @Override
         protected void updatePagingData(BaseDataParser loadedDataVO)
         {
-
             try
             {
                 if(loadedDataVO!=null && loadedDataVO instanceof PeopleResult)

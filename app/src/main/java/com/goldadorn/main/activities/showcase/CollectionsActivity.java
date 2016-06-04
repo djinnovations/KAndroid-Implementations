@@ -353,6 +353,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             bindOverlay(mCollection);
             if (!isFirstTime) {
                 isFirstTime = true;
+                Log.d("djcoll","onCollectionChange");
                 configureUI(mUIState);
             }
             for (CollectionChangeListener l : mCollectionChangeListeners)
@@ -391,6 +392,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     private void configureUI(int uiState) {
+        Log.d("djcoll","uistate value: "+uiState);
         Fragment f = null;
         int id = R.id.frame;
         mFrame.setVisibility(View.VISIBLE);
@@ -404,6 +406,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
 
         } else if (uiState == UISTATE_PRODUCT) {
+            Log.d("djcoll","uistate - product frag");
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
         if (f != null) {

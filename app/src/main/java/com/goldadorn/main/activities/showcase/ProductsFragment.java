@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.Collection;
@@ -86,7 +87,7 @@ public class ProductsFragment extends Fragment {
     private View.OnClickListener mBuyClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.i("iiii","Click2");
+            Log.i("iiii", "Click2");
             goToProductPage(v.getContext(), mProduct);
         }
     };
@@ -142,7 +143,7 @@ public class ProductsFragment extends Fragment {
                     mCollectionChangeListener);
         }*/
         getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
-        refreshData();
+        refreshData(0);
 
         mBuyButton.setOnClickListener(mBuyClick);
     }
@@ -152,27 +153,31 @@ public class ProductsFragment extends Fragment {
         mProduct = mSwipeDeckAdapter.getItem(0);
         mNameText.setText(mProduct.name);
         mPriceText.setText(mProduct.getDisplayPrice());
-
     }
 
     @Override
     public void onDestroy() {
-        if (mMode == MODE_USER) {
+        /*if (mMode == MODE_USER) {
             ((ShowcaseActivity) getActivity()).unRegisterUserChangeListener(mUserChangeListener);
         } else {
             ((CollectionsActivity) getActivity()).unRegisterCollectionChangeListener(
                     mCollectionChangeListener);
-        }
+        }*/
+        initialTotalProductCount = 0;
+        //isFirstTime = true;
         getLoaderManager().destroyLoader(mProductCallback.hashCode());
         super.onDestroy();
     }
 
 
+    private int initialTotalProductCount;
+    //private boolean isFirstTime = true;
+    private final int threshold = 0;
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
             SwipeFlingAdapterView.onFlingListener, SwipeFlingAdapterView.OnItemClickListener {
 
         private Context context;
-        private final List<Product> products = new ArrayList<>();
+        private List<Product> products = new ArrayList<>();
         private ArrayList<Product> originalProducts;
 
         public SwipeDeckAdapter(Context context) {
@@ -261,20 +266,39 @@ public class ProductsFragment extends Fragment {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                        Toast.makeText(getContext(), mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), mProduct.name + " Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else {
-                Log.i("iiii","Click1");
+                Log.i("iiii", "Click1");
                 goToProductPage(v.getContext(), mProduct);
             }
         }
 
+
         public void changeCursor(Cursor data) {
+            Log.d("djprod","data pulled - cursorCount: "+data.getCount());
+           /* if (isFirstTime){
+                isFirstTime = false;*/
+                initialTotalProductCount = data.getCount();
+                offsetMain = initialTotalProductCount;
+                Log.d("djprod","offsetMain: "+offsetMain);
+                Log.d("djprod","initialTotalProductCount: "+initialTotalProductCount);
+           // }
             products.clear();
+
             if (data != null && data.moveToFirst()) do {
-                products.add(Product.extractFromCursor(data));
+                Product product = Product.extractFromCursor(data);
+                products.add(product);
+                Log.d("djprod","product id: "+product.id);
             } while (data.moveToNext());
+            try {
+                products = products.subList(0, DbHelper.productCountPerCall);
+                initialTotalProductCount = products.size();
+                Log.d("djprod","scissored initialTotalProductCount: "+initialTotalProductCount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             originalProducts = new ArrayList<>(products);
             if (products.size() > 0) {
                 showEmptyView(false);
@@ -285,13 +309,24 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void removeFirstObjectInAdapter() {
-            Product p = products.remove(0);
+            products.remove(0);
             notifyDataSetChanged();
+            initialTotalProductCount--;
+            Log.d("djprod","initialTotalProductCount - removeFirstObjectInAdapter: "+initialTotalProductCount);
+            if (initialTotalProductCount == threshold) {
+                Log.d("djprod","new offset - threshold reached- paginate: "+(offsetMain));
+                refreshData(offsetMain);
+            }
         }
 
         @Override
         public void onLeftCardExit(Object o) {
+            Log.d("djlike","onLeftCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
+            /*Log.d("djlike", "product like stat pt1: " + p.isLiked);
+            if (p.likeStat == 0) {
+
+            }
             if (!p.isLiked)
                 UIController.like(getActivity(), p, false, new IResultListener<LikeResponse>() {
                     @Override
@@ -301,6 +336,7 @@ public class ProductsFragment extends Fragment {
                             p.isLiked = false;
                             p.likecount--;
                         }
+                        Log.d("djlike", "product like stat pt2: " + p.isLiked);
                         if (mToast != null) mToast.cancel();
                         mToast = Toast.makeText(getActivity(),
                                 result.success ? p.name + " dis-liked" : "failed", Toast.LENGTH_LONG);
@@ -308,36 +344,137 @@ public class ProductsFragment extends Fragment {
                     }
                 });
             else
-                Toast.makeText(getContext(),"You have already dis-liked the "+p.name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You have already dis-liked the " + p.name, Toast.LENGTH_SHORT).show();*/
+            manupilateLikeStat(p, false);
             if (getCount() > 0) setData();
         }
 
         @Override
         public void onRightCardExit(Object o) {
+            Log.d("djlike","onRightCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
+            manupilateLikeStat(p, true);
+            /*Log.d("djlike", "product like stat pt3: " + p.isLiked);
             if (!p.isLiked)
                 UIController.like(getActivity(), p, true,
                         new IResultListener<LikeResponse>() {
-                    @Override
-                    public void onResult(LikeResponse result) {
-                        isLikedHover(false);
-                        if (result.success) {
-                            p.isLiked = true;
-                            p.likecount++;
-                        }
-                        if (mToast != null) mToast.cancel();
-                        mToast = Toast.makeText(getActivity(),
-                                result.success ? p.name + " liked" : "failed", Toast.LENGTH_LONG);
-                        mToast.show();
-                    }
-                });
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                isLikedHover(false);
+                                if (result.success) {
+                                    p.isLiked = true;
+                                    p.likecount++;
+                                }
+                                Log.d("djlike", "product like stat pt4: " + p.isLiked);
+                                if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),
+                                        result.success ? p.name + " liked" : "failed", Toast.LENGTH_LONG);
+                                mToast.show();
+                            }
+                        });
             else
-                Toast.makeText(getContext(),"You have already Liked the "+p.name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "You have already Liked the " + p.name, Toast.LENGTH_SHORT).show();*/
             if (getCount() > 0) setData();
+        }
+
+
+        private void manupilateLikeStat(final Product product, boolean isLikeAction) {
+
+            Log.d("djlike","product like stat: startPoint: "+product.likeStat);
+            Log.d("djlike","product id: startPoint: "+product.id);
+            Log.d("djlike","product name: startPoint: "+product.name);
+            if (product.likeStat == 0) {
+                Log.d("djlike", "product like stat=0");
+                if (isLikeAction) {
+                    Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+                    UIController.like(getActivity(), product, true,
+                            new IResultListener<LikeResponse>() {
+                                @Override
+                                public void onResult(LikeResponse result) {
+                                    isLikedHover(false);
+                                    if (result.success) {
+                                        product.isLiked = true;
+                                        product.likecount++;
+                                    }
+                                    if (mToast != null) mToast.cancel();
+                                    mToast = Toast.makeText(getActivity(),
+                                            result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
+                                    mToast.show();
+                                }
+                            });
+                } else {
+                    Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+                    UIController.like(getActivity(), product, false, new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            isDislikedHover(false);
+                            if (result.success) {
+                                product.isLiked = false;
+                                product.likecount--;
+                            }
+                            if (mToast != null) mToast.cancel();
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? product.name + " dis-liked" : "failed to update", Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    });
+                }
+            } else if (product.likeStat == 1) {
+                Log.d("djlike", "product like stat=1");
+                if (isLikeAction) {
+                    Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
+                    if (mToast != null) mToast.cancel();
+                    mToast = Toast.makeText(getActivity(), "You have already liked this product!", Toast.LENGTH_LONG);
+                    mToast.show();
+                    isLikedHover(false);
+                } else {
+                    Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
+                    UIController.like(getActivity(), product, false, new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            isDislikedHover(false);
+                            if (result.success) {
+                                product.isLiked = false;
+                                product.likecount--;
+                            }
+                            if (mToast != null) mToast.cancel();
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? product.name + " dis-liked" : "failed to update", Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    });
+                }
+            } else if (product.likeStat == -1) {
+                Log.d("djlike", "product like stat=-1");
+                if (!isLikeAction) {
+                    Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
+                    if (mToast != null) mToast.cancel();
+                    mToast = Toast.makeText(getActivity(), "You have already disliked this product!", Toast.LENGTH_LONG);
+                    mToast.show();
+                    isDislikedHover(false);
+                } else {
+                    Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
+                    UIController.like(getActivity(), product, true, new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            isLikedHover(false);
+                            if (result.success) {
+                                product.isLiked = false;
+                                product.likecount--;
+                            }
+                            if (mToast != null) mToast.cancel();
+                            mToast = Toast.makeText(getActivity(),
+                                    result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
+                            mToast.show();
+                        }
+                    });
+                }
+            }
         }
 
         @Override
         public void onAdapterAboutToEmpty(int i) {
+            Log.d("djprod","swipedeck adapter position: "+i);
             showEmptyView(i == 0);
         }
 
@@ -360,7 +497,7 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onItemClicked(int i, Object o) {
-            Log.e("iiii","Click4");
+            Log.e("iiii", "Click4");
 
             goToProductPage(context, (Product) o);
         }
@@ -404,12 +541,12 @@ public class ProductsFragment extends Fragment {
 
     private void showEmptyView(boolean isEmpty) {
         if (isEmpty) {
+            Log.d("djprod","**empty**");
+            mEndView.setVisibility(View.VISIBLE);
             mDataView.setVisibility(View.GONE);
             mTextDataView.setVisibility(View.GONE);
-            mEndView.setVisibility(View.VISIBLE);
-
         } else {
-            mEndView.setVisibility(View.GONE);
+            mEndView.setVisibility(View.INVISIBLE);
             mDataView.setVisibility(View.VISIBLE);
             mTextDataView.setVisibility(View.VISIBLE);
         }
@@ -419,33 +556,35 @@ public class ProductsFragment extends Fragment {
         startActivity(ProductActivity.getLaunchIntent(context, product));
     }
 
-    private UserChangeListener mUserChangeListener = new UserChangeListener() {
+    /*private UserChangeListener mUserChangeListener = new UserChangeListener() {
         @Override
         public void onUserChange(User user) {
             mUser = user;
             getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
-            refreshData();
+            refreshData(0);
         }
     };
     private CollectionChangeListener mCollectionChangeListener = new CollectionChangeListener() {
         @Override
-        public void onCollectionChange(Collection user) {
-            mCollection = user;
+        public void onCollectionChange(Collection collection) {
+            mCollection = collection;
             getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
-            refreshData();
+            refreshData(0);
         }
-    };
+    };*/
 
-    private void refreshData() {
+    private int offsetMain;
+    private void refreshData(int offset) {
         ProductResponse response = new ProductResponse();
         if (mMode == MODE_USER && mUser != null) {
             response.userId = mUser.id;
-            Log.e("iii-product-",mUser.id+"");
+            Log.e("iii-product-", mUser.id + "");
             UIController.getProducts(getContext(), response, null);
         } else if (mCollection != null) {
             response.collectionId = mCollection.id;
             response.userId = mCollection.userId;
-            Log.e("iii-colection-",mCollection.id+"");
+            response.mPageCount = offset;
+            Log.e("iii-colection-", mCollection.id + "");
             UIController.getProducts(getContext(), response, null);
         }
 
@@ -458,6 +597,8 @@ public class ProductsFragment extends Fragment {
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             String selection;
             String[] selArgs;
+
+            Log.d("djprod", "onCreateLoader");
             if (mMode == MODE_COLLECTION) {
                 Log.d(Constants.TAG, "mode collection; prod frag");
                 selection = Products.COLLECTION_ID + " = ?";
@@ -473,12 +614,17 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+            initialTotalProductCount = 0;
+            //isFirstTime = true;
+            Log.d("djprod","onLoadFinished");
             if (cursor != null) cursor.close();
             this.cursor = data;
+
             mSwipeDeckAdapter.changeCursor(data);
             mCount.updateProductCounts(data.getCount());
-
-            if (mProduct == null && mSwipeDeckAdapter.getCount() > 0) setData();
+            //getLoaderManager().destroyLoader(mProductCallback.hashCode());
+            //if (mProduct == null && mSwipeDeckAdapter.getCount() > 0) setData();
         }
 
         @Override

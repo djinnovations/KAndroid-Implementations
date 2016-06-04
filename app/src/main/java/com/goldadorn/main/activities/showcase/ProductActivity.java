@@ -3,7 +3,6 @@ package com.goldadorn.main.activities.showcase;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -35,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -281,6 +279,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     private void bindOverlay() {
+        mOverlayVH.like.setSelected(mProduct.isLiked);
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
@@ -410,7 +409,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 });*/
 
         Dialog dialog = ViewConstructor.getInstance(getApplicationContext()).displayDialog(ProductActivity.this,
-                R.layout.dj_custom_views, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                R.layout.dialog_cart_new, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\n& Checkout", "Continue\nShopping", new ViewConstructor.DialogButtonClickListener() {
                     @Override
                     public void onPositiveBtnClicked(Dialog dialog, View btn) {
@@ -577,17 +576,21 @@ public class ProductActivity extends BaseDrawerActivity {
             } else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
+                Log.d("djprod","isliked val: "+isLiked);
                 UIController.like(v.getContext(), mProduct, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
+                                Log.d("djprod","isliked val: "+v.isSelected());
                                 v.setSelected(result.success != isLiked);
                                 if(isLiked){
+                                    Log.d("djprod","isliked - true");
                                     mProduct.likecount=mProduct.likecount-1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
                                     // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
                                 }else{
+                                    Log.d("djprod","isliked - false");
                                     mProduct.likecount=mProduct.likecount+1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
                                     //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();

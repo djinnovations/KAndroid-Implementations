@@ -99,7 +99,7 @@ public class DisplayProperties {
             pixels_per_cell_X = (metrics.widthPixels) / (gridX);
             pixels_per_cell_Y = (metrics.heightPixels) / (gridY);
 
-        } else if (orientation == 1) {
+        } else if (orientation == 1) {// 1==portrait ; 0 == landscape
 
             pixels_per_cell_X = (metrics.widthPixels) / (gridY);
             pixels_per_cell_Y = (metrics.heightPixels) / (gridX);

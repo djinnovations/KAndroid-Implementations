@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.OptionKey;
@@ -62,13 +63,15 @@ public class ApiFactory extends ExtractResponse {
     private static final int DELETE_WISHLIST = 22;
     static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String IMAGE_URL_HOST = "http://goldadorn.cloudapp.net/goldadorn_dev/";
-    public static final String IMAGE_URL_COLLECTIONS_HOST = "http://demo.eremotus-portal.com/";
-    private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
+    public static final String IMAGE_URL_HOST = /*"http://goldadorn.cloudapp.net/goldadorn_dev/"*/ BuildConfig.IMAGE_END_POINT;
+    public static final String IMAGE_URL_COLLECTIONS_HOST = /*"http://demo.eremotus-portal.com/"*/ BuildConfig.SHOWCASE_COLLECTION_HOST;
+    /*private static final String HOST_NAME_DEV = "demo.eremotus-portal.com";
     private static final String HOST_NAME_PROD = "demo.eremotus-portal.com";
-    private static final String HOST_NAME_DEV_SOCIAL = "goldadorn.cloudapp.net";
-    public static final String HOST_NAME = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV;
-    private static final String HOST_NAME_SOCIAL = Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV_SOCIAL;;
+    private static final String HOST_NAME_DEV_SOCIAL = "goldadorn.cloudapp.net";*/
+    public static final String HOST_NAME = /*Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV*/
+            BuildConfig.SHOWCASE_COMMERCIAL;
+    private static final String HOST_NAME_SOCIAL = /*Constants.isProduction ? HOST_NAME_PROD : HOST_NAME_DEV_SOCIAL*/
+            BuildConfig.SHOWCASE_SOCIAL;
 
     private static String getUrl(Context context, UrlBuilder urlBuilder) {
         Uri.Builder builder = new Uri.Builder();
@@ -204,7 +207,7 @@ public class ApiFactory extends ExtractResponse {
             case UNLIKE_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
-                builder.appendPath("unlike");
+                builder.appendPath("dislike");
                 break;
             }
             case GETDESIGNERS_SOCIAL_TYPE: {
@@ -511,7 +514,6 @@ public class ApiFactory extends ExtractResponse {
             ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
             paramsBuilder.mContext = context;
             paramsBuilder.mApiType = PRODUCTS_SOCIAL_TYPE;
-
 
             Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
@@ -922,7 +924,8 @@ public class ApiFactory extends ExtractResponse {
             } else if (response.userId != -1) {
                 builder.add("designer", response.userId + "");
             }
-            L.d("LIKE JSON " + builder.build().toString());
+
+            L.d("LIKE JSON " + builder);
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
@@ -943,12 +946,12 @@ public class ApiFactory extends ExtractResponse {
         }
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
-            urlBuilder.mUrlType = LIKE_TYPE;
+            urlBuilder.mUrlType = UNLIKE_TYPE;
 
             urlBuilder.mResponse = response;
             ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
             paramsBuilder.mContext = context;
-            paramsBuilder.mApiType = LIKE_TYPE;
+            paramsBuilder.mApiType = UNLIKE_TYPE;
 
 
             FormEncodingBuilder builder = new FormEncodingBuilder();

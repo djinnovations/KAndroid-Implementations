@@ -1,31 +1,42 @@
 package com.goldadorn.main.activities;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.uiutils.BadgeDrawable;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.squareup.picasso.Picasso;
 
@@ -38,13 +49,15 @@ import butterknife.OnClick;
 /**
  * Created by Vijith Menon on 06.03.16.
  */
-public class BaseDrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class BaseDrawerActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
+        DefaultProjectDataManager.NotificationCountChangeListener {
 
     @Bind(R.id.drawerLayout)
     protected DrawerLayout drawerLayout;
     @Bind(R.id.vNavigation)
     NavigationView vNavigation;
     Toolbar toolbar;
+
 
     @Override
     public void setContentView(int layoutResID) {
@@ -135,12 +148,61 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         Log.d(Constants.TAG, "onCreateOptionsMenu: BaseDrawerActivity");
-        getMenuInflater().inflate(R.menu.main, menu);
+        /*getMenuInflater().inflate(R.menu.main, menu);
 
         MenuItem itemCart = menu.findItem(R.id.nav_my_notifications);
-        icon = (LayerDrawable) itemCart.getIcon();
+        icon = (LayerDrawable) itemCart.getIcon();*/
+        setMenuCustom(menu);
 
         return true;
+    }
+
+
+   private void setMenuCustom(Menu menu){
+       if (menu != null) {
+           menu.clear();
+       }
+       MenuInflater inflater = getMenuInflater();
+       inflater.inflate(R.menu.main, menu);
+       final MenuItem item = menu.findItem(R.id.nav_my_notifications);
+
+       if (item != null) {
+           MenuItemCompat.setActionView(item, R.layout.notification_badge);
+
+           TextView textView = (TextView) item.getActionView()
+                   .findViewById(R.id.tvNotifyCount);
+           item.getActionView().setOnClickListener(new View.OnClickListener() {
+
+               @Override
+               public void onClick(View v) {
+                   onOptionsItemSelected(item);
+               }
+           });
+
+           if (TextUtils.isEmpty(mCount)) {
+               if (textView != null) {
+                   textView.setVisibility(View.INVISIBLE);
+               }
+           }else if (mCount.equalsIgnoreCase("0")){
+               if (textView != null) {
+                   textView.setVisibility(View.INVISIBLE);
+               }
+           }
+           else {
+               if (textView != null) {
+                   textView.setVisibility(View.VISIBLE);
+                   textView.setText(mCount);
+               }
+           }
+       }
+    }
+
+
+    private String mCount;
+    @Override
+    public void onNotificationCountChanged(String count) {
+        mCount = count;
+        this.supportInvalidateOptionsMenu();
     }
 
 
@@ -182,12 +244,56 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }*/
 
 
+    private static Button btnBadge;
+    private static TextView tvBadge;
     public static void setBadgeCount(Context context, LayerDrawable icon, String count) {
 
+        float xPosFortv = 57.3f;
+        DisplayProperties mProp = DisplayProperties.getInstance(context, 1);
+        if (Constants.CURRENT_API_LEVEL < Build.VERSION_CODES.LOLLIPOP){
+            Log.d("djbadge", "version pre-5");
+            if (btnBadge == null) {
+                btnBadge = new Button(context);
+                int xCord = (int) (56.5 * mProp.getXPixelsPerCell());
+                int yCord = (int) (2 * mProp.getYPixelsPerCell());
+                int width = (int) (2.4 * mProp.getXPixelsPerCell());
+                int height = (int) (2.4 * mProp.getYPixelsPerCell());
+
+                if (MainActivity.getRlMain() == null )
+                    return;
+                mSetLayoutParams(MainActivity.getRlMain(), btnBadge,
+                        xCord, yCord, width, height);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    btnBadge.setBackground(ResourceReader.getInstance(context).getDrawableFromResId(R.drawable.circle_bg));
+                }else
+                    btnBadge.setBackgroundDrawable(ResourceReader.getInstance(context).getDrawableFromResId(R.drawable.circle_bg));
+
+                tvBadge = new TextView(context);
+                xCord = (int) (xPosFortv * mProp.getXPixelsPerCell());
+                yCord = (int) (2.2 * mProp.getYPixelsPerCell());
+                mSetLayoutParams(MainActivity.getRlMain(), tvBadge, xCord, yCord,
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                tvBadge.setTextSize(8);
+                tvBadge.setTypeface(null, Typeface.BOLD);
+                tvBadge.setTextColor(Color.WHITE);
+            }
+            RelativeLayout.LayoutParams tvParams = (RelativeLayout.LayoutParams) tvBadge.getLayoutParams();
+            if (count.length() >= 2){
+                tvParams.leftMargin = (int) ((xPosFortv - 0.3f) * mProp.getXPixelsPerCell());
+            }
+            else {tvParams.leftMargin = (int) (xPosFortv  * mProp.getXPixelsPerCell());
+            }
+            tvBadge.setText(count);
+            btnBadge.setEnabled(false);
+            Log.d("djbadge", "badge placed");
+            return;
+        }
+
         BadgeDrawable badge; // Reuse drawable if possible
-        badge = new BadgeDrawable(context);
         icon.mutate();
-        icon.setDrawableByLayerId(R.id.ic_badge, badge);
+        /*badge = new BadgeDrawable(context);
+        icon.mutate();
+        icon.setDrawableByLayerId(R.id.ic_badge, badge);*/
 
         Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge); //getting the layer 2
         if (reuse != null && reuse instanceof BadgeDrawable) {
@@ -199,8 +305,6 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             icon.setDrawableByLayerId(R.id.ic_badge, badge);
         }
         Rect bounds = badge.copyBounds();
-        /*float width = bounds.right - bounds.left;
-        float height = bounds.bottom - bounds.top;*/
         Log.d("dj", "badge right: "+bounds.right);
         Log.d("dj", "badge left: "+bounds.left);
         Log.d("dj", "badge top: "+bounds.top);
@@ -208,8 +312,26 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         /*if (bounds.right == 0 && bounds.left == 0 && bounds.top == 0 && bounds.bottom == 0)
             badge.setBounds(0, 0, 50, 50);*/
         badge.setCount(count);
-        icon.mutate();
+       // icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_badge, badge);
+    }
+
+
+
+    private static void mSetLayoutParams(RelativeLayout parent, View child, int xCord, int yCord, int width, int height){
+
+        RelativeLayout.LayoutParams childParams = new RelativeLayout.LayoutParams(
+                width, height);
+
+        if(xCord < 0)
+            xCord = 0;
+        if(yCord < 0)
+            yCord = 0;
+        childParams.leftMargin = xCord;
+        childParams.topMargin = yCord;
+
+        child.setLayoutParams(childParams);
+        parent.addView(child);
     }
 
 

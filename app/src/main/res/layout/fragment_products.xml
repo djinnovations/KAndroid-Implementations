@@ -73,8 +73,7 @@
             android:layout_height="wrap_content"
             android:elevation="4dp"
             android:gravity="center"
-            android:orientation="horizontal"
-            app:elevation="4dp">
+            android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="46dp"
@@ -82,7 +81,7 @@
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="@dimen/padding_default_half"
                 android:elevation="5dp"
-                app:elevation="5dp">
+                >
 
                 <ImageView
                     android:id="@+id/dislike_bg"
@@ -116,7 +115,7 @@
                 android:layout_marginLeft="@dimen/padding_default_half"
                 android:layout_marginRight="12dp"
                 android:elevation="5dp"
-                app:elevation="5dp">
+                >
                 <ImageView
                     android:id="@+id/like_bg"
                     android:layout_width="match_parent"
@@ -143,7 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="260dp"
         android:layout_gravity="top"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"

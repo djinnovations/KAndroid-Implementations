@@ -65,6 +65,7 @@ public class DbHelper {
 
     }
 
+    public static int productCountPerCall;
     public static void writeProductsSocial(Context context, ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject dataObj = new JSONObject(response.responseContent);
@@ -73,7 +74,9 @@ public class DbHelper {
                 if (productsArray.length() != 0) {
                     if (response.mPageCount == 0)
                         context.getContentResolver().delete(Tables.Products.CONTENT_URI_NO_NOTIFICATION, null, null);
+                    productCountPerCall = productsArray.length();
                     for (int i = 0; i < productsArray.length(); i++) {
+
                         JSONObject productObj = productsArray.getJSONObject(i);
                         ContentValues cv = new ContentValues();
                         cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCT_ID, 0));
@@ -320,7 +323,7 @@ public class DbHelper {
         Log.e("iiii---",response.userId+"");
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
-            cv.put(Tables.Products.IS_LIKED, 1);
+            cv.put(Tables.Products.IS_LIKED, 1); //0 = no action; 1 = liked and -1 is disliked.
             Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
             if (cursor != null && cursor.moveToFirst()) {
                 cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) + 1));
@@ -353,7 +356,7 @@ public class DbHelper {
     public static void writeUnLike(Context context, LikeResponse response) {
         ContentValues cv = new ContentValues();
         if (response.productId != -1) {
-            cv.put(Tables.Products.IS_LIKED, 0);
+            cv.put(Tables.Products.IS_LIKED, -1);//here 0 = no action; 1 = liked and -1 is disliked.
             Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
             if (cursor != null && cursor.moveToFirst()) {
                 cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) - 1));

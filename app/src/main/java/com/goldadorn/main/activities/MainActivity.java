@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseDrawerActivity  {
     @Bind(R.id.layoutParent)
     ViewGroup layoutParent;
 
+    static RelativeLayout rlMain;
     @Bind(R.id.indicator)
     View indicator;
 
@@ -97,6 +99,10 @@ public class MainActivity extends BaseDrawerActivity  {
     private WeakReference<SocialFeedFragment> socialPostHost;
     private boolean backEntry;
 
+    public static RelativeLayout getRlMain(){
+        return rlMain;
+    }
+
     public View getDisableApp()
     {
         //return null;
@@ -107,6 +113,8 @@ public class MainActivity extends BaseDrawerActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_bar_main);
+
+        rlMain = (RelativeLayout) findViewById(R.id.rlMain);
 
         NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
         if(navigationDataObject !=null)

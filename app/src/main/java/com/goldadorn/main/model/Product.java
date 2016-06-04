@@ -45,6 +45,7 @@ public class Product implements Serializable {
 
     public final HashMap<OptionKey, OptionValue> customisations = new HashMap<>();
     public boolean isLiked;
+    public int likeStat;
 
     public Product(int id) {
         this.id = id;
@@ -114,6 +115,7 @@ public class Product implements Serializable {
         t.unitPrice = cursor.getLong(cursor.getColumnIndex(Tables.Products.PRICE));
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
         t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED)) == 1;
+        t.likeStat = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)
             t.image_a_r = 1;

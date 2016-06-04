@@ -168,7 +168,7 @@ public class ViewConstructor {
 
         final Dialog dialog = new Dialog(activity);dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        View tempView = LayoutInflater.from(appContext).inflate(R.layout.dj_custom_views, null);
+        View tempView = LayoutInflater.from(appContext).inflate(R.layout.dialog_cart_new, null);
         WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
         tempParams.copyFrom(dialog.getWindow().getAttributes());
 

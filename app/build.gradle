@@ -16,22 +16,39 @@ android {
 
             //added by DJphy (Darshan)
             //buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/sociallogin"'
-            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
+            //buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
+            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://107.170.99.118/goldadorn_dev/rest/sociallogin"'
 
             //buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
             //both debug and live are referring to GA (changed at 16/o5/16 6:30 pm)
-            buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
+            //buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
+            buildConfigField 'String', 'END_POINT', '"http://107.170.99.118/goldadorn_dev/rest/"'
 
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
+            //buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://107.170.99.118/goldadorn_dev/"'
 
-            buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
-            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
-            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
-            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
+            //buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
+            buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://107.170.48.64/goldadorn_prod/rest/"'
 
-            buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
+            //buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
+            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://107.170.48.64/products/"'
+
+            //buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
+            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://107.170.48.64/collections/"'
+
+            //buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
+            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://107.170.48.64/producttypes/"'
+
+            //buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
+            buildConfigField 'String', 'HTML_END_POINT', '" http://107.170.99.118/goldadorn_dev/html/"'
+
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
+
+            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://107.170.48.64/"'
+            buildConfigField 'String', 'SHOWCASE_COMMERCIAL', '"107.170.48.64"'
+            buildConfigField 'String', 'SHOWCASE_SOCIAL', '"107.170.99.118"'
+
         }
 
         live {
@@ -49,6 +66,10 @@ android {
             buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
+
+            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://demo.eremotus-portal.com/"'
+            buildConfigField 'String', 'SHOWCASE_COMMERCIAL', '"demo.eremotus-portal.com"'
+            buildConfigField 'String', 'SHOWCASE_SOCIAL', '"goldadorn.cloudapp.net"'
         }
     }
 
@@ -159,7 +180,7 @@ dependencies {
     compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     //compile 'com.ovenbits:quickactionview:1.0.0'
 
-    //Added by author dj
+    //Added by DJphy
     compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.google.android.gms:play-services-plus:8.3.0'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'

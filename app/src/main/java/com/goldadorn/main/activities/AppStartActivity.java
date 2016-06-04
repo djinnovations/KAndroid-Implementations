@@ -135,8 +135,9 @@ public class AppStartActivity extends BaseActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
-                        .show();
+                /*apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();*/
+                Toast.makeText(getApplicationContext(), "Google Play Services is not installed!", Toast.LENGTH_LONG).show();
             } else {
                 Log.i("djGcm", "This device is not supported. Google Play Services not installed!");
                 Toast.makeText(getApplicationContext(), "This device is not supported. Google Play Services not installed!", Toast.LENGTH_LONG).show();
