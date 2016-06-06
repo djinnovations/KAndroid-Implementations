@@ -18,7 +18,7 @@
         android:background="@color/darkDisable"
         android:visibility="gone" />
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -28,10 +28,11 @@
         android:clipToPadding="true"
         app:layout_anchor="@+id/recyclerView"
         app:layout_anchorGravity="bottom|end"
+        android:visibility="gone"
         app:layout_behavior="com.goldadorn.main.modules.socialFeeds.FABScrollBehavior">
 
         <include layout="@layout/post_fab" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
 
     <Button

@@ -16,8 +16,6 @@ public class SwipeHelper implements View.OnTouchListener {
     public SwipeHelper(Context mContext) {
 
         mGestureDetector = new GestureDetector(mContext, new MyGestureListener());
-
-
     }
 
 
@@ -39,9 +37,9 @@ public class SwipeHelper implements View.OnTouchListener {
             Log.d("gest", "onFling");
             boolean result = false;
             try {
-                float diffY = e2.getY() - e1.getY();
+                //float diffY = e2.getY() - e1.getY();
                 float diffX = e2.getX() - e1.getX();
-                if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > /*Math.abs(diffY)*/0) {
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
                             onSwipeLeftToRight();
@@ -50,12 +48,13 @@ public class SwipeHelper implements View.OnTouchListener {
                         }
                     }
                     result = true;
-                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else {/*if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeTopToBottom();
                     } else {
                         onSwipeBottomToTop();
-                    }
+                    }*/
+                    result = false;
                 }
                 result = true;
 

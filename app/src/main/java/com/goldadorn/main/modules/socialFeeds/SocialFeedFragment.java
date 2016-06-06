@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -55,6 +56,7 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
+import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
@@ -105,38 +107,17 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
-    private void setUpGesture(View view) {
-        Log.d("gest", "setUpGesture");
-        view.setOnTouchListener(new SwipeHelper(getActivity()) {
+    /*@Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) { }
+        else {  }
+    }*/
 
-            @Override
-            public void onSwipeLeftToRight() {
-
-                Toast.makeText(getContext(), "swipe right", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSwipeRightToLeft() {
-
-                Toast.makeText(getContext(), "swipe left", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSwipeBottomToTop() {
-
-                Toast.makeText(getContext(), "SwipeTop", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onSwipeTopToBottom() {
-
-                Toast.makeText(getContext(), "Swipe bottom", Toast.LENGTH_SHORT).show();
-            }
-
-
-        });
+    @Override
+    public boolean getUserVisibleHint() {
+        return super.getUserVisibleHint();
     }
-
 
     public FloatingActionsMenu getFloatingActionsMenu() {
         return mFloatingActionsMenu;
@@ -230,7 +211,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         Map<String, Object> params = new HashMap<>();
         params.put(URLHelper.LIKE_A_POST.OFFSET, offset);
         params.put(URLHelper.LIKE_A_POST.POST_ID, 0);
-
         return params;
     }
 
@@ -494,7 +474,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         else
             view = inflater.inflate(R.layout.social_feed_fragment_recycler, container, false);
 
-        //setUpGesture(view);
         return view;
     }
 

@@ -35,10 +35,7 @@
     <string name="labelMale">Male</string>
     <string name="labelFemale">Female</string>
     <string name="labelGender">Gender:</string>
-    <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a
-        href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a
-        href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a
-        href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>terms and conditions</u></font></a></string>
+    <string name="creatingAnAccount">By creating an account, you agree to GoldAdorn <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>content policy</u></font></a>, <a href="http://www.goldadorn.com/privacy-security-policy"><font color="#004fd7"><u>privacy policy</u></font></a> and <a href="http://www.goldadorn.com/terms-of-use"><font color="#004fd7"><u>terms and conditions</u></font></a></string>
     <string name="registerSuccssMsg">Registration done successfully</string>
     <string name="socialFeeds">Social Feed</string>
     <string name="findPeople">People</string>
@@ -63,8 +60,7 @@
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
     <string name="appShareTitle">Share The App In Your Network</string>
-    <string
-        name="appShareBody">"Hey Check out this app. it has interesting jewellery options :  "</string>
+    <string name="appShareBody">"Hey Check out this app. it has interesting jewellery options :  "</string>
 
 
     <string name="contactUsURL">contact-us.html</string>
@@ -103,11 +99,7 @@
     <string name="font_name_text_normal">din-regular.ttf</string>
     <string name="font_name_text_secondary">didot-italic.ttf</string>
 
-    <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07"
-                                                       id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g
-        example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm"
-                                                                     id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g
-        example="5.55 grams" id="weight">%s</xliff:g></string>
+    <string name="product_desc">Product Code\n<xliff:g example="1001EA1115S9O2G2M07" id="id">%s</xliff:g>\n\nHeight\t\t\t\t\t\t\t\tWidth\n<xliff:g example="25.99mm" id="height">%s</xliff:g>\t\t\t\t\t<xliff:g example="11.44mm" id="width">%s</xliff:g>\n\nProduct Weight[Approx.]\n<xliff:g example="5.55 grams" id="weight">%s</xliff:g></string>
     <string name="product_information">Product Information</string>
     <string name="labelRecomandation">Recommendation</string>
     <string name="basic_profile">Basic Profile</string>

@@ -8,6 +8,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -21,6 +23,8 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
+import com.goldadorn.main.dj.gesture.MyGestureListener;
+import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.Constants;
@@ -51,7 +55,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 
-public class MainActivity extends BaseDrawerActivity  {
+public class MainActivity extends BaseDrawerActivity {
     private BaseFragment activePage;
     private NavigationDataObject activePageData;
     private List<NavigationDataObject> history = new ArrayList<>();
@@ -77,7 +81,7 @@ public class MainActivity extends BaseDrawerActivity  {
     @Bind(R.id.transViewPost)
     View transViewPost;
 
-//    private ResourceReader resRdr;
+    //    private ResourceReader resRdr;
 //    private MyPreferenceManager coachMarkMgr;
 //
 //    private final String msgWelcome = "You have landed on the social feed\n"
@@ -89,9 +93,7 @@ public class MainActivity extends BaseDrawerActivity  {
     private AppTourGuideHelper mTourHelper;
 
 
-
-    public View getPageIndicator()
-    {
+    public View getPageIndicator() {
         return indicator;
     }
 
@@ -99,15 +101,58 @@ public class MainActivity extends BaseDrawerActivity  {
     private WeakReference<SocialFeedFragment> socialPostHost;
     private boolean backEntry;
 
-    public static RelativeLayout getRlMain(){
+    public static RelativeLayout getRlMain() {
         return rlMain;
     }
 
-    public View getDisableApp()
-    {
+    private GestureDetector gd;
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        gd.onTouchEvent(ev);
+        return super.dispatchTouchEvent(ev);
+        /*if (gd.onTouchEvent(ev))
+            return true;
+        else
+            return super.dispatchTouchEvent(ev);*/
+    }
+
+    public View getDisableApp() {
         //return null;
         return disableApp;
     }
+
+    private MyGestureListener myGestureListener = new MyGestureListener() {
+        @Override
+        public void onSwipeLeftToRight() {
+
+            Log.d("djgest", "onSwipeLeftToRight");
+            //Toast.makeText(MainActivity.this.getApplicationContext(), "swipe right", Toast.LENGTH_SHORT).show();
+            boolean isActive = ((HomePage) activePage).socialFeedFragmentpage.getUserVisibleHint();
+            Log.d("djgest", "isSocialfeedactive?: " + isActive);
+            if (isActive){
+                menuAction(R.id.nav_showcase);
+            }
+        }
+
+        @Override
+        public void onSwipeRightToLeft() {
+            Log.d("djgest", "onSwipeRightToLeft");
+            //Toast.makeText(MainActivity.this.getApplicationContext(), "swipe left", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSwipeBottomToTop() {
+            Log.d("djgest", "onSwipeBottomToTop");
+            //Toast.makeText(MainActivity.this.getApplicationContext(), "SwipeTop", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onSwipeTopToBottom() {
+            Log.d("djgest", "onSwipeTopToBottom");
+            //Toast.makeText(MainActivity.this.getApplicationContext(), "Swipe bottom", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,15 +161,15 @@ public class MainActivity extends BaseDrawerActivity  {
 
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
 
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_home);
-        if(navigationDataObject !=null)
+        gd = new GestureDetector(this, myGestureListener);
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_home);
+        if (navigationDataObject != null)
             action(navigationDataObject);
 
         logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
 
         tourThisScreen();
     }
-
 
 
     private void tourThisScreen() {
@@ -138,7 +183,7 @@ public class MainActivity extends BaseDrawerActivity  {
 
                 /*if (!coachMarkMgr.isHomeScreenTourDone())
                     testTourGuide();*/
-                mTourHelper.displayHomeTour(MainActivity.this, new View[]{ transView, transViewPeople, transViewSearch,
+                mTourHelper.displayHomeTour(MainActivity.this, new View[]{transView, transViewPeople, transViewSearch,
                         transViewNotify, transViewPost});
             }
         }, 2000);
@@ -149,13 +194,9 @@ public class MainActivity extends BaseDrawerActivity  {
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else if (activePage!= null && activePage.allowedBack()==false)
-        {
+        } else if (activePage != null && activePage.allowedBack() == false) {
 
-        }
-        else if (activePage!= null && activePage.allowedBack())
-        {
+        } else if (activePage != null && activePage.allowedBack()) {
             final Snackbar snackbar = Snackbar.make(layoutParent, "Are you sure you want to exit", Snackbar.LENGTH_SHORT);
             snackbar.setAction("Yes", new View.OnClickListener() {
                 public void onClick(View v) {
@@ -171,28 +212,26 @@ public class MainActivity extends BaseDrawerActivity  {
                 }
             });
             ColoredSnackbar.alert(snackbar).show();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
 
 
-    final public static int POST_FEED=1;
+    final public static int POST_FEED = 1;
+
     @Subscribe
     public void onEvent(SocialPost data) {
 
-        if(!uploadInProgress)
-        {
-            Intent intent=null;
-            if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST)
-                intent= new Intent(MainActivity.this, PostNormalActivity.class);
-            else if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_POLL)
-                intent= new Intent(MainActivity.this, PostPollActivity.class);
-            else if(data.type== com.goldadorn.main.model.SocialPost.POST_TYPE_BEST_OF)
-                intent= new Intent(MainActivity.this, PostBestOfActivity.class);
-            if(intent!=null)
-            {
+        if (!uploadInProgress) {
+            Intent intent = null;
+            if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST)
+                intent = new Intent(MainActivity.this, PostNormalActivity.class);
+            else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_POLL)
+                intent = new Intent(MainActivity.this, PostPollActivity.class);
+            else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_BEST_OF)
+                intent = new Intent(MainActivity.this, PostBestOfActivity.class);
+            if (intent != null) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Create_post_initiation");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
                 socialPostHost = new WeakReference<>(data.host);
@@ -203,117 +242,108 @@ public class MainActivity extends BaseDrawerActivity  {
                 intent.putExtra("PROFILE_PIC", people.getProfilePic());
                 intent.putExtra("IS_DESIGNER", people.getIsDesigner());
                 intent.putExtra("ID", people.getUserId());
-                intent.putExtra("IS_SELF",people.isSelf());
-                intent.putExtra("backEnabled",true);
+                intent.putExtra("IS_SELF", people.isSelf());
+                intent.putExtra("backEnabled", true);
                 startActivityForResult(intent, POST_FEED);
             }
-        }
-        else
-        {
+        } else {
             final Snackbar snackbar = Snackbar.make(layoutParent, "Upload is in progress", Snackbar.LENGTH_SHORT);
             ColoredSnackbar.info(snackbar).show();
         }
 
     }
+
     final private int postCallToken = IDUtils.generateViewId();
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
 
-
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
-                try {
-                    //String fileData=data.getStringExtra("fileData");
-                    int type=data.getIntExtra("type", -1);
-                    if(type!=-1)
-                    {
-                        String msg=data.getStringExtra("msg");
-                        MultipartEntity reqEntity = new MultipartEntity();
+            try {
+                //String fileData=data.getStringExtra("fileData");
+                int type = data.getIntExtra("type", -1);
+                if (type != -1) {
+                    String msg = data.getStringExtra("msg");
+                    MultipartEntity reqEntity = new MultipartEntity();
 
 
-                        try
-                        {
-                            if(data.getExtras().get("files")!=null) {
-                                File[] files = (File[]) data.getExtras().get("files");
+                    try {
+                        if (data.getExtras().get("files") != null) {
+                            File[] files = (File[]) data.getExtras().get("files");
 
-                                File file;
-                                int count = 1;
-                                for (int i = 0; i < files.length; i++) {
-                                    file = files[i];
-                                    if (file!=null && file.exists() && file.canRead()) {
-                                        reqEntity.addPart("file" + count, new FileBody(file));
-                                        count++;
-                                    }
-                                }
-                            }
-                        }catch (Exception e)
-                        {
-                            if(data.getExtras().get("filesURIs")!=null) {
-                                String[] uris = (String[]) data.getExtras().get("filesURIs");
-
-                                File file;
-                                int count = 1;
-                                for (int i = 0; i < uris.length; i++) {
-                                    file = new File(uris[i]);;
-                                    if (file!=null && file.exists() && file.canRead()) {
-                                        reqEntity.addPart("file" + count, new FileBody(file));
-                                        count++;
-                                    }
-                                }
-                            }
-                        }
-
-                        if(data.getExtras().get("links")!=null) {
-                            String[] links = (String[]) data.getExtras().get("links");
-
-                            String link;
+                            File file;
                             int count = 1;
-                            for (int i = 0; i < links.length; i++) {
-                                link = links[i];
-                                if (link!=null && link.equals("")==false) {
-                                    reqEntity.addPart("link" + count, new StringBody(link+""));
+                            for (int i = 0; i < files.length; i++) {
+                                file = files[i];
+                                if (file != null && file.exists() && file.canRead()) {
+                                    reqEntity.addPart("file" + count, new FileBody(file));
                                     count++;
                                 }
                             }
                         }
+                    } catch (Exception e) {
+                        if (data.getExtras().get("filesURIs") != null) {
+                            String[] uris = (String[]) data.getExtras().get("filesURIs");
 
+                            File file;
+                            int count = 1;
+                            for (int i = 0; i < uris.length; i++) {
+                                file = new File(uris[i]);
+                                ;
+                                if (file != null && file.exists() && file.canRead()) {
+                                    reqEntity.addPart("file" + count, new FileBody(file));
+                                    count++;
+                                }
+                            }
+                        }
+                    }
 
+                    if (data.getExtras().get("links") != null) {
+                        String[] links = (String[]) data.getExtras().get("links");
 
-
-
-                        if(msg!=null && msg.equals("")==false)
-                            reqEntity.addPart("createpost_message", new StringBody(msg));
-                        reqEntity.addPart("createpost_type", new StringBody(type+""));
-                        Map<String, Object> params = new HashMap<>();
-                        params.put(AQuery.POST_ENTITY, reqEntity);
-
-
-                        String url = getUrlHelper().getCreatePostServiceURL();
-                        ExtendedAjaxCallback ajaxCallback =getAjaxCallback(postCallToken);
-                        ajaxCallback.setClazz(String.class);
-                        ajaxCallback.setParams(params);
-                        ajaxCallback.method(AQuery.METHOD_POST);
-                        getAQuery().ajax(url, params, String.class, ajaxCallback);
-                        uploadInProgress=true;
-                        startUploadProgress();
+                        String link;
+                        int count = 1;
+                        for (int i = 0; i < links.length; i++) {
+                            link = links[i];
+                            if (link != null && link.equals("") == false) {
+                                reqEntity.addPart("link" + count, new StringBody(link + ""));
+                                count++;
+                            }
+                        }
                     }
 
 
+                    if (msg != null && msg.equals("") == false)
+                        reqEntity.addPart("createpost_message", new StringBody(msg));
+                    reqEntity.addPart("createpost_type", new StringBody(type + ""));
+                    Map<String, Object> params = new HashMap<>();
+                    params.put(AQuery.POST_ENTITY, reqEntity);
 
-                }catch (Exception e)
-                {
-                    System.out.println(e);
+
+                    String url = getUrlHelper().getCreatePostServiceURL();
+                    ExtendedAjaxCallback ajaxCallback = getAjaxCallback(postCallToken);
+                    ajaxCallback.setClazz(String.class);
+                    ajaxCallback.setParams(params);
+                    ajaxCallback.method(AQuery.METHOD_POST);
+                    getAQuery().ajax(url, params, String.class, ajaxCallback);
+                    uploadInProgress = true;
+                    startUploadProgress();
                 }
+
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
     }
-    public void serverCallEnds(int id,String url, Object json, AjaxStatus status) {
-        if(id== postCallToken)
-        {
-            uploadInProgress=false;
+
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == postCallToken) {
+            uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
-            if(success)
-            {
-                if(socialPostHost!=null && socialPostHost.get()!=null)
+            if (success) {
+                if (socialPostHost != null && socialPostHost.get() != null)
                     socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
 
                 socialPostHost = null;
@@ -323,45 +353,45 @@ public class MainActivity extends BaseDrawerActivity  {
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 stopUploadProgress(success);
             }
 
-        }
-        else
-            super.serverCallEnds(id,url, json, status);
+        } else
+            super.serverCallEnds(id, url, json, status);
     }
+
     private void startUploadProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
+
     private void stopUploadProgress(boolean success) {
         progressBar.setVisibility(View.GONE);
     }
-    public boolean action(NavigationDataObject navigationDataObject) {
-        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW))
-        {
-            Action action =new Action(this);
-            Boolean isAdded=false;
 
-            if(activePageData!=null && activePageData.getIdInt()== navigationDataObject.getIdInt()) {
+    public boolean action(NavigationDataObject navigationDataObject) {
+        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW)) {
+            Action action = new Action(this);
+            Boolean isAdded = false;
+
+            if (activePageData != null && activePageData.getIdInt() == navigationDataObject.getIdInt()) {
                 isAdded = true;
 
             }
 
-            if(!isAdded) {
+            if (!isAdded) {
                 BaseFragment view = BaseFragment.newInstance(navigationDataObject);
                 if (view != null) {
                     //setTitle(navigationDataObject.getTitle());
                     setTitle("");
-                    FragmentTransaction ft =getSupportFragmentManager().beginTransaction();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     ft.replace(R.id.container, view);
                     ft.commit();
                     activePage = view;
                     activePageData = navigationDataObject;
-                    if(backEntry==false)
+                    if (backEntry == false)
                         history.add(activePageData);
-                    backEntry=false;
+                    backEntry = false;
                     return true;
                 }
             }
@@ -371,9 +401,8 @@ public class MainActivity extends BaseDrawerActivity  {
 
     protected void onResume() {
         super.onResume();
-        if(activePage instanceof HomePage)
-        {
-            ((HomePage)activePage).updateComments();
+        if (activePage instanceof HomePage) {
+            ((HomePage) activePage).updateComments();
         }
     }
 

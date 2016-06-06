@@ -228,6 +228,7 @@ public class ProductsFragment extends Fragment {
             holder.like.setTag(product);
             holder.like.setSelected(product.isLiked);
             Picasso.with(context).load(product.getImageUrl()).into(holder.image);
+            Log.d("djprod", "imageURL: "+product.getImageUrl());
             return convertView;
         }
 

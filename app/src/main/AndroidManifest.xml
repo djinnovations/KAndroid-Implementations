@@ -19,8 +19,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
-
-    <!--Adding for GCM-->
+    <!-- Adding for GCM -->
     <permission
         android:name="com.goldadorn.main.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
@@ -29,8 +28,8 @@
     <uses-permission android:name="com.goldadorn.main.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <!--End of addition for GCM-->
 
+    <!-- End of addition for GCM -->
     <application
         android:name=".activities.Application"
         android:allowBackup="true"
@@ -141,7 +140,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.post.SelectServerImageActivity"
             android:screenOrientation="portrait"
@@ -167,7 +165,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activities.showcase.CollectionsActivity"
             android:launchMode="singleTop"
@@ -207,10 +204,10 @@
             android:name=".db.GoldProvider"
             android:authorities="${applicationId}" />
 
-        <activity android:name=".activities.TestActivity"></activity>
+        <activity android:name=".activities.TestActivity" />
         <activity
             android:name=".activities.cart.PaymentTestActivity"
-            android:label="@string/app_name"></activity>
+            android:label="@string/app_name" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -232,8 +229,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
-        <!--<receiver
+        <!--
+        <receiver
             android:name="com.mixpanel.android.mpmetrics.GCMReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -243,10 +240,11 @@
 
                 <category android:name="com.goldadorn.main" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
 
 
-        <!--Adding for GCM-->
+        <!-- Adding for GCM -->
 
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
@@ -275,8 +273,12 @@
             </intent-filter>
         </service>
 
-        <!--end of addition for GCM-->
+        <!-- end of addition for GCM -->
 
+        <activity
+            android:name=".activities.NotificationPostActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

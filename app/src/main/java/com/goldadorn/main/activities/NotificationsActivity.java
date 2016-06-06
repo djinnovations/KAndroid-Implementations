@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,6 +23,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.URLHelper;
@@ -79,7 +82,6 @@ public class NotificationsActivity extends BaseActivity {
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Notification");
         logEventsAnalytics(GAAnalyticsEventNames.NOTIFICATION);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -88,7 +90,21 @@ public class NotificationsActivity extends BaseActivity {
 
         //refresh();
         requestNotificationPaginate(offsetMain);
+        setUpListenerListView();
         // TODO: 26-05-2016
+    }
+
+    private void setUpListenerListView() {
+
+        notificationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
+                intent.putExtra(IntentKeys.NOTIFICATION_OBJ, mAdapter.getItem(position));
+                NotificationDataObject ndo = mAdapter.getItem(position);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -195,6 +211,15 @@ public class NotificationsActivity extends BaseActivity {
         String postImageUrl = null;
         String dateTime = null;
         String postContent = null;
+        String postId = null;
+
+        if (!object.isNull("postid")){
+            try {
+                postId = object.getString("postid");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
         if (!object.isNull("profilePic")){
             try {
@@ -220,7 +245,7 @@ public class NotificationsActivity extends BaseActivity {
         dateTime = DateUtils.getRelativeDateTimeString(this,timestamp,DateUtils.
                 SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL).toString();
         postContent = createString(object);
-        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost);
+        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId);
 
     }
 

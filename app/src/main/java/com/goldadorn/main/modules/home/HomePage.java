@@ -5,15 +5,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
+import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -28,112 +31,116 @@ import com.nshmura.recyclertablayout.RecyclerTabLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HomePage extends BaseHorizontalFragmentViewPager
-{
+public class HomePage extends BaseHorizontalFragmentViewPager {
     View disableApp;
+
     protected void garbageCollectorCall() {
         super.garbageCollectorCall();
-        disableApp=null;
-        socialFeedFragmentpage=null;
+        disableApp = null;
+        socialFeedFragmentpage = null;
     }
+
     public void updateComments() {
-        if(socialFeedFragmentpage!=null)
+        if (socialFeedFragmentpage != null)
             socialFeedFragmentpage.updateComments();
     }
+
     public boolean allowedBack() {
-        if(socialFeedFragmentpage!=null) {
+        if (socialFeedFragmentpage != null) {
             return socialFeedFragmentpage.allowedBack();
-        }
-        else
+        } else
             return super.allowedBack();
     }
-    SocialFeedFragment socialFeedFragmentpage;
+
+    public SocialFeedFragment socialFeedFragmentpage;
+
     public void onItemCreated(Fragment page) {
-        if(page instanceof SocialFeedFragment)
-        {
+        if (page instanceof SocialFeedFragment) {
             socialFeedFragmentpage = ((SocialFeedFragment) page);
-            ((SocialFeedFragment)page).addDisableColver(disableApp);
+            ((SocialFeedFragment) page).addDisableColver(disableApp);
         }
     }
+
     protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.home_fragment_page_view, container, false);
         disableApp = rootView.findViewById(R.id.disableApp);
         return rootView;
     }
+
     protected Application getApp() {
-        BaseActivity baseActivity =(BaseActivity)getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
         return baseActivity.getApp();
     }
-    protected View createIndicator(View rootView)
-    {
+
+    protected View createIndicator(View rootView) {
         View indicator = rootView.findViewById(R.id.indicator);
-        if(getActivity() instanceof MainActivity && ((MainActivity)getActivity()).getPageIndicator()!=null)
-        {
-            if(indicator!=null)
+        if (getActivity() instanceof MainActivity && ((MainActivity) getActivity()).getPageIndicator() != null) {
+            if (indicator != null)
                 indicator.setVisibility(View.GONE);
-            return ((MainActivity)getActivity()).getPageIndicator();
+            return ((MainActivity) getActivity()).getPageIndicator();
         }
         return indicator;
     }
-    protected DataManager createDataManager()
-    {
-        DataManager dataManger =new StaticDataManger(getActivity());
-        NavigationDataObject navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_feed);
+
+    protected DataManager createDataManager() {
+        DataManager dataManger = new StaticDataManger(getActivity());
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_feed);
         dataManger.add(navigationDataObject);
-        navigationDataObject =(NavigationDataObject)getApp().getMainMenu().get(R.id.nav_people);
+        navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_people);
         dataManger.add(navigationDataObject);
         return dataManger;
     }
-    public Fragment getItemFragment(int position,Object navigationObject)
-    {
-        if(navigationObject instanceof IFragmentData)
-        {
-            BaseFragment activePage = BaseFragment.newInstance((IFragmentData)navigationObject);
+
+    public Fragment getItemFragment(int position, Object navigationObject) {
+        if (navigationObject instanceof IFragmentData) {
+            BaseFragment activePage = BaseFragment.newInstance((IFragmentData) navigationObject);
             return activePage;
         }
         return
                 null;
     }
+
     @Override
-    public String getItemTitle(int position,Object navigationObject)
-    {
-        if(navigationObject instanceof IFragmentData)
-        {
-            return ((IFragmentData)navigationObject).getName();
+    public String getItemTitle(int position, Object navigationObject) {
+        if (navigationObject instanceof IFragmentData) {
+            return ((IFragmentData) navigationObject).getName();
         }
-        return super.getItemTitle(position,navigationObject);
+        return super.getItemTitle(position, navigationObject);
     }
 
     protected RecyclerTabLayout.Adapter<?> getRecyclerViewTabProvider(ViewPager viewPager) {
-        return new TabIndicatorRecyclerViewAdapter(viewPager,getDataManager());
+        return new TabIndicatorRecyclerViewAdapter(viewPager, getDataManager());
     }
+
     private void gotoData(Object data) {
-        if(getDataManager()!=null && data!=null)
-        {
+        if (getDataManager() != null && data != null) {
             for (int i = 0; i < getDataManager().size(); i++) {
-                if(getDataManager().get(i)==data)
-                {
-                    gotoItem(i,false);
+                if (getDataManager().get(i) == data) {
+                    gotoItem(i, false);
                     break;
                 }
             }
         }
     }
 
+    //public static ViewPager viewPager;
+
     public class TabIndicatorRecyclerViewAdapter extends com.kimeeo.library.listDataView.viewPager.TabIndicatorRecyclerViewAdapter {
 
         public TabIndicatorRecyclerViewAdapter(ViewPager viewPager, DataManager dataManager) {
-            super(viewPager,dataManager);
+            super(viewPager, dataManager);
+            //HomePage.viewPager = viewPager;
         }
-        protected  ViewHolder getViewHolder(View view, int var2)
-        {
+
+        protected ViewHolder getViewHolder(View view, int var2) {
             return new MyViewHolder(view);
         }
+
         @Override
-        protected View getView(ViewGroup parent, int var2)
-        {
+        protected View getView(ViewGroup parent, int var2) {
             return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_tab_view, parent, false);
         }
+
         public int getItemCount() {
             return getDataManager().size();
         }
@@ -158,18 +165,20 @@ public class HomePage extends BaseHorizontalFragmentViewPager
                     }
                 });
 
-                TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary),textView);
+                TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary), textView);
             }
+
             NavigationDataObject data;
+
             public void updatedSelectedItem(Object o) {
-                data=(NavigationDataObject) o;
+                data = (NavigationDataObject) o;
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
                 selected.setVisibility(View.VISIBLE);
             }
-            public void updatedNormalItem(Object o)
-            {
-                data=(NavigationDataObject) o;
+
+            public void updatedNormalItem(Object o) {
+                data = (NavigationDataObject) o;
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
                 selected.setVisibility(View.GONE);
