@@ -277,8 +277,7 @@
 
         <activity
             android:name=".activities.NotificationPostActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

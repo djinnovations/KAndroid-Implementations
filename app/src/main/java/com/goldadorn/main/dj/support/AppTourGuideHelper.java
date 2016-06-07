@@ -1,17 +1,21 @@
 package com.goldadorn.main.dj.support;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 
@@ -54,6 +58,7 @@ public class AppTourGuideHelper {
     private final String toolTipBgColor = "#33E2E4E7";
 
     private static AppTourGuideHelper ourInstance;
+    private Context appContext;
 
     public static AppTourGuideHelper getInstance(Context appContext) {
 
@@ -65,6 +70,7 @@ public class AppTourGuideHelper {
 
     private AppTourGuideHelper(Context appContext) {
 
+        this.appContext = appContext;
         bounceAnim = new TranslateAnimation(0f, 0f, 200f, 0f);
         bounceAnim.setDuration(1000);
         bounceAnim.setFillAfter(true);
@@ -83,12 +89,15 @@ public class AppTourGuideHelper {
     }
 
 
-    public void displayHomeTour(Activity homeActivity, View[] viewsInSequence) {
+    private int count = 0;
+    private ChainTourGuide mTourGuideHandler;
+    public void displayHomeTour(final Activity homeActivity, View[] viewsInSequence) {
 
         if (coachMarkMgr.isHomeScreenTourDone())
             return;
 
         try {
+            count = 0;
             int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
             int toolTipTextColor = Color.WHITE;
             Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
@@ -175,13 +184,24 @@ public class AppTourGuideHelper {
                             tourGuideNotification, tourGuidePost)
                     .setDefaultOverlay(new Overlay()
                             .setEnterAnimation(fadeInAnim)
-                            .setExitAnimation(fadeOutAnim)
+                            .setExitAnimation(fadeOutAnim).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    mTourGuideHandler.next();
+                                    count++;
+                                    if (count == 5){
+                                        mTourGuideHandler.cleanUp();
+                                        count = 0;
+                                        handleArrowDialog(homeActivity);
+                                    }
+                                }
+                            })
                     )
                     .setDefaultPointer(null)
-                    .setContinueMethod(Sequence.ContinueMethod.Overlay)
+                    .setContinueMethod(Sequence.ContinueMethod.OverlayListener)
                     .build();
 
-            ChainTourGuide.init(homeActivity).playInSequence(sequence);
+            mTourGuideHandler = ChainTourGuide.init(homeActivity).playInSequence(sequence);
         }catch (OutOfMemoryError ex){
 
         }
@@ -189,6 +209,25 @@ public class AppTourGuideHelper {
             e.printStackTrace();
         }
         coachMarkMgr.setHomeScreenTourGuideStatus(true);
+    }
+
+
+    private void handleArrowDialog(Activity homeActivity){
+        View view = LayoutInflater.from(appContext).inflate(R.layout.dialog_arrow_coach_mark, null);
+        WindowUtils.dialogDimAmount = 0.5f;
+        final Dialog arrowDialog = WindowUtils.getInstance(appContext).displayDialogNoTitle(homeActivity, view);
+        arrowDialog.show();
+        View overLay = arrowDialog.findViewById(R.id.rlArrowParent);
+        final View arrow = arrowDialog.findViewById(R.id.rlArrow);
+        overLay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                arrow.clearAnimation();
+                arrowDialog.dismiss();
+            }
+        });
+        Animation myFadeInOut = AnimationUtils.loadAnimation(appContext, R.anim.fadeinout_repeat);
+        arrow.startAnimation(myFadeInOut);
     }
 
     private TourGuide tgTimeLine;

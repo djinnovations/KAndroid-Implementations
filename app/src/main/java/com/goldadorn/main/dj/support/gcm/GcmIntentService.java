@@ -16,6 +16,9 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 
 public class GcmIntentService extends IntentService {
@@ -81,13 +84,21 @@ public class GcmIntentService extends IntentService {
         registrationComplete.putExtra("token", token);
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
- 
+
+    private final String value_property = "android_devices";
     private void sendRegistrationToServer(final String token) {
         // Send the registration token to Mix panel
         User user = Application.getInstance().getUser();
         if(user != null){
             MixpanelAPI.People people = Application.getInstance().getMixPanelInstance().getPeople();
             people.identify(String.valueOf(Application.getInstance().getUser().id));
+            JSONArray jsonArray = new JSONArray();
+            try {
+                jsonArray.put(0, token);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            people.union(value_property, jsonArray);
         }
         //// TODO: 30-05-2016
        // people.setPushRegistrationId(registrationId);

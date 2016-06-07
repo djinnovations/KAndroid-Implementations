@@ -37,6 +37,7 @@ import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -172,7 +173,8 @@ public class ProductsFragment extends Fragment {
 
     private int initialTotalProductCount;
     //private boolean isFirstTime = true;
-    private final int threshold = 0;
+    private final int threshold = 2;
+
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
             SwipeFlingAdapterView.onFlingListener, SwipeFlingAdapterView.OnItemClickListener {
 
@@ -228,7 +230,7 @@ public class ProductsFragment extends Fragment {
             holder.like.setTag(product);
             holder.like.setSelected(product.isLiked);
             Picasso.with(context).load(product.getImageUrl()).into(holder.image);
-            Log.d("djprod", "imageURL: "+product.getImageUrl());
+            Log.d("djprod", "imageURL: " + product.getImageUrl());
             return convertView;
         }
 
@@ -278,25 +280,29 @@ public class ProductsFragment extends Fragment {
 
 
         public void changeCursor(Cursor data) {
-            Log.d("djprod","data pulled - cursorCount: "+data.getCount());
+            Log.d("djprod", "data pulled - cursorCount: " + data.getCount());
            /* if (isFirstTime){
                 isFirstTime = false;*/
-                initialTotalProductCount = data.getCount();
-                offsetMain = initialTotalProductCount;
-                Log.d("djprod","offsetMain: "+offsetMain);
-                Log.d("djprod","initialTotalProductCount: "+initialTotalProductCount);
-           // }
+            //initialTotalProductCount = data.getCount();
+            offsetMain = data.getCount();
+            Log.d("djprod", "offsetMain: " + offsetMain);
+            // }
             products.clear();
 
             if (data != null && data.moveToFirst()) do {
                 Product product = Product.extractFromCursor(data);
                 products.add(product);
-                Log.d("djprod","product id: "+product.id);
+                Log.d("djprod", "product id: " + product.id);
             } while (data.moveToNext());
             try {
-                products = products.subList(0, DbHelper.productCountPerCall);
-                initialTotalProductCount = products.size();
-                Log.d("djprod","scissored initialTotalProductCount: "+initialTotalProductCount);
+                if (isPaginateCall){
+                    products = getNewListToDisplay(products);
+                }else {
+                    products = products.subList(0, DbHelper.productCountPerCall);
+                    initialTotalProductCount = products.size();
+                    Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -308,21 +314,53 @@ public class ProductsFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+
+        private List<Product> getNewListToDisplay(List<Product> prodList) {
+            List<Product> tempProdList = new ArrayList<>();
+            boolean contains = false;
+            Log.d("djprod","lastSeenprodID: "+lastSeenProductId);
+            try {
+                tempProdList = prodList.subList(0, DbHelper.productCountPerCall);
+                ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
+                Iterator<Product> iterator = toComapareList.iterator();
+                while (iterator.hasNext()){
+                    Product prod = iterator.next();
+                    Log.d("djprod","prodId - toCompareList: "+prod.productId);
+                    if (contains)
+                        tempProdList.add(0, prod);
+                    if (prod.productId == lastSeenProductId){
+                        contains = true;
+                    }
+                }
+                Log.d("djprod","final size of products to display: "+tempProdList.size());
+                initialTotalProductCount = tempProdList.size();
+                Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                return tempProdList;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        private int lastSeenProductId;
+        private boolean isPaginateCall = false;
         @Override
         public void removeFirstObjectInAdapter() {
+            lastSeenProductId = products.get(0).productId;
             products.remove(0);
             notifyDataSetChanged();
             initialTotalProductCount--;
-            Log.d("djprod","initialTotalProductCount - removeFirstObjectInAdapter: "+initialTotalProductCount);
+            Log.d("djprod", "initialTotalProductCount - removeFirstObjectInAdapter: " + initialTotalProductCount);
             if (initialTotalProductCount == threshold) {
-                Log.d("djprod","new offset - threshold reached- paginate: "+(offsetMain));
+                Log.d("djprod", "new offset - threshold reached- paginate: " + (offsetMain));
+                isPaginateCall = true;
                 refreshData(offsetMain);
             }
         }
 
         @Override
         public void onLeftCardExit(Object o) {
-            Log.d("djlike","onLeftCardExit");
+            Log.d("djlike", "onLeftCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
             /*Log.d("djlike", "product like stat pt1: " + p.isLiked);
             if (p.likeStat == 0) {
@@ -352,7 +390,7 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onRightCardExit(Object o) {
-            Log.d("djlike","onRightCardExit");
+            Log.d("djlike", "onRightCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
             manupilateLikeStat(p, true);
             /*Log.d("djlike", "product like stat pt3: " + p.isLiked);
@@ -381,9 +419,9 @@ public class ProductsFragment extends Fragment {
 
         private void manupilateLikeStat(final Product product, boolean isLikeAction) {
 
-            Log.d("djlike","product like stat: startPoint: "+product.likeStat);
-            Log.d("djlike","product id: startPoint: "+product.id);
-            Log.d("djlike","product name: startPoint: "+product.name);
+            Log.d("djlike", "product like stat: startPoint: " + product.likeStat);
+            Log.d("djlike", "product id: startPoint: " + product.id);
+            Log.d("djlike", "product name: startPoint: " + product.name);
             if (product.likeStat == 0) {
                 Log.d("djlike", "product like stat=0");
                 if (isLikeAction) {
@@ -475,7 +513,7 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onAdapterAboutToEmpty(int i) {
-            Log.d("djprod","swipedeck adapter position: "+i);
+            Log.d("djprod", "swipedeck adapter position: " + i);
             showEmptyView(i == 0);
         }
 
@@ -542,7 +580,7 @@ public class ProductsFragment extends Fragment {
 
     private void showEmptyView(boolean isEmpty) {
         if (isEmpty) {
-            Log.d("djprod","**empty**");
+            Log.d("djprod", "**empty**");
             mEndView.setVisibility(View.VISIBLE);
             mDataView.setVisibility(View.GONE);
             mTextDataView.setVisibility(View.GONE);
@@ -575,6 +613,7 @@ public class ProductsFragment extends Fragment {
     };*/
 
     private int offsetMain;
+
     private void refreshData(int offset) {
         ProductResponse response = new ProductResponse();
         if (mMode == MODE_USER && mUser != null) {
@@ -618,7 +657,7 @@ public class ProductsFragment extends Fragment {
 
             initialTotalProductCount = 0;
             //isFirstTime = true;
-            Log.d("djprod","onLoadFinished");
+            Log.d("djprod", "onLoadFinished");
             if (cursor != null) cursor.close();
             this.cursor = data;
 

@@ -61,8 +61,6 @@ public class NotificationPostActivity extends BaseActivity{
 
     @Bind(R.id.rlChild)
     RelativeLayout childLayout;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
 
     private NotificationDataObject mNotificationDataObj;
     static int postId;
@@ -86,10 +84,10 @@ public class NotificationPostActivity extends BaseActivity{
 
     private void setupToolbarCustom() {
 
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_back);
-        setTitle("Notification");
+        setTitle(Html.fromHtml("<font color='#ffffff'>Notification</font>"));
     }
 
     @Override

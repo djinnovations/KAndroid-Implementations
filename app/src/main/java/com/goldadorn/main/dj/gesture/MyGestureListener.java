@@ -4,6 +4,9 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
+
 /**
  * Created by User on 07-06-2016.
  */
@@ -12,6 +15,8 @@ public abstract class MyGestureListener extends GestureDetector.SimpleOnGestureL
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
+    private final float spacingFromEdge = 10 * DisplayProperties.getInstance(Application.getInstance(), 1)
+            .getXPixelsPerCell();
 
     @Override
     public boolean onDown(MotionEvent e) {
@@ -30,6 +35,8 @@ public abstract class MyGestureListener extends GestureDetector.SimpleOnGestureL
             if (Math.abs(diffX) > Math.abs(diffY)) {
                 if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffX > 0) {
+                        if (e1.getX() < spacingFromEdge)
+                            return false;
                         onSwipeLeftToRight();
                     } else {
                         //onSwipeRightToLeft();

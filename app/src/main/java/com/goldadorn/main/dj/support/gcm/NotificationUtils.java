@@ -120,7 +120,6 @@ public class NotificationUtils {
             inboxStyle.addLine(message);
         }
 
-
         Notification notification;
         notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)

@@ -13,30 +13,21 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.AbstractPostActivity;
-import com.goldadorn.main.dj.uiutils.AlertWindowUtils;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.icons.IconsUtils;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
@@ -241,7 +232,7 @@ public class ImageSelector {
                             Manifest.permission.READ_EXTERNAL_STORAGE)) {
                         //A dialog to show an explanation
                         Log.d(Constants.TAG, "read perm request, explanation needed");
-                        AlertWindowUtils.getInstance(activity.getApplicationContext()).
+                        WindowUtils.getInstance(activity.getApplicationContext()).
                                 genericPermissionInfoDialog(activity, Constants.INFO_MSG_READ_GALLERY);
 
 
@@ -277,7 +268,7 @@ public class ImageSelector {
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         Log.d(Constants.TAG, "write perm request, explanation needed");
                         //A dialog to show an explanation
-                        AlertWindowUtils.getInstance(activity.getApplicationContext()).
+                        WindowUtils.getInstance(activity.getApplicationContext()).
                                 genericPermissionInfoDialog(activity, Constants.INFO_MSG_WRITE);
 
                         ActivityCompat.requestPermissions(activity,
@@ -310,7 +301,7 @@ public class ImageSelector {
                             Manifest.permission.CAMERA)) {
                         //A dialog to show an explanation
                         Log.d(Constants.TAG, "camera perm request, explanation needed");
-                        AlertWindowUtils.getInstance(activity.getApplicationContext()).
+                        WindowUtils.getInstance(activity.getApplicationContext()).
                                 genericPermissionInfoDialog(activity, Constants.INFO_MSG_CAMERA);
 
                         ActivityCompat.requestPermissions(activity,

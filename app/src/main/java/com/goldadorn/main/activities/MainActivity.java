@@ -160,7 +160,6 @@ public class MainActivity extends BaseDrawerActivity {
         setContentView(R.layout.app_bar_main);
 
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
-
         gd = new GestureDetector(this, myGestureListener);
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_home);
         if (navigationDataObject != null)

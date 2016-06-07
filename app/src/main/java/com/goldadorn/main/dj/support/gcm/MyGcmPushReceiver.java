@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.database.DatabaseUtilsCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.goldadorn.main.activities.AppStartActivity;
+import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.google.android.gms.gcm.GcmListenerService;
 
 public class MyGcmPushReceiver extends GcmListenerService {
@@ -26,15 +28,29 @@ public class MyGcmPushReceiver extends GcmListenerService {
  
     @Override
     public void onMessageReceived(String from, Bundle bundle) {
-        String title = bundle.getString("title");
-        String message = bundle.getString("message");
-        String image = bundle.getString("image");
-        String timestamp = bundle.getString("created_at");
-        Log.e(TAG, "From: " + from);
-        Log.e(TAG, "Title: " + title);
-        Log.e(TAG, "message: " + message);
-        Log.e(TAG, "image: " + image);
-        Log.e(TAG, "timestamp: " + timestamp);
+
+        String title = null;
+        String message = null;
+        String image = null;
+        String timestamp = null;
+        String iconName;
+        String ctaData = null;
+
+        if (bundle != null){
+            message = bundle.getString("mp_message");
+            iconName = bundle.getString("mp_icnm");
+            ctaData = bundle.getString("mp_cta");
+            title = bundle.getString("mp_title");
+        }
+        else{
+            Log.d("djpush","bundle is null");
+        }
+        timestamp = DateTimeUtils.getCurrentDateTime("hh:mm a");//dd/MM/yyyy hh:mm a
+        Log.i(TAG, "From: " + from);
+        Log.i(TAG, "Title: " + title);
+        Log.i(TAG, "message: " + message);
+        Log.i(TAG, "ctaData: " + ctaData);
+        Log.i(TAG, "timestamp: " + timestamp);
  
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
  
