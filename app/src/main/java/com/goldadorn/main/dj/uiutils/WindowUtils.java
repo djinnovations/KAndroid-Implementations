@@ -4,9 +4,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.goldadorn.main.R;
 
 /**
  * Created by COMP on 1/28/2016.
@@ -80,6 +84,37 @@ public class WindowUtils {
 /*		if(keyPadOnTop)
 			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);*/
 
+        return dialog;
+    }
+
+
+
+    public Dialog displayOverlay(Activity activityToDisplayOverlay, String infoMsg, int colorResId) {
+
+        Dialog dialog = new Dialog(activityToDisplayOverlay);
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		/*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*/
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0.0f;
+
+        View overLay = LayoutInflater.from(appContext).inflate(R.layout.window_util_overlay/*dialog_overlay*/, null);
+        TextView tvTemp = (TextView) overLay.findViewById(R.id.tvOverlayInfo);
+        if (infoMsg != null) {
+            tvTemp.setText(infoMsg);
+            tvTemp.setTextColor(ResourceReader.getInstance(appContext)
+                    .getColorFromResource(colorResId));
+        } else tvTemp.setVisibility(View.GONE);
+        dialog.setContentView(overLay);
+        dialog.setCancelable(false);
+
+        dialog.getWindow().setAttributes(tempParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         return dialog;
     }
 

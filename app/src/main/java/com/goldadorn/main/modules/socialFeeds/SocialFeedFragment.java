@@ -41,6 +41,8 @@ import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
+import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.server.RequestJson;
@@ -56,6 +58,7 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
@@ -65,6 +68,8 @@ import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -372,8 +377,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
     }
 
+    private void setUserInfoCache(){
+        UIController.getShowCase(getContext(),
+                new IResultListener<TimelineResponse>() {
+                    @Override
+                    public void onResult(TimelineResponse result) {
+                        Log.d("djfeed", "userInfoCache updation: "+result.success);
+                    }
+                });
+    }
+
     public void onViewCreated(View view) {
 
+        setUserInfoCache();
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Social feed");
         logEventsAnalytics(GAAnalyticsEventNames.SOCIAL_FEED);
 
@@ -1146,7 +1162,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         final Dialog dialog = displayOverlay(null, R.color.colorAccent);
         dialog.show();
 
-
         JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, Constants.ENDPOINT_PRODUCT_BASIC_INFO + productId,
                 null, new Response.Listener<JSONObject>() {
             @Override
@@ -1213,7 +1228,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     private void evaluateResults(ProductTemp productTemp, SocialPost socialPost, Dialog dialog) {
 
         Product product = Product.extractFromProductTemp(productTemp, socialPost.getIsLiked() == 1, socialPost.getLikeCount());
+        User mUser = UserInfoCache.getInstance(getContext()).getUserInfoDB(product.userId, true);
         dialog.dismiss();
+        if (mUser == null){
+            Toast.makeText(getContext(), "User Info Not Found", Toast.LENGTH_SHORT).show();
+            return;
+        }
         startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
     }
 

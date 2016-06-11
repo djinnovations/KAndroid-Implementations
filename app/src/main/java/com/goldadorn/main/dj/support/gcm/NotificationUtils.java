@@ -22,7 +22,9 @@ import android.util.Patterns;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.DateTimeUtils;
+import com.goldadorn.main.dj.utils.IntentKeys;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +66,7 @@ public class NotificationUtils {
         final int icon = R.mipmap.ic_launcher;
 
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra(IntentKeys.PUSH_NOTIFICATION_CALL, Constants.GCM_CALL);
         final PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         mContext,

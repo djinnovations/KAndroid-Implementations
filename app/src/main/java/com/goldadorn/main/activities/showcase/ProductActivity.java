@@ -43,6 +43,7 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Collection;
@@ -121,12 +122,30 @@ public class ProductActivity extends BaseDrawerActivity {
         return intent;
     }
 
+    private Dialog overLayDialog;
+
+    private void showOverLay(String text, int colorResId){
+        if (overLayDialog == null){
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId);
+        }
+        overLayDialog.show();
+    }
+
+    private void dismissOverLay(){
+        if (overLayDialog!=null){
+            if (overLayDialog.isShowing()){
+                overLayDialog.dismiss();
+            }
+        }
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
+        showOverLay("Loading...", R.color.colorAccent);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
 
@@ -236,6 +255,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     if (f != null)
                         f.bindProductOptions(mProductOptions);
                 }
+                dismissOverLay();
             }
         });
         configureUI(UISTATE_CUSTOMIZE);
@@ -378,7 +398,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 });
     }*/
 
-    public void addToCartNew() {
+    public void addToCartNew(final View cartBtn) {
+
+        cartBtn.setEnabled(false);
         UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
                 new IResultListener<ProductResponse>() {
                     @Override
@@ -390,14 +412,14 @@ public class ProductActivity extends BaseDrawerActivity {
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();
                         if (result.success){
-                            confirmedToCart();
+                            confirmedToCart(cartBtn);
                         }
                     }
                 });
     }
 
 
-    private void confirmedToCart(){
+    private void confirmedToCart(final View cartBtn){
         /*Log.d("iii","product id that was pushed to cart: "+mProduct.id);
         ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
@@ -414,12 +436,14 @@ public class ProductActivity extends BaseDrawerActivity {
                     @Override
                     public void onPositiveBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
+                        cartBtn.setEnabled(true);
                         menuAction(R.id.nav_cart);
                     }
 
                     @Override
                     public void onNegativeBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
+                        cartBtn.setEnabled(true);
                         Toast.makeText(getApplicationContext(), "You can access your cart by selecting the cart option from the Slidemenu", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -610,7 +634,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     }
                 });
             } else if (v == cartButton) {
-                addToCartNew();
+                addToCartNew(cartButton);
             } else if (v == followButton) {
                 v.setEnabled(false);
                 final boolean isFollowing = v.isSelected();

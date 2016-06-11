@@ -88,6 +88,97 @@
         android:textSize="14sp"/>
 
     <include
+        android:id="@+id/paymentModesAvail"
+        layout="@layout/layout_cutomize_title"/>
+
+    <TextView
+        android:id="@+id/paymentModesAvail_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:fontFamily="sans-serif-light"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"/>
+
+
+
+    <include
+        android:id="@+id/warrantyInfo"
+        layout="@layout/layout_cutomize_title"/>
+
+    <TextView
+        android:id="@+id/warrantyInfo_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:fontFamily="sans-serif-light"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"/>
+
+
+    <include
+        android:id="@+id/moneyBackPolicy"
+        layout="@layout/layout_cutomize_title"/>
+
+    <TextView
+        android:id="@+id/moneyBackPolicy_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:fontFamily="sans-serif-light"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"/>
+
+
+    <include
+        android:id="@+id/certificateType"
+        layout="@layout/layout_cutomize_title"/>
+
+    <TextView
+        android:id="@+id/certificateType_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:fontFamily="sans-serif-light"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"/>
+
+
+    <include
+        android:id="@+id/estimatedDelTime"
+        layout="@layout/layout_cutomize_title"/>
+
+    <TextView
+        android:id="@+id/estimatedDelTime_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_default"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_marginRight="@dimen/padding_default"
+        android:fontFamily="sans-serif-light"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"/>
+
+
+    <include
         android:id="@+id/product_detail_style"
         layout="@layout/layout_cutomize_title"/>
 

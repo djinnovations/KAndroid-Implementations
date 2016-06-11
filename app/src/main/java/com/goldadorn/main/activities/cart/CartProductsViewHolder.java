@@ -62,8 +62,6 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             ProductViewHolder pvh = createItem(product);
             pvh.bindUI(product);
         }
-
-
     }
 
     public void setVisibility(int visibility) {
@@ -81,6 +79,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         public final TextView name, price;
         public final EditText quantityText;
         public final View quantityChange;
+        ImageView ivRemoveFromCart;
         private Product product;
 
 
@@ -92,10 +91,14 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText = (EditText) itemView.findViewById(R.id.product_quantity);
             quantityChange = itemView.findViewById(R.id.product_quantity_change);
             quantityText.addTextChangedListener(this);
+            ivRemoveFromCart = (ImageView) itemView.findViewById(R.id.ivRemoveFromCart);
             quantityChange.setOnClickListener(this);
+
+            ivRemoveFromCart.setOnClickListener(this);
         }
 
         public void bindUI(Product product) {
+            Log.d("djcart","product name: "+product.name);
             name.setText(product.name);
             quantityText.removeTextChangedListener(this);
             Log.e("iiii",product.orderQty + "");
@@ -131,10 +134,14 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onClick(View v) {
+            if (v.getId() == R.id.ivRemoveFromCart){
+                changeQuantity(0);
+                return;
+            }
             if (popupMenu != null) popupMenu.dismiss();
             popupMenu = new PopupMenu(quantityChange.getContext(), quantityChange);
             Menu menu = popupMenu.getMenu();
-            for (int i = 0; i < product.maxQuantity + 1; i++)
+            for (int i = 1; i < product.maxQuantity + 1; i++)
                 menu.add(0, i, i, "" + i);
             popupMenu.setOnMenuItemClickListener(this);
             popupMenu.show();

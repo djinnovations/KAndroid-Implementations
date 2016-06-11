@@ -93,7 +93,7 @@
         android:paddingTop="@dimen/padding_default_2x"
         android:textSize="12sp"
         android:text="Note : To remove a product from cart, please set the quantity as 0"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

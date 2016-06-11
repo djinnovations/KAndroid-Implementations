@@ -1,6 +1,9 @@
 package com.goldadorn.main.model;
 
+import android.util.Log;
+
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.utils.SmartTimeAgo;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.IParseableObject;
@@ -208,11 +211,14 @@ public class SocialPost extends ServerError implements IParseableObject {
 
 
 
-        Date date = (new Date(Long.parseLong(timestamp.toString())));
+        /*Date date = (new Date(Long.parseLong(timestamp.toString())));
         age = sdf.format(date);
 
-        age = age.replace(",",", at ");
-
+        age = age.replace(",",", at ");*/
+        String result = SmartTimeAgo.getSmartTime(/*null, */timestamp/*, true*/);
+        /*if (result.equals(SmartTimeAgo.SMART_TIME_EOF))
+            setDateAsEarlier();
+        else */age = result;
 
         //strElapsed(timestamp);
 
@@ -242,6 +248,14 @@ public class SocialPost extends ServerError implements IParseableObject {
         if(recommendation.size()==0)
             recommendation=null;
 
+    }
+
+
+    private void setDateAsEarlier(){
+        Date date = (new Date(Long.parseLong(timestamp.toString())));
+        age = sdf.format(date);
+
+        age = age.replace(",",", at ");
     }
 
     public String strElapsed(Long timestamp) {

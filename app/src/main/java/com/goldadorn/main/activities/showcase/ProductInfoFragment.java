@@ -85,6 +85,18 @@ public class ProductInfoFragment extends Fragment {
                 "Collection Style");
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
+
+        ((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
+                "Payment Modes Available");
+        ((TextView) view.findViewById(R.id.warrantyInfo).findViewById(R.id.title)).setText(
+                "Warranty Information");
+        ((TextView) view.findViewById(R.id.moneyBackPolicy).findViewById(R.id.title)).setText(
+                "Money Back Policy");
+        ((TextView) view.findViewById(R.id.certificateType).findViewById(R.id.title)).setText(
+                "Certificate Type");
+        ((TextView) view.findViewById(R.id.estimatedDelTime).findViewById(R.id.title)).setText(
+                "Estimated Delivery Time");
+
         ((TextView) view.findViewById(R.id.product_detail_style).findViewById(R.id.title)).setText(
                 "Product Detail");
 
@@ -146,9 +158,10 @@ public class ProductInfoFragment extends Fragment {
                 head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
                 head.itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 head.component.setText("Component");
-                head.rate.setText("Rate\n(" + t.rateunit + ")");
-                head.weight.setText("Weight\n(" + t.weightunit + ")");
-                head.price.setText("Value\n(" + t.rateunit + ")");
+                head.rate.setText("Rate\n(" + t.rateunit + ")");//to be changed from backend
+                head.weight.setText("Weight");
+                //(" + t.weightunit + ");
+                head.price.setText("Value\n(" + t.rateunit + ")");//to be changed from backend
                 head.offer_price.setText("Offer Price");
 
                 int childPos = 1;
@@ -243,7 +256,7 @@ public class ProductInfoFragment extends Fragment {
                 holder.rate.setText(detail.price+"");
             }
 
-            holder.weight.setText(" " + detail.weight);
+            holder.weight.setText(" " + detail.weight+ " "+ detail.metalWeightUnits);//changed djphy
             float mValue= detail.price * detail.weight;
             holder.price.setText(" " + Math.round(mValue));
             holder.offer_price.setText(" " + ((int)mValue));

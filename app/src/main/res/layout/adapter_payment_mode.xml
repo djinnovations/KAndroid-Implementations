@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlCheckPay"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:paddingLeft="8dp"
+    android:background="@drawable/bottom_stoke">
+
+    <TextView
+        android:id="@+id/tvMethod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/radioBtn"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp" />
+
+    <RadioButton
+        android:id="@+id/radioBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+</RelativeLayout>

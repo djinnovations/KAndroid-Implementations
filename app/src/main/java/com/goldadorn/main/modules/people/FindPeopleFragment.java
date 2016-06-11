@@ -158,10 +158,11 @@ public class FindPeopleFragment extends DefaultVerticalListView
     }
     public String getNextDataURL(PageData pageData)
     {
-        if(pageData.curruntPage==1)
+        Log.d("djpeople","pagination offset FindPeopleFragment: "+offset);
+        /*if(pageData.curruntPage==1)*/
             return getApp().getUrlHelper().getFindPeopleServiceURL(offset);
-        else
-            return null;
+        /*else
+            return null;*/
     }
     public class PeopleItemHolder extends BaseItemHolder {
 

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 
 /**
@@ -42,10 +45,13 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         return inflater.inflate(R.layout.fragment_mycart, container, false);
     }
 
+    HashMap<Integer, Integer> mapOfProdsToQuantity;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         mCartEmptyView = view.findViewById(R.id.emptyview_cart);
+        mapOfProdsToQuantity = new HashMap<>();
 
         mShippingContainer = view.findViewById(R.id.container_shipping);
         mTaxContainer = view.findViewById(R.id.container_tax);
@@ -74,10 +80,11 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                 try {
                     if (result.success && result.productArray != null) {
                         for (int i=0;i<result.productArray.size();i++){
-                            Product p=result.productArray.get(i);
-
+                            Product prod=result.productArray.get(i);
+                            checkAndEntry(prod);
                         }
-                        mCart.addAll(result.productArray);
+                        mCart.addAll(getUniqueProdList(result.productArray));
+                        //getUniqueProdList();
                         onCartChanged();
                     }
                     ((ILoadingProgress) getActivity()).showLoading(false);
@@ -86,6 +93,16 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                 }
             }
         });
+    }
+
+    private void checkAndEntry(Product prod) {
+
+        if (mapOfProdsToQuantity.containsKey(prod.id)){
+            int oldVal = mapOfProdsToQuantity.get(prod.id);
+            mapOfProdsToQuantity.put(prod.id, (oldVal+1));
+        }
+        else
+            mapOfProdsToQuantity.put(prod.id, prod.quantity);
     }
 
     private void logEventsAnalytics(String eventName) {
@@ -155,5 +172,21 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         Product t = new Product(id);
         int index = mCart.indexOf(t);
         return mCart.get(index);
+    }
+
+    public ArrayList<Product> getUniqueProdList(ArrayList<Product> fullList) {
+        ArrayList<Product> templist = new ArrayList<>();
+        Set<Integer> keysList = mapOfProdsToQuantity.keySet();
+        for (int key: keysList){
+            for (Product prod: fullList){
+                if (key == prod.id){
+                    prod.orderQty = mapOfProdsToQuantity.get(key);
+                    templist.add(prod);
+                    break;
+                }
+            }
+        }
+        Log.d("djcart", "unique productList size: "+templist.size());
+        return templist;
     }
 }

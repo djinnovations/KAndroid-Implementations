@@ -26,12 +26,20 @@ public class DateTimeUtils {
     }
 
 
-    public static String getTime12Hour(String dateFromServer) {
+    /*public static String getTime12Hour(String dateFromServer) {
 
         String[] arraydateTime = dateFromServer.split(" ");
-        /*Time t = Time.valueOf(arraydateTime[1].trim());
-        long l = t.getTime();*/
+        *//*Time t = Time.valueOf(arraydateTime[1].trim());
+        long l = t.getTime();*//*
         return _24To12Hour(arraydateTime[1].trim());
+    }*/
+
+
+    public static String getFormattedTimestamp(String outputFormat, long timestamp){
+
+        DateFormat dateFormat = new SimpleDateFormat(outputFormat, Locale.getDefault());
+        Date date = new Date(timestamp);
+        return dateFormat.format(date);
     }
 
 

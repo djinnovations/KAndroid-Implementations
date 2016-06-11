@@ -19,7 +19,7 @@
         <ScrollView
             android:id="@+id/scrollview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:fillViewport="true">
 
             <LinearLayout
@@ -36,7 +36,7 @@
                 <FrameLayout
                     android:id="@+id/frame"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:minHeight="100dp"/>
 
                 <Button
@@ -58,5 +58,38 @@
             android:clickable="true"
             android:visibility="gone"/>
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/paymentModeUI"
+        android:layout_width="match_parent"
+        android:padding="16dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvOrderAmount"
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:text="Order Amount\nRs. "
+                android:textSize="16sp"
+                android:textColor="@color/Black"
+                android:textStyle="bold"/>
+
+            <Button
+                android:id="@+id/btnPlaceOrder"
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:textSize="16sp"
+                android:layout_height="match_parent"
+                android:text="Place Order"/>
+        </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

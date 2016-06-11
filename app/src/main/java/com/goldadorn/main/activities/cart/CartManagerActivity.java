@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -20,11 +22,14 @@ import android.widget.Toast;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.Address;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.Product;
 
 import java.util.ArrayList;
@@ -36,7 +41,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class CartManagerActivity extends FragmentActivity implements ICartData, ILoadingProgress {
+public class CartManagerActivity extends BaseActivity implements ICartData, ILoadingProgress {
     public static final int UISTATE_CART = 0;
     public static final int UISTATE_ADDRESS = 1;
     public static final int UISTATE_PAYMENT = 2;
@@ -58,7 +63,8 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
     LinearLayout mContainerProgressImage;
     @Bind(R.id.scrollview)
     ScrollView mScollView;
-
+    @Bind(R.id.paymentModeUI)
+    View paymentModeUI;
     ProgressDialog mProgressDialog;
 
     public List<Product> mCartItems = new ArrayList<>();
@@ -71,9 +77,19 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         return in;
     }
 
-    private void logEventsAnalytics(String eventName) {
-        ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    public void contactUs(){
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_contact_us);
+        if (navigationDataObject != null)
+            action(navigationDataObject);
     }
+
+    /*public long getTotalAmount(){
+        return mCostTotal;
+    }*/
+
+    /*private void logEventsAnalytics(String eventName) {
+        ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +149,7 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         mUIState = uistate;
         Fragment f = null;
         int frame = R.id.frame;
+        paymentModeUI.setVisibility(View.GONE);
         if (uistate == UISTATE_CART) {
             f = new MyCartFragment();
             mContinueButton.setText("Select address ->");
@@ -143,10 +160,14 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
             mContinueButton.setText("Proceed to payment");
         } else if (uistate == UISTATE_PAYMENT) {
             f = new PaymentFragment();
+            paymentModeUI.setVisibility(View.VISIBLE);
             mContinueButton.setVisibility(View.INVISIBLE);
         } else if (uistate == UISTATE_FINAL) {
             f = new SummaryFragment();
-            mContinueButton.setText("Go to home");
+            Bundle args = new Bundle();
+            args.putBoolean(IntentKeys.COD_CALL, isCOD);
+            f.setArguments(args);
+            mContinueButton.setText("Go To Social Feed");
             mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
@@ -166,6 +187,14 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         }
         mScollView.scrollTo(0, 0);
         refreshToolBar();
+    }
+
+    public Button getPlaceOrderBtn(){
+        return (Button) paymentModeUI.findViewById(R.id.btnPlaceOrder);
+    }
+
+    public TextView getTvAmount(){
+        return (TextView) paymentModeUI.findViewById(R.id.tvOrderAmount);
     }
 
     private void refreshToolBar() {
@@ -247,9 +276,11 @@ public class CartManagerActivity extends FragmentActivity implements ICartData, 
         return mCostTotal;
     }
 
+    private boolean isCOD;
     @Override
-    public void setPaymentDone(boolean done) {
+    public void setPaymentDone(boolean done, boolean isCOD) {
         mPaymentSuccess = done;
+        this.isCOD = isCOD;
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CHECKOUT_SUCCESSFUL");
         logEventsAnalytics(GAAnalyticsEventNames.CHECKOUT_SUCCESSFUL);
         if (done) {

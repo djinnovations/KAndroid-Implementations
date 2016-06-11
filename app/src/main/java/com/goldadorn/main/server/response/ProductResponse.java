@@ -53,6 +53,7 @@ public class ProductResponse extends BasicResponse {
     }
     public static ProductResponse getAddToListResponseNew(Product product,ProductInfo mProductInfo,ProductOptions mProductOptions) {
         ProductResponse response = new ProductResponse();
+        response.product = product;
         response.productId = product.id;
         response.metalWeight=mProductInfo.metalWeight;
         response.metalrate=mProductInfo.metalrate;
@@ -64,8 +65,6 @@ public class ProductResponse extends BasicResponse {
         response.primaryMetalColor=mProductOptions.primaryMetalColor;
         response.priceUnits=mProductOptions.priceUnits;
         response.size=mProductOptions.size;
-
-
         //response.userId=product.userId;
         return response;
     }

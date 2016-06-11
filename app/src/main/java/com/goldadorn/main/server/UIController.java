@@ -143,7 +143,7 @@ public class UIController {
 
 
     public static void addToCartNewProduct(final Context context, Product product, ProductInfo mProductInfo, ProductOptions mProductOptions, final IResultListener<ProductResponse> listener) {
-        final ProductResponse response =ProductResponse.getAddToListResponseNew(product,mProductInfo,mProductOptions);
+        final ProductResponse response = ProductResponse.getAddToListResponseNew(product,mProductInfo,mProductOptions);
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

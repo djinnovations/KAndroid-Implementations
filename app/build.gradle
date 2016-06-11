@@ -82,8 +82,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 11
-        versionName "2.1"
+        versionCode 12
+        versionName "2.2"
         multiDexEnabled true
         /*March 5 2016 1:46:58*/
     }
@@ -102,7 +102,8 @@ android {
 
 repositories {
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://maven.fabric.io/public'}
+    maven { url 'http://mvnrepository.com/artifact/org.apache.commons/commons-lang3'}
     mavenCentral()
     maven { url "https://jitpack.io" }
     maven(){
@@ -203,4 +204,5 @@ dependencies {
     compile 'com.github.markomilos:paginate:0.5.1'
     compile 'com.seatgeek:placesautocomplete:0.1-SNAPSHOT'
     compile 'com.github.vlonjatg:progress-activity:v1.0.3'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }

@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,6 +22,9 @@ import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.gcm.Config;
 import com.goldadorn.main.dj.support.gcm.GcmIntentService;
+import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -33,7 +37,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -67,7 +70,7 @@ public class AppStartActivity extends BaseActivity {
         logo.setImageResource(res);
         */
         setUpGCM();
-
+        checkAppStart(getIntent());
 
         ProgressView progressBar = (ProgressView) findViewById(R.id.progressBar);
         progressBar.setProgress(0f);
@@ -83,6 +86,17 @@ public class AppStartActivity extends BaseActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, INTERNET_PERMISSION_REQUEST_CODE);
         }
         //initFacebookSdk();
+    }
+
+    private void checkAppStart(Intent intent){
+        if (intent!=null){
+            String calledFrom = intent.getStringExtra(IntentKeys.PUSH_NOTIFICATION_CALL);
+            if (!TextUtils.isEmpty(calledFrom)){
+                if (calledFrom.equals(Constants.GCM_CALL)){
+                    getApp().logEventMixPanel(GAAnalyticsEventNames.PUSH_NOTIFICATION_TAP, null);
+                }
+            }
+        }
     }
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
@@ -102,7 +116,7 @@ public class AppStartActivity extends BaseActivity {
                     String token = intent.getStringExtra("token");
 
                    // Toast.makeText(getApplicationContext(), "GCM registration token: " + token, Toast.LENGTH_LONG).show();
-                    Log.d("dj", "GCM reg Token: " + token);
+                    //Log.d("dj", "GCM reg Token: " + token);
                     Log.d("dj","GCM reg Token: "+token);
 
                 } else if (intent.getAction().equals(Config.SENT_TOKEN_TO_SERVER)) {

@@ -18,12 +18,12 @@
         android:padding="8dp"
         android:text="Hang On!"
         android:textColor="@color/colorAccent"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <com.rey.material.widget.ProgressView
         android:id="@+id/progressBar"
-        android:layout_width="@dimen/tinyProgressBar"
-        android:layout_height="@dimen/tinyProgressBar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_centerInParent="true"
         android:visibility="visible"
         app:pv_autostart="true"

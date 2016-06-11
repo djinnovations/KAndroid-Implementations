@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -12,20 +13,24 @@ import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
+import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.PaymentMethodAdapter;
 import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
 import com.payu.india.Interfaces.PaymentRelatedDetailsListener;
@@ -45,9 +50,13 @@ import com.payu.india.Tasks.DeleteCardTask;
 import com.payu.india.Tasks.GetPaymentRelatedDetailsTask;
 import com.payu.india.Tasks.GetStoredCardTask;
 import com.payu.payuui.PayUCreditDebitCardActivity;
+import com.payu.payuui.PayUNetBankingActivity;
 import com.payu.payuui.PaymentsActivity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kiran BH on 10/03/16.
@@ -55,17 +64,19 @@ import java.util.ArrayList;
 public class PaymentFragment extends Fragment implements PaymentRelatedDetailsListener, DeleteCardApiListener, GetStoredCardApiListener {
 
     ArrayList<StoredCard> mPaymentModes = new ArrayList<>(5);
-    TextView mAddButton;
+    //TextView mAddButton;
     PayuResponse mPayuResponse;
     PayuConfig mPayuConfig;
     PaymentParams mPaymentParams;
     PayuHashes mPayUHashes;
-    ProgressBar mProgressBar;
-    LinearLayout mContainerCard;
+    //ProgressBar mProgressBar;
+    // LinearLayout mContainerCard;
     PayUHelper mPayUHelper;
     private Bundle mPayuBundle;
-    PayUStoredCardsAdapter mStoredCardsAdapter;
+    //PayUStoredCardsAdapter mStoredCardsAdapter;
     ICartData mCartData;
+
+    private String modeChosen;
 
     @Nullable
     @Override
@@ -77,18 +88,23 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     @Override
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(), mPaymentModes);
-        mAddButton = (TextView) view.findViewById(R.id.action_add);
-        mContainerCard = (LinearLayout) view.findViewById(R.id.recyclerView);
+
+        LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
+        setUpPaymentMethodView(view);
+
+        //mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(), mPaymentModes);
+        //mAddButton = (TextView) view.findViewById(R.id.action_add);
+        // mContainerCard = (LinearLayout) view.findViewById(R.id.recyclerView);
 //        mContainerCard.setAdapter(mStoredCardsAdapter);
-        mAddButton.setText("Add new payment method");
-        mAddButton.setOnClickListener(mAddClick);
+        //mAddButton.setText("Add new payment method");
+        //mAddButton.setOnClickListener(mAddClick);
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        //mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         mPayUHelper = new PayUHelper(getActivity(), mCartData.getBillableAmount(), new IResultListener<Bundle>() {
             @Override
             public void onResult(Bundle bundle) {
+                Log.d("djcart", "onResult - PayUHelper");
                 mPayuBundle = bundle;
                 Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
                 mPayuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
@@ -107,17 +123,111 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                         mPayuConfig.setData(postData.getResult());
 
                         // lets set the visibility of progress bar
-                        mProgressBar.setVisibility(View.VISIBLE);
+                        //mProgressBar.setVisibility(View.VISIBLE);
                         GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
                         paymentRelatedDetailsForMobileSdkTask.execute(mPayuConfig);
                     } else {
                         Toast.makeText(getContext(), postData.getResult(), Toast.LENGTH_LONG).show();
                         // close the progress bar
-                        mProgressBar.setVisibility(View.GONE);
+                        //mProgressBar.setVisibility(View.GONE);
                     }
                 }
             }
         });
+    }
+
+    private PaymentMethodsViewController.IPayMethodChangedListener payMethodListener =
+            new PaymentMethodsViewController.IPayMethodChangedListener() {
+                @Override
+                public void onPaymentSelected(PaymentMethodsViewController.PaymentMethodsDataObj dataObj) {
+                    modeChosen = dataObj.getMethodName();
+                    Log.d("djcart", "pay mode: " + modeChosen);
+                }
+            };
+
+    private final String[] payMethodArr = new String[]{"Net Banking", "Credit Card", "EMI", "Debit Card", "Cash on Delivery"};
+
+    private void setUpPaymentMethodView(View view) {
+        /*payMethodList = new ArrayList<>();
+
+        int initSelectedPosition = 1;
+        payMethodList.add("Net Banking");
+        payMethodList.add("Credit Card");
+        payMethodList.add("EMI");
+        payMethodList.add("Debit Card");
+        payMethodList.add("Cash on Delivery");
+
+        PaymentMethodAdapter adapter = new PaymentMethodAdapter(getActivity(), payMethodList);
+       // ListView listView = (ListView) view.findViewById(R.id.list);
+        lvPaymentMethod.setAdapter(adapter);
+        lvPaymentMethod.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        lvPaymentMethod.setSelection(initSelectedPosition);
+
+        lvPaymentMethod.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                *//*Checkable child = (Checkable) parent.getChildAt(position);
+                child.toggle();*//*
+                ((RadioButton) parent.getChildAt(position).findViewById(R.id.radio)).setChecked(true);
+            }
+        });*/
+        LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
+        TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity)getActivity()).getTvAmount();
+        Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity)getActivity()).getPlaceOrderBtn();
+        String txt = tvAmount.getText().toString();
+        String txt2 = String.valueOf(mCartData.getBillableAmount());
+        String finalTxt = txt + StringUtils.stripStart(txt2, "0");
+        Log.d("djcart","billableAmount: "+finalTxt);
+        tvAmount.setText(finalTxt);
+        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                proceedToPay(modeChosen);
+            }
+        });
+        ArrayList<PaymentMethodsViewController.PaymentMethodsDataObj> list = new ArrayList<>();
+        int i = 0;
+        for (String str : payMethodArr) {
+            if (i == 1)
+                list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, true));
+            else list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, false));
+            i++;
+        }
+        new PaymentMethodsViewController(paymethodContainer, payMethodListener).displayMethods(list);
+        modeChosen = payMethodArr[1];
+
+    }
+
+    //private boolean isCod;
+    private void proceedToPay(String modeChosen) {
+        Intent intent = null;
+        //isCod = false;
+        switch (modeChosen) {
+            case "Net Banking":
+                intent = new Intent(getContext(), PayUNetBankingActivity.class);
+                intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
+                break;
+            case "Credit Card":
+                intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
+                intent.putParcelableArrayListExtra(PayuConstants.CREDITCARD, mPayuResponse.getCreditCard());
+                break;
+            case "EMI":
+                Toast.makeText(getContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                return;
+            case "Debit Card":
+                intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
+                intent.putParcelableArrayListExtra(PayuConstants.DEBITCARD, mPayuResponse.getDebitCard());
+                break;
+            case "Cash on Delivery":
+                //isCod = true;
+                mCartData.setPaymentDone(true, true);
+                //// TODO: 11-06-2016
+                return;
+            default:
+                break;
+        }
+        if (intent != null)
+            launchActivity(intent);
     }
 
     private void onPaymentOptionsChanged() {
@@ -138,12 +248,12 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 //            card.setCardBin("visa");
 //            mPaymentModes.add(card);
 //        }
-        if (mPaymentModes.size() > 0) {
+        /*if (mPaymentModes.size() > 0) {
             mContainerCard.setVisibility(View.VISIBLE);
         } else {
             mContainerCard.setVisibility(View.GONE);
-        }
-        mStoredCardsAdapter.changeData(mPaymentModes);
+        }*/
+        //mStoredCardsAdapter.changeData(mPaymentModes);
     }
 
     private View.OnClickListener mAddClick = new View.OnClickListener() {
@@ -160,9 +270,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
-                String result=data.getStringExtra("result");
-                if(result.equals(mPaymentParams.getSurl())){
-                    mCartData.setPaymentDone(true);
+                String result = data.getStringExtra("result");
+                if (result.equals(mPaymentParams.getSurl())) {
+                    mCartData.setPaymentDone(true, false);
                 }
                 new AlertDialog.Builder(getContext())
                         .setCancelable(false)
@@ -181,7 +291,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     @Override
     public void onPaymentRelatedDetailsResponse(PayuResponse payuResponse) {
         mPayuResponse = payuResponse;
-        mProgressBar.setVisibility(View.GONE);
+        //mProgressBar.setVisibility(View.GONE);
         onGetStoredCardApiResponse(payuResponse);
     }
 
@@ -379,7 +489,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
         public void changeData(ArrayList<StoredCard> mPaymentModes) {
             storedCards = mPaymentModes;
-            for (int i = 0; i < storedCards.size(); i++) {
+            /*for (int i = 0; i < storedCards.size(); i++) {
                 View child = mContainerCard.getChildAt(i);
                 View v = getView(i, child, mContainerCard);
                 v.setVisibility(View.VISIBLE);
@@ -391,7 +501,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 for (int i = storedCards.size(); i < mContainerCard.getChildCount(); i++) {
                     mContainerCard.getChildAt(i).setVisibility(View.GONE);
                 }
-            }
+            }*/
 //            notifyDataSetChanged();
         }
 
@@ -459,7 +569,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < mContainerCard.getChildCount(); i++) {
+                /*for (int i = 0; i < mContainerCard.getChildCount(); i++) {
                     View cvvContainer = mContainerCard.getChildAt(i).findViewById(cvvPayNowLinearLayout.getId());
                     if (cvvContainer.equals(cvvPayNowLinearLayout)) {
                         if (cvvPayNowLinearLayout.getVisibility() == View.VISIBLE) {
@@ -475,7 +585,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     deleteCard(storedCards.get(position));
                 } else if (view.getId() == R.id.button_pay_now) {
                     makePayment(storedCards.get(position), cvvEditText.getText().toString());
-                }
+                }*/
             }
         }
     }

@@ -35,6 +35,10 @@ public class MyGcmPushReceiver extends GcmListenerService {
         String timestamp = null;
         String iconName;
         String ctaData = null;
+        for (String key: bundle.keySet())
+        {
+            Log.d ("djgcm", key + " is a key in the bundle");
+        }
 
         if (bundle != null){
             message = bundle.getString("mp_message");

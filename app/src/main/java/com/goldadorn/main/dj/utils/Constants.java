@@ -56,7 +56,8 @@ public class Constants {
     public static final String INFO_MSG_WRITE = "Picture captured for uploading will be stored into the device";
 
 
-
     public static final String COACH_MARK_PREF_NAME = "gold_adorn_coach_mark";
+    public static final String GCM_CALL = "GCM_APP_STARTED";
+
 
 }

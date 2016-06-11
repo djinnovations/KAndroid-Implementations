@@ -1,6 +1,7 @@
 package com.goldadorn.main.dj.support.gcm;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -71,9 +73,9 @@ public class GcmIntentService extends IntentService {
             Log.i(TAG, "GCM Registration Token: " + token);
  
             // sending the registration id to our server
-            sendRegistrationToServer(token);
- 
+            sendRefreshTokenToServer(token);
             sharedPreferences.edit().putBoolean(Config.SENT_TOKEN_TO_SERVER, true).apply();
+
         } catch (Exception e) {
             Log.e(TAG, "Failed to complete token refresh", e);
  
@@ -85,13 +87,23 @@ public class GcmIntentService extends IntentService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
-    private final String value_property = "android_devices";
-    private void sendRegistrationToServer(final String token) {
+    private final String value_property = "$android_devices";
+    SharedPreferences sharedPreferences;
+    private void sendRefreshTokenToServer(final String token) {
         // Send the registration token to Mix panel
-        User user = Application.getInstance().getUser();
-        if(user != null){
+        Log.d(TAG, "sendRefreshTokenToServer called");
+
+        sharedPreferences = getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
+        boolean isLoginDone = sharedPreferences.getBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false);
+        int userId = -1;
+        if (isLoginDone)
+            userId = sharedPreferences.getInt(AppSharedPreferences.LoginInfo.USER_ID, -1);
+
+        //User user = Application.getInstance().getUser();
+        if(userId != -1){
+            Log.d(TAG, "user id picked up from shared pref");
             MixpanelAPI.People people = Application.getInstance().getMixPanelInstance().getPeople();
-            people.identify(String.valueOf(Application.getInstance().getUser().id));
+            people.identify(String.valueOf(userId));
             JSONArray jsonArray = new JSONArray();
             try {
                 jsonArray.put(0, token);
@@ -99,6 +111,23 @@ public class GcmIntentService extends IntentService {
                 e.printStackTrace();
             }
             people.union(value_property, jsonArray);
+            Log.d(TAG, "refresh token sent to Mix panel");
+        }
+        else {
+            User user = Application.getInstance().getUser();
+            if (user != null) {
+                Log.d(TAG, "user id picked up from application cache");
+                MixpanelAPI.People people = Application.getInstance().getMixPanelInstance().getPeople();
+                people.identify(String.valueOf(user.id));
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    jsonArray.put(0, token);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                people.union(value_property, jsonArray);
+                Log.d(TAG, "refresh token sent to Mix panel");
+            }
         }
         //// TODO: 30-05-2016
        // people.setPushRegistrationId(registrationId);

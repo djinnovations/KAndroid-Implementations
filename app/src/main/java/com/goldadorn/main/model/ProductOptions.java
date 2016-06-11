@@ -1,5 +1,7 @@
 package com.goldadorn.main.model;
 
+import android.util.Log;
+
 import com.goldadorn.main.constants.Constants;
 
 import org.json.JSONArray;
@@ -45,9 +47,24 @@ public class ProductOptions {
     public static ProductOptions extractCustomization(JSONObject productInfo) throws JSONException {
         ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
 
-        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", (float) productInfo.optDouble(Constants.JsonConstants.PRIMARYMETALPRICE)));
-        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Stone", (float) productInfo.optDouble(Constants.JsonConstants.STONEPRICE)));
-        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Making Charges", (float) productInfo.optDouble(Constants.JsonConstants.MAKINGCHARGES)));
+        Log.d("djcustom","response Obj - ProductOptions: "+productInfo.toString());
+        float primaryMetalPrice;
+        float stonePrice;
+        float makingcharges;
+        try {
+            primaryMetalPrice = (float) productInfo.getDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
+            stonePrice = (float) productInfo.getDouble(Constants.JsonConstants.STONEPRICE);
+            makingcharges = (float) productInfo.getDouble(Constants.JsonConstants.MAKINGCHARGES);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            primaryMetalPrice = -1;
+            stonePrice = -1;
+            makingcharges = -1;
+        }
+
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Stone", stonePrice));
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Making Charges", makingcharges));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("VAT (Tax)", (float) 00.00));
 
         p.priceUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);

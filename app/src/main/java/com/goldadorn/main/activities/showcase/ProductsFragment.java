@@ -321,7 +321,7 @@ public class ProductsFragment extends Fragment {
             Log.d("djprod","lastSeenprodID: "+lastSeenProductId);
             try {
                 tempProdList = prodList.subList(0, DbHelper.productCountPerCall);
-                ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
+                /*ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
                 Iterator<Product> iterator = toComapareList.iterator();
                 while (iterator.hasNext()){
                     Product prod = iterator.next();
@@ -331,6 +331,9 @@ public class ProductsFragment extends Fragment {
                     if (prod.productId == lastSeenProductId){
                         contains = true;
                     }
+                }*/
+                for (Product prod: pendingProductList){
+                    tempProdList.add(0, prod);
                 }
                 Log.d("djprod","final size of products to display: "+tempProdList.size());
                 initialTotalProductCount = tempProdList.size();
@@ -344,12 +347,14 @@ public class ProductsFragment extends Fragment {
 
         private int lastSeenProductId;
         private boolean isPaginateCall = false;
+        private List<Product> pendingProductList;
         @Override
         public void removeFirstObjectInAdapter() {
             lastSeenProductId = products.get(0).productId;
             products.remove(0);
             notifyDataSetChanged();
             initialTotalProductCount--;
+            pendingProductList = products.subList(0, products.size());
             Log.d("djprod", "initialTotalProductCount - removeFirstObjectInAdapter: " + initialTotalProductCount);
             if (initialTotalProductCount == threshold) {
                 Log.d("djprod", "new offset - threshold reached- paginate: " + (offsetMain));
@@ -362,6 +367,7 @@ public class ProductsFragment extends Fragment {
         public void onLeftCardExit(Object o) {
             Log.d("djlike", "onLeftCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
+
             /*Log.d("djlike", "product like stat pt1: " + p.isLiked);
             if (p.likeStat == 0) {
 
@@ -537,8 +543,10 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onItemClicked(int i, Object o) {
             Log.e("iiii", "Click4");
-
-            goToProductPage(context, (Product) o);
+            Product p = originalProducts.get(originalProducts.indexOf(o));
+            //goToProductPage(context, (Product) o);
+            Log.d("djprod","product name onClickImage: "+ p.name);
+            goToProductPage(context, p);
         }
 
         class ProductViewHolder {

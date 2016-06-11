@@ -23,6 +23,8 @@ import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.dj.utils.TableBuilder;
+import com.goldadorn.main.dj.utils.TableFormatter;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.ProductOptions;
@@ -104,6 +106,7 @@ public class ProductCustomiseFragment extends Fragment {
         }
     }
 
+    private final String NO_DETAILS = "Detail Not Available";
     private SingleItemAdapter.IViewBinder<PBViewHolder> mPriceBinder = new SingleItemAdapter.IViewBinder<PBViewHolder>() {
         @Override
         public void onNewView(int id, PBViewHolder holder) {
@@ -117,28 +120,44 @@ public class ProductCustomiseFragment extends Fragment {
             float total = 0;
             float vatTotal = 0;
             SpannableStringBuilder builder = new SpannableStringBuilder();
+            //TableFormatter tb = new TableFormatter();
+            TableBuilder tblr = new TableBuilder();
             for (Map.Entry<String, Float> entry : p) {
                 String name = entry.getKey();
+
+                String priceValue;
                 Float price = entry.getValue();
-                String priceValue =String.valueOf(Math.round(price));
-                total = total + price;
+                //price = -1f;
+                if (price == -1){
+                    priceValue = NO_DETAILS;
+                }
+                else priceValue = String.valueOf(Math.round(price));
+                total = total + /*price*/price == -1 ? 0 : price;
 
                 String spaces="";
-                for (int i=(name.length()+1);i<15;i++){
+                /*for (int i=(name.length()+1);i<15;i++){
                     spaces=spaces+" ";
                 }
-                name=name+spaces;
-
+                name=name+spaces;*/
 
                 if(name.contains("Metal")){
-                    vatTotal=vatTotal+price;
-                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
+                    //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                    // total of tab spaces added = 12
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    /*vatTotal=vatTotal+*//*price*//* price == -1 ? 0 : price;
+                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
                 }
                 else if(name.contains("Stone")){
-                    vatTotal=vatTotal+price;
-                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
+                    //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                    // total of tab spaces added = 12
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                   /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
+                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
                 }else if(name.contains("Making Charges")){
-                    vatTotal=vatTotal+price;
+                    //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                    // total of tab spaces added = 3
+                    tblr.addRow(name+ "\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    /*vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
                     }else if(density== DisplayMetrics.DENSITY_HIGH){
@@ -148,10 +167,13 @@ public class ProductCustomiseFragment extends Fragment {
                         name = name + "\t\t\t\t\t\t\t\t\t";
                     }else{
                         name = name + "\t\t\t\t\t\t\t\t\t";
-                    }
+                    }*/
                 }else{
-                    price=(float)(vatTotal*0.01);
-                    priceValue=String.valueOf(Math.round(price));
+                    //price=(float)(vatTotal*0.01);
+                    //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                    // total of tab spaces added = 8
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    /*priceValue=String.valueOf(Math.round(price));
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
                     }else if(density== DisplayMetrics.DENSITY_HIGH){
@@ -161,40 +183,55 @@ public class ProductCustomiseFragment extends Fragment {
                         name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
                     }else{
                         name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
-                    }
+                    }*/
 
                 }
 
-                Log.e("iii---",name+"--"+name.length()+"--"+density);
-
+                /*Log.e("iii---",name+"--"+name.length()+"--"+density);
+                priceUnit = priceValue.equals(NO_DETAILS) ? "": priceUnit;
                 builder.append(name+priceUnit);
 
                 builder.append("\t");
                 builder.append(priceValue);
-                builder.append("\n");
+                builder.append("\n");*/
             }
-            int index = builder.length();
+            //int index = builder.length();
 
             String mTotal="Total";
-            String spaces="";
+            /*String spaces="";
             for (int i=(mTotal.length()+1);i<15;i++){
                 spaces=spaces+" ";
             }
             mTotal=mTotal+spaces;
-            builder.append(mTotal);
+            builder.append(mTotal);*/
 
+            //tb = tb.addLine(mTotal + "\t", total == -1 ? NO_DETAILS: priceUnit+String.valueOf(total));
+            // total of tab spaces added = 12
+            //"<b>" + id + "</b> "
+            String totalRowTxt = "Total"+"\t\t\t\t\t\t\t\t\t\t\t\t";
 
-            builder.append("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            String totalRowTxtVal = total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total));
+
+            tblr.addRow(/*"Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"*/totalRowTxt,
+                    /*total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total))*/ totalRowTxtVal);
+
+            /*builder.append("\t\t\t\t\t\t\t\t\t\t\t\t\t");
             builder.append(priceUnit);
-            String priceValue=String.valueOf(Math.round(total));
+            String priceValue=String.valueOf(Math.round(total));*/
             //  String priceValue =String.format(Locale.getDefault(),"%.2f",Math.round(total));
             /*for(int i = 8-priceValue.length();i>=0;i--){
                 builder.append("\t");
             }*/
-            builder.append("\t");
+            /*builder.append("\t");
             builder.append(priceValue);
             builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.gold.setText(builder);
+*/
+            //holder.gold.setText(builder);
+            //holder.gold.setText(tb.toString());
+            String fullText = tblr.toString();
+            //String boldTxt = totalRowTxt + totalRowTxtVal;
+
+            holder.gold.setText(/*tblr.toString()*/ fullText);
 
         }
     };
@@ -289,7 +326,7 @@ public class ProductCustomiseFragment extends Fragment {
 
                 @Override
                 public void onClick(View v) {
-                    ((ProductActivity) getActivity()).addToCartNew();
+                    ((ProductActivity) getActivity()).addToCartNew(v);
                 }
             });
         }

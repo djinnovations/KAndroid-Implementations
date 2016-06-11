@@ -29,4 +29,5 @@ public class GAAnalyticsEventNames {
     public static final String POST_NORMAL = "Post_Product_Image";
     public static final String POST_BONB = "BONB_Product_Image";
     public static final String POST_BOT = "BOT_Product_Image";
+    public static final String PUSH_NOTIFICATION_TAP = "GCM_Tap";
 }

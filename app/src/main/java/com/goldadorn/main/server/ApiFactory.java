@@ -782,6 +782,8 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productId);
+            Log.d("djprod","productName to server: "+response.product.name);
+            jsonObject.put("prodName", response.product.name);
             jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
             jsonObject.put("primaryMetal", response.primaryMetal);
             jsonObject.put("primaryMetalPurity", response.primaryMetalPurity);

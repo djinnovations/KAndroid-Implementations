@@ -22,8 +22,10 @@ import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.dj.utils.SmartTimeAgo;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.URLHelper;
@@ -242,8 +244,11 @@ public class NotificationsActivity extends BaseActivity {
 
         // todo nithin get timestamp
         long timestamp = object.optLong("timestamp",System.currentTimeMillis());
-        dateTime = DateUtils.getRelativeDateTimeString(this,timestamp,DateUtils.
-                SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL).toString();
+        dateTime = /*DateUtils.getRelativeDateTimeString(this,timestamp,DateUtils.
+                SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL).toString();*/
+                SmartTimeAgo.getSmartTime(/*getApplicationContext(), */timestamp/*, false*/);
+                //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
+
         postContent = createString(object);
         return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId);
 

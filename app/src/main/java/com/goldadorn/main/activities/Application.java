@@ -41,6 +41,7 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.splunk.mint.Mint;
 
 import org.apache.http.cookie.Cookie;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -243,7 +244,14 @@ public class Application extends BaseApplication {
     }
 
 
+    public void logEventMixPanel(String eventName, JSONObject propertyParams){
 
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog - MixPanel: "+eventName);
+        if (propertyParams == null)
+            getMixPanelInstance().track(eventName);
+        else
+            getMixPanelInstance().track(eventName, propertyParams);
+    }
 
     private Tracker mTracker;
 
