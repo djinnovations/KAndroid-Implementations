@@ -1227,14 +1227,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     private void evaluateResults(ProductTemp productTemp, SocialPost socialPost, Dialog dialog) {
 
-        Product product = Product.extractFromProductTemp(productTemp, socialPost.getIsLiked() == 1, socialPost.getLikeCount());
-        User mUser = UserInfoCache.getInstance(getContext()).getUserInfoDB(product.userId, true);
-        dialog.dismiss();
-        if (mUser == null){
-            Toast.makeText(getContext(), "User Info Not Found", Toast.LENGTH_SHORT).show();
-            return;
+        try {
+            Product product = Product.extractFromProductTemp(productTemp, socialPost.getIsLiked() == 1, socialPost.getLikeCount());
+            User mUser = UserInfoCache.getInstance(getContext()).getUserInfoDB(product.userId, true);
+            dialog.dismiss();
+            if (mUser == null){
+                Toast.makeText(getContext(), "User-Info not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "User-Info not found", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
-        startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
     }
 
 
