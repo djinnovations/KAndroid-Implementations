@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +16,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.SmartTimeAgo;
@@ -38,10 +39,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +84,7 @@ public class NotificationsActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
         getSupportActionBar().setTitle("");
 
         //refresh();
@@ -96,17 +93,52 @@ public class NotificationsActivity extends BaseActivity {
         // TODO: 26-05-2016
     }
 
+    NotificationDataObject lastClicked;
+
     private void setUpListenerListView() {
 
         notificationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
+                lastClicked = mAdapter.getItem(position);
+                int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
+                int idTouse = actionTypeInt == 5 ? getApp().getUser().id : Integer.parseInt(lastClicked.getPostId());
+                Map<String, Integer> params = new HashMap<>();
+                params.put("type", actionTypeInt);
+                params.put("id", idTouse);
+                sendNotifyClickToServer(params);
+                /*Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
                 intent.putExtra(IntentKeys.NOTIFICATION_OBJ, mAdapter.getItem(position));
-                NotificationDataObject ndo = mAdapter.getItem(position);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
+    }
+
+
+    private int getIdFromActionType(String actionType) {
+
+        switch (actionType) {
+            case "L":
+                return 1;
+            case "C":
+                return 2;
+            case "P":
+                return 3;
+            case "B":
+                return 4;
+            case "F":
+                return 5;
+            default: return -1;
+        }
+    }
+
+    private final int NOTIFICATION_CLICK_CALL = IDUtils.generateViewId();
+
+    private void sendNotifyClickToServer(Map<String, Integer> params) {
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(NOTIFICATION_CLICK_CALL);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        Log.d("djnotify", "req params - sendNotifyClickToServer: " + params);
+        getAQuery().ajax(ApiKeys.getUpdateNotificationAPI(), params, String.class, ajaxCallback);
     }
 
     @Override
@@ -119,45 +151,46 @@ public class NotificationsActivity extends BaseActivity {
     }
 
 
-
     private final int notificationReg = IDUtils.generateViewId();
-    private void requestNotificationPaginate(int offset){
+
+    private void requestNotificationPaginate(int offset) {
 
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(notificationReg);
         Map<String, String> paramsMap = new HashMap<>();
         paramsMap.put("offset", String.valueOf(offset));
 
         String url = URLHelper.getInstance().getNotificationsUrl();
-        Log.d(Constants.TAG,"offset - requestNotificationPaginate: "+offset);
-        Log.d(Constants.TAG," notification url - NotificationActivity(requestNotificationPaginate): "+url);
+        Log.d("djnotify", "offset - requestNotificationPaginate: " + offset);
+        Log.d("djnotify", " notification url - NotificationActivity(requestNotificationPaginate): " + url);
 
         getAQuery().ajax(url, paramsMap, String.class, ajaxCallback);
     }
 
 
     private boolean firstTime = true;
+
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djnotify", "url queried- NotificationsActivity: " + url);
+        Log.d("djnotify", "response - NotificationsActivity: " + json);
+        if (id == notificationReg) {
 
-        if (id == notificationReg){
-            Log.d(Constants.TAG, "serverCallEnds - notification API response: " + json);
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
-                    notificationsList , this);
+                    notificationsList, this);
             if (success) {
                 try {
                     JSONObject jsonObj = new JSONObject(json.toString());
                     int offset = jsonObj.getInt("offset");
                     ArrayList<NotificationDataObject> notificationData = getDataForAdapter(jsonObj.getJSONArray("likes"));
-                    if (firstTime){
+                    if (firstTime) {
                         mAdapter = new NotificationsAdapter(this, notificationData);
                         notificationsList.setAdapter(mAdapter);
                         updateUi(notificationData);
                         setUpPaginate();
                         firstTime = false;
-                    }
-                    else if (offset > offsetMain){
+                    } else if (offset > offsetMain) {
                         mAdapter.addNotifyData(notificationData);
-                    }else if (offset == offsetMain){
+                    } else if (offset == offsetMain) {
                         seenAllNotification = true;
                     }
                     offsetMain = offset;
@@ -165,11 +198,22 @@ public class NotificationsActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-        }
-        else super.serverCallEnds(id, url, json, status);
+        } else if (id == NOTIFICATION_CLICK_CALL) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    notificationsList, this);
+            String txt = success ? "notification count updated" : "notification count updation failed";
+            Log.d("djnotify", "notification click: " + txt);
+            if (success) {
+                Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
+                intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
+                startActivity(intent);
+            } else Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+
+        } else super.serverCallEnds(id, url, json, status);
     }
 
     private int trigger = 1;
+
     private void setUpPaginate() {
         paginate = Paginate.with(notificationsList, callbacks)
                 .setOnScrollListener(scrollListener)
@@ -193,10 +237,10 @@ public class NotificationsActivity extends BaseActivity {
     };
 
 
-    private ArrayList<NotificationDataObject> getDataForAdapter(JSONArray jsonArray){
+    private ArrayList<NotificationDataObject> getDataForAdapter(JSONArray jsonArray) {
 
         ArrayList<NotificationDataObject> list = new ArrayList<>();
-        for (int i = 0; i<jsonArray.length(); i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             try {
                 list.add(extractJsonContent(jsonArray.getJSONObject(i)));
             } catch (JSONException e) {
@@ -214,8 +258,9 @@ public class NotificationsActivity extends BaseActivity {
         String dateTime = null;
         String postContent = null;
         String postId = null;
+        String actionType = "";
 
-        if (!object.isNull("postid")){
+        if (!object.isNull("postid")) {
             try {
                 postId = object.getString("postid");
             } catch (JSONException e) {
@@ -223,10 +268,10 @@ public class NotificationsActivity extends BaseActivity {
             }
         }
 
-        if (!object.isNull("profilePic")){
+        if (!object.isNull("profilePic")) {
             try {
                 peopleImageUrl = object.getString("profilePic");
-            }catch (Exception ex){
+            } catch (Exception ex) {
 
             }
         }
@@ -242,25 +287,33 @@ public class NotificationsActivity extends BaseActivity {
             }
         }
 
+        if (!object.isNull("actionType")) {
+            try {
+                actionType = object.getString("actionType");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         // todo nithin get timestamp
-        long timestamp = object.optLong("timestamp",System.currentTimeMillis());
+        long timestamp = object.optLong("timestamp", System.currentTimeMillis());
         dateTime = /*DateUtils.getRelativeDateTimeString(this,timestamp,DateUtils.
                 SECOND_IN_MILLIS,DateUtils.DAY_IN_MILLIS,DateUtils.FORMAT_ABBREV_ALL).toString();*/
                 SmartTimeAgo.getSmartTime(/*getApplicationContext(), */timestamp/*, false*/);
-                //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
+        //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
 
         postContent = createString(object);
-        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId);
+        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId, actionType);
 
     }
 
 
-    private void updateUi(ArrayList<NotificationDataObject> list){
+    private void updateUi(ArrayList<NotificationDataObject> list) {
 
-        if(list!=null && list.size()>0){
+        if (list != null && list.size() > 0) {
             notificationsList.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }else{
+        } else {
             notificationsList.setVisibility(View.INVISIBLE);
             emptyView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
@@ -282,7 +335,7 @@ public class NotificationsActivity extends BaseActivity {
         @Override
         public boolean isLoading() {
             // Indicate whether new page loading is in progress or not
-            Log.d("djpg", "isLoading: "+loading);
+            Log.d("djpg", "isLoading: " + loading);
             return loading;
         }
 
@@ -293,7 +346,6 @@ public class NotificationsActivity extends BaseActivity {
             return seenAllNotification;
         }
     };
-
 
 
     private class NotificationsAdapter extends BaseAdapter {
@@ -352,30 +404,30 @@ public class NotificationsActivity extends BaseActivity {
             String postImageUrl = dataObject.getPostImageUrl();
             String notifyContent = dataObject.getNotifyContent();
             String dateTime = dataObject.getDateTime();
-            boolean botPost =  dataObject.isBotPost();
+            boolean botPost = dataObject.isBotPost();
 
-            if (peopleImageUrl != null){
+            if (peopleImageUrl != null) {
                 try {
                     Picasso.with(context).load(URLHelper.parseImageURL(peopleImageUrl)).placeholder(R.drawable
                             .vector_image_place_holder_profile_dark).into(holder.person);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     Picasso.with(context).load(R.drawable
                             .vector_image_place_holder_profile_dark).into(holder.person);
                 }
-            }else Picasso.with(context).load(R.drawable
+            } else Picasso.with(context).load(R.drawable
                     .vector_image_place_holder_profile_dark).into(holder.person);
 
 
             if (!botPost) {
                 if (postImageUrl != null) {
                     try {
-                        Log.d(Constants.TAG, "postImage url- : " + postImageUrl);
+                        Log.d("djnotify", "postImage url- : " + postImageUrl);
                         Picasso.with(context).load(postImageUrl).into(holder.ivPostImage);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
+            } else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
 
             if (dateTime != null)
                 holder.time.setText(dateTime);
@@ -389,9 +441,8 @@ public class NotificationsActivity extends BaseActivity {
     }
 
 
-
     private String createString(JSONObject object) {
-        //Log.d(Constants.TAG, "notification list obj resonse - createString: "+object);
+        //Log.d("djnotify", "notification list obj resonse - createString: "+object);
         StringBuilder builder = new StringBuilder();
         String typeLabel = null;
         String type = "";
@@ -443,8 +494,8 @@ public class NotificationsActivity extends BaseActivity {
     }
 
 
-    private boolean isBotPost(JSONObject jsonObject){
-        if (!jsonObject.isNull("type")){
+    private boolean isBotPost(JSONObject jsonObject) {
+        if (!jsonObject.isNull("type")) {
             int type = 0;
             try {
                 type = jsonObject.getInt("type");
@@ -452,24 +503,21 @@ public class NotificationsActivity extends BaseActivity {
                 e.printStackTrace();
                 type = 0;
             }
-            if (type == 3){
+            if (type == 3) {
                 return true;
-            }
-            else return false;
+            } else return false;
         }
         return false;
     }
 
 
-
-    private String getPostImageUrl(JSONArray jsonArray){
-        Log.d(Constants.TAG, "jsonArrLength - getPostImageUrl- : "+jsonArray.length());
-        if (jsonArray.length() > 1){
+    private String getPostImageUrl(JSONArray jsonArray) {
+        Log.d("djnotify", "jsonArrLength - getPostImageUrl- : " + jsonArray.length());
+        if (jsonArray.length() > 1) {
             return "BOT";
-        }else if (jsonArray.length() == 0){
+        } else if (jsonArray.length() == 0) {
             return null;
-        }
-        else{
+        } else {
             try {
                 String imageUrl = jsonArray.getString(0);
                 return URLHelper.parseImageURL(imageUrl);

@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -45,8 +44,8 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ProductTemp;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
-import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -59,7 +58,6 @@ import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
@@ -377,12 +375,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
     }
 
-    private void setUserInfoCache(){
+    private void setUserInfoCache() {
         UIController.getShowCase(getContext(),
                 new IResultListener<TimelineResponse>() {
                     @Override
                     public void onResult(TimelineResponse result) {
-                        Log.d("djfeed", "userInfoCache updation: "+result.success);
+                        Log.d("djfeed", "userInfoCache updation: " + result.success);
                     }
                 });
     }
@@ -735,8 +733,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
             TypefaceHelper.setFont(notBuyLabel, buyLabel, voteToView);
-
-
         }
 
         public void updatePostView(SocialPost item, View view, int position) {
@@ -744,6 +740,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             votePostButton.setVisibility(View.VISIBLE);
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             votePostButton.setText("{hea_buy_or_not}");
+
+            if (socialPost.getIsVoted() == 1){
+                votePostButton.setSelected(true);
+            }else votePostButton.setSelected(false);
 
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
@@ -928,6 +928,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             votePostButton.setVisibility(View.VISIBLE);
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             detailsHolder.setVisibility(View.VISIBLE);
+
+            if (socialPost.getIsVoted() == 1){
+                votePostButton.setSelected(true);
+            }else votePostButton.setSelected(false);
 
             Boolean isVoted = isVoted(item, false);
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
@@ -1162,7 +1166,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         final Dialog dialog = displayOverlay(null, R.color.colorAccent);
         dialog.show();
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, Constants.ENDPOINT_PRODUCT_BASIC_INFO + productId,
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, ApiKeys.ENDPOINT_PRODUCT_BASIC_INFO + productId,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -1231,13 +1235,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             Product product = Product.extractFromProductTemp(productTemp, socialPost.getIsLiked() == 1, socialPost.getLikeCount());
             User mUser = UserInfoCache.getInstance(getContext()).getUserInfoDB(product.userId, true);
             dialog.dismiss();
-            if (mUser == null){
-                Toast.makeText(getContext(), "User-Info not found", Toast.LENGTH_SHORT).show();
+            if (mUser == null) {
+                Toast.makeText(getContext(), "No Product Details Available", Toast.LENGTH_SHORT).show();
                 return;
             }
             startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
         } catch (Exception e) {
-            Toast.makeText(getContext(), "User-Info not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No Product Details Available", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -1475,7 +1479,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     .into(userImage);
             updatePostView(socialPost, view, position);
 
-
+            votePostButton.setText(getActivity().getResources().getString(R.string.icon_poll_post));
+            /*if (socialPost.getIsVoted() == 1){
+                votePostButton.setSelected(true);
+            }else votePostButton.setSelected(false);*/
+            //// TODO: 16-06-2016
+            //if (socialPost.comment) //for comment needs to be rectified
+            //if (socialPost.shar) // for share needs to be rectified
             if (socialPost.getIsLiked() == 1) {
                 likePostButton.setText(getActivity().getResources().getString(R.string.icon_liked_post));
                 likePostButton.setSelected(true);

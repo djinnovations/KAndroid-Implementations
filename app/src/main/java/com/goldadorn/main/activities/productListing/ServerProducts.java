@@ -2,7 +2,6 @@ package com.goldadorn.main.activities.productListing;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -16,19 +15,13 @@ import android.widget.Button;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
-import com.goldadorn.main.activities.imagePicker.PickServerProducts;
-import com.goldadorn.main.activities.post.ImageSelectorFragment;
-import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.NavigationDataObject;
-import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.nineoldandroids.animation.Animator;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -151,7 +144,7 @@ public class ServerProducts extends BaseActivity {
         setTitle("Our Products");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
 
         sortBestSelling.setSelected(true);
         sortBestSelling.setAlpha(Float.parseFloat("1"));

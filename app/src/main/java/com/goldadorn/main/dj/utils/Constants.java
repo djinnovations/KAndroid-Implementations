@@ -10,10 +10,6 @@ import com.goldadorn.main.utils.URLHelper;
  */
 public class Constants {
 
-    public static final String ENDPOINT_SOCIAL_LOGIN = BuildConfig.END_POINT_SOCIAL_LOGIN;
-    public static final String ENDPOINT_PRODUCT_BASIC_INFO = BuildConfig.END_POINT_COMERCIAL +
-            URLHelper.VERB.GET_BASIC_PRODUCT + "/";
-
 
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 2901;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2902;

@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.7"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -36,9 +36,8 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1.2"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -62,16 +61,12 @@
             android:background="@color/colorPrimaryDark"
             android:scaleType="centerInside"
             android:src="@android:drawable/arrow_down_float" />
-
-        <ImageView
-            android:id="@+id/ivRemoveFromCart"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/vector_icon_cross_white"
-            android:layout_marginLeft="25dp" />
     </LinearLayout>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_weight="0.2"
+        android:layout_height="0.5dp"/>
     <TextView
         android:id="@+id/product_price"
         android:layout_width="0dp"
@@ -82,4 +77,12 @@
         android:padding="8dp"
         android:textSize="16sp"
         tools:text="Rs. 2500" />
+    <ImageView
+        android:id="@+id/ivRemoveFromCart"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/vector_icon_cross_white"
+        android:background="@drawable/circle_bg"
+        android:layout_marginLeft="5dp"/>
 </LinearLayout>

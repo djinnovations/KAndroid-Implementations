@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,16 +48,17 @@ public class AddressFragment extends Fragment {
         mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        mProgressBar.setVisibility(View.GONE);
         mAddButton.setText("Add new shipping address");
         mAddButton.setOnClickListener(mClick);
-        getLoaderManager().initLoader(mAddressCallBacks.hashCode(), null, mAddressCallBacks);
-
+        //getLoaderManager().initLoader(mAddressCallBacks.hashCode(), null, mAddressCallBacks);
+        refreshAddr();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getLoaderManager().destroyLoader(mAddressCallBacks.hashCode());
+        //getLoaderManager().destroyLoader(mAddressCallBacks.hashCode());
     }
 
     private void onAddressesChanged() {
@@ -98,6 +100,7 @@ public class AddressFragment extends Fragment {
 
                 @Override
                 public Result loadInBackground() {
+                    Log.d("djcart", "loadInBackground - AddressFragment");
                     Result result = new Result();
                     Cursor c = mContext.getContentResolver().query(Tables.Addresses.CONTENT_URI, null, null, null, null);
                     List<Address> t = null;
@@ -116,6 +119,7 @@ public class AddressFragment extends Fragment {
 
         @Override
         public void onLoadFinished(Loader<ObjectAsyncLoader.Result> loader, ObjectAsyncLoader.Result data) {
+            Log.d("djcart", "onLoadFinished - AddressFragment");
             mAddresses.clear();
             if (data.object != null)
                 mAddresses.addAll((Collection<? extends Address>) data.object);
@@ -127,5 +131,11 @@ public class AddressFragment extends Fragment {
         public void onLoaderReset(Loader<ObjectAsyncLoader.Result> loader) {
 
         }
+    }
+
+    public void refreshAddr(){
+        //mAddresses.clear();
+        mAddresses =((CartManagerActivity) getActivity()).getShippingAdress();
+        onAddressesChanged();
     }
 }

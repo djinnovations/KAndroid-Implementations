@@ -834,7 +834,7 @@ public class ApiFactory extends ExtractResponse {
 
 
 
-    protected static void removeFromCart(Context context, ProductResponse response) throws IOException, JSONException {
+    protected static void removeFromCart(Context context, ProductResponse response, int orderQty) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -854,7 +854,8 @@ public class ApiFactory extends ExtractResponse {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("transId", response.product.transid);
             jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
-
+            jsonObject.put("reduceQty", orderQty);
+            Log.d("djcart", "req param - removefromcart: "+jsonObject);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();

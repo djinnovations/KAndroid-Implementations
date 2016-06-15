@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
@@ -27,6 +28,7 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 
 import java.util.List;
+import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -158,10 +160,10 @@ public class ProductInfoFragment extends Fragment {
                 head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
                 head.itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 head.component.setText("Component");
-                head.rate.setText("Rate\n(" + t.rateunit + ")");//to be changed from backend
+                head.rate.setText("Rate\n(" + "INR/weight" + ")");//to be changed from backend
                 head.weight.setText("Weight");
                 //(" + t.weightunit + ");
-                head.price.setText("Value\n(" + t.rateunit + ")");//to be changed from backend
+                head.price.setText("Value\n(" + /*t.rateunit*/"INR" + ")");//to be changed from backend
                 head.offer_price.setText("Offer Price");
 
                 int childPos = 1;
@@ -249,16 +251,20 @@ public class ProductInfoFragment extends Fragment {
             holder.setTextSize(getResources().getDimensionPixelSize(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
             if(detail.number==-1){
+                //for gold
                 holder.component.setText(detail.color+" - "+detail.clarity);
-                holder.rate.setText(detail.price+"/"+detail.metalWeightUnits);
+                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+"/"+detail.metalWeightUnits);//changed djphy
+                holder.weight.setText(" " + detail.weight+ " "+ detail.metalWeightUnits);
             }else {
+                //for gstone
                 holder.component.setText(detail.color + "-" + detail.clarity + " : " + detail.number + " nos.");
-                holder.rate.setText(detail.price+"");
+                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+ "/"+/*detail.weightunit*/"ct");//djphy
+                holder.weight.setText(" " + detail.weight+ " "+ /*detail.weightunit*/"ct");//changed djphy
             }
 
-            holder.weight.setText(" " + detail.weight+ " "+ detail.metalWeightUnits);//changed djphy
+            ;//changed djphy
             float mValue= detail.price * detail.weight;
-            holder.price.setText(" " + Math.round(mValue));
+            holder.price.setText(" " + /*Math.round(mValue)*/ RandomUtils.getIndianCurrencyFormat(mValue, true));
             holder.offer_price.setText(" " + ((int)mValue));
             mTotalPrice=mTotalPrice+Math.round(mValue);
 
@@ -301,7 +307,7 @@ public class ProductInfoFragment extends Fragment {
             holder.rate.setText("");
             holder.weight.setText(" ");
             float makingChanges=Math.round(mProductActivity.mProductInfo.productmaking_charges*mProductActivity.mProductInfo.weight);
-            holder.price.setText(" "+(int)makingChanges);
+            holder.price.setText(/*" "+(int)makingChanges*/ RandomUtils.getIndianCurrencyFormat(makingChanges, true));
             holder.offer_price.setText(" " +(int)makingChanges);
         }else if(mType.equalsIgnoreCase(VAT)){
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
@@ -313,7 +319,7 @@ public class ProductInfoFragment extends Fragment {
             holder.component.setText(VAT);
             holder.rate.setText("");
             holder.weight.setText(" ");
-            holder.price.setText(" "+String.valueOf(((int)mVat)));
+            holder.price.setText(/*" "+String.valueOf(((int)mVat))*/ RandomUtils.getIndianCurrencyFormat(mVat, true));
             holder.offer_price.setVisibility(View.GONE);
             holder.offer_price.setText(" " + String.valueOf(((int)mVat)));
         }else if(mType.equalsIgnoreCase(DISCOUNT)){
@@ -340,7 +346,7 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setText(" ");
             holder.price.setVisibility(View.GONE);
             holder.offer_price.setVisibility(View.VISIBLE);
-            holder.offer_price.setText(" "+ (int)mTotalPrice);
+            holder.offer_price.setText(" "+ RandomUtils.getIndianCurrencyFormat(mTotalPrice, true)+"/-");
         }
 
         return holder.itemView;

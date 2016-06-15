@@ -1,16 +1,12 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +20,11 @@ import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
 import com.goldadorn.main.dj.utils.TableBuilder;
-import com.goldadorn.main.dj.utils.TableFormatter;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.ProductOptions;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -107,6 +103,7 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
     private final String NO_DETAILS = "Detail Not Available";
+    DecimalFormat dcmf = new DecimalFormat("0.#");
     private SingleItemAdapter.IViewBinder<PBViewHolder> mPriceBinder = new SingleItemAdapter.IViewBinder<PBViewHolder>() {
         @Override
         public void onNewView(int id, PBViewHolder holder) {
@@ -132,7 +129,10 @@ public class ProductCustomiseFragment extends Fragment {
                     priceValue = NO_DETAILS;
                 }
                 else priceValue = String.valueOf(Math.round(price));
-                total = total + /*price*/price == -1 ? 0 : price;
+                float totalTemp = price == -1 ? 0 : price;
+                Log.d("djprod","price iteration amount: "+totalTemp);
+                total = total + totalTemp;
+                //Log.d("djprod","price iteration amount: "+total);
 
                 String spaces="";
                 /*for (int i=(name.length()+1);i<15;i++){
@@ -143,20 +143,28 @@ public class ProductCustomiseFragment extends Fragment {
                 if(name.contains("Metal")){
                     //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 12
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
-                    /*vatTotal=vatTotal+*//*price*//* price == -1 ? 0 : price;
-                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+dcmf.format(price)
+                            /*String.valueOf(price)*/);
+                    float tempVat = price == -1 ? 0 : price;
+                    vatTotal=vatTotal+tempVat;
+                    //name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
                 }
                 else if(name.contains("Stone")){
                     //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 12
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+/*dcmf.format(price)*/
+                            String.valueOf(Math.round(price)));
+                    float tempVat = price == -1 ? 0 : price;
+                    vatTotal=vatTotal+tempVat;
                    /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
                 }else if(name.contains("Making Charges")){
                     //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 3
-                    tblr.addRow(name+ "\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    tblr.addRow(name+ "\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+ /*dcmf.format(price)*/
+                            String.valueOf(Math.round(price)));
+                    float tempVat = price == -1 ? 0 : price;
+                    vatTotal=vatTotal+tempVat;
                     /*vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
@@ -172,7 +180,10 @@ public class ProductCustomiseFragment extends Fragment {
                     //price=(float)(vatTotal*0.01);
                     //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 8
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+String.valueOf(price));
+                    float vat =(float)(vatTotal - (vatTotal/1.01));
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t",priceUnit+" "+ /*dcmf.format(vat)*/
+                            String.valueOf(Math.round(vat)));
+                    total = total + vat;
                     /*priceValue=String.valueOf(Math.round(price));
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
@@ -210,7 +221,9 @@ public class ProductCustomiseFragment extends Fragment {
             //"<b>" + id + "</b> "
             String totalRowTxt = "Total"+"\t\t\t\t\t\t\t\t\t\t\t\t";
 
-            String totalRowTxtVal = total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total));
+            String totalRowTxtVal = total == -1 ? NO_DETAILS: priceUnit +" "+/*dcmf.format(total)*/
+                    String.valueOf(Math.round(total));
+            Log.d("djprod","totalRowTxtVal: "+totalRowTxtVal);
 
             tblr.addRow(/*"Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"*/totalRowTxt,
                     /*total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total))*/ totalRowTxtVal);

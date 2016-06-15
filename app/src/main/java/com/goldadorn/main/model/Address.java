@@ -10,11 +10,25 @@ import java.io.Serializable;
  * Created by Kiran BH on 06/03/16.
  */
 public class Address implements Serializable{
-    public final int id;
+    public int id;
     public String name, street, city, state, country,phoneNumber;
-    public int pincode;
+    public String pincode;
 
     public Address(int id) {
+        this.id = id;
+    }
+
+    public Address(String name, String street, String city, String state, String country, String phoneNumber, String pincode) {
+        this.name = name;
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.country = country;
+        this.phoneNumber = phoneNumber;
+        this.pincode = pincode;
+    }
+
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -25,7 +39,7 @@ public class Address implements Serializable{
         t.city = cursor.getString(cursor.getColumnIndex(Tables.Addresses.CITY));
         t.state = cursor.getString(cursor.getColumnIndex(Tables.Addresses.STATE));
         t.country = cursor.getString(cursor.getColumnIndex(Tables.Addresses.COUNTRY));
-        t.pincode = cursor.getInt(cursor.getColumnIndex(Tables.Addresses.PINCODE));
+        t.pincode = String.valueOf(cursor.getInt(cursor.getColumnIndex(Tables.Addresses.PINCODE)));
         t.phoneNumber = cursor.getString(cursor.getColumnIndex(Tables.Addresses.PHONENUMBER));
         return t;
     }

@@ -66,7 +66,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
         boolean backEnabled = getIntent().getExtras().getBoolean("backEnabled", true);
         if (backEnabled) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
         }
 
 

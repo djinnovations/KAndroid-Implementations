@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.ShipmentBillingAddress;
 import com.goldadorn.main.model.Address;
 
 import java.util.ArrayList;
@@ -163,7 +164,7 @@ public class AddAddressFragment extends Fragment {
     private View.OnClickListener mClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ContentValues cv = new ContentValues();
+           /* ContentValues cv = new ContentValues();
             for (TextInputLayout t : mInputs) {
                 String text = t.getEditText().getText().toString();
                 if (!TextUtils.isEmpty(text)) {
@@ -192,7 +193,43 @@ public class AddAddressFragment extends Fragment {
                 cv.put(Tables.Addresses._ID, newId);
                 getContext().getContentResolver().insert(Tables.Addresses.CONTENT_URI, cv);
             }
-            getActivity().onBackPressed();
+            getActivity().onBackPressed();*/
+            setAddress();
         }
     };
+
+    private void setAddress(){
+        ShipmentBillingAddress address ;
+        String fname = "", lname = "", ph = "", addr1 = "", addr2 = "", city = "", pincode = "", state = "", country = "";
+
+        for (TextInputLayout t : mInputs) {
+            String text = t.getEditText().getText().toString();
+            if (!TextUtils.isEmpty(text)) {
+                switch (t.getId()){
+                    case R.id.input_name: fname = text;
+                        break;
+                    case R.id.input_address_street: addr1 = text;
+                        break;
+                    case R.id.input_city: city = text;
+                        break;
+                    case R.id.input_state: state = text;
+                        break;
+                    case R.id.input_pincode: pincode = text;
+                        break;
+                    case R.id.input_phone_number: ph = text;
+                    default: break;
+                }
+            } else {
+                mInErrorUi = true;
+                t.setErrorEnabled(true);
+                t.setError((CharSequence) t.getTag(TAG_ERROR));
+                return;
+            }
+        }
+
+        address = new ShipmentBillingAddress(fname, lname, ph, addr1, addr2, country,
+                state, city, pincode, CartManagerActivity.TYPE_ADDRESS_SHIPPING);
+        ((CartManagerActivity) getActivity()).setAddressResult(address);
+        getActivity().onBackPressed();
+    }
 }

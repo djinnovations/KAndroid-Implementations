@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.cart;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,14 +18,19 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Set;
 
 
@@ -46,6 +52,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     HashMap<Integer, Integer> mapOfProdsToQuantity;
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -74,16 +81,17 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
 
         ((ILoadingProgress) getActivity()).showLoading(true);
-        UIController.getCartDetails(getContext(),  new IResultListener<ProductResponse>() {
+        UIController.getCartDetails(getContext(), new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 try {
                     if (result.success && result.productArray != null) {
-                        for (int i=0;i<result.productArray.size();i++){
-                            Product prod=result.productArray.get(i);
-                            checkAndEntry(prod);
+                        for (int i = 0; i < result.productArray.size(); i++) {
+                            Product prod = result.productArray.get(i);
+                            //checkAndEntry(prod);
                         }
-                        mCart.addAll(getUniqueProdList(result.productArray));
+                        mCart.addAll(/*getUniqueProdList(*/result.productArray/*)*/);
+                        mapTransIdOrderQty(result.productArray);
                         //getUniqueProdList();
                         onCartChanged();
                     }
@@ -97,17 +105,35 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
 
     private void checkAndEntry(Product prod) {
 
-        if (mapOfProdsToQuantity.containsKey(prod.id)){
+        if (mapOfProdsToQuantity.containsKey(prod.id)) {
             int oldVal = mapOfProdsToQuantity.get(prod.id);
-            mapOfProdsToQuantity.put(prod.id, (oldVal+1));
-        }
-        else
+            mapOfProdsToQuantity.put(prod.id, (oldVal + 1));
+        } else
             mapOfProdsToQuantity.put(prod.id, prod.quantity);
     }
 
     private void logEventsAnalytics(String eventName) {
         ((Application) getActivity().getApplication()).getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
     }
+
+    HashMap<Integer, Integer> mapTransIdQty = new HashMap<>();
+
+    private void mapTransIdOrderQty(ArrayList<Product> prodList) {
+        for (Product product : prodList) {
+            mapTransIdQty.put(product.transid, product.orderQty);
+        }
+    }
+
+
+    private int getOrderQtyToRemove(int transId, int currentSelectedCount) {
+        int intial = mapTransIdQty.get(transId);
+        int toremove = intial - currentSelectedCount;
+        mapTransIdQty.put(transId, currentSelectedCount);
+        return toremove;
+    }
+
+
+    private boolean isFirst = true;
 
     private void bindCostUi() {
         mCostTotal = 0;
@@ -117,32 +143,34 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             mCostTotal = mCostTotal + p.getTotalPriceNew();
             totalUnits = totalUnits + p.orderQty;
             currency = p.priceUnit;
-            Log.e("iii---",p.transid+"--"+mCostTotal+"--"+p.orderQty);
+            Log.e("iii---", p.transid + "--" + mCostTotal + "--" + p.orderQty);
 
-            if(p.orderQty==0){
-                UIController.removeFromCart(getContext(), p, new IResultListener<ProductResponse>() {
-                    @Override
-                    public void onResult(ProductResponse result) {
-                        if (result.success) {
-                            mCart.remove(p);
-                            Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CART_PRODUCT_REMOVED");
-                            logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_REMOVED);
-                            //   notifyDataSetChanged();
-                            Log.e("REMOVED ITEM---","REMOVED "+ mCart.size());
-                            onCartChanged();
-                            //result.productArray.remove(mCart);
-                            Toast.makeText(getContext(), "Product successfully deleted from Cart.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            if (p.orderQty == 0) {
+                UIController.removeFromCart(getContext(), p, getOrderQtyToRemove(p.transid, p.orderQty),
+                        new IResultListener<ProductResponse>() {
+                            @Override
+                            public void onResult(ProductResponse result) {
+                                ((CartManagerActivity) getActivity()).dismissOverLay();
+                                if (result.success) {
+                                    mCart.remove(p);
+                                    //   notifyDataSetChanged();
+                                    Log.e("REMOVED ITEM---", "REMOVED " + mCart.size());
+                                    onCartChanged();
+                                    //result.productArray.remove(mCart);
+                                    Toast.makeText(getContext(), "Item removed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
             }
 
         }
+        //((CartManagerActivity) getActivity()).dismissOverLay();
+        isFirst = false;
         mCostTotal = mCostTotal + mCostShipping + mCostTax;
         int t = totalUnits > 0 ? 1 : 0;
-        Log.e("iii---",t+"--"+mCostTotal);
+        Log.e("iii---", t + "--" + mCostTotal);
         /*Madhu*/
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs "+ (mCostTax * t) + "/-");
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs " + (mCostTax * t) + "/-");
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText("Rs " + (mCostShipping * t) + "/-");
         ((TextView) mTotalContainer.findViewById(R.id.cost)).setText("Rs " + (mCostTotal * t) + "/-");
       /*  ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
@@ -165,6 +193,10 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
 
     @Override
     public void onQuantityChanged(Product product) {
+        if (!isFirst)
+            ((CartManagerActivity) getActivity()).showOverLay("Updating cart", R.color.colorPrimary,
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
+        Log.d("djcart", "onQuantityChanged");
         bindCostUi();
     }
 
@@ -177,16 +209,17 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     public ArrayList<Product> getUniqueProdList(ArrayList<Product> fullList) {
         ArrayList<Product> templist = new ArrayList<>();
         Set<Integer> keysList = mapOfProdsToQuantity.keySet();
-        for (int key: keysList){
-            for (Product prod: fullList){
-                if (key == prod.id){
+        for (int key : keysList) {
+            for (Product prod : fullList) {
+                if (key == prod.id) {
                     prod.orderQty = mapOfProdsToQuantity.get(key);
                     templist.add(prod);
                     break;
                 }
             }
         }
-        Log.d("djcart", "unique productList size: "+templist.size());
+        Log.d("djcart", "unique productList size: " + templist.size());
         return templist;
     }
+
 }

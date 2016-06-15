@@ -40,6 +40,11 @@ public class RequestJson {
         }
     }
 
+    /*public Map<String, String> getAdressCartReqMap(){
+
+    }*/
+
+
 
     public static ProductTemp parseProduct(JSONObject json) {
 

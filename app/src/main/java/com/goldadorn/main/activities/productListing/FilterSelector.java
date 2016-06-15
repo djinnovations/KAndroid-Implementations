@@ -2,17 +2,14 @@ package com.goldadorn.main.activities.productListing;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.appyvet.rangebar.IRangeBarFormatter;
 import com.appyvet.rangebar.RangeBar;
@@ -20,13 +17,8 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.model.FilterPrice;
 import com.goldadorn.main.model.IIDInterface;
-import com.goldadorn.main.model.NavigationDataObject;
-import com.goldadorn.main.utils.IDUtils;
-import com.goldadorn.main.utils.TypefaceHelper;
-import com.kimeeo.library.fragments.BaseFragment;
 import com.kimeeo.library.listDataView.viewHelper.RecyclerViewHelper;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +53,7 @@ public class FilterSelector extends BaseActivity {
         setTitle("Apply Filter(s)");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_white);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
 
         RecyclerView designersRecyclerView = (RecyclerView) findViewById(R.id.designersRecyclerView);
         new DesignerHelper(this,designersRecyclerView,filterItemClick);

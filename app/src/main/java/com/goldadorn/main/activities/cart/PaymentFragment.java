@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -17,20 +16,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.dj.PaymentMethodAdapter;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
 import com.payu.india.Interfaces.PaymentRelatedDetailsListener;
@@ -53,10 +49,7 @@ import com.payu.payuui.PayUCreditDebitCardActivity;
 import com.payu.payuui.PayUNetBankingActivity;
 import com.payu.payuui.PaymentsActivity;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Kiran BH on 10/03/16.
@@ -175,8 +168,8 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity)getActivity()).getTvAmount();
         Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity)getActivity()).getPlaceOrderBtn();
         String txt = tvAmount.getText().toString();
-        String txt2 = String.valueOf(mCartData.getBillableAmount());
-        String finalTxt = txt + StringUtils.stripStart(txt2, "0");
+        //String txt2 = String.valueOf(mCartData.getBillableAmount());
+        String finalTxt = txt + RandomUtils.getIndianCurrencyFormat(mCartData.getBillableAmount(), true) + "/-";
         Log.d("djcart","billableAmount: "+finalTxt);
         tvAmount.setText(finalTxt);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +188,6 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         }
         new PaymentMethodsViewController(paymethodContainer, payMethodListener).displayMethods(list);
         modeChosen = payMethodArr[1];
-
     }
 
     //private boolean isCod;

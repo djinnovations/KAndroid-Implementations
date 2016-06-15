@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.rey.material.widget.ProgressView;
 
 /**
  * Created by COMP on 1/28/2016.
@@ -27,11 +30,12 @@ public class WindowUtils {
 
         this.appContext = appContext;
         mViewConstructor = ViewConstructor.getInstance(appContext);
+        mDispProp = DisplayProperties.getInstance(appContext, DisplayProperties.ORIENTATION_PORTRAIT);
     }
 
 
-    public static WindowUtils getInstance(Context appContext){
-        if (thisInstance == null){
+    public static WindowUtils getInstance(Context appContext) {
+        if (thisInstance == null) {
             thisInstance = new WindowUtils(appContext);
         }
         return thisInstance;
@@ -53,7 +57,8 @@ public class WindowUtils {
 
 
     public static float dialogDimAmount = 0.3f;
-    public Dialog displayDialogNoTitle(Context activityContext, View layout/*, String title*/){
+
+    public Dialog displayDialogNoTitle(Context activityContext, View layout/*, String title*/) {
 
         Dialog dialog = new Dialog(activityContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,14 +72,14 @@ public class WindowUtils {
         tempParams.copyFrom(dialog.getWindow().getAttributes());
 
 		/*tempParams.width = dialogWidthInPx;
-		tempParams.height = dialogHeightInPx;*/
+        tempParams.height = dialogHeightInPx;*/
         tempParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         tempParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         tempParams.dimAmount = dialogDimAmount;
 
-        View tempView =  layout;
+        View tempView = layout;
         dialog.setContentView(tempView);
         //dialog.setCancelable(false);
 
@@ -88,8 +93,11 @@ public class WindowUtils {
     }
 
 
+    public static final int PROGRESS_FRAME_GRAVITY_TOP = 9001;
+    public static final int PROGRESS_FRAME_GRAVITY_CENTER = 9003;
+    public static final int PROGRESS_FRAME_GRAVITY_BOTTOM = 9004;
 
-    public Dialog displayOverlay(Activity activityToDisplayOverlay, String infoMsg, int colorResId) {
+    public Dialog displayOverlay(Activity activityToDisplayOverlay, String infoMsg, int colorResId, int customGravity) {
 
         Dialog dialog = new Dialog(activityToDisplayOverlay);
         WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
@@ -110,6 +118,7 @@ public class WindowUtils {
             tvTemp.setTextColor(ResourceReader.getInstance(appContext)
                     .getColorFromResource(colorResId));
         } else tvTemp.setVisibility(View.GONE);
+        setGravity(((ProgressView) overLay.findViewById(R.id.progressBar)), customGravity);
         dialog.setContentView(overLay);
         dialog.setCancelable(false);
 
@@ -118,4 +127,20 @@ public class WindowUtils {
         return dialog;
     }
 
+
+    public static int marginForProgressViewInGrid = 5;
+
+    private void setGravity(ProgressView proView, int gravity) {
+        RelativeLayout.LayoutParams rlParams = /*new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT)*/ (RelativeLayout.LayoutParams) proView.getLayoutParams();
+        if (gravity == PROGRESS_FRAME_GRAVITY_CENTER)
+            return;
+        else if (gravity == PROGRESS_FRAME_GRAVITY_TOP) {
+            rlParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        } else if ((gravity == PROGRESS_FRAME_GRAVITY_BOTTOM)) {
+            rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        }
+        rlParams.bottomMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
+        proView.setLayoutParams(rlParams);
+    }
 }

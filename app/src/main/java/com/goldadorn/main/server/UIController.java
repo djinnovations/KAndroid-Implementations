@@ -159,13 +159,13 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void removeFromCart(final Context context, Product product, final IResultListener<ProductResponse> listener) {
+    public static void removeFromCart(final Context context, Product product, final int orderQty, final IResultListener<ProductResponse> listener) {
         final ProductResponse response = new ProductResponse();
         response.product = product;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.removeFromCart(context, response, 0);
+                Api.removeFromCart(context, response, orderQty);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

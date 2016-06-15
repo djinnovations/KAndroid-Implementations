@@ -38,7 +38,8 @@ public class DisplayProperties {
     public float XTRA_LARGE_FONT;
     public float HUGE_FONT;
 
-
+    public static int ORIENTATION_LANDSCAPE = 0;
+    public static int ORIENTATION_PORTRAIT = 1;
     private DisplayProperties() {
 
         metrics = new DisplayMetrics();
@@ -94,12 +95,12 @@ public class DisplayProperties {
 
     private void calcPixelsPerCell() {
 
-        if (orientation == 0) {
+        if (orientation == ORIENTATION_LANDSCAPE) {
 
             pixels_per_cell_X = (metrics.widthPixels) / (gridX);
             pixels_per_cell_Y = (metrics.heightPixels) / (gridY);
 
-        } else if (orientation == 1) {// 1==portrait ; 0 == landscape
+        } else if (orientation == ORIENTATION_PORTRAIT) {// 1==portrait ; 0 == landscape
 
             pixels_per_cell_X = (metrics.widthPixels) / (gridY);
             pixels_per_cell_Y = (metrics.heightPixels) / (gridX);

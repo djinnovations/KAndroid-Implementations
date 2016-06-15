@@ -265,7 +265,6 @@ public class NotificationPostActivity extends BaseActivity{
         }
 
         public String getNextDataURL(PageData pageData) {
-            Log.d("djfeed", "getNextDataURL");
             isRefreshingData = false;
             return getApp().getUrlHelper().getSocialFeedServiceURL();
         }
@@ -288,7 +287,6 @@ public class NotificationPostActivity extends BaseActivity{
 
             @Override
             public boolean canLoadNext() {
-                Log.d("djfeed","canLoadNext");
                 if (isFirst){
                     isFirst = false;
                     return true;
@@ -301,7 +299,6 @@ public class NotificationPostActivity extends BaseActivity{
             }*/
 
             protected void updatePagingData(BaseDataParser loadedDataVO) {
-                Log.d("djfeed","updatePagingData");
                 /*try {
 
                     offset = loadedDataVO.getPageSize();

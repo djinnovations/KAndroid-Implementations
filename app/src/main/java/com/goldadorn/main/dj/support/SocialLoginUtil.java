@@ -30,6 +30,7 @@ import com.goldadorn.main.activities.LandingPageActivity;
 import com.goldadorn.main.activities.LoginPageActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.model.FbGoogleTweetLoginResult;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
@@ -500,7 +501,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         String version = req.getVersion();
 
         RequestJson reqJsonInstance = RequestJson.getInstance();
-        JSONObject json = null;
         //String url = getUrlHelper().getLoginServiceURL();
         ExtendedAjaxCallback ajaxCallback = null;
         Map<String, String> paramsMap = null;
@@ -524,7 +524,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
         }
 
-        getAQuery().ajax(Constants.ENDPOINT_SOCIAL_LOGIN, paramsMap, String.class, ajaxCallback);
+        getAQuery().ajax(ApiKeys.ENDPOINT_SOCIAL_LOGIN, paramsMap, String.class, ajaxCallback);
     }
 
 
@@ -537,7 +537,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         for (Cookie coo : cookies) {
             Log.d(Constants.TAG, "serverCallEndsCustom - social login cookies: " + coo);
         }
-        if (success) {
+        if (json != null && success) {
             Gson gson = new Gson();
             com.goldadorn.main.model.LoginResult loginResult = gson.fromJson((String) json, com.goldadorn.main.model.LoginResult.class);
 
@@ -553,7 +553,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
                     }*/
                 doSuccessOperation(loginResult, cookies);
-
+                genericInfo("Authorization successful");
             } else {
                 setErrSnackBar(loginResult.getMsg());
                 dismissOverlayView();
@@ -687,7 +687,6 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                genericInfo("Authorization successful");
                 dialog.dismiss();
             }
         });

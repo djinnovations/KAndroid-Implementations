@@ -14,15 +14,17 @@ public class NotificationDataObject implements Parcelable {
     private String postImageUrl;
     private boolean botPost;
     private String postId;
+    private String actionType;
 
     public NotificationDataObject(String peopleImageUrl, String notifyContent, String dateTime,
-                                  String postImageUrl, boolean botPost, String postId) {
+                                  String postImageUrl, boolean botPost, String postId, String actionType) {
         this.peopleImageUrl = peopleImageUrl;
         this.notifyContent = notifyContent;
         this.dateTime = dateTime;
         this.postImageUrl = postImageUrl;
         this.botPost = botPost;
         this.postId = postId;
+        this.actionType = actionType;
     }
 
     public String getPostId() {
@@ -49,6 +51,10 @@ public class NotificationDataObject implements Parcelable {
         return botPost;
     }
 
+    public String getActionType() {
+        return actionType;
+    }
+
     protected NotificationDataObject(Parcel in) {
         peopleImageUrl = in.readString();
         notifyContent = in.readString();
@@ -56,6 +62,7 @@ public class NotificationDataObject implements Parcelable {
         postImageUrl = in.readString();
         postId = in.readString();
         botPost = in.readByte() != 0x00;
+        actionType = in.readString();
     }
 
     @Override
@@ -71,6 +78,7 @@ public class NotificationDataObject implements Parcelable {
         dest.writeString(postImageUrl);
         dest.writeString(postId);
         dest.writeByte((byte) (botPost ? 0x01 : 0x00));
+        dest.writeString(actionType);
     }
 
     @SuppressWarnings("unused")

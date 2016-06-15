@@ -252,10 +252,10 @@ public class Api {
         }
     }
 
-    public static void removeFromCart(Context context, ProductResponse response, int retryCount) {
+    public static void removeFromCart(Context context, ProductResponse response, int orderQty) {
         try {
             generateUserCredentials(context, response);
-            ApiFactory.removeFromCart(context, response);
+            ApiFactory.removeFromCart(context, response, orderQty);
             if (response.success && response.responseContent != null) {
             }
         } catch (Exception e) {

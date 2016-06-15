@@ -17,8 +17,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.squareup.picasso.Picasso;
 
@@ -109,10 +111,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
             //remove 0 at end the end
             DecimalFormat format = new DecimalFormat("0.#");
-            System.out.println(format.format(product.pricePaid));
             int pricee= Integer.parseInt(format.format(product.pricePaid));
-            SpannableStringBuilder sbr = new SpannableStringBuilder("Rs " + (pricee * product.orderQty));
-            sbr.append("/-");
+            long totalCost = pricee * product.orderQty;
+            SpannableStringBuilder sbr = new SpannableStringBuilder((RandomUtils.getIndianCurrencyFormat(totalCost, true)));
+            //sbr.append("/-");
             int start = sbr.length();
             sbr.append("\n").append("(").append(product.orderQty + " * " + product.pricePaid).append(")");
             int end = sbr.length();
@@ -164,6 +166,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         }
 
         private void changeQuantity(int newQuantity) {
+            if (newQuantity != 0){
+                Toast.makeText(quantityText.getContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                return;
+            }
             product.orderQty = newQuantity;
             bindUI(product);
             quatityChangeListener.onQuantityChanged(product);

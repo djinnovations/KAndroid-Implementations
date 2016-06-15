@@ -123,11 +123,11 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     private Dialog overLayDialog;
-
     private void showOverLay(String text, int colorResId){
-        if (overLayDialog == null){
-            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId);
-        }
+        //if (overLayDialog == null){
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        //}
         overLayDialog.show();
     }
 
@@ -145,7 +145,7 @@ public class ProductActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        showOverLay("Loading...", R.color.colorAccent);
+        showOverLay("Loading...", R.color.colorPrimary);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
 
@@ -400,7 +400,8 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public void addToCartNew(final View cartBtn) {
 
-        cartBtn.setEnabled(false);
+        //cartBtn.setEnabled(false);
+        showOverLay("Adding to cart..", R.color.colorPrimary);
         UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
                 new IResultListener<ProductResponse>() {
                     @Override
@@ -408,9 +409,10 @@ public class ProductActivity extends BaseDrawerActivity {
                         logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
                         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
                         //logEventsAnalytics(AppEventsConstants.EVENT_NAME_ADDED_TO_CART);
-                        Toast.makeText(mContext,
+                        dismissOverLay();
+                       /* Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
-                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();
+                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();*/
                         if (result.success){
                             confirmedToCart(cartBtn);
                         }
@@ -436,14 +438,14 @@ public class ProductActivity extends BaseDrawerActivity {
                     @Override
                     public void onPositiveBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
-                        cartBtn.setEnabled(true);
+                        //cartBtn.setEnabled(true);
                         menuAction(R.id.nav_cart);
                     }
 
                     @Override
                     public void onNegativeBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
-                        cartBtn.setEnabled(true);
+                        //cartBtn.setEnabled(true);
                         Toast.makeText(getApplicationContext(), "You can access your cart by selecting the cart option from the Slidemenu", Toast.LENGTH_LONG).show();
                     }
                 });
