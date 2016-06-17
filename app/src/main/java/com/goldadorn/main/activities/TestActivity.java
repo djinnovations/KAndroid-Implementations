@@ -43,12 +43,12 @@ public class TestActivity extends AppCompatActivity {
                 mToast = Toast.makeText(TestActivity.this,"Product "+position+" liked",Toast.LENGTH_LONG);
                 mToast.show();
 
-                Log.i("MainActivity", "card was swiped left, position in adapter: " + position);
+                Log.i("TestPayment", "card was swiped left, position in adapter: " + position);
             }
 
             @Override
             public void cardSwipedRight(int position) {
-                Log.i("MainActivity", "card was swiped right, position in adapter: " + position);
+                Log.i("TestPayment", "card was swiped right, position in adapter: " + position);
                 if(mToast!=null)
                     mToast.cancel();
                 mToast = Toast.makeText(TestActivity.this,"Product "+position+" dis-liked",Toast.LENGTH_LONG);
@@ -57,7 +57,7 @@ public class TestActivity extends AppCompatActivity {
 
             @Override
             public void cardsDepleted() {
-                Log.i("MainActivity", "no more cards");if(mToast!=null)
+                Log.i("TestPayment", "no more cards");if(mToast!=null)
                     mToast.cancel();
                 mToast = Toast.makeText(TestActivity.this,"Products depleted ",Toast.LENGTH_LONG);
                 mToast.show();

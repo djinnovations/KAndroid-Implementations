@@ -67,8 +67,8 @@ public class Product implements Serializable {
     }
 
     public String getDisplayPrice() {
-        if(priceUnit!=null && unitPrice>0)
-            return priceUnit + ". " + unitPrice;
+        if(/*priceUnit!=null &&*/ unitPrice>0)
+            return /*priceUnit + ". " +*/ String.valueOf(unitPrice);
         else
             return "";
     }

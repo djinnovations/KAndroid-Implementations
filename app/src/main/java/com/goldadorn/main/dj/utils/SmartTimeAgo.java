@@ -24,6 +24,8 @@ public class SmartTimeAgo {
             long diffInMins = Math.round(diffInSeconds/60);
             if (diffInMins > 60){
                 int diffInhrs = Math.round(diffInMins/60);
+                if (diffInhrs == 1)
+                    return "1 hour ago";
                 if (diffInhrs > 6){
                     /*if (isPost)
                         return SMART_TIME_EOF;

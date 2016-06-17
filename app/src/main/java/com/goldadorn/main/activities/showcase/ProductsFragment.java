@@ -26,6 +26,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
@@ -153,7 +154,7 @@ public class ProductsFragment extends Fragment {
     private void setData() {
         mProduct = mSwipeDeckAdapter.getItem(0);
         mNameText.setText(mProduct.name);
-        mPriceText.setText(mProduct.getDisplayPrice());
+        mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
     }
 
     @Override
@@ -671,6 +672,7 @@ public class ProductsFragment extends Fragment {
 
             mSwipeDeckAdapter.changeCursor(data);
             mCount.updateProductCounts(data.getCount());
+            //((CollectionsActivity) getActivity()).dismissOverLay();
             //getLoaderManager().destroyLoader(mProductCallback.hashCode());
             //if (mProduct == null && mSwipeDeckAdapter.getCount() > 0) setData();
         }

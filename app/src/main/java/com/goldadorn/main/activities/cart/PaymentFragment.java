@@ -45,6 +45,7 @@ import com.payu.india.PostParams.PaymentPostParams;
 import com.payu.india.Tasks.DeleteCardTask;
 import com.payu.india.Tasks.GetPaymentRelatedDetailsTask;
 import com.payu.india.Tasks.GetStoredCardTask;
+import com.payu.payuui.PayUBaseActivity;
 import com.payu.payuui.PayUCreditDebitCardActivity;
 import com.payu.payuui.PayUNetBankingActivity;
 import com.payu.payuui.PaymentsActivity;
@@ -103,6 +104,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 mPayuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
                 mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
                 mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
+                Log.d("djpayu","mPayUHashes: "+mPayUHashes);
                 if (savedInstanceState == null) { // dont fetch the data if its been called from payment activity.
                     MerchantWebService merchantWebService = new MerchantWebService();
                     merchantWebService.setKey(mPaymentParams.getKey());
@@ -167,9 +169,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
         TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity)getActivity()).getTvAmount();
         Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity)getActivity()).getPlaceOrderBtn();
-        String txt = tvAmount.getText().toString();
+        //String txt = tvAmount.getText().toString();
         //String txt2 = String.valueOf(mCartData.getBillableAmount());
-        String finalTxt = txt + RandomUtils.getIndianCurrencyFormat(mCartData.getBillableAmount(), true) + "/-";
+        String finalTxt = /*txt + */RandomUtils.getIndianCurrencyFormat(mCartData.getBillableAmount(), true) + "/-";
         Log.d("djcart","billableAmount: "+finalTxt);
         tvAmount.setText(finalTxt);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
@@ -190,29 +192,36 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         modeChosen = payMethodArr[1];
     }
 
+
+    String paymentMode = "";
     //private boolean isCod;
     private void proceedToPay(String modeChosen) {
         Intent intent = null;
         //isCod = false;
         switch (modeChosen) {
             case "Net Banking":
-                intent = new Intent(getContext(), PayUNetBankingActivity.class);
+                paymentMode = "net";
+                intent = new Intent(getContext(), PayUBaseActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
                 break;
             case "Credit Card":
+                paymentMode = "cre";
                 intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.CREDITCARD, mPayuResponse.getCreditCard());
                 break;
             case "EMI":
+                paymentMode = "emi";
                 Toast.makeText(getContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
                 return;
             case "Debit Card":
+                paymentMode = "deb";
                 intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.DEBITCARD, mPayuResponse.getDebitCard());
                 break;
             case "Cash on Delivery":
                 //isCod = true;
-                mCartData.setPaymentDone(true, true);
+                paymentMode = "cod";
+                mCartData.setPaymentDone(true, true, paymentMode);
                 //// TODO: 11-06-2016
                 return;
             default:
@@ -264,7 +273,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             if (data != null) {
                 String result = data.getStringExtra("result");
                 if (result.equals(mPaymentParams.getSurl())) {
-                    mCartData.setPaymentDone(true, false);
+                    mCartData.setPaymentDone(true, false, paymentMode);
                 }
                 new AlertDialog.Builder(getContext())
                         .setCancelable(false)

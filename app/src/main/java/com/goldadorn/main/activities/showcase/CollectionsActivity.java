@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -37,6 +38,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -125,6 +127,27 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         return intent;
     }
 
+
+    private Dialog overLayDialog;
+
+    public void showOverLay(String text, int colorResId, int gravity) {
+        //if (overLayDialog == null) {
+        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                gravity);
+        //}
+        Log.d("djcart", "showOverLay");
+        overLayDialog.show();
+    }
+
+    public void dismissOverLay() {
+        if (overLayDialog != null) {
+            if (overLayDialog.isShowing()) {
+                overLayDialog.dismiss();
+            }
+        }
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +156,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: COLLECTION_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
 
+        //showOverLay("Loading Collections", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
         mOverlayViewHolder = new OverlayViewHolder(mBrandButtonsLayout);

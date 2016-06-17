@@ -14,6 +14,6 @@ public interface ICartData {
      void storeCartData(ArrayList<Product> cart, long costTotal);
     public List<Product> getCartProducts();
     public long getBillableAmount();
-    public void setPaymentDone(boolean done, boolean isCOD);
+    public void setPaymentDone(boolean done, boolean isCOD, String payMode);
     public boolean isPaymentDone();
 }

@@ -42,17 +42,21 @@ public class ExtractResponse {
 
     protected static void extractGetCart(ProductResponse response) throws JSONException {
         if (response.responseContent != null && response.productArray != null) {
-            JSONArray productArray = new JSONArray(response.responseContent);
-            for (int i = 0; i < productArray.length(); i++) {
-                response.productArray.add(Product.extractGetCartProductList(productArray.getJSONObject(i)));
+            JSONObject cartJson = new JSONObject(response.responseContent);
+            JSONArray productArray = cartJson.getJSONArray("items");
+            int offset = cartJson.optInt("offset");
+            //JSONArray productArray = new JSONArray(response.responseContent);
+            if (productArray != null) {
+                for (int i = 0; i < productArray.length(); i++) {
+                    response.productArray.add(Product.extractGetCartProductList(productArray.getJSONObject(i)));
+                }
             }
-
         }
     }
 
     protected static void extractGetWishlist(ProductResponse response) throws JSONException {
         if (response.responseContent != null && response.productArray != null) {
-            JSONObject json=new JSONObject(response.responseContent);
+            JSONObject json = new JSONObject(response.responseContent);
             JSONArray productArray = json.getJSONArray("wishes");
             for (int i = 0; i < productArray.length(); i++) {
                 response.productArray.add(new Product(productArray.getJSONObject(i).optInt("productId")));
@@ -60,6 +64,7 @@ public class ExtractResponse {
             }
         }
     }
+
     protected static void extractBasicProfile(ObjectResponse<ProfileData> response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject jsonObject = new JSONObject(response.responseContent);
@@ -82,29 +87,29 @@ public class ExtractResponse {
             profileData.city = jsonObject.optString("city");
             profileData.pincode = jsonObject.optString("pincode");
             profileData.dob = getBdayInLong(jsonObject);
-            profileData.genderType = jsonObject.isNull("gender")? 0: getGenderTypeFromText(jsonObject.getString("gender"));
-            Log.d("dj","genderType: " +profileData.genderType);
+            profileData.genderType = jsonObject.isNull("gender") ? 0 : getGenderTypeFromText(jsonObject.getString("gender"));
+            Log.d("dj", "genderType: " + profileData.genderType);
 
         }
 
     }
 
 
-    private static int getGenderTypeFromText(String code){
+    private static int getGenderTypeFromText(String code) {
 
-        Log.d("dj","gender: " +code);
-        if (code.equals("Female")){
+        Log.d("dj", "gender: " + code);
+        if (code.equals("Female")) {
             return 1;
-        }else if (code.equals("Male")) return 2;
+        } else if (code.equals("Male")) return 2;
 
         return 0;
     }
 
 
-    private static long getBdayInLong(JSONObject jsonObject){
+    private static long getBdayInLong(JSONObject jsonObject) {
 
         try {
-            String dateFromServer = jsonObject.isNull("birthday")? "0": jsonObject.getString("birthday");
+            String dateFromServer = jsonObject.isNull("birthday") ? "0" : jsonObject.getString("birthday");
             return DateTimeUtils.getDateInMillis(dateFromServer);
         } catch (JSONException e) {
             e.printStackTrace();

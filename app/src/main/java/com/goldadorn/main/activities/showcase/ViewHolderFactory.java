@@ -47,6 +47,9 @@ class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
             case TYPE.VHT_C_SPINNER:
                 vh = new ViewHolder(inflater.inflate(R.layout.item_customize_spinner, parent, false));
                 break;
+            case TYPE.VHT_PBCA:
+                vh = new MyViewHolderNew(inflater.inflate(R.layout.adapter_price_breakdown, parent, false));
+                break;
             default:
                 throw new IllegalStateException("undefined state " + viewType);
         }
@@ -63,6 +66,7 @@ class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
         int VHT_C_SEPARATOR = 5050;
         int VHT_C_BUTTON = 5060;
         int VHT_C_SPINNER = 5070;
+        int VHT_PBCA = 5080;
     }
 
 }

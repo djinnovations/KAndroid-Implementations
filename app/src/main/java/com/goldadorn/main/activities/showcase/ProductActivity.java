@@ -46,6 +46,7 @@ import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
@@ -314,10 +315,8 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
-        mOverlayVH.mProductCost.setText(mProduct.getDisplayPrice());
+        mOverlayVH.mProductCost.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
         mOverlayVH.mProductCost2.setText(mProduct.getDisplayPrice());
-
-
         mTabViewHolder.setCounts(-1, -1);
     }
 
@@ -344,6 +343,11 @@ public class ProductActivity extends BaseDrawerActivity {
                         configureUI(position);
                     }
                 });
+    }
+
+
+    public String getProductDisplayPrice(){
+        return mProduct.getDisplayPrice();
     }
 
     @Override

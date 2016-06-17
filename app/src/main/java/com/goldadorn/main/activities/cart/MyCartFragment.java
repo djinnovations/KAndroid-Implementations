@@ -1,12 +1,10 @@
 package com.goldadorn.main.activities.cart;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.SpannableStringBuilder;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +17,12 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
-import com.goldadorn.main.dj.utils.Constants;
-import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
-import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.Set;
 
 

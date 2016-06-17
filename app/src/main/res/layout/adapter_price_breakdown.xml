@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="8dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="Making Charges"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/tempView"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_centerInParent="true" />
+
+    <View
+        android:id="@+id/tempView2"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/tempView" />
+
+
+    <TextView
+        android:id="@+id/tvValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tempView2"
+        android:layout_centerVertical="true"
+        android:text="Details Not Available"
+        android:textSize="16sp" />
+
+</RelativeLayout>

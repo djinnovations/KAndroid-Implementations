@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.goldadorn.main.BR;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.IConfigurableObject;
 
@@ -61,7 +62,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
 
     public void config()
     {
-        price = productPriceUnits+" "+productPrice;
+        price = /*productPriceUnits+" "+*/RandomUtils.getIndianCurrencyFormat(productPrice, true) + "/-";
         image = URLHelper.getInstance().productImageEndPoint+prodId+"/"+prodId+"-1.jpg";
         System.out.println(image);
     }

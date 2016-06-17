@@ -19,7 +19,7 @@ import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
-import com.goldadorn.main.dj.utils.TableBuilder;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.ProductOptions;
@@ -45,6 +45,7 @@ public class ProductCustomiseFragment extends Fragment {
     private SingleItemAdapter mPriceAdapter;
     private ProductOptions mProductOption;
     private int density= 0;
+    //private ArrayList<PriceValueModel> dataForPriceBreakDown;
 
     @Nullable
     @Override
@@ -55,15 +56,19 @@ public class ProductCustomiseFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_customize, container, false);
     }
 
+    PriceBreakDownAdapter pbda;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        density= getResources().getDisplayMetrics().densityDpi;
+        density = getResources().getDisplayMetrics().densityDpi;
 
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
-        mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
+        mAdapter.addAdapter(getTitleAdapter("Price BreakDown"));
+        //mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
+       ArrayList<PriceValueModel> tempList = new ArrayList<>();
+        mAdapter.addAdapter(pbda = new PriceBreakDownAdapter(false, ViewHolderFactory.TYPE.VHT_PBCA));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
 //        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
@@ -93,17 +98,24 @@ public class ProductCustomiseFragment extends Fragment {
         if (options != null) {
             mProductOption = options;
             mCustomizeAdapter.changeData(options.customisationOptions);
+
             if (options.priceBreakDown.size() > 0) {
-                mPriceAdapter.setEnabled(true);
-                mPriceAdapter.notifyDataSetChanged();
+                //mPriceAdapter.setEnabled(true);
+                //mPriceAdapter.notifyDataSetChanged();
+                pbda.setEnabled(true);
+                pbda.setList(getDataForPriceBreakDown(options));
+                //pbda.notifyDataSetChanged();
             } else {
-                mPriceAdapter.setEnabled(false);
+                //mPriceAdapter.setEnabled(false);
+                pbda.setEnabled(false);
             }
         }
     }
 
     private final String NO_DETAILS = "Detail Not Available";
     DecimalFormat dcmf = new DecimalFormat("0.#");
+
+
     private SingleItemAdapter.IViewBinder<PBViewHolder> mPriceBinder = new SingleItemAdapter.IViewBinder<PBViewHolder>() {
         @Override
         public void onNewView(int id, PBViewHolder holder) {
@@ -114,9 +126,9 @@ public class ProductCustomiseFragment extends Fragment {
         public void onBindView(int id, PBViewHolder holder) {
             ArrayList<Map.Entry<String, Float>> p = mProductOption.priceBreakDown;
             String priceUnit = mProductOption.priceUnit;
-            float total = 0;
+            double total = 0;
             float vatTotal = 0;
-            SpannableStringBuilder builder = new SpannableStringBuilder();
+            /*SpannableStringBuilder builder = new SpannableStringBuilder();
             //TableFormatter tb = new TableFormatter();
             TableBuilder tblr = new TableBuilder();
             for (Map.Entry<String, Float> entry : p) {
@@ -129,42 +141,210 @@ public class ProductCustomiseFragment extends Fragment {
                     priceValue = NO_DETAILS;
                 }
                 else priceValue = String.valueOf(Math.round(price));
-                float totalTemp = price == -1 ? 0 : price;
+                float totalTemp = price < 0 ? 0 : price;
                 Log.d("djprod","price iteration amount: "+totalTemp);
                 total = total + totalTemp;
                 //Log.d("djprod","price iteration amount: "+total);
 
                 String spaces="";
-                /*for (int i=(name.length()+1);i<15;i++){
+                for (int i=(name.length()+1);i<15;i++){
                     spaces=spaces+" ";
                 }
-                name=name+spaces;*/
+                name=name+spaces;
 
                 if(name.contains("Metal")){
                     //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 12
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+dcmf.format(price)
-                            /*String.valueOf(price)*/);
-                    float tempVat = price == -1 ? 0 : price;
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: priceUnit+" "+dcmf.format(price)
+                                    RandomUtils.getIndianCurrencyFormat(Math.round(price), true)
+                            String.valueOf(price));
+                    float tempVat = price < 0 ? 0 : price;
                     vatTotal=vatTotal+tempVat;
                     //name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
                 }
                 else if(name.contains("Stone")){
                     //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 12
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+/*dcmf.format(price)*/
-                            String.valueOf(Math.round(price)));
-                    float tempVat = price == -1 ? 0 : price;
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: priceUnit+" "+dcmf.format(price)
+                            String.valueOf(Math.round(price)) RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                    float tempVat = price < 0 ? 0 : price;
                     vatTotal=vatTotal+tempVat;
-                   /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
-                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
+                    vatTotal=vatTotal+priceprice == -1 ? 0 : price;
+                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
                 }else if(name.contains("Making Charges")){
                     //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                     // total of tab spaces added = 3
-                    tblr.addRow(name+ "\t\t\t", price == -1 ? NO_DETAILS: priceUnit+" "+ /*dcmf.format(price)*/
-                            String.valueOf(Math.round(price)));
-                    float tempVat = price == -1 ? 0 : price;
+                    tblr.addRow(name+ "\t\t\t", price < 0 ? NO_DETAILS: priceUnit+" "+ dcmf.format(price)
+                            String.valueOf(Math.round(price))RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                    float tempVat =  price < 0 ? 0 : price;
                     vatTotal=vatTotal+tempVat;
+                    vatTotal=vatTotal+priceprice == -1 ? 0 : price;
+                    if(density== DisplayMetrics.DENSITY_MEDIUM) {
+                        name = name + "\t\t\t\t\t\t\t\t\t";
+                    }else if(density== DisplayMetrics.DENSITY_HIGH){
+                        name = name + "\t\t\t\t\t\t\t\t\t\t";
+                    }
+                    else if(density== DisplayMetrics.DENSITY_XHIGH){
+                        name = name + "\t\t\t\t\t\t\t\t\t";
+                    }else{
+                        name = name + "\t\t\t\t\t\t\t\t\t";
+                    }
+                }else{
+                    //price=(float)(vatTotal*0.01);
+                    //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                    // total of tab spaces added = 8
+                    //float vat =(float)(vatTotal - (vatTotal/1.01));
+                    double vat;
+                    try {
+                        double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
+                        vat = (displayPrice - (displayPrice/1.01));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        vat = 0.0;
+                    }
+
+                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t", *priceUnit+" "+ dcmf.format(vat)
+                            String.valueOf(Math.round(vat))RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
+                    total = total + vat;
+                    priceValue=String.valueOf(Math.round(price));
+                    if(density== DisplayMetrics.DENSITY_MEDIUM) {
+                        name = name + "\t\t\t\t\t\t\t\t\t";
+                    }else if(density== DisplayMetrics.DENSITY_HIGH){
+                        name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
+                    }
+                    else if(density== DisplayMetrics.DENSITY_XHIGH){
+                        name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
+                    }else{
+                        name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
+                    }
+
+                }
+
+                Log.e("iii---",name+"--"+name.length()+"--"+density);
+                priceUnit = priceValue.equals(NO_DETAILS) ? "": priceUnit;
+                builder.append(name+priceUnit);
+
+                builder.append("\t");
+                builder.append(priceValue);
+                builder.append("\n");
+            }
+            //int index = builder.length();
+
+            String mTotal="Total";
+            String spaces="";
+            for (int i=(mTotal.length()+1);i<15;i++){
+                spaces=spaces+" ";
+            }
+            mTotal=mTotal+spaces;
+            builder.append(mTotal);
+
+            //tb = tb.addLine(mTotal + "\t", total == -1 ? NO_DETAILS: priceUnit+String.valueOf(total));
+            // total of tab spaces added = 12
+            //"<b>" + id + "</b> "
+            String totalRowTxt = "Total"+"\t\t\t\t\t\t\t\t\t\t\t\t";
+
+            String totalDisplayPrice = ((ProductActivity) getActivity()).getProductDisplayPrice();
+            String totalRowTxtVal = total == -1 ? NO_DETAILS: priceUnit +" "+dcmf.format(total)
+                    String.valueOf(Math.round(total)RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true);
+            Log.d("djprod","totalRowTxtVal: "+totalRowTxtVal);
+
+            tblr.addRow("Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"totalRowTxt,
+                    total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total)) totalRowTxtVal);
+
+            builder.append("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+            builder.append(priceUnit);
+            String priceValue=String.valueOf(Math.round(total));
+            //  String priceValue =String.format(Locale.getDefault(),"%.2f",Math.round(total));
+            for(int i = 8-priceValue.length();i>=0;i--){
+                builder.append("\t");
+            }
+            builder.append("\t");
+            builder.append(priceValue);
+            builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            //holder.gold.setText(builder);
+            //holder.gold.setText(tb.toString());
+            String fullText = tblr.toString();
+            //String boldTxt = totalRowTxt + totalRowTxtVal;
+
+            holder.gold.setText(*//*tblr.toString()*//* fullText);*/
+
+        }
+    };
+
+    public ArrayList<PriceValueModel> getDataForPriceBreakDown(ProductOptions mProductOptions) {
+
+        ArrayList<Map.Entry<String, Float>> p = /*mProductOption.priceBreakDown*/mProductOptions.priceBreakDown;
+        //String priceUnit = mProductOption.priceUnit;
+        //double total = 0;
+        //float vatTotal = 0;
+        //SpannableStringBuilder builder = new SpannableStringBuilder();
+        //TableFormatter tb = new TableFormatter();
+        //TableBuilder tblr = new TableBuilder();
+        ArrayList<PriceValueModel> priceBreakDownList = new ArrayList<>();
+        for (Map.Entry<String, Float> entry : p) {
+            String name = entry.getKey();
+
+            //String priceValue;
+            Float price = entry.getValue();
+            //price = -1f;
+           /* if (price == -1){
+                priceValue = NO_DETAILS;
+            }
+            else priceValue = String.valueOf(Math.round(price));*/
+            float totalTemp = price < 0 ? 0 : price;
+            Log.d("djprod","price iteration amount: "+totalTemp);
+            //total = total + totalTemp;
+            //Log.d("djprod","price iteration amount: "+total);
+
+            //String spaces="";
+                /*for (int i=(name.length()+1);i<15;i++){
+                    spaces=spaces+" ";
+                }
+                name=name+spaces;*/
+
+            if(name.contains("Metal")){
+
+                //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                // total of tab spaces added = 12
+                /*tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: *//*priceUnit+" "+dcmf.format(price)*//*
+                                RandomUtils.getIndianCurrencyFormat(Math.round(price), true)
+                            *//*String.valueOf(price)*//*);*/
+
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
+                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                priceBreakDownList.add(pvm);
+
+               /* float tempVat = price < 0 ? 0 : price;
+                vatTotal=vatTotal+tempVat;*/
+                //name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
+            }
+            else if(name.contains("Stone")){
+                //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                // total of tab spaces added = 12
+                /*tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: *//*priceUnit+" "+dcmf.format(price)*//*
+                            *//*String.valueOf(Math.round(price))*//* RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
+
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
+                            RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                priceBreakDownList.add(pvm);
+
+               /* float tempVat = price < 0 ? 0 : price;
+                vatTotal=vatTotal+tempVat;*/
+                   /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
+                    name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
+            }else if(name.contains("Making Charges")){
+                //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                // total of tab spaces added = 3
+               /* tblr.addRow(name+ "\t\t\t", price < 0 ? NO_DETAILS: *//*priceUnit+" "+ dcmf.format(price)*//*
+                            *//*String.valueOf(Math.round(price))*//*RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
+
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
+                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                priceBreakDownList.add(pvm);
+
+                /*float tempVat =  price < 0 ? 0 : price;
+                vatTotal=vatTotal+tempVat;*/
                     /*vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
@@ -176,14 +356,27 @@ public class ProductCustomiseFragment extends Fragment {
                     }else{
                         name = name + "\t\t\t\t\t\t\t\t\t";
                     }*/
-                }else{
-                    //price=(float)(vatTotal*0.01);
-                    //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
-                    // total of tab spaces added = 8
-                    float vat =(float)(vatTotal - (vatTotal/1.01));
-                    tblr.addRow(name+ "\t\t\t\t\t\t\t\t",priceUnit+" "+ /*dcmf.format(vat)*/
-                            String.valueOf(Math.round(vat)));
-                    total = total + vat;
+            }else{
+                //price=(float)(vatTotal*0.01);
+                //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
+                // total of tab spaces added = 8
+                //float vat =(float)(vatTotal - (vatTotal/1.01));
+                double vat;
+                try {
+                    double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
+                    vat = (displayPrice - (displayPrice/1.01));
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    vat = 0.0;
+                }
+
+               /* tblr.addRow(name+ "\t\t\t\t\t\t\t\t", *//**priceUnit+" "+ dcmf.format(vat)*//*
+                            *//*String.valueOf(Math.round(vat))*//*RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));*/
+
+                PriceValueModel pvm = new PriceValueModel(name, RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
+                priceBreakDownList.add(pvm);
+
+                //total = total + vat;
                     /*priceValue=String.valueOf(Math.round(price));
                     if(density== DisplayMetrics.DENSITY_MEDIUM) {
                         name = name + "\t\t\t\t\t\t\t\t\t";
@@ -196,7 +389,7 @@ public class ProductCustomiseFragment extends Fragment {
                         name = name + "\t\t\t\t\t\t\t\t\t\t\t\t";
                     }*/
 
-                }
+            }
 
                 /*Log.e("iii---",name+"--"+name.length()+"--"+density);
                 priceUnit = priceValue.equals(NO_DETAILS) ? "": priceUnit;
@@ -205,49 +398,53 @@ public class ProductCustomiseFragment extends Fragment {
                 builder.append("\t");
                 builder.append(priceValue);
                 builder.append("\n");*/
-            }
-            //int index = builder.length();
+        }
+        //int index = builder.length();
 
-            String mTotal="Total";
-            /*String spaces="";
+        /*String mTotal="Total";
+            *//*String spaces="";
             for (int i=(mTotal.length()+1);i<15;i++){
                 spaces=spaces+" ";
             }
             mTotal=mTotal+spaces;
-            builder.append(mTotal);*/
+            builder.append(mTotal);*//*
 
-            //tb = tb.addLine(mTotal + "\t", total == -1 ? NO_DETAILS: priceUnit+String.valueOf(total));
-            // total of tab spaces added = 12
-            //"<b>" + id + "</b> "
-            String totalRowTxt = "Total"+"\t\t\t\t\t\t\t\t\t\t\t\t";
+        //tb = tb.addLine(mTotal + "\t", total == -1 ? NO_DETAILS: priceUnit+String.valueOf(total));
+        // total of tab spaces added = 12
+        //"<b>" + id + "</b> "
+        String totalRowTxt = "Total"+"\t\t\t\t\t\t\t\t\t\t\t\t";*/
 
-            String totalRowTxtVal = total == -1 ? NO_DETAILS: priceUnit +" "+/*dcmf.format(total)*/
-                    String.valueOf(Math.round(total));
-            Log.d("djprod","totalRowTxtVal: "+totalRowTxtVal);
+        String totalDisplayPrice = ((ProductActivity) getActivity()).getProductDisplayPrice();
+       /* String totalRowTxtVal = total < 0 ? NO_DETAILS: *//*priceUnit +" "+dcmf.format(total)*//*
+                    *//*String.valueOf(Math.round(total)*//*RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true);*/
 
-            tblr.addRow(/*"Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"*/totalRowTxt,
-                    /*total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total))*/ totalRowTxtVal);
+        Log.d("djprod","totalRowTxtVal: "+RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
+        PriceValueModel pvm = new PriceValueModel("Total", RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
+        priceBreakDownList.add(pvm);
 
-            /*builder.append("\t\t\t\t\t\t\t\t\t\t\t\t\t");
+       /* tblr.addRow(*//*"Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"*//*totalRowTxt,
+                    *//*total == -1 ? NO_DETAILS: (priceUnit +" "+ String.valueOf(total))*//* totalRowTxtVal);
+
+            *//*builder.append("\t\t\t\t\t\t\t\t\t\t\t\t\t");
             builder.append(priceUnit);
-            String priceValue=String.valueOf(Math.round(total));*/
-            //  String priceValue =String.format(Locale.getDefault(),"%.2f",Math.round(total));
-            /*for(int i = 8-priceValue.length();i>=0;i--){
+            String priceValue=String.valueOf(Math.round(total));*//*
+        //  String priceValue =String.format(Locale.getDefault(),"%.2f",Math.round(total));
+            *//*for(int i = 8-priceValue.length();i>=0;i--){
                 builder.append("\t");
-            }*/
-            /*builder.append("\t");
+            }*//*
+            *//*builder.append("\t");
             builder.append(priceValue);
             builder.setSpan(new StyleSpan(Typeface.BOLD),index,builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-*/
-            //holder.gold.setText(builder);
-            //holder.gold.setText(tb.toString());
-            String fullText = tblr.toString();
-            //String boldTxt = totalRowTxt + totalRowTxtVal;
+*//*
+        //holder.gold.setText(builder);
+        //holder.gold.setText(tb.toString());
+        String fullText = tblr.toString();
+        //String boldTxt = totalRowTxt + totalRowTxtVal;
 
-            holder.gold.setText(/*tblr.toString()*/ fullText);
+        holder.gold.setText(*//*tblr.toString()*//* fullText);*/
 
-        }
-    };
+        return priceBreakDownList;
+    }
 
 
     private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<OptionKey, OptionValue>> {
@@ -347,6 +544,85 @@ public class ProductCustomiseFragment extends Fragment {
         @Override
         public int getItemCount() {
             return 1;
+        }
+    }
+
+
+
+
+
+
+
+    private class PriceBreakDownAdapter extends RecyclerAdapter<MyViewHolderNew>{
+
+        private ArrayList<PriceValueModel> ourList = new ArrayList<>();
+        private final int mViewType;
+
+        public PriceBreakDownAdapter(boolean enabled, int viewType) {
+            super(getActivity(), enabled);
+            mViewType =  viewType;
+        }
+
+        /*public PriceBreakDownAdapter(ArrayList<PriceValueModel> ourList) {
+            this.ourList = ourList;
+        }*/
+
+        @Override
+        public int getItemViewType(int position) {
+            return mViewType;
+        }
+
+
+        public void setList(ArrayList<PriceValueModel> ourList){
+            this.ourList = ourList;
+            notifyDataSetChanged();
+        }
+
+       /* @Override
+        public MyViewHolderNew onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_price_breakdown, parent, false);
+            view.setEnabled(false);
+            return new MyViewHolderNew(view);
+        }*/
+
+        @Override
+        public int getItemCount() {
+            return ourList.size();
+        }
+
+        @Override
+        public void onBindViewHolder(MyViewHolderNew holder, int position) {
+            holder.tvTitle.setText(ourList.get(position).getTvTitle());
+            holder.tvValue.setText(ourList.get(position).getTvValue());
+        }
+
+        /*class MyViewHolderNew extends RecyclerView.ViewHolder{
+
+            private TextView tvTitle, tvValue;
+            public MyViewHolderNew(View itemView) {
+                super(itemView);
+                tvTitle = (TextView) itemView.findViewById(R.id.tvTitle);
+                tvValue = (TextView) itemView.findViewById(R.id.tvValue);
+            }
+        }*/
+    }
+
+
+    private class PriceValueModel{
+        private String tvTitle;
+        private String tvValue;
+
+        public PriceValueModel(String tvTitle, String tvValue) {
+            this.tvTitle = tvTitle;
+            this.tvValue = tvValue;
+        }
+
+        public String getTvTitle() {
+            return tvTitle;
+        }
+
+        public String getTvValue() {
+            return tvValue;
         }
     }
 

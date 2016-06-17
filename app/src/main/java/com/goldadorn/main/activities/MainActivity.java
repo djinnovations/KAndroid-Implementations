@@ -127,7 +127,7 @@ public class MainActivity extends BaseDrawerActivity {
         public void onSwipeLeftToRight() {
 
             Log.d("djgest", "onSwipeLeftToRight");
-            //Toast.makeText(MainActivity.this.getApplicationContext(), "swipe right", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TestPayment.this.getApplicationContext(), "swipe right", Toast.LENGTH_SHORT).show();
             boolean isActive = ((HomePage) activePage).socialFeedFragmentpage.getUserVisibleHint();
             Log.d("djgest", "isSocialfeedactive?: " + isActive);
             if (isActive){
@@ -138,19 +138,19 @@ public class MainActivity extends BaseDrawerActivity {
         @Override
         public void onSwipeRightToLeft() {
             Log.d("djgest", "onSwipeRightToLeft");
-            //Toast.makeText(MainActivity.this.getApplicationContext(), "swipe left", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TestPayment.this.getApplicationContext(), "swipe left", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onSwipeBottomToTop() {
             Log.d("djgest", "onSwipeBottomToTop");
-            //Toast.makeText(MainActivity.this.getApplicationContext(), "SwipeTop", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TestPayment.this.getApplicationContext(), "SwipeTop", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onSwipeTopToBottom() {
             Log.d("djgest", "onSwipeTopToBottom");
-            //Toast.makeText(MainActivity.this.getApplicationContext(), "Swipe bottom", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(TestPayment.this.getApplicationContext(), "Swipe bottom", Toast.LENGTH_SHORT).show();
         }
     };
 

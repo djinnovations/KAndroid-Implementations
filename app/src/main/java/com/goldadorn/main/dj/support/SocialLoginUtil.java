@@ -637,7 +637,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true).commit();
 
                 dismissOverlayView(dialog);
-                mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                mActivity.startActivity(new Intent(mActivity, TestPayment.class));
                 mActivity.finish();
             }
         }.start();
@@ -674,7 +674,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                         .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid())).commit();*/
 
                 dismissOverlayView();
-                /*mActivity.startActivity(new Intent(mActivity, MainActivity.class));
+                /*mActivity.startActivity(new Intent(mActivity, TestPayment.class));
                 mActivity.finish();*/
                 new Action(mActivity).launchActivity(MainActivity.class, true);
             }

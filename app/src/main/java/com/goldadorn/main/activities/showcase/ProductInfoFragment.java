@@ -27,6 +27,8 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -141,6 +143,7 @@ public class ProductInfoFragment extends Fragment {
 
     }
 
+    private final int TYPE_GOLD = 8123;
     @SuppressLint("StringFormatInvalid")
     public void bindProductInfo(ProductInfo summary) {
         if (summary != null) {
@@ -149,12 +152,13 @@ public class ProductInfoFragment extends Fragment {
                     summary.getDisplayWeight()));
             mdescription.setText(summary.description);
             List<StoneDetail> rows = summary.stonesDetails;
-
-            if (rows.size() == 0) {
+            if (summary.productmaking_charges < 0)
+                mTableContainer.setVisibility(View.GONE);//rows = new ArrayList<>();//change
+           /* if (rows.size() == 0) {
                 mTableContainer.setVisibility(View.GONE);
-            } else {
+            }*/ else {
                 mTableContainer.setVisibility(View.VISIBLE);
-                StoneDetail t = rows.get(0);
+                //StoneDetail t = rows.get(0);
                 TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
                 head.setTextColor(Color.WHITE);
                 head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
@@ -179,7 +183,7 @@ public class ProductInfoFragment extends Fragment {
                 StoneDetail details = new StoneDetail();
                 details.color=summary.metalType;
                 details.clarity=summary.metalPurity+""+summary.metalPurityInUnits;
-                details.number=-1;
+                details.number = /*-1*/TYPE_GOLD;
                 details.metalWeightUnits=summary.metalWeightUnits;
                 details.price= summary.metalrate;
                 details.weight=summary.metalWeight;
@@ -187,24 +191,25 @@ public class ProductInfoFragment extends Fragment {
                 mTableContainer.addView(mGoldDetails);
                 childPos++;
 
-
                  /*Add the remain metal details*/
-                do {
-                    StoneDetail detail = rows.get(pos);
-                    View child = mTableContainer.getChildAt(childPos);
-                    View v;
-                    if (detail.type.equals(type)) {
-                        v = getRowView(detail, child, mTableContainer);
-                        pos++;
-                    } else {
-                        v = getRowView(type = detail.type, child, mTableContainer);
-                    }
-                    childPos++;
-                    v.setVisibility(View.VISIBLE);
-                    if (child == null) {
-                        mTableContainer.addView(v);
-                    }
-                } while (pos < rows.size());
+                if (rows.size() > 0) {
+                    do {
+                        StoneDetail detail = rows.get(pos);
+                        View child = mTableContainer.getChildAt(childPos);
+                        View v;
+                        if (detail.type.equals(type)) {
+                            v = getRowView(detail, child, mTableContainer);
+                            pos++;
+                        } else {
+                            v = getRowView(type = detail.type, child, mTableContainer);
+                        }
+                        childPos++;
+                        v.setVisibility(View.VISIBLE);
+                        if (child == null) {
+                            mTableContainer.addView(v);
+                        }
+                    } while (pos < rows.size());
+                }
                 /*Caliculate the total,vat,making charges and discount*/
                 childPos++;
                 mChileview = mTableContainer.getChildAt(childPos);
@@ -250,11 +255,11 @@ public class ProductInfoFragment extends Fragment {
             holder.setTextColor(grey);
             holder.setTextSize(getResources().getDimensionPixelSize(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
-            if(detail.number==-1){
+            if(detail.number == TYPE_GOLD){
                 //for gold
                 holder.component.setText(detail.color+" - "+detail.clarity);
-                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+"/"+detail.metalWeightUnits);//changed djphy
-                holder.weight.setText(" " + detail.weight+ " "+ detail.metalWeightUnits);
+                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+"/"+/*detail.metalWeightUnits*/"gm");//changed djphy
+                holder.weight.setText(" " + detail.weight+ " "+ /*detail.metalWeightUnits*/"gm");
             }else {
                 //for gstone
                 holder.component.setText(detail.color + "-" + detail.clarity + " : " + detail.number + " nos.");
@@ -314,8 +319,16 @@ public class ProductInfoFragment extends Fragment {
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
             Log.e("iii--",mTotalPrice+"");
-            double mVat=(mTotalPrice)*0.01;
-            mTotalPrice=mTotalPrice+((float)(mTotalPrice*0.01));
+            double mVat;
+            try {
+                double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
+                mVat = displayPrice - (displayPrice/1.01);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                mVat = 0.0;
+            }
+            //double mVat=/*(mTotalPrice)*0.01*/ RandomUtils.getIndianCurrencyFormat();
+            //mTotalPrice=mTotalPrice+((float)(mTotalPrice*0.01));
             holder.component.setText(VAT);
             holder.rate.setText("");
             holder.weight.setText(" ");
@@ -346,7 +359,8 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setText(" ");
             holder.price.setVisibility(View.GONE);
             holder.offer_price.setVisibility(View.VISIBLE);
-            holder.offer_price.setText(" "+ RandomUtils.getIndianCurrencyFormat(mTotalPrice, true)+"/-");
+            String displayPrice = ((ProductActivity) getActivity()).getProductDisplayPrice();
+            holder.offer_price.setText(" "+ RandomUtils.getIndianCurrencyFormat(displayPrice, true)+"/-");
         }
 
         return holder.itemView;

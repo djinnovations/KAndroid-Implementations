@@ -390,7 +390,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("addToWishlist post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("addToWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -427,7 +427,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("buyorNobuy post body content " + jsonObject.toString());
 
 
-            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder),body);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
             L.d("buyorNobuy " + "Code :" + response.responseCode + " content", response.responseContent.toString());
@@ -782,8 +782,12 @@ public class ApiFactory extends ExtractResponse {
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("prodId", response.productId);
-            Log.d("djprod","productName to server: "+response.product.name);
-            jsonObject.put("prodName", response.product.name);
+            Log.d("djprod", "productName to server: " + response.product.name);
+            if (response.product.name == null)
+                jsonObject.put("prodName", "");
+            else
+                jsonObject.put("prodName", response.product.name);
+
             jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
             jsonObject.put("primaryMetal", response.primaryMetal);
             jsonObject.put("primaryMetalPurity", response.primaryMetalPurity);
@@ -797,12 +801,12 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("metalWeight", response.metalWeight);
             jsonObject.put("orderQty", 1);
             jsonObject.put("VAT", 0.0);
-            for (int i=0;i<response.stonesDetails.size();i++){
-                StoneDetail mStone=response.stonesDetails.get(i);
+            for (int i = 0; i < response.stonesDetails.size(); i++) {
+                StoneDetail mStone = response.stonesDetails.get(i);
                 jsonObject.put(mStone.stoneFactor, mStone.type);
             }
 
-            Log.e("iii",response.productId+"--"+response.userId+"---"+((Application) context.getApplicationContext()).getUser().id);
+            Log.e("iii", response.productId + "--" + response.userId + "---" + ((Application) context.getApplicationContext()).getUser().id);
 
             /*try {
                 for (Map.Entry<OptionKey, OptionValue> entry : response.product.customisations.entrySet()) {
@@ -831,9 +835,6 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-
-
-
     protected static void removeFromCart(Context context, ProductResponse response, int orderQty) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
@@ -855,7 +856,7 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("transId", response.product.transid);
             jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
             jsonObject.put("reduceQty", orderQty);
-            Log.d("djcart", "req param - removefromcart: "+jsonObject);
+            Log.d("djcart", "req param - removefromcart: " + jsonObject);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();

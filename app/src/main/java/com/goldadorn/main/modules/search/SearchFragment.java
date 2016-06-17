@@ -78,13 +78,13 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
     @Override
     public void onStart() {
         super.onStart();
-        //((MainActivity) getActivity()).registerQueryListener(mQueryListener);
+        //((TestPayment) getActivity()).registerQueryListener(mQueryListener);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //((MainActivity) getActivity()).unRegisterQueryListener(mQueryListener);
+        //((TestPayment) getActivity()).unRegisterQueryListener(mQueryListener);
     }
 
     private IQueryListener mQueryListener = new IQueryListener() {
@@ -100,7 +100,7 @@ public class SearchFragment extends BaseHorizontalFragmentViewPager {
 
     @Override
     public boolean allowedBack() {
-        //((MainActivity)getActivity()).goBack();
+        //((TestPayment)getActivity()).goBack();
         return false;
     }
 }

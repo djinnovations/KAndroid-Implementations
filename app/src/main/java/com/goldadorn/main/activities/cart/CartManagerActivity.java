@@ -42,6 +42,7 @@ import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -108,7 +109,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
                 gravity);
         //}
-        Log.d("djcart","showOverLay");
+        Log.d("djcart", "showOverLay");
         overLayDialog.show();
     }
 
@@ -164,13 +165,14 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
     private final int NOTIFY_PAYMENT_CALL = IDUtils.generateViewId();
-    private void updatePaymentStatToServer(Map<String, Object> params){
+
+    private void updatePaymentStatToServer(Map<String, Object> params) {
         Log.d("djcart", "req param - updatePaymentStatToServer: " + params);
         showOverLay("Processing...", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(NOTIFY_PAYMENT_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         //ajaxCallback.params(params);
-        getAQueryCustom().ajax(ApiKeys.getUpdatePaymentAPI(), params, JSONObject.class, ajaxCallback);
+        getAQueryCustom().ajax(ApiKeys.getUpdatePaymentAPI(), params, String.class, ajaxCallback);
     }
 
     @Override
@@ -193,7 +195,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                 }
             }
         } else if (id == SET_CART_ADDRESS_CALL) {
-            if (mProgressDialog.isShowing()){
+            if (mProgressDialog.isShowing()) {
                 showLoading(false);
             }
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
@@ -203,37 +205,37 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                 AddressFragment af = (AddressFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(UISTATE_ADDRESS));
                 af.refreshAddr();
                 Toast.makeText(getApplicationContext(), "Address updated", Toast.LENGTH_SHORT).show();
-            }else
+            } else
                 Toast.makeText(getApplicationContext(), "Address could not be updated", Toast.LENGTH_SHORT).show();
 
-        }else if (id == NOTIFY_PAYMENT_CALL){
-            if (json == null){
+        } else if (id == NOTIFY_PAYMENT_CALL) {
+            if (json == null) {
                 Toast.makeText(getApplicationContext(), "Unable to process payment", Toast.LENGTH_SHORT).show();
                 return;
             }
-            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+            //status.
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url,(String) json, status, null,
                     mContinueButton, this);
             if (success) {
                 if (mPaymentSuccess) {
                     configureUI(UISTATE_FINAL);
                 }
-            }else Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
-        }
-
-        else super.serverCallEnds(id, url, json, status);
+            } else
+                Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
+        } else super.serverCallEnds(id, url, json, status);
     }
 
     private Address getAddressObj(ShipmentBillingAddress sba) {
         String lastName = "";
-        if (!TextUtils.isEmpty(sba.getLname())){
+        if (!TextUtils.isEmpty(sba.getLname())) {
             lastName = sba.getLname();
         }
         String addr2 = "";
-        if (!TextUtils.isEmpty(sba.getAddress2())){
+        if (!TextUtils.isEmpty(sba.getAddress2())) {
             addr2 = sba.getAddress2();
         }
-        String street = sba.getAddress1() + (addr2.equals("") ? "" : ", "+addr2);
-        String fullName = sba.getFname() + (lastName.equals("") ? "" : " "+lastName);
+        String street = sba.getAddress1() + (addr2.equals("") ? "" : ", " + addr2);
+        String fullName = sba.getFname() + (lastName.equals("") ? "" : " " + lastName);
         return new Address(fullName, street, sba.getCity(), sba.getState(), sba.getCountry(), sba.getPhone(), sba.getPincode());
     }
 
@@ -442,7 +444,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     private boolean isCOD;
 
     @Override
-    public void setPaymentDone(boolean done, boolean isCOD) {
+    public void setPaymentDone(boolean done, boolean isCOD, String payMode) {
         mPaymentSuccess = done;
         this.isCOD = isCOD;
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CHECKOUT_SUCCESSFUL");
@@ -453,14 +455,15 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             params.put("status", Integer.valueOf(2));*/
             JSONObject params = new JSONObject();
             try {
-                params.put("userId", getApp().getUser().id);
+                params.put("userID", getApp().getUser().id);
                 params.put("status", Integer.valueOf(2));
-                Integer[] transIds = new Integer[mCartItems.size()];
+                JSONArray transIds = new JSONArray();
                 int i = 0;
-                for (Product prod: mCartItems){
-                    transIds[i] = prod.transid;
+                for (Product prod : mCartItems) {
+                    transIds.put(prod.transid);
                 }
                 params.put("transId", transIds);
+                params.put("modePay", payMode);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -474,7 +477,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             paramsMap.put(AQuery.POST_ENTITY, entity);
             //params.put("transId", transIds);
             updatePaymentStatToServer(paramsMap);
-        }else return;
+        } else return;
         /*if (done) {
             configureUI(UISTATE_FINAL);
         }*/
@@ -497,7 +500,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         configureUI(UISTATE_OVERLAY_ADD_ADDRESS);
     }
 
-    public void setAddressResult(ShipmentBillingAddress sba){
+    public void setAddressResult(ShipmentBillingAddress sba) {
         addressList.add(sba.getAddressDataObj());
         Map<String, String> params = new HashMap<>();
         params.put("fname", sba.getFname());
@@ -510,7 +513,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         params.put("city", sba.getCity());
         params.put("pincode", sba.getPincode());
         params.put("type", sba.getType());
-        Log.d("djcart","req params - setAddressResult: "+params);
+        Log.d("djcart", "req params - setAddressResult: " + params);
         passCartAddressToServer(params, sba.getType());
     }
 
