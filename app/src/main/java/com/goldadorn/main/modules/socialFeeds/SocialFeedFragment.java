@@ -741,9 +741,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             votePostButton.setText("{hea_buy_or_not}");
 
-            if (socialPost.getIsVoted() == 1){
+            /*if (socialPost.getIsVoted() == 1) {
                 votePostButton.setSelected(true);
-            }else votePostButton.setSelected(false);
+            } else votePostButton.setSelected(false);*/
 
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
@@ -758,6 +758,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
 
             Boolean isVoted = isVoted(item, false);
+            if (isVoted) {
+                Log.d("djfeed", "poll post isVoted - must set color to pink: " + isVoted);
+                votePostButton.setSelected(true);
+            }
             if (isVoted) {
                 buyLabel.setText("Buy: " + item.getYesPercent() + "%");
                 notBuyLabel.setText("Not Buy: " + item.getNoPercent() + "%");
@@ -929,11 +933,16 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             detailsHolder.setVisibility(View.VISIBLE);
 
-            if (socialPost.getIsVoted() == 1){
+            /*if (socialPost.getIsVoted() == 1){
                 votePostButton.setSelected(true);
-            }else votePostButton.setSelected(false);
+            }else votePostButton.setSelected(false);*/
 
             Boolean isVoted = isVoted(item, false);
+            Log.d("djfeed", "BOT-isVoted value: " + isVoted);
+            if (isVoted) {
+                Log.d("djfeed", "BOT isVoted - must set color to pink: " + isVoted);
+                votePostButton.setSelected(true);
+            } else votePostButton.setSelected(false);
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), option1Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox1.setVisibility(View.VISIBLE);

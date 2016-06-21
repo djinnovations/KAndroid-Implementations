@@ -144,10 +144,11 @@ public class WindowUtils {
             return;
         else if (gravity == PROGRESS_FRAME_GRAVITY_TOP) {
             rlParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+            rlParams.topMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
         } else if ((gravity == PROGRESS_FRAME_GRAVITY_BOTTOM)) {
             rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            rlParams.bottomMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
         }
-        rlParams.bottomMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
         proView.setLayoutParams(rlParams);
     }
 }

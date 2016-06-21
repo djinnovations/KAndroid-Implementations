@@ -77,7 +77,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
     void onClickLoginWithGoogleButton() {
         if (checkNetwork()){
             if (!mSocialLoginInstance.isGoogleConnected()){
-                android.widget.Toast.makeText(getApplicationContext(), "Not yet! connected to Google", android.widget.Toast.LENGTH_SHORT).show();
+                android.widget.Toast.makeText(getApplicationContext(), "Trying to connect with Google", android.widget.Toast.LENGTH_SHORT).show();
                 return;
             }
             mSocialLoginInstance.onGoogleLogin(this);

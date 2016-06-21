@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -26,6 +27,7 @@ import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
@@ -107,11 +109,35 @@ public class ProductsFragment extends Fragment {
         return f;
     }
 
+
+    private Dialog overLayDialog;
+
+    private void showOverLay(String text, int colorResId, int gravity) {
+        //if (overLayDialog == null){
+        overLayDialog = WindowUtils.getInstance(getContext().getApplicationContext()).displayOverlay(getActivity(), text, colorResId,
+                gravity);
+        //}
+        overLayDialog.show();
+    }
+
+    private void dismissOverLay() {
+        Log.d("djprod", "overLayDialog dismiss");
+        if (overLayDialog != null) {
+            Log.d("djprod", "overLayDialog not null");
+            /*if (overLayDialog.isShowing()) {*/
+                Log.d("djprod", "overLayDialog dismisal");
+                overLayDialog.dismiss();
+            //}
+        }
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         Log.d(Constants.TAG, "prod frag");
         Bundle b = getArguments();
         if (b != null) {
@@ -154,9 +180,13 @@ public class ProductsFragment extends Fragment {
 
 
     private void setData() {
+        Log.d("djprod", "setData");
         mProduct = mSwipeDeckAdapter.getItem(0);
         mNameText.setText(mProduct.name);
         mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+        Log.d("djprod", "setData - price val: "+mProduct.getDisplayPrice().trim().length());
+        /*if (mProduct.getDisplayPrice().trim().length() > 0)
+            dismissOverLay();*/
     }
 
     @Override

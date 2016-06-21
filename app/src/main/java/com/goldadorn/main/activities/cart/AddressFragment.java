@@ -49,7 +49,7 @@ public class AddressFragment extends Fragment {
         mAddButton = (TextView) view.findViewById(R.id.action_add);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.GONE);
-        mAddButton.setText("Add/Update new shipping address");
+        mAddButton.setText("Add/Update Shipping address");
         mAddButton.setOnClickListener(mClick);
         //getLoaderManager().initLoader(mAddressCallBacks.hashCode(), null, mAddressCallBacks);
         refreshAddr();

@@ -77,7 +77,7 @@ public class ProductInfo {
                 JSONArray jsonArr = obj.getJSONArray("productPayModes");
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < jsonArr.length(); i++) {
-                    sb = sb.append(jsonArr.getString(i) + ", ");
+                    sb = sb.append(getFullNamePay(jsonArr.getString(i)) + ", ");
                 }
                 p.payModesTxt = sb.toString().substring(0, (sb.toString().length() - 2));
                 Log.d("djprod", "payment modes - productInfo: " + p.payModesTxt);
@@ -113,6 +113,24 @@ public class ProductInfo {
                 }
         }
         return p;
+    }
+
+
+    private static String getFullNamePay(String payModeFromServer) {
+        switch (payModeFromServer) {
+            case "net":
+                return "Net Banking";
+            case "cre":
+                return "Credit Card";
+            case "deb":
+                return "Debit Card";
+            case "cod":
+                return "Cash On Delivery";
+            case "emi":
+                return "EMI";
+            default:
+                return "";
+        }
     }
 
     public CharSequence getDisplayHeight() {

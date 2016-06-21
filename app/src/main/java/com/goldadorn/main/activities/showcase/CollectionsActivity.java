@@ -45,6 +45,7 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -554,13 +555,22 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
     public void displayBookAppointment() {
 
-        Intent intent = new Intent(this, BookAppointment.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mCollection.name);
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mCollection.getImageUrl());
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mCollection.id));
-        intent.putExtras(bundle);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, BookAppointment.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mCollection.name);
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mCollection.getImageUrl());
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mCollection.id));
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void launchDesignerScreen(){
+        menuAction(R.id.nav_showcase);
+        finish();
     }
 
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -611,6 +621,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             followButton.setOnClickListener(this);
             share.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
+            ownerName.setOnClickListener(this);
+            RandomUtils.underLineTv(ownerName);
         }
 
         public void setVisisbility(int visibility) {
@@ -626,7 +638,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         @Override
         public void onClick(final View v) {
-            if (v.getId() == like.getId()) {
+            if (v.getId() == ownerName.getId()){
+                launchDesignerScreen();
+            }
+            else if (v.getId() == like.getId()) {
                 v.setEnabled(false);
                 final Collection collection = (Collection) v.getTag();
                 final boolean isLiked = v.isSelected();

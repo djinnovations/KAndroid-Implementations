@@ -127,6 +127,21 @@ public class ProductInfoFragment extends Fragment {
 
         ((TextView) view.findViewById(R.id.product_detail_style).findViewById(R.id.title)).setText(
                 "Product Detail");
+        RandomUtils.underLineTv(mCollectionName);
+        RandomUtils.underLineTv(mProductOwnerName);
+
+        mCollectionName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+        mProductOwnerName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((ProductActivity) getActivity()).launchDesignerScreen();
+            }
+        });
 
         if (mUser != null) {
             mProductOwnerName.setText(mUser.name);
@@ -175,8 +190,10 @@ public class ProductInfoFragment extends Fragment {
                     summary.getDisplayWeight()));
             mdescription.setText(summary.description);
             List<StoneDetail> rows = summary.stonesDetails;
-            if (summary.productmaking_charges < 0)
-                mTableContainer.setVisibility(View.GONE);//rows = new ArrayList<>();//change
+            if (summary.productmaking_charges < 0) {
+                //mTableContainer.setVisibility(View.GONE);
+                create2RowTable(summary, rows);
+            }//rows = new ArrayList<>();//change
            /* if (rows.size() == 0) {
                 mTableContainer.setVisibility(View.GONE);
             }*/
@@ -200,7 +217,7 @@ public class ProductInfoFragment extends Fragment {
                 /*Add the gold details*/
 
                 mChileview = mTableContainer.getChildAt(childPos);
-                View mGoldHeading = getRowView(summary.metalType, mChileview, mTableContainer);
+                View mGoldHeading = getRowView(summary.metalType, mChileview, mTableContainer, false);
                 mTableContainer.addView(mGoldHeading);
                 childPos++;
 
@@ -211,7 +228,7 @@ public class ProductInfoFragment extends Fragment {
                 details.metalWeightUnits = summary.metalWeightUnits;
                 details.price = summary.metalrate;
                 details.weight = summary.metalWeight;
-                View mGoldDetails = getRowView(details, mChileview, mTableContainer);
+                View mGoldDetails = getRowView(details, mChileview, mTableContainer, false);
                 mTableContainer.addView(mGoldDetails);
                 childPos++;
 
@@ -222,10 +239,10 @@ public class ProductInfoFragment extends Fragment {
                         View child = mTableContainer.getChildAt(childPos);
                         View v;
                         if (detail.type.equals(type)) {
-                            v = getRowView(detail, child, mTableContainer);
+                            v = getRowView(detail, child, mTableContainer, false);
                             pos++;
                         } else {
-                            v = getRowView(type = detail.type, child, mTableContainer);
+                            v = getRowView(type = detail.type, child, mTableContainer, false);
                         }
                         childPos++;
                         v.setVisibility(View.VISIBLE);
@@ -262,7 +279,7 @@ public class ProductInfoFragment extends Fragment {
         }
     }
 
-    private View getRowView(Object obj, View convertView, LinearLayout parent) {
+    private View getRowView(Object obj, View convertView, LinearLayout parent, boolean display2Rows) {
         TableRowHolder holder = null;
         if (convertView == null) {
             LayoutInflater mInflater = LayoutInflater.from(getContext());
@@ -274,6 +291,10 @@ public class ProductInfoFragment extends Fragment {
         }
         int grey = getResources().getColor(R.color.cb_dark_grey);
         int gold = getResources().getColor(R.color.colorPrimary);
+        if (display2Rows) {
+            holder.price.setVisibility(View.INVISIBLE);
+            holder.rate.setVisibility(View.INVISIBLE);
+        }
         if (obj instanceof StoneDetail) {
             holder.itemView.setBackgroundColor(Color.WHITE);
             holder.setTextColor(grey);
@@ -437,6 +458,69 @@ public class ProductInfoFragment extends Fragment {
             followButton.setSelected(mUser.isFollowed);
         } else {
 
+        }
+    }
+
+
+    private void create2RowTable(ProductInfo summary, List<StoneDetail> rows) {
+        TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
+        head.setTextColor(Color.WHITE);
+        head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
+        head.itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        head.component.setText("Component");
+        head.rate.setText("Rate\n(" + "INR/weight" + ")");//to be changed from backend
+        head.rate.setVisibility(View.INVISIBLE);
+        head.weight.setText("Weight");
+        //(" + t.weightunit + ");
+        head.price.setText("Value\n(" + /*t.rateunit*/"INR" + ")");//to be changed from backend
+        head.price.setVisibility(View.INVISIBLE);
+        head.offer_price.setText("Offer Price");
+
+        int childPos = 1;
+        int pos = 0;
+        String type = "";
+                /*Add the gold details*/
+
+        mChileview = mTableContainer.getChildAt(childPos);
+        View mGoldHeading = getRowView(summary.metalType, mChileview, mTableContainer, true);
+        mTableContainer.addView(mGoldHeading);
+        childPos++;
+
+        StoneDetail details = new StoneDetail();
+        details.color = summary.metalType;
+        details.clarity = summary.metalPurity + "" + summary.metalPurityInUnits;
+        details.number = /*-1*/TYPE_GOLD;
+        details.metalWeightUnits = summary.metalWeightUnits;
+        details.price = summary.metalrate;
+        details.weight = summary.metalWeight;
+        View mGoldDetails = getRowView(details, mChileview, mTableContainer, true);
+        mTableContainer.addView(mGoldDetails);
+        childPos++;
+
+        if (rows.size() > 0) {
+            do {
+                StoneDetail detail = rows.get(pos);
+                View child = mTableContainer.getChildAt(childPos);
+                View v;
+                if (detail.type.equals(type)) {
+                    v = getRowView(detail, child, mTableContainer, true);
+                    pos++;
+                } else {
+                    v = getRowView(type = detail.type, child, mTableContainer, true);
+                }
+                childPos++;
+                v.setVisibility(View.VISIBLE);
+                if (child == null) {
+                    mTableContainer.addView(v);
+                }
+            } while (pos < rows.size());
+        }
+                /*Caliculate the total,vat,making charges and discount*/
+        childPos++;
+        if (mTableContainer.getChildCount() > childPos) {
+            for (int i = childPos; i < mTableContainer.getChildCount(); i++) {
+                mTableContainer.getChildAt(i).setVisibility(View.GONE);
+            }
         }
     }
 }

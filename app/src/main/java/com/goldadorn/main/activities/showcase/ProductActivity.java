@@ -340,7 +340,7 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
         mOverlayVH.mProductCost.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
-        mOverlayVH.mProductCost2.setText(mProduct.getDisplayPrice());
+        mOverlayVH.mProductCost2.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
         mTabViewHolder.setCounts(-1, -1);
     }
 
@@ -514,18 +514,27 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public void displayBookAppointment() {
 
-        Intent intent = new Intent(this, BookAppointment.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
+        try {
+            Intent intent = new Intent(this, BookAppointment.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
         /*if (mMode == MODE_COLLECTION) {
             bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
             bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
         }*/
-        intent.putExtras(bundle);
-        startActivity(intent);
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
+
+    public void launchDesignerScreen(){
+        menuAction(R.id.nav_showcase);
+        finish();
     }
 
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -599,6 +608,8 @@ public class ProductActivity extends BaseDrawerActivity {
             like.setOnClickListener(this);
             cartButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
+            mProductOwner.setOnClickListener(this);
+            RandomUtils.underLineTv(mProductOwner);
         }
 
         public void setVisisbility(int visibility) {
@@ -648,7 +659,11 @@ public class ProductActivity extends BaseDrawerActivity {
                 }
             } else if (v.getId() == R.id.btnBookApoint) {
                 displayBookAppointment();
-            } else if (v == like) {
+            }else if (v.getId() == mProductOwner.getId()){
+                launchDesignerScreen();
+            }
+
+            else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);

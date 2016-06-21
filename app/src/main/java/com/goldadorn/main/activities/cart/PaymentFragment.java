@@ -205,7 +205,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 paymentMode = "net";
                 intent = new Intent(getContext(), PayUNetBankingActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
-                break;
+                Toast.makeText(getContext().getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                return;
+            //break;
             case "Credit Card":
                 paymentMode = "cre";
                 intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
@@ -271,20 +273,27 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("djpay", "onActivityResult");
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
+            Log.d("djpay", "onActivityResult - req by payu");
             if (data != null) {
+                Log.d("djpay", "onActivityResult - data not null");
                 String result = data.getStringExtra("result");
                 if (result.equals(mPaymentParams.getSurl())) {
+                    Log.d("djpay", "onActivityResult - sucecss transaction");
                     mCartData.setPaymentDone(true, false, paymentMode);
                 }
-                new AlertDialog.Builder(getContext())
+                else {
+                    Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
+                }
+                /*new AlertDialog.Builder(getContext())
                         .setCancelable(false)
                         .setMessage(data.getStringExtra("result"))
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
 
                             }
-                        }).show();
+                        }).show();*/
             } else {
                 Toast.makeText(getContext(), "Could not receive data", Toast.LENGTH_LONG).show();
             }
@@ -342,10 +351,10 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     }
 
     private void launchActivity(Intent intent) {
-        //intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
-        //intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
-        //mPayuConfig.setData(null);
-        //intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
+        intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
+        intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
+        mPayuConfig.setData(null);
+        intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
         // salt
         if (mPayuBundle.getString(PayuConstants.SALT) != null)
             intent.putExtra(PayuConstants.SALT, mPayuBundle.getString(PayuConstants.SALT));

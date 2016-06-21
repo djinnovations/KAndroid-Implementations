@@ -1,5 +1,9 @@
 package com.goldadorn.main.dj.utils;
 
+import android.app.Activity;
+import android.graphics.Paint;
+import android.widget.TextView;
+
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.Locale;
@@ -58,6 +62,11 @@ public class RandomUtils {
         }
         String indianFormat = result + lastDigit;
         return INDIAN_CURRENCY_SYMBOL + " " + indianFormat;
+    }
+
+
+    public static void underLineTv(TextView textview) {
+        textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
 }

@@ -131,13 +131,17 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     public void displayBookAppointment() {
 
-        Intent intent = new Intent(this, BookAppointment.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mUser.name);
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, mUser.getImageUrl());
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, String.valueOf(mUser.id));
-        intent.putExtras(bundle);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, BookAppointment.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mUser.name);
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mUser.getImageUrl());
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mUser.id));
+            intent.putExtras(bundle);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
        /* final Dialog dialog = new Dialog(this, R.style.BookAppointmentDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
@@ -288,7 +292,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
-                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
         }
         overLayDialog.show();
     }
@@ -307,6 +311,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
 
+        showOverLay(null, R.color.Black);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: SHOWCASE");
         logEventsAnalytics(GAAnalyticsEventNames.SHOWCASE);
 
@@ -409,7 +414,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 new IResultListener<TimelineResponse>() {
                     @Override
                     public void onResult(TimelineResponse result) {
-                        mProgressFrame.setVisibility(View.GONE);
+                        //mProgressFrame.setVisibility(View.GONE);
+                        dismissOverLay();
                         getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
                     }
                 });
@@ -474,7 +480,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                         new IResultListener<TimelineResponse>() {
                             @Override
                             public void onResult(TimelineResponse result) {
-                                mProgressFrame.setVisibility(View.GONE);
+                                //mProgressFrame.setVisibility(View.GONE);
                                 getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
                             }
                         });

@@ -69,48 +69,56 @@ public class BookAppointment extends BaseActivity {
 
         ButterKnife.bind(this);
         Bundle args = getIntent().getExtras();
-        if (args != null) {
-            name = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_NAME);
-            id = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_ID);
-            url = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_URL);
-            /*collectionId = args.getString(IntentKeys.COLLECTION_DETAILS_ID);
-            collectionName = args.getString(IntentKeys.COLLECTION_DETAILS_NAME);
-            productId = args.getString(IntentKeys.PRODUCT_DETAILS_ID);
-            productName = args.getString(IntentKeys.PRODUCT_DETAILS_NAME);*/
-            Log.d("djappoint", "name: " + name);
-            Log.d("djappoint", "id: " + id);
-            Log.d("djappoint", "url: " + url);
-           /* Log.d("djappoint", "collectionId: " + collectionId);
-            Log.d("djappoint", "collectionName: " + collectionName);
-            Log.d("djappoint", "productId: " + productId);
-            Log.d("djappoint", "productName: " + productName);*/
-        }
-        dismissOverLay();
+        try {
+            if (args != null) {
+                name = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_NAME);
+                id = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_ID);
+                url = args.getString(IntentKeys.BOOK_APPOINT_DETAILS_URL);
+                /*collectionId = args.getString(IntentKeys.COLLECTION_DETAILS_ID);
+                collectionName = args.getString(IntentKeys.COLLECTION_DETAILS_NAME);
+                productId = args.getString(IntentKeys.PRODUCT_DETAILS_ID);
+                productName = args.getString(IntentKeys.PRODUCT_DETAILS_NAME);*/
+                Log.d("djappoint", "name: " + name);
+                Log.d("djappoint", "id: " + id);
+                Log.d("djappoint", "url: " + url);
+               /* Log.d("djappoint", "collectionId: " + collectionId);
+                Log.d("djappoint", "collectionName: " + collectionName);
+                Log.d("djappoint", "productId: " + productId);
+                Log.d("djappoint", "productName: " + productName);*/
+            }
+            dismissOverLay();
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Book Appoin");*/
-        setCustomTitle();
-        if (!TextUtils.isEmpty(url))
-            Picasso.with(getApplicationContext())
-                    .load(url)
-                    .placeholder(R.drawable.img_timeline)
-                    .into(ivHeader);
-        //tvNegative.setOnClickListener(finishClickListener);
-        tvOkay.setOnClickListener(finishClickListener);
-        btnTvBookNow.setOnClickListener(positiveClick);
+            setCustomTitle();
+            if (!TextUtils.isEmpty(url))
+                Picasso.with(getApplicationContext())
+                        .load(url)
+                        //.placeholder(R.drawable.img_timeline)
+                        .into(ivHeader);
+            //tvNegative.setOnClickListener(finishClickListener);
+            tvOkay.setOnClickListener(finishClickListener);
+            btnTvBookNow.setOnClickListener(positiveClick);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setCustomTitle() {
-        Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(tb);
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedText);
-        collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedText);
+        try {
+            Toolbar tb = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(tb);
+            CollapsingToolbarLayout collapsingToolbar =
+                    (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+            collapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedText);
+            collapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedText);
 
-        collapsingToolbar.setTitle(name == null ? "Designer Name" : name);
+            collapsingToolbar.setTitle(name == null ? "Designer Name" : name);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -118,17 +126,21 @@ public class BookAppointment extends BaseActivity {
         @Override
         public void onClick(View v) {
 
-            if (etPhNum.getText().toString().trim().length() < 10) {
-                Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                Toast.makeText(getApplicationContext(), "Please provide your name", Toast.LENGTH_SHORT).show();
-                return;
-            } else if (TextUtils.isEmpty(etMsgAppoint.getText().toString().trim())) {
-                Toast.makeText(getApplicationContext(), "Please leave a message", Toast.LENGTH_SHORT).show();
-                return;
+            try {
+                if (etPhNum.getText().toString().trim().length() < 10) {
+                    Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(etName.getText().toString().trim())) {
+                    Toast.makeText(getApplicationContext(), "Please provide your name", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(etMsgAppoint.getText().toString().trim())) {
+                    Toast.makeText(getApplicationContext(), "Please leave a message", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                doTransition();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            doTransition();
         }
     };
 
@@ -152,7 +164,7 @@ public class BookAppointment extends BaseActivity {
 
     private final int BOOK_APPOINTMENT_CALL = IDUtils.generateViewId();
 
-    private void doTransition() {
+    private void doTransition() throws Exception{
         Map<String, String> params = new HashMap<>();
         params.put("phone", etPhNum.getText().toString().trim());
 

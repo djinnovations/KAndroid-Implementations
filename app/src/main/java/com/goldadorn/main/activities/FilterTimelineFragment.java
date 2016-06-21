@@ -22,24 +22,25 @@ import java.util.Map;
 /**
  * Created by DJphy on 18-06-2016.
  */
-public class FilterTimelineFragment extends SocialFeedFragment{
+public class FilterTimelineFragment extends SocialFeedFragment {
 
     FilterPostParams fpp;
 
 
     public void onViewCreated(View view) {
-        Log.d("djtimeline","onViewCreated ");
+        Log.d("djtimeline", "onViewCreated ");
         super.onViewCreated(view);
         fpp = getArguments().getParcelable(IntentKeys.FILTER_POST_PARAMS);
         getFloatingActionsMenu().setVisibility(View.GONE);
         getFabBackImage().setVisibility(View.GONE);
+
         //followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
     }
 
-    protected DataManager createDataManager()
-    {
-        return new FilterDataManager(getActivity(),this,getApp().getCookies());
+    protected DataManager createDataManager() {
+        return new FilterDataManager(getActivity(), this, getApp().getCookies());
     }
+
     public class FilterDataManager extends SocialFeedProjectDataManager {
         public FilterDataManager(Context context, IDataManagerDelegate delegate, List<Cookie> cookies) {
             super(context, delegate, cookies);
@@ -51,43 +52,44 @@ public class FilterTimelineFragment extends SocialFeedFragment{
         //People userData=crateUser();
         /*if(userData!=null) {
             setUser(userData);*/
-            dataManager.setRefreshItemPos(1);
-            dataManager.setRefreshEnabled(true);
-            //    dataManager.add(userData);
+        dataManager.setRefreshItemPos(1);
+        dataManager.setRefreshEnabled(true);
+        //    dataManager.add(userData);
         //}
     }
 
-
+    @Override
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
         params.put(URLHelper.LIKE_A_POST.OFFSET, offset);
         params.put(URLHelper.LIKE_A_POST.POST_ID, 0);
         params.put(URLHelper.LIKE_A_POST.USER_ID, fpp.getUserid());
-        Log.d("djtimeline","req params: "+params);
+        Log.d("djtimeline", "req params: " + params);
         return params;
     }
+
     public Map<String, Object> getRefreshDataParams(PageData data) {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put(URLHelper.LIKE_A_POST.OFFSET, refreshOffset);
-            SocialPost sp =(SocialPost)getDataManager().get(1);
+            SocialPost sp = (SocialPost) getDataManager().get(1);
             params.put(URLHelper.LIKE_A_POST.POST_ID, sp.getPostId());
             params.put(URLHelper.LIKE_A_POST.USER_ID, fpp.getUserid());
             return params;
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         return null;
     }
 
 
-    public String getNextDataURL(PageData pageData)
-    {
-        Log.d("djtimeline","getNextDataURL ");
-        isRefreshingData= false;
+    public String getNextDataURL(PageData pageData) {
+        Log.d("djtimeline", "getNextDataURL ");
+        isRefreshingData = false;
         return getApp().getUrlHelper().getUsersSocialFeedServiceURL();
     }
-    public String getRefreshDataURL(PageData pageData)
-    {
-        isRefreshingData= true;
+
+    public String getRefreshDataURL(PageData pageData) {
+        isRefreshingData = true;
         return getApp().getUrlHelper().getUsersSocialFeedServiceURL();
     }
 
