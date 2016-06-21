@@ -17,6 +17,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
@@ -162,9 +163,12 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         int t = totalUnits > 0 ? 1 : 0;
         Log.e("iii---", t + "--" + mCostTotal);
         /*Madhu*/
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText("Rs " + (mCostTax * t) + "/-");
-        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText("Rs " + (mCostShipping * t) + "/-");
-        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText("Rs " + (mCostTotal * t) + "/-");
+        float taxCost = (mCostTax * t);
+        float shipinCost = (mCostShipping * t);
+        float totalCost = (mCostTotal * t);
+        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(taxCost, true)/*"Rs " + (mCostTax * t)*/ + "/-");
+        ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(shipinCost, true)/*"Rs " + (mCostShipping * t)*/ + "/-");
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(totalCost, true)/*"Rs " + (mCostTotal * t)*/ + "/-");
       /*  ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostShipping * t) + "/-");
         ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");*/

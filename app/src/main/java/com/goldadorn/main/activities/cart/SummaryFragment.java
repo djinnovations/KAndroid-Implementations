@@ -8,16 +8,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.IntentKeys;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by Kiran BH on 10/03/16.
  */
-public class SummaryFragment extends Fragment implements View.OnClickListener{
+public class SummaryFragment extends Fragment implements View.OnClickListener {
 
     private boolean isCOD;
+    @Bind(R.id.btnShare)
+    View btnShare;
+    @Bind(R.id.tvCODNote)
+    View tvCODNote;
+    @Bind(R.id.btnContactUs)
+    View btnContactUs;
    /* public static final String CODTxt = "";
     public static final String notCODTxt = "Your order has been successfully placed." +
             "\nWe will keep you posted on all updates regarding your order." +
@@ -35,11 +45,13 @@ public class SummaryFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this, view);
         if (isCOD)
-            view.findViewById(R.id.tvCODNote).setVisibility(View.VISIBLE);
-        else view.findViewById(R.id.tvCODNote).setVisibility(View.INVISIBLE);
+            tvCODNote.setVisibility(View.VISIBLE);
+        else tvCODNote.setVisibility(View.INVISIBLE);
 
-        view.findViewById(R.id.btnContactUs).setOnClickListener(this);
+        btnContactUs.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
         //((TextView) view.findViewById(R.id.tvCongo)).setText(Html.fromHtml("Congrats <img> :) <img/>"));
         super.onViewCreated(view, savedInstanceState);
     }
@@ -54,8 +66,12 @@ public class SummaryFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnContactUs){
+        if (v.getId() == R.id.btnContactUs) {
             ((CartManagerActivity) getActivity()).contactUs();
+        }
+        if (v.getId() == R.id.btnShare) {
+            Toast.makeText(getContext().getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            return;
         }
         getActivity().finish();
     }

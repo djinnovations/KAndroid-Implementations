@@ -32,6 +32,7 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
         <item name="colorControlHighlight">@color/colorPrimary</item>
     </style>
+
     <style name="AppTheme" parent="Theme.AppCompat.DayNight">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -44,6 +45,7 @@
         <item name="android:actionBarStyle">@style/toolbarStyle</item>
 
     </style>
+
     <style name="toolbarStyle">
         <item name="android:background">@color/toolbarBG</item>
         <item name="background">@color/toolbarBG</item>
@@ -60,6 +62,7 @@
         <item name="android:textSize">16sp</item>
         <item name="color">@color/toolbarTextColor</item>
     </style>
+
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="spinBars">true</item>
         <item name="color">@color/toolbarIconColor</item>
@@ -87,9 +90,11 @@
     <style name="AppTheme.NoActionBar.Showcase" parent="Theme.AppCompat.Light">
 
     </style>
+
     <style name="AppTheme.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">#ffffff</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
@@ -115,6 +120,7 @@
         <item name="android:textColor">@drawable/social_login_button_text_color</item>
         <item name="android:background">@drawable/social_button_bg</item>
     </style>
+
     <style name="circleSmallButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@drawable/social_login_button_text_color</item>
@@ -124,15 +130,19 @@
     <style name="buyStyle" parent="circleSmallButton">
         <item name="android:textColor">@drawable/vote_buy_text_color</item>
     </style>
+
     <style name="notBuyStyle" parent="circleSmallButton">
         <item name="android:textColor">@drawable/vote_not_buy_text_color</item>
     </style>
+
     <style name="botOp1" parent="circleSmallButton">
         <item name="android:textColor">@drawable/vote_bot_op1_text_color</item>
     </style>
+
     <style name="botOp2" parent="circleSmallButton">
         <item name="android:textColor">@drawable/vote_bot_op2_text_color</item>
     </style>
+
     <style name="botOp3" parent="circleSmallButton">
         <item name="android:textColor">@drawable/vote_bot_op3_text_color</item>
     </style>
@@ -173,10 +183,12 @@
         <item name="android:background">@drawable/link_button_bg</item>
         <item name="android:padding">0dip</item>
     </style>
+
     <style name="voteLinkButton" parent="linkButton">
         <item name="android:textSize">40sp</item>
         <item name="android:textColor">@drawable/vote_link_button_text_color</item>
     </style>
+
     <style name="linkBlackButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@drawable/black_link_button_text_color</item>
@@ -184,6 +196,7 @@
         <item name="android:background">@drawable/link_button_bg</item>
         <item name="android:padding">0dip</item>
     </style>
+
     <style name="linkWhiteButton" parent="@android:style/Widget.Button">
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@drawable/link_button_white_text_color</item>
@@ -235,6 +248,20 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="BookAppointShowcase" parent="@android:style/Widget.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:background">@drawable/circle_bg_creamywhite</item>
+    </style>
+
+    <style name="BookAppointCollection" parent="@android:style/Widget.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:background">@drawable/circle_bg</item>
+    </style>
+
     <style name="ShowcaseButton.White">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@android:color/black</item>
@@ -276,6 +303,18 @@
         <item name="android:padding">8dp</item>
         <item name="android:scrollHorizontally">true</item>
         <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="CollapsedText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ExpandedText" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">normal</item>
     </style>
 
     <color name="appBGColor">#ffffff</color>

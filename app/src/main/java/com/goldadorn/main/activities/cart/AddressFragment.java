@@ -45,11 +45,11 @@ public class AddressFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAddressesHolder = new AddressesViewHolder((LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
+        mAddressesHolder = new AddressesViewHolder(getActivity(), (LinearLayout) view.findViewById(R.id.container_addresses_payment), mAddressSelectedListener);
         mAddButton = (TextView) view.findViewById(R.id.action_add);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.GONE);
-        mAddButton.setText("Add new shipping address");
+        mAddButton.setText("Add/Update new shipping address");
         mAddButton.setOnClickListener(mClick);
         //getLoaderManager().initLoader(mAddressCallBacks.hashCode(), null, mAddressCallBacks);
         refreshAddr();

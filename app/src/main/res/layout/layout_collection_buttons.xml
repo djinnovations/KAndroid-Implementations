@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:gravity="center_horizontal|bottom"
-              android:paddingTop="56dp"
-              android:layout_weight="1"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:gravity="center_horizontal|bottom"
+    android:orientation="vertical"
+    android:paddingTop="56dp">
 
 
     <LinearLayout
@@ -21,16 +21,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_featured"/>
+            android:src="@drawable/ic_featured"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/badge_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:visibility="gone"
-            android:src="@drawable/ic_trending"/>
+            android:src="@drawable/ic_trending"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -39,41 +39,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@android:color/white"
-        tools:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge"/>
+        tools:text="Large Text" />
+
     <LinearLayout
         android:id="@+id/layout_2"
-        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
-        android:paddingBottom="12dp"
         android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        android:paddingBottom="12dp">
 
         <TextView
             android:id="@+id/collection_owner_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="italic"
             android:fontFamily="sans-serif-light"
-            android:paddingRight="8dp"
             android:gravity="center"
-            tools:text="Small Text"
-            android:textSize="15sp"
+            android:paddingRight="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textSize="15sp"
+            android:textStyle="italic"
+            tools:text="Small Text" />
+
         <ImageView
             android:id="@+id/followButton"
             style="@style/RoundButton"
             android:layout_width="@dimen/circle_button_tiny_height"
             android:layout_height="@dimen/circle_button_tiny_height"
-            android:textSize="12sp"
-            android:src="@drawable/ic_w_follow"/>
+            android:src="@drawable/ic_w_follow"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <TextView
@@ -81,12 +83,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-        android:textSize="12sp"
-        android:paddingRight="8dp"
         android:gravity="center"
+        android:paddingRight="8dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"
-        tools:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textSize="12sp"
+        tools:text="Small Text" />
 
     <TextView
         android:id="@+id/collection_extra_description"
@@ -94,65 +96,122 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif"
         android:gravity="center"
-        android:textSize="13sp"
         android:paddingRight="8dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"
-        tools:text="Small Text"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textSize="13sp"
+        tools:text="Small Text" />
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/layout_3"
-        android:layout_marginBottom="@dimen/tab_height"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/tab_height"
+        android:gravity="center_horizontal">
 
-        <TextView
+        <!--<TextView
             android:id="@+id/likes_count"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:textSize="22sp"
-            android:paddingRight="8dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/lin_buttons"
             android:layout_toStartOf="@+id/lin_buttons"
-            android:textStyle="italic"
+            android:fontFamily="sans-serif-light"
+            android:paddingRight="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/white"
-            tools:text="2012"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:textSize="22sp"
+            android:textStyle="italic"
+            tools:text="2012" />-->
+
 
         <LinearLayout
             android:id="@+id/lin_buttons"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:weightSum="3">
 
-            <ImageView
-                android:id="@+id/likeButton"
-                style="@style/RoundButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginRight="@dimen/padding_default_4x"
-                android:layout_marginTop="@dimen/padding_default_2x"
-                android:layout_marginBottom="@dimen/padding_default_2x"
-                android:src="@drawable/ic_w_like"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/likeButton"
+                    style="@style/RoundButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:src="@drawable/ic_w_like" />
+
+                <TextView
+                    android:id="@+id/likes_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@android:color/white"
+                    android:textStyle="italic|bold"
+                    tools:text="2016" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/btnBookApoint"
+                    style="@style/BookAppointShowcase"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_book_appointment" />
+
+                <TextView
+                    android:id="@+id/appointment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:fontFamily="sans-serif-light"
+                    android:padding="8dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@android:color/white"
+                    android:textStyle="italic|bold"
+                    tools:text="2016" />
+
+            </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/shareButton"
-                style="@style/RoundButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginLeft="@dimen/padding_default_4x"
-                android:layout_marginTop="@dimen/padding_default_2x"
-                android:layout_marginBottom="@dimen/padding_default_2x"
-                android:src="@drawable/ic_w_share"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:id="@+id/shareButton"
+                    style="@style/RoundButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:src="@drawable/ic_w_share" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

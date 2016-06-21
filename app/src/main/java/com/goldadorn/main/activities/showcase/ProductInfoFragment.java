@@ -41,10 +41,10 @@ import butterknife.ButterKnife;
 public class ProductInfoFragment extends Fragment {
 
 
-    public static final String MAKING_CHARGES="makingcharges";
-    public static final String VAT="VAT";
-    public static final String DISCOUNT="Discount";
-    public static final String GRAND_TOTAL="GrandTotal";
+    public static final String MAKING_CHARGES = "makingcharges";
+    public static final String VAT = "VAT";
+    public static final String DISCOUNT = "Discount";
+    public static final String GRAND_TOTAL = "GrandTotal";
 
     @Bind(R.id.product_owner_name)
     TextView mProductOwnerName;
@@ -58,6 +58,16 @@ public class ProductInfoFragment extends Fragment {
     TextView mdescription;
     @Bind(R.id.product_detail_desc)
     TextView mProductDetail;
+    @Bind(R.id.paymentModesAvail_desc)
+    TextView paymentModesAvail_desc;
+    @Bind(R.id.warrantyInfo_desc)
+    TextView warrantyInfo_desc;
+    @Bind(R.id.moneyBackPolicy_desc)
+    TextView moneyBackPolicy_desc;
+    @Bind(R.id.certificateType_desc)
+    TextView certificateType_desc;
+    @Bind(R.id.estimatedDelTime_desc)
+    TextView estimatedDelTime_desc;
 
     @Bind(R.id.container_table)
     LinearLayout mTableContainer;
@@ -65,9 +75,9 @@ public class ProductInfoFragment extends Fragment {
 
     private User mUser;
     private Product mProduct;
-    View mChileview=null;
+    View mChileview = null;
 
-    private float mTotalPrice=0;
+    private float mTotalPrice = 0;
 
     ProductActivity mProductActivity;
 
@@ -80,6 +90,20 @@ public class ProductInfoFragment extends Fragment {
         mUser = mProductActivity.mUser;
         return inflater.inflate(R.layout.fragment_product_info, container, false);
     }
+
+
+    public void setAllDescription(ArrayList<String> listOfDescription) {
+        if (listOfDescription == null)
+            return;
+        if (listOfDescription.size() < 5)
+            return;
+        warrantyInfo_desc.setText(listOfDescription.get(0) == null ? "" : listOfDescription.get(0));
+        moneyBackPolicy_desc.setText(listOfDescription.get(1) == null ? "" : listOfDescription.get(1));
+        certificateType_desc.setText(listOfDescription.get(2) == null ? "" : listOfDescription.get(2));
+        estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3) + " days");
+        paymentModesAvail_desc.setText(listOfDescription.get(4) == null ? "" : listOfDescription.get(4));
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -136,17 +160,16 @@ public class ProductInfoFragment extends Fragment {
             bindProductInfo(mProductActivity.mProductInfo);
 
         }
-
-
-
         //mdescription.setText(mProduct.description);
 
     }
 
     private final int TYPE_GOLD = 8123;
+
     @SuppressLint("StringFormatInvalid")
     public void bindProductInfo(ProductInfo summary) {
         if (summary != null) {
+            setAllDescription(summary.new5details);
             mProductDetail.setText(getString(R.string.product_desc, summary.code,
                     summary.getDisplayHeight(), summary.getDisplayWidth(),
                     summary.getDisplayWeight()));
@@ -156,7 +179,8 @@ public class ProductInfoFragment extends Fragment {
                 mTableContainer.setVisibility(View.GONE);//rows = new ArrayList<>();//change
            /* if (rows.size() == 0) {
                 mTableContainer.setVisibility(View.GONE);
-            }*/ else {
+            }*/
+            else {
                 mTableContainer.setVisibility(View.VISIBLE);
                 //StoneDetail t = rows.get(0);
                 TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
@@ -181,12 +205,12 @@ public class ProductInfoFragment extends Fragment {
                 childPos++;
 
                 StoneDetail details = new StoneDetail();
-                details.color=summary.metalType;
-                details.clarity=summary.metalPurity+""+summary.metalPurityInUnits;
+                details.color = summary.metalType;
+                details.clarity = summary.metalPurity + "" + summary.metalPurityInUnits;
                 details.number = /*-1*/TYPE_GOLD;
-                details.metalWeightUnits=summary.metalWeightUnits;
-                details.price= summary.metalrate;
-                details.weight=summary.metalWeight;
+                details.metalWeightUnits = summary.metalWeightUnits;
+                details.price = summary.metalrate;
+                details.weight = summary.metalWeight;
                 View mGoldDetails = getRowView(details, mChileview, mTableContainer);
                 mTableContainer.addView(mGoldDetails);
                 childPos++;
@@ -255,23 +279,23 @@ public class ProductInfoFragment extends Fragment {
             holder.setTextColor(grey);
             holder.setTextSize(getResources().getDimensionPixelSize(R.dimen.ts_secondary));
             StoneDetail detail = (StoneDetail) obj;
-            if(detail.number == TYPE_GOLD){
+            if (detail.number == TYPE_GOLD) {
                 //for gold
-                holder.component.setText(detail.color+" - "+detail.clarity);
-                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+"/"+/*detail.metalWeightUnits*/"gm");//changed djphy
-                holder.weight.setText(" " + detail.weight+ " "+ /*detail.metalWeightUnits*/"gm");
-            }else {
+                holder.component.setText(detail.color + " - " + detail.clarity);
+                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true) + "/" +/*detail.metalWeightUnits*/"gm");//changed djphy
+                holder.weight.setText(" " + detail.weight + " " + /*detail.metalWeightUnits*/"gm");
+            } else {
                 //for gstone
                 holder.component.setText(detail.color + "-" + detail.clarity + " : " + detail.number + " nos.");
-                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true)+ "/"+/*detail.weightunit*/"ct");//djphy
-                holder.weight.setText(" " + detail.weight+ " "+ /*detail.weightunit*/"ct");//changed djphy
+                holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true) + "/" +/*detail.weightunit*/"ct");//djphy
+                holder.weight.setText(" " + detail.weight + " " + /*detail.weightunit*/"ct");//changed djphy
             }
 
             ;//changed djphy
-            float mValue= detail.price * detail.weight;
+            float mValue = detail.price * detail.weight;
             holder.price.setText(" " + /*Math.round(mValue)*/ RandomUtils.getIndianCurrencyFormat(mValue, true));
-            holder.offer_price.setText(" " + ((int)mValue));
-            mTotalPrice=mTotalPrice+Math.round(mValue);
+            holder.offer_price.setText(" " + ((int) mValue));
+            mTotalPrice = mTotalPrice + Math.round(mValue);
 
            /* holder.rate.setText(detail.rateunit + " " + detail.price);
             holder.weight.setText(detail.weightunit + " " + detail.weight);
@@ -292,7 +316,7 @@ public class ProductInfoFragment extends Fragment {
     }
 
 
-    private View makingVatTotal(String mType,View convertView, LinearLayout parent){
+    private View makingVatTotal(String mType, View convertView, LinearLayout parent) {
         TableRowHolder holder = null;
         if (convertView == null) {
             LayoutInflater mInflater = LayoutInflater.from(getContext());
@@ -303,26 +327,26 @@ public class ProductInfoFragment extends Fragment {
             holder = (TableRowHolder) convertView.getTag();
         }
         holder.itemView.setBackgroundColor(Color.WHITE);
-        if(mType.equalsIgnoreCase(MAKING_CHARGES)){
+        if (mType.equalsIgnoreCase(MAKING_CHARGES)) {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
-            mTotalPrice=mTotalPrice+(int)(mProductActivity.mProductInfo.productmaking_charges*mProductActivity.mProductInfo.weight);
+            mTotalPrice = mTotalPrice + (int) (mProductActivity.mProductInfo.productmaking_charges * mProductActivity.mProductInfo.weight);
             holder.component.setText("Making \nCharges");
             holder.rate.setText("");
             holder.weight.setText(" ");
-            float makingChanges=Math.round(mProductActivity.mProductInfo.productmaking_charges*mProductActivity.mProductInfo.weight);
+            float makingChanges = Math.round(mProductActivity.mProductInfo.productmaking_charges * mProductActivity.mProductInfo.weight);
             holder.price.setText(/*" "+(int)makingChanges*/ RandomUtils.getIndianCurrencyFormat(makingChanges, true));
-            holder.offer_price.setText(" " +(int)makingChanges);
-        }else if(mType.equalsIgnoreCase(VAT)){
+            holder.offer_price.setText(" " + (int) makingChanges);
+        } else if (mType.equalsIgnoreCase(VAT)) {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
-            Log.e("iii--",mTotalPrice+"");
+            Log.e("iii--", mTotalPrice + "");
             double mVat;
             try {
                 double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
-                mVat = displayPrice - (displayPrice/1.01);
+                mVat = displayPrice - (displayPrice / 1.01);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 mVat = 0.0;
@@ -334,20 +358,20 @@ public class ProductInfoFragment extends Fragment {
             holder.weight.setText(" ");
             holder.price.setText(/*" "+String.valueOf(((int)mVat))*/ RandomUtils.getIndianCurrencyFormat(mVat, true));
             holder.offer_price.setVisibility(View.GONE);
-            holder.offer_price.setText(" " + String.valueOf(((int)mVat)));
-        }else if(mType.equalsIgnoreCase(DISCOUNT)){
+            holder.offer_price.setText(" " + String.valueOf(((int) mVat)));
+        } else if (mType.equalsIgnoreCase(DISCOUNT)) {
             holder.component.setTextColor(getResources().getColor(R.color.red));
             holder.component.setTypeface(null, Typeface.BOLD);
             holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
             holder.offer_price.setTypeface(null, Typeface.BOLD);
 
-            holder.component.setText(DISCOUNT+" \n0%");
+            holder.component.setText(DISCOUNT + " \n0%");
             holder.rate.setText("");
             holder.weight.setText(" ");
             holder.price.setText(" ");
             holder.offer_price.setVisibility(View.VISIBLE);
-            holder.offer_price.setText(" 0" );
-        }else{
+            holder.offer_price.setText(" 0");
+        } else {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             holder.component.setTypeface(null, Typeface.BOLD);
             holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
@@ -360,7 +384,7 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setVisibility(View.GONE);
             holder.offer_price.setVisibility(View.VISIBLE);
             String displayPrice = ((ProductActivity) getActivity()).getProductDisplayPrice();
-            holder.offer_price.setText(" "+ RandomUtils.getIndianCurrencyFormat(displayPrice, true)+"/-");
+            holder.offer_price.setText(" " + RandomUtils.getIndianCurrencyFormat(displayPrice, true) + "/-");
         }
 
         return holder.itemView;
@@ -406,10 +430,10 @@ public class ProductInfoFragment extends Fragment {
         }
     }
 
-    public void mFollower(){
+    public void mFollower() {
 
         if (mProductActivity.mUser != null) {
-            mUser=mProductActivity.mUser;
+            mUser = mProductActivity.mUser;
             followButton.setSelected(mUser.isFollowed);
         } else {
 

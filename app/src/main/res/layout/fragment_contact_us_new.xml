@@ -2,59 +2,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingBottom="20dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="80dp">
+    android:paddingTop="40dp">
 
-    <EditText
-        android:id="@+id/etName"
-        style="@style/FormEditText"
-        android:layout_height="40dp"
-        android:hint="Name"
-        android:inputType="textPersonName"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        style="@style/FormEditText"
-        android:layout_height="40dp"
-        android:layout_marginTop="12dp"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/etMsgBody"
-        style="@style/FormEditText"
-        android:layout_height="140dp"
-        android:layout_marginTop="12dp"
-        android:gravity="top|left"
-        android:hint="Message"
-        android:inputType="textAutoCorrect|textMultiLine|textShortMessage"
-        android:textSize="16sp" />
-
-
-    <CheckBox
-        android:id="@+id/cbEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Send a copy to my email address" />
-
-    <Button
-        android:id="@+id/btnSend"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginTop="16dp"
-        android:text="Send"
-        android:textSize="16sp" />
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="You can also reach out to us anytime on\nphone: 96101-39500 or via mail to-\nB201, Jheel CHS, A.S. Marg, Rambaug, Powai, Mumbai-400076 "
-        android:textSize="12.5sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/etName"
+                style="@style/FormEditText"
+                android:layout_height="40dp"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                style="@style/FormEditText"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/etMsgBody"
+                style="@style/FormEditText"
+                android:layout_height="140dp"
+                android:layout_marginTop="12dp"
+                android:gravity="top|left"
+                android:hint="Message"
+                android:inputType="textAutoCorrect|textMultiLine|textShortMessage"
+                android:textSize="16sp" />
+
+
+            <CheckBox
+                android:id="@+id/cbEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Send a copy to my email address" />
+
+            <Button
+                android:id="@+id/btnSend"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="16dp"
+                android:text="Send"
+                android:textSize="16sp" />
+
+            <com.rey.material.widget.ProgressView
+                android:id="@+id/progressBar"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                app:pv_autostart="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                app:pv_circular="true"
+                app:pv_progressMode="indeterminate"
+                app:pv_progressStyle="@style/Theme.AppCompat.NoActionBar"
+                tools:visibility="invisible" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="You can also reach out to us anytime on\nphone: 96101-39500 or via mail to-\nB201, Jheel CHS, A.S. Marg, Rambaug, Powai, Mumbai-400076 "
+                android:textSize="12.5sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
 </LinearLayout>

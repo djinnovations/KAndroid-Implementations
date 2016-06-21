@@ -56,6 +56,11 @@ public class WindowUtils {
     }
 
 
+    public void genericInfoMsg(Activity activity, String title, String infoMsg, int colorInfoMsg){
+        mViewConstructor.displayInfo(activity, title, infoMsg, colorInfoMsg);
+    }
+
+
     public static float dialogDimAmount = 0.3f;
 
     public Dialog displayDialogNoTitle(Context activityContext, View layout/*, String title*/) {
@@ -118,7 +123,9 @@ public class WindowUtils {
             tvTemp.setTextColor(ResourceReader.getInstance(appContext)
                     .getColorFromResource(colorResId));
         } else tvTemp.setVisibility(View.GONE);
-        setGravity(((ProgressView) overLay.findViewById(R.id.progressBar)), customGravity);
+        if (!justPlainOverLay){
+            setGravity(((ProgressView) overLay.findViewById(R.id.progressBar)), customGravity);
+        }else (overLay.findViewById(R.id.progressBar)).setVisibility(View.GONE);
         dialog.setContentView(overLay);
         dialog.setCancelable(false);
 
@@ -127,7 +134,7 @@ public class WindowUtils {
         return dialog;
     }
 
-
+    public static boolean justPlainOverLay = false;
     public static int marginForProgressViewInGrid = 5;
 
     private void setGravity(ProgressView proView, int gravity) {

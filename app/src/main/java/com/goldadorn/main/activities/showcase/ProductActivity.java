@@ -34,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -41,11 +43,13 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
@@ -59,8 +63,15 @@ import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -124,17 +135,18 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     private Dialog overLayDialog;
-    private void showOverLay(String text, int colorResId){
+
+    private void showOverLay(String text, int colorResId) {
         //if (overLayDialog == null){
-            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
-                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         //}
         overLayDialog.show();
     }
 
-    private void dismissOverLay(){
-        if (overLayDialog!=null){
-            if (overLayDialog.isShowing()){
+    private void dismissOverLay() {
+        if (overLayDialog != null) {
+            if (overLayDialog.isShowing()) {
                 overLayDialog.dismiss();
             }
         }
@@ -182,7 +194,6 @@ public class ProductActivity extends BaseDrawerActivity {
         mStartHeight = (int) (.8f * dm.heightPixels);
         mCollapsedHeight = (int) (.4f * dm.heightPixels);
 
-
         mOverlayVH.pager.setAdapter(
                 mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), data));
         mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
@@ -229,6 +240,8 @@ public class ProductActivity extends BaseDrawerActivity {
 
         bindOverlay();
 
+        //get5NewProductDescFromServer();
+
         ProductResponse response = new ProductResponse();
         response.productId = mProduct.id;
         response.product = mProduct;
@@ -260,12 +273,24 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         });
         configureUI(UISTATE_CUSTOMIZE);
+
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                get5NewProductDescFromServer();
+            }
+        }, 3000);*/
+
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
 
         tourThisScreen();
     }
 
+
+    public ArrayList<String> getDescriptions() {
+        return list;
+    }
 
     @Bind(R.id.transViewProducts)
     View transViewProducts;
@@ -298,15 +323,14 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-
     private void bindOverlay() {
         mOverlayVH.like.setSelected(mProduct.isLiked);
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
-        Log.d(Constants.TAG, "user ID: "+mProduct.userId);
+        Log.d(Constants.TAG, "user ID: " + mProduct.userId);
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
-        Log.e("iiii--",mUser.id+"--"+mUser.isFollowed+"---"+mUser.followers_cnt);
+        Log.e("iiii--", mUser.id + "--" + mUser.isFollowed + "---" + mUser.followers_cnt);
         if (mUser != null) {
             mOverlayVH.mProductOwner.setText("By " + mUser.getName());
             mOverlayVH.followButton.setTag(mUser);
@@ -346,7 +370,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-    public String getProductDisplayPrice(){
+    public String getProductDisplayPrice() {
         return mProduct.getDisplayPrice();
     }
 
@@ -379,7 +403,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, f, "" + uiState);
             fragmentTransaction.commit();
-        }else{
+        } else {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, mProInfoFragment, "" + uiState);
@@ -406,7 +430,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         //cartBtn.setEnabled(false);
         showOverLay("Adding to cart..", R.color.colorPrimary);
-        UIController.addToCartNewProduct(mContext, mProduct,mProductInfo,mProductOptions,
+        UIController.addToCartNewProduct(mContext, mProduct, mProductInfo, mProductOptions,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
@@ -417,7 +441,7 @@ public class ProductActivity extends BaseDrawerActivity {
                        /* Toast.makeText(mContext,
                                 result.success ? "Added to cart successfully!" :
                                         "Adding to cart failed.", Toast.LENGTH_LONG).show();*/
-                        if (result.success){
+                        if (result.success) {
                             confirmedToCart(cartBtn);
                         }
                     }
@@ -425,7 +449,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-    private void confirmedToCart(final View cartBtn){
+    private void confirmedToCart(final View cartBtn) {
         /*Log.d("iii","product id that was pushed to cart: "+mProduct.id);
         ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
@@ -488,6 +512,22 @@ public class ProductActivity extends BaseDrawerActivity {
 
     }
 
+    public void displayBookAppointment() {
+
+        Intent intent = new Intent(this, BookAppointment.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
+        /*if (mMode == MODE_COLLECTION) {
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
+        }*/
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final AppBarLayout appBarLayout;
@@ -504,6 +544,9 @@ public class ProductActivity extends BaseDrawerActivity {
         ImageView shareButton;
         @Bind(R.id.buyNoBuyButton)
         ImageView buyNoBuyButton;
+        @Bind(R.id.btnBookApoint)
+        IconicsButton btnBookApoint;
+
         @Bind(R.id.wishlistButton)
         ImageView wishlistButton;
 
@@ -552,7 +595,7 @@ public class ProductActivity extends BaseDrawerActivity {
             shareButton.setOnClickListener(this);
             buyNoBuyButton.setOnClickListener(this);
             wishlistButton.setOnClickListener(this);
-
+            btnBookApoint.setOnClickListener(this);
             like.setOnClickListener(this);
             cartButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
@@ -603,25 +646,27 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductCost.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
+            } else if (v.getId() == R.id.btnBookApoint) {
+                displayBookAppointment();
             } else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
-                Log.d("djprod","isliked val: "+isLiked);
+                Log.d("djprod", "isliked val: " + isLiked);
                 UIController.like(v.getContext(), mProduct, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
                                 v.setEnabled(true);
-                                Log.d("djprod","isliked val: "+v.isSelected());
+                                Log.d("djprod", "isliked val: " + v.isSelected());
                                 v.setSelected(result.success != isLiked);
-                                if(isLiked){
-                                    Log.d("djprod","isliked - true");
-                                    mProduct.likecount=mProduct.likecount-1;
+                                if (isLiked) {
+                                    Log.d("djprod", "isliked - true");
+                                    mProduct.likecount = mProduct.likecount - 1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
                                     // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
-                                }else{
-                                    Log.d("djprod","isliked - false");
-                                    mProduct.likecount=mProduct.likecount+1;
+                                } else {
+                                    Log.d("djprod", "isliked - false");
+                                    mProduct.likecount = mProduct.likecount + 1;
                                     mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
                                     //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
                                 }
@@ -636,7 +681,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                        Toast.makeText(mContext, mProduct.name+" Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mProduct.name + " Successfully Added To Wishlist", Toast.LENGTH_SHORT).show();
                     }
                 });
             } else if (v == cartButton) {
@@ -653,20 +698,109 @@ public class ProductActivity extends BaseDrawerActivity {
                                 v.setSelected(result.success != isFollowing);
                                 if (isFollowing) {
                                     mUser.followers_cnt = mUser.followers_cnt - 1;
-                                    mUser.isFollowed=false;
+                                    mUser.isFollowed = false;
                                     //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
                                 } else {
                                     mUser.followers_cnt = mUser.followers_cnt + 1;
-                                    mUser.isFollowed=true;
+                                    mUser.isFollowed = true;
                                     //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
                                 }
-                                if(mProInfoFragment!=null){
+                                if (mProInfoFragment != null) {
                                     mProInfoFragment.mFollower();
                                 }
                             }
                         });
             }
         }
+    }
+
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId) {
+        return getAjaxCallback(requestId);
+    }
+
+    public AQuery getAQueryCustom() {
+        return getAQuery();
+    }
+
+    private final int DESC_CALL = IDUtils.generateViewId();
+
+    private void get5NewProductDescFromServer() {
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(DESC_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQueryCustom().ajax((ApiKeys.getDesc5NewAPI() + mProduct.id), String.class, ajaxCallback);
+    }
+
+
+    ArrayList<String> list;
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+
+        Log.d("djprod", "url queried- ProductActivity: " + url);
+        Log.d("djprod", "response- ProductActivity: " + json);
+        if (id == DESC_CALL) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mTabLayout, this);
+            if (json == null)
+                return;
+            if (success) {
+                list = new ArrayList<>();
+                try {
+                    JSONObject jsonObj = new JSONObject(json.toString());
+                    if (!jsonObj.isNull("productWarranty")) {
+                        try {
+                            list.add(jsonObj.getString("productWarranty"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add(null);
+                        }
+                    }
+                    if (!jsonObj.isNull("productMBP")) {
+                        try {
+                            list.add(jsonObj.getString("productMBP"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add(null);
+                        }
+                    }
+                    if (!jsonObj.isNull("productCert")) {
+                        try {
+                            list.add(jsonObj.getString("productCert"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add(null);
+                        }
+                    }
+                    if (!jsonObj.isNull("productEDTInDays")) {
+                        try {
+                            list.add(jsonObj.getString("productEDTInDays"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add(null);
+                        }
+                    }
+                    if (!jsonObj.isNull("productPayModes")) {
+                        try {
+                            JSONArray jsonArr = jsonObj.getJSONArray("productPayModes");
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < jsonArr.length(); i++) {
+                                sb = sb.append(jsonArr.getString(i) + "\n");
+                            }
+                            list.add(sb.toString());
+                            Log.d("djprod", "payment modes - serverCallEnds: " + sb.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            list.add(null);
+                        }
+                    }
+                    /*ProductInfoFragment pif = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                    pif.setAllDescription(list);*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else super.serverCallEnds(id, url, json, status);
     }
 
     private class CollectionCallBack implements
@@ -724,7 +858,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
-    public void mFollower(){
+    public void mFollower() {
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         if (mUser != null) {
             mOverlayVH.followButton.setTag(mUser);

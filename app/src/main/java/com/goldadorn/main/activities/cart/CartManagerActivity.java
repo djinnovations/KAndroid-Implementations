@@ -116,6 +116,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     public void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
+                WindowUtils.marginForProgressViewInGrid = 5;
                 overLayDialog.dismiss();
             }
         }
@@ -168,7 +169,8 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
 
     private void updatePaymentStatToServer(Map<String, Object> params) {
         Log.d("djcart", "req param - updatePaymentStatToServer: " + params);
-        showOverLay("Processing...", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        WindowUtils.marginForProgressViewInGrid = 20;
+        showOverLay("Processing...", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(NOTIFY_PAYMENT_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         //ajaxCallback.params(params);
@@ -456,7 +458,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             JSONObject params = new JSONObject();
             try {
                 params.put("userID", getApp().getUser().id);
-                params.put("status", Integer.valueOf(2));
+                params.put("status", /*Integer.valueOf(2)*/"pass");
                 JSONArray transIds = new JSONArray();
                 int i = 0;
                 for (Product prod : mCartItems) {

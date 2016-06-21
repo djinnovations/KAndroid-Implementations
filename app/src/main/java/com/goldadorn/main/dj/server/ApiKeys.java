@@ -46,6 +46,15 @@ public class ApiKeys {
         return BuildConfig.END_POINT_COMERCIAL + VERB.UPDATE_PAYMENT_API;
     }
 
+    @Deprecated
+    public static final String getDesc5NewAPI(){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.NEW5_DESC_API + "/" ;
+    }
+
+    public static final String getAppointmentAPI(){
+        return BuildConfig.END_POINT + VERB.BOOK_APPOINTMENT_API;
+    }
+
     private static final class VERB{
 
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
@@ -53,5 +62,7 @@ public class ApiKeys {
         private static final String CONTACT_US_API = "contactus";
         private static final String UPDATE_NOTIFICATION_COUNT = "updatenotification";
         private static final String UPDATE_PAYMENT_API = "notifypaymentstatus";
+        private static final String NEW5_DESC_API = "getproductbasicinfo";
+        private static final String BOOK_APPOINTMENT_API = "bookappointment";
     }
 }

@@ -278,6 +278,10 @@
         <activity
             android:name=".activities.NotificationPostActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.showcase.BookAppointment"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

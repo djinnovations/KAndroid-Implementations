@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.cart;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,13 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
     public final LinearLayout container;
     private ArrayList<AddressHolder> productsVh = new ArrayList<>(5);
     IResultListener<Address> resultListener;
+    private final Activity cartActivity;
 
-    public AddressesViewHolder(LinearLayout itemView, IResultListener<Address> resultListener) {
+    public AddressesViewHolder(Activity cartActivity, LinearLayout itemView, IResultListener<Address> resultListener) {
         super(itemView);
         container = itemView;
         this.resultListener = resultListener;
+        this.cartActivity = cartActivity;
     }
 
     private AddressHolder createItem(Address address) {
@@ -81,7 +84,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
         itemView.setVisibility(visibility);
     }
 
-    static class AddressHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class AddressHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView name, detailedAddress;
         public final CheckBox checkBox;
         public final ImageView actionEdit;
@@ -112,7 +115,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onClick(View v) {
-            ((CartManagerActivity) v.getContext()).showAddAddress(address);
+            ((CartManagerActivity) cartActivity).showAddAddress(address);
         }
     }
 }

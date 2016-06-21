@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.webView.ApplicationDefaultWebView;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.fragments.BaseFragment;
+import com.rey.material.widget.ProgressView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +35,10 @@ import butterknife.ButterKnife;
 
 public class WebActivity extends BaseActivity {
 
+    private static final String TAG_CONTACT_US = "goladorn.ContactUs";
     @Bind(R.id.mainHolder)
     FrameLayout mainHolder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +72,8 @@ public class WebActivity extends BaseActivity {
 
         if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
                 .getStringFromResource(R.string.contactUs))) {
-            fragmentManager.beginTransaction().replace(mainHolder.getId(), new ContactUsFragment()).commit();
-        }
-        else {
+            fragmentManager.beginTransaction().replace(mainHolder.getId(), new ContactUsFragment(), TAG_CONTACT_US).commit();
+        } else {
             BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
             fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
         }
@@ -106,8 +109,11 @@ public class WebActivity extends BaseActivity {
 
     private final int CONTACT_US_CALL = IDUtils.generateViewId();
 
-    public void sendContactUsInfoToServer(Map<String, String> params) {
-        showOverLay("Sending", R.color.colorPrimaryDark);
+    private ProgressView pgView;
+
+    public void sendContactUsInfoToServer(Map<String, String> params, ProgressView progressBar) {
+        pgView = progressBar;
+        showOverLay(null, R.color.colorPrimaryDark);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(CONTACT_US_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         getAQueryCustom().ajax(ApiKeys.getContactUsAPI(), params, String.class, ajaxCallback);
@@ -116,16 +122,28 @@ public class WebActivity extends BaseActivity {
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
 
-        Log.d("djcart", "url queried- WebActivity: " + url);
-        Log.d("djcart", "response- WebActivity: " + json);
+        Log.d("djweb", "url queried- WebActivity: " + url);
+        Log.d("djweb", "response- WebActivity: " + json);
         dismissOverLay();
         if (id == CONTACT_US_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mainHolder, this);
-            if (success){
-                Toast.makeText(getApplicationContext(), "Your message has been sent", Toast.LENGTH_SHORT).show();
+            if (success) {
+                if (json == null) {
+                    showDialogInfo("Your message could not be delivered", false);
+                    return;
+                }
+                try {
+                    ((ContactUsFragment) getSupportFragmentManager().findFragmentByTag(TAG_CONTACT_US)).clearForm();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                showDialogInfo("Your message has been sent", true);
+                //Toast.makeText(getApplicationContext(), "Your message has been sent", Toast.LENGTH_SHORT).show();
+            } else{
+                showDialogInfo("Your message could not be delivered", false);
             }
-            else Toast.makeText(getApplicationContext(), "Sending failed", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Sending failed", Toast.LENGTH_SHORT).show();
         } else super.serverCallEnds(id, url, json, status);
     }
 
@@ -134,6 +152,9 @@ public class WebActivity extends BaseActivity {
 
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
+            // WindowUtils.marginForProgressViewInGrid = 6;
+            WindowUtils.justPlainOverLay = true;
+            pgView.setVisibility(View.VISIBLE);
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         }
@@ -142,9 +163,19 @@ public class WebActivity extends BaseActivity {
 
     private void dismissOverLay() {
         if (overLayDialog != null) {
+            //WindowUtils.marginForProgressViewInGrid = 5;
             if (overLayDialog.isShowing()) {
+                WindowUtils.justPlainOverLay = false;
+                pgView.setVisibility(View.INVISIBLE);
                 overLayDialog.dismiss();
             }
         }
+    }
+
+
+    private void showDialogInfo(String msg, boolean isPositive){
+        int color ;
+        color = isPositive ? R.color.colorPrimary : R.color.Red;
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsg(this, null, msg, color);
     }
 }

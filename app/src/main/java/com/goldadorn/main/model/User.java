@@ -19,7 +19,7 @@ public class User implements Serializable {
     public String name, imageUrl, description;
     public boolean featured, trending;
     public final int type;
-    public int likes_cnt, followers_cnt, following_cnt, collections_cnt, products_cnt;
+    public int /*likes_cnt,*/ followers_cnt, following_cnt, collections_cnt, products_cnt, numAppts;
     public long dataVersion;
     public boolean isLiked,isFollowed;
 
@@ -57,7 +57,9 @@ public class User implements Serializable {
         info.name = cursor.getString(cursor.getColumnIndex(Users.NAME));
         info.description = cursor.getString(cursor.getColumnIndex(Users.DESCRIPTION));
         info.imageUrl = cursor.getString(cursor.getColumnIndex(Users.IMAGEURL));
-        info.likes_cnt = cursor.getInt(cursor.getColumnIndex(Users.COUNT_LIKES));
+        //info.likes_cnt = cursor.getInt(cursor.getColumnIndex(Users.COUNT_LIKES));
+        info.numAppts = cursor.getInt(cursor.getColumnIndex(Users.COUNT_BOOKAPPOINT));
+
         info.followers_cnt = cursor.getInt(cursor.getColumnIndex(Users.COUNT_FOLLOWERS));
         info.following_cnt = cursor.getInt(cursor.getColumnIndex(Users.COUNT_FOLLOWING));
         info.collections_cnt = cursor.getInt(cursor.getColumnIndex(Users.COUNT_COLLECTIONS));

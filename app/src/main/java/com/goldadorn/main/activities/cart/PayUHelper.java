@@ -171,7 +171,7 @@ import java.util.Iterator;
         checksum.setAmount(mPaymentParams.getAmount());
         checksum.setKey(mPaymentParams.getKey());
         checksum.setTxnid(mPaymentParams.getTxnId());
-        checksum.setEmail(mPaymentParams.getEmail());
+        checksum.setEmail(mPaymentParams.getEmail()); //here
         checksum.setSalt(salt);
         checksum.setProductinfo(mPaymentParams.getProductInfo());
         checksum.setFirstname(mPaymentParams.getFirstName());
@@ -227,7 +227,7 @@ import java.util.Iterator;
         }
 
         // we have generated all the hases now lest launch sdk's ui
-        onBundleReady(payuHashes);
+        onBundleReady(payuHashes); //
     }
 
     // deprecated, should be used only for testing.

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +26,7 @@ public class ViewConstructor {
 
     private static ViewConstructor thisInstance;
 
-    public static interface InfoDisplayListener{
+    public static interface InfoDisplayListener {
 
         public void onPositiveSelection(DialogInterface alertDialog);
     }
@@ -44,9 +46,9 @@ public class ViewConstructor {
     }
 
 
-    public static ViewConstructor getInstance(Context appContext){
+    public static ViewConstructor getInstance(Context appContext) {
 
-        if (thisInstance == null){
+        if (thisInstance == null) {
             thisInstance = new ViewConstructor(appContext);
         }
         return thisInstance;
@@ -54,7 +56,7 @@ public class ViewConstructor {
 
 
     public AlertDialog displayInfo(Activity activity, String title, String infoMsg, String positiveBtnText,
-                                   String negativeBtnText, boolean showTwoOptions, final InfoDisplayListener mInfoListener){
+                                   String negativeBtnText, boolean showTwoOptions, final InfoDisplayListener mInfoListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setMessage(infoMsg).setPositiveButton(positiveBtnText,
@@ -66,7 +68,7 @@ public class ViewConstructor {
                     }
                 }).setTitle(title);
 
-        if(showTwoOptions){
+        if (showTwoOptions) {
             builder.setNegativeButton(negativeBtnText, new DialogInterface.OnClickListener() {
 
                 @Override
@@ -86,10 +88,10 @@ public class ViewConstructor {
         btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
         btnPositive.setAllCaps(false);
-        if(showTwoOptions){
+        if (showTwoOptions) {
 
             Button btnNegative = (alert.getButton(DialogInterface.BUTTON_NEGATIVE));
-            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell*2.2f);
+            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
             btnNegative.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
             btnNegative.setAllCaps(false);
         }
@@ -100,15 +102,54 @@ public class ViewConstructor {
         return alert;
     }
 
+    public AlertDialog displayInfo(Activity activity, String title, String infoMsg, int infoMsgColor) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setMessage(infoMsg).setPositiveButton("Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        if (!TextUtils.isEmpty(title))
+            builder.setTitle(title);
 
+        /*if(showTwoOptions){
+            builder.setNegativeButton(negativeBtnText, new DialogInterface.OnClickListener() {
 
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setCancelable(false);
+        }*/
 
+        AlertDialog alert = builder.create();
+        alert.getWindow().getAttributes().windowAnimations = R.style.AlertDialogAnimHelp;
+        alert.show();
 
+        Button btnPositive = (alert.getButton(DialogInterface.BUTTON_POSITIVE));
+        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
+        btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
+        btnPositive.setAllCaps(false);
+        /*if(showTwoOptions){
+            Button btnNegative = (alert.getButton(DialogInterface.BUTTON_NEGATIVE));
+            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell*2.2f);
+            btnNegative.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
+            btnNegative.setAllCaps(false);
+        }*/
 
+        TextView tvMsg = ((TextView) alert.findViewById(android.R.id.message));
+        tvMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.7f);
+        tvMsg.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
+
+        return alert;
+    }
 
 
     public AlertDialog displayViewInfo(Activity activity, String title, int viewResId, String positiveBtnText, boolean showTwoOptions,
-                                                          final InfoDisplayListener mInfoListener){
+                                       final InfoDisplayListener mInfoListener) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setView(viewResId).setPositiveButton(positiveBtnText,
@@ -121,7 +162,7 @@ public class ViewConstructor {
                     }
                 }).setCancelable(false).setTitle(title);
 
-        if(showTwoOptions){
+        if (showTwoOptions) {
 
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
@@ -142,10 +183,10 @@ public class ViewConstructor {
         btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2);
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
 
-        if(showTwoOptions){
+        if (showTwoOptions) {
 
             Button btnNegative = (alert.getButton(DialogInterface.BUTTON_NEGATIVE));
-            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell*2);
+            btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2);
             btnNegative.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
         }
 
@@ -156,24 +197,26 @@ public class ViewConstructor {
     }
 
 
-    public interface DialogButtonClickListener{
+    public interface DialogButtonClickListener {
 
         void onPositiveBtnClicked(Dialog dialog, View btn);
+
         void onNegativeBtnClicked(Dialog dialog, View btn);
     }
 
 
-    public Dialog displayDialog(Activity activity, int layoutResId, String title, String bodyMsg,String positiveBtnText,
-                                String negativeBtnText, final DialogButtonClickListener listener){
+    public Dialog displayDialog(Activity activity, int layoutResId, String title, String bodyMsg, String positiveBtnText,
+                                String negativeBtnText, final DialogButtonClickListener listener) {
 
-        final Dialog dialog = new Dialog(activity);dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         View tempView = LayoutInflater.from(appContext).inflate(R.layout.dialog_cart_new, null);
         WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
         tempParams.copyFrom(dialog.getWindow().getAttributes());
 
 		/*tempParams.width = dialogWidthInPx;
-		tempParams.height = dialogHeightInPx;*/
+        tempParams.height = dialogHeightInPx;*/
         tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         tempParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
@@ -200,6 +243,7 @@ public class ViewConstructor {
         });
         dialog.setCancelable(false);
         dialog.getWindow().setAttributes(tempParams);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         //dialog.getWindow().setBackgroundDrawableResource(android.R.drawable.editbox_dropdown_dark_frame);
 /*		if(keyPadOnTop)
 			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);*/

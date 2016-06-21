@@ -31,6 +31,7 @@ import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
 import com.payu.india.Interfaces.PaymentRelatedDetailsListener;
 import com.payu.india.Model.MerchantWebService;
+import com.payu.india.Model.PaymentDetails;
 import com.payu.india.Model.PaymentParams;
 import com.payu.india.Model.PayuConfig;
 import com.payu.india.Model.PayuHashes;
@@ -98,13 +99,13 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         mPayUHelper = new PayUHelper(getActivity(), mCartData.getBillableAmount(), new IResultListener<Bundle>() {
             @Override
             public void onResult(Bundle bundle) {
-                Log.d("djcart", "onResult - PayUHelper");
                 mPayuBundle = bundle;
                 Parcelable p = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
                 mPayuConfig = p != null && p instanceof PayuConfig ? (PayuConfig) p : new PayuConfig();
                 mPaymentParams = bundle.getParcelable(PayuConstants.PAYMENT_PARAMS); // Todo change the name to PAYMENT_PARAMS
                 mPayUHashes = bundle.getParcelable(PayuConstants.PAYU_HASHES);
-                Log.d("djpayu","mPayUHashes: "+mPayUHashes);
+                Log.d("djpayu", "payment hash: " + mPayUHashes.getPaymentHash());
+                Log.d("djpayu", "PaymentRelatedDetailsForMobileSdkHash: " + mPayUHashes.getPaymentRelatedDetailsForMobileSdkHash());
                 if (savedInstanceState == null) { // dont fetch the data if its been called from payment activity.
                     MerchantWebService merchantWebService = new MerchantWebService();
                     merchantWebService.setKey(mPaymentParams.getKey());
@@ -116,7 +117,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     if (postData.getCode() == PayuErrors.NO_ERROR) {
                         // ok we got the post params, let make an api call to payu to fetch the payment related details
                         mPayuConfig.setData(postData.getResult());
-
+                        Log.d("djpay", "merchant web service call");
                         // lets set the visibility of progress bar
                         //mProgressBar.setVisibility(View.VISIBLE);
                         GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
@@ -167,12 +168,12 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             }
         });*/
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
-        TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity)getActivity()).getTvAmount();
-        Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity)getActivity()).getPlaceOrderBtn();
+        TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity) getActivity()).getTvAmount();
+        Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity) getActivity()).getPlaceOrderBtn();
         //String txt = tvAmount.getText().toString();
         //String txt2 = String.valueOf(mCartData.getBillableAmount());
         String finalTxt = /*txt + */RandomUtils.getIndianCurrencyFormat(mCartData.getBillableAmount(), true) + "/-";
-        Log.d("djcart","billableAmount: "+finalTxt);
+        Log.d("djcart", "billableAmount: " + finalTxt);
         tvAmount.setText(finalTxt);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +195,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
 
     String paymentMode = "";
+
     //private boolean isCod;
     private void proceedToPay(String modeChosen) {
         Intent intent = null;
@@ -201,7 +203,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         switch (modeChosen) {
             case "Net Banking":
                 paymentMode = "net";
-                intent = new Intent(getContext(), PayUBaseActivity.class);
+                intent = new Intent(getContext(), PayUNetBankingActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
                 break;
             case "Credit Card":
@@ -257,7 +259,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         //mStoredCardsAdapter.changeData(mPaymentModes);
     }
 
-    private View.OnClickListener mAddClick = new View.OnClickListener() {
+    /*private View.OnClickListener mAddClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Intent intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
@@ -265,7 +267,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             intent.putParcelableArrayListExtra(PayuConstants.DEBITCARD, mPayuResponse.getDebitCard());
             launchActivity(intent);
         }
-    };
+    };*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -293,7 +295,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onPaymentRelatedDetailsResponse(PayuResponse payuResponse) {
         mPayuResponse = payuResponse;
         //mProgressBar.setVisibility(View.GONE);
-        onGetStoredCardApiResponse(payuResponse);
+        Log.d("djpay", "onPaymentRelatedDetailsResponse");
+        /*for (PaymentDetails paymentDetails: payuResponse.getNetBanks()){
+            Log.d("djpay","bank name: "+paymentDetails.getBankCode());
+        }*/
+        //onGetStoredCardApiResponse(payuResponse);
     }
 
     @Override
@@ -336,10 +342,10 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     }
 
     private void launchActivity(Intent intent) {
-        intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
-        intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
-        mPayuConfig.setData(null);
-        intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
+        //intent.putExtra(PayuConstants.PAYU_HASHES, mPayUHashes);
+        //intent.putExtra(PayuConstants.PAYMENT_PARAMS, mPaymentParams);
+        //mPayuConfig.setData(null);
+        //intent.putExtra(PayuConstants.PAYU_CONFIG, mPayuConfig);
         // salt
         if (mPayuBundle.getString(PayuConstants.SALT) != null)
             intent.putExtra(PayuConstants.SALT, mPayuBundle.getString(PayuConstants.SALT));

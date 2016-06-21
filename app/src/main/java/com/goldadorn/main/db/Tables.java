@@ -107,6 +107,8 @@ public class Tables {
         public static final String FEATURED = "featured";
 
         public static final String COUNT_LIKES = "likes";
+        public static final String COUNT_BOOKAPPOINT = "appointments";
+
         public static final String COUNT_FOLLOWERS = "followers";
         public static final String COUNT_FOLLOWING = "following";
         public static final String COUNT_COLLECTIONS = "collections";
@@ -186,6 +188,7 @@ public class Tables {
                 Users.TYPE + " INTEGER DEFAULT 0," +
                 Users.TRENDING + " INTEGER DEFAULT 0," + Users.FEATURED + " INTEGER DEFAULT 0," +
                 Users.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Users.COUNT_BOOKAPPOINT + " INTEGER DEFAULT 0," +
                 Users.IS_LIKED + " INTEGER DEFAULT 0," +
                 Users.IS_FOLLOWING + " INTEGER DEFAULT 0," +
                 Users.COUNT_FOLLOWERS + " INTEGER DEFAULT 0," +

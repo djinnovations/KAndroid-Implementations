@@ -34,19 +34,23 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -210,8 +214,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     mFrame.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
                     mTabViewHolder.setSides(-p);
-                    if ((verticalOffset*-1) - lastStep > 250){
-                        lastStep = (verticalOffset*-1);
+                    if ((verticalOffset * -1) - lastStep > 250) {
+                        lastStep = (verticalOffset * -1);
                         checkOutTour(verticalOffset);
                     }
 
@@ -332,7 +336,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -377,7 +380,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             bindOverlay(mCollection);
             if (!isFirstTime) {
                 isFirstTime = true;
-                Log.d("djcoll","onCollectionChange");
+                Log.d("djcoll", "onCollectionChange");
                 configureUI(mUIState);
             }
             for (CollectionChangeListener l : mCollectionChangeListeners)
@@ -416,21 +419,26 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     private void configureUI(int uiState) {
-        Log.d("djcoll","uistate value: "+uiState);
+        Log.d("djcoll", "uistate value: " + uiState);
         Fragment f = null;
         int id = R.id.frame;
         mFrame.setVisibility(View.VISIBLE);
         mFrameScrollDummy.setVisibility(View.INVISIBLE);
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFeedFragment();
+            //f = new SocialFeedFragment();
+            f = new FilterTimelineFragment();
+            Bundle args = new Bundle();
+            FilterPostParams fpp = new FilterPostParams(("C" + mCollection.id), "0", "0");
+            args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
+            f.setArguments(args);
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
 
         } else if (uiState == UISTATE_PRODUCT) {
-            Log.d("djcoll","uistate - product frag");
+            Log.d("djcoll", "uistate - product frag");
             f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
         if (f != null) {
@@ -544,7 +552,18 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
-    static class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public void displayBookAppointment() {
+
+        Intent intent = new Intent(this, BookAppointment.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mCollection.name);
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mCollection.getImageUrl());
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mCollection.id));
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.collection_name)
         TextView name;
@@ -571,8 +590,12 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         @Bind(R.id.likes_count)
         TextView likesCount;
+        @Bind(R.id.appointment_count)
+        TextView appointment_count;
         @Bind(R.id.likeButton)
         ImageView like;
+        @Bind(R.id.btnBookApoint)
+        IconicsButton btnBookApoint;
         @Bind(R.id.shareButton)
         ImageView share;
 
@@ -587,6 +610,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             like.setOnClickListener(this);
             followButton.setOnClickListener(this);
             share.setOnClickListener(this);
+            btnBookApoint.setOnClickListener(this);
         }
 
         public void setVisisbility(int visibility) {
@@ -602,7 +626,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         @Override
         public void onClick(final View v) {
-            if (v.equals(like)) {
+            if (v.getId() == like.getId()) {
                 v.setEnabled(false);
                 final Collection collection = (Collection) v.getTag();
                 final boolean isLiked = v.isSelected();
@@ -624,7 +648,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                                 }
                             }
                         });
-            } else if (v.equals(followButton)) {
+            } else if (v.getId() == followButton.getId()) {
                 v.setEnabled(false);
                 final User user = (User) v.getTag();
                 final boolean isFollowing = v.isSelected();
@@ -642,7 +666,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                                 }
                             }
                         });
-            } else if (v.equals(share)) {
+            }else if (v.getId() == btnBookApoint.getId()){
+                displayBookAppointment();
+            }
+
+            else if (v.getId() == share.getId()) {
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         }

@@ -1,6 +1,8 @@
 package com.goldadorn.main.activities.showcase;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,19 +32,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -55,7 +62,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Vijith Menon on 6/3/16.
  */
-public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsFragment.UpdateLikes,ProductsFragment.UpdateProductCount{
+public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsFragment.UpdateLikes, ProductsFragment.UpdateProductCount {
     private final static int UISTATE_COLLECTION = 0;
     private final static int UISTATE_PRODUCT = 1;
     private final static int UISTATE_SOCIAL = 2;
@@ -119,7 +126,180 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
     private Handler mHandler = new Handler();
-    public static boolean isCollectionLike=false;
+    public static boolean isCollectionLike = false;
+
+
+    public void displayBookAppointment() {
+
+        Intent intent = new Intent(this, BookAppointment.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mUser.name);
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, mUser.getImageUrl());
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, String.valueOf(mUser.id));
+        intent.putExtras(bundle);
+        startActivity(intent);
+       /* final Dialog dialog = new Dialog(this, R.style.BookAppointmentDialog);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        final View tempView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_book_appointment_sc1, null);
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		*//*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*//*
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+        dialog.setContentView(tempView);
+
+        ((TextView) dialog.findViewById(R.id.tvPositive)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText etPhNum = (EditText) dialog.findViewById(R.id.etPhNum);
+                EditText etMessage = (EditText) dialog.findViewById(R.id.etMsgAppoint);
+                if (etPhNum.getText().toString().trim().length() < 10) {
+                    Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(etMessage.getText().toString().trim())) {
+                    Toast.makeText(getApplicationContext(), "Please leave a message", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                doTransition(dialog, tempView, etPhNum.getText().toString().trim(), etMessage.getText().toString().trim());
+            }
+        });
+
+        dialog.findViewById(R.id.tvNegative).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(false);
+        dialog.getWindow().setAttributes(tempParams);
+        dialog.show();*/
+    }
+
+    /*interface ServerResponseListener {
+        void onPositiveResponse();
+
+        void onNegativeResponse();
+    }
+
+    private ServerResponseListener srspListener;
+    private final int BOOK_APPOINTMENT_CALL = IDUtils.generateViewId();
+
+    private void doTransition(final Dialog dialog, final View tempView, String phone, String msg) {
+        srspListener = new ServerResponseListener() {
+            @Override
+            public void onPositiveResponse() {
+                bringUpSuccessBookingScreen(dialog, tempView);
+            }
+
+            @Override
+            public void onNegativeResponse() {
+                Toast.makeText(getApplicationContext(), "Not able to make an Appointment, Please try again ", Toast.LENGTH_LONG).show();
+            }
+        };
+        Map<String, String> params = new HashMap<>();
+        params.put("designer", mUser.name);
+        params.put("phone", phone);
+        params.put("message", msg);
+        Log.d("djweb", "req params- book appointment: " + params);
+        sendAppointmentRequest(params);
+    }
+
+
+    private void bringUpSuccessBookingScreen(final Dialog dialog, final View oldView) {
+        try {
+            startAnim(oldView, R.anim.slide_out_into_left);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                oldView.setAlpha(0);
+                oldView.setVisibility(View.GONE);
+                oldView.setVisibility(View.VISIBLE);
+                View newView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_book_appointment_sc2, null);
+                try {
+                    dialog.setContentView(newView);//// TODO: 19-06-2016
+                    startAnim(newView, R.anim.slide_in_from_right);
+                    newView.setAlpha(1);
+                    newView.findViewById(R.id.tvOkay).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 400);
+    }
+
+
+    private void startAnim(View view, int animResID) throws Exception {
+
+        Animation anim = AnimationUtils.loadAnimation(this, animResID);
+        view.startAnimation(anim);
+    }
+
+    private void sendAppointmentRequest(Map<String, String> params) {
+        showOverLay(null, R.color.colorPrimaryDark);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(BOOK_APPOINTMENT_CALL);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        getAQueryCustom().ajax(ApiKeys.getAppointmentAPI(), params, String.class, ajaxCallback);
+    }
+
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djweb", "url queried- ShowcaseActivity: " + url);
+        Log.d("djweb", "response- ShowcaseActivity: " + json);
+        dismissOverLay();
+        if (id == BOOK_APPOINTMENT_CALL) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mTabLayout, this);
+            if (success) {
+                if (json == null)
+                    srspListener.onNegativeResponse();
+                else {
+                    srspListener.onPositiveResponse();
+                }
+            } else srspListener.onNegativeResponse();
+        } else super.serverCallEnds(id, url, json, status);
+    }*/
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId) {
+        return getAjaxCallback(requestId);
+    }
+
+    public AQuery getAQueryCustom() {
+        return getAQuery();
+    }
+
+    private Dialog overLayDialog;
+
+    private void showOverLay(String text, int colorResId) {
+        if (overLayDialog == null) {
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        }
+        overLayDialog.show();
+    }
+
+    private void dismissOverLay() {
+        if (overLayDialog != null) {
+            if (overLayDialog.isShowing()) {
+                overLayDialog.dismiss();
+            }
+        }
+    }
 
 
     @Override
@@ -163,7 +343,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (mVerticalOffset != verticalOffset) {
-                    Log.d(TAG, "offset : " + verticalOffset+"--"+mStartHeight+"---"+mCollapsedHeight);
+                    Log.d(TAG, "offset : " + verticalOffset + "--" + mStartHeight + "---" + mCollapsedHeight);
                     boolean change = Math.abs(verticalOffset) <= .1f * mStartHeight;
                     int visibility = change ? View.VISIBLE : View.GONE;
                     topLayout.getLayoutParams().height = change ? mStartHeight : mCollapsedHeight;
@@ -261,7 +441,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 /*if (!coachMarkMgr.isHomeScreenTourDone())
                     testTourGuide();*/
                 Log.d(Constants.TAG, "tour showcase");
-                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{ transViewMain, transViewSwipeUp, transViewProds});
+                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{transViewMain, transViewSwipeUp, transViewProds});
             }
         }, 1500);
     }
@@ -282,16 +462,14 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     }
 
 
-
-
     @Override
     protected void onResume() {
-        if(mUser!=null){
-            Log.e("iii--Notnull--",""+mUser.id);
-            mUser= UserInfoCache.getInstance(mContext).getUserInfoDB(mUser.id, true);
+        if (mUser != null) {
+            Log.e("iii--Notnull--", "" + mUser.id);
+            mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mUser.id, true);
             bindOverlay(mUser);
-            if(isCollectionLike) {
-                isCollectionLike=false;
+            if (isCollectionLike) {
+                isCollectionLike = false;
                 UIController.getShowCase(mContext,
                         new IResultListener<TimelineResponse>() {
                             @Override
@@ -301,8 +479,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                             }
                         });
             }
-        }else{
-            Log.e("iii--null--","");
+        } else {
+            Log.e("iii--null--", "");
         }
         super.onResume();
 
@@ -324,7 +502,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     @Override
     public void updateProductCounts(int count) {
-       // mTabViewHolder.productsCount(count);
+        // mTabViewHolder.productsCount(count);
     }
 
     private void onUserChange(User user) {
@@ -402,7 +580,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             if (cursor != null) cursor.close();
             this.cursor = data;
             mShowCaseAdapter.changeCursor(data);
-            Log.e("iiiii--","enter");
+            Log.e("iiiii--", "enter");
             if (data.getCount() > 0) {
                 if (otpFlag) {
                     otpFlag = false;
@@ -421,17 +599,17 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     private void bindOverlay(User user) {
         mOverlayVH.brandName.setText(user.name);
-        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+        mOverlayVH.appointment_count.setText(String.format(Locale.getDefault(), "%d", user.numAppts));
         mOverlayVH.followersCount.setText(
                 String.format(Locale.getDefault(), "%d", user.followers_cnt));
         mOverlayVH.followingCount.setText(
                 String.format(Locale.getDefault(), "%d", user.following_cnt));
 
         mOverlayVH.followButton.setTag(user);
-        mOverlayVH.likeButton.setTag(user);
+        mOverlayVH.btnBookAppoint.setTag(user);
         mTabViewHolder.setCounts(user.collections_cnt, user.products_cnt);
         mOverlayVH.setBadges(user.trending, user.featured);
-        mOverlayVH.likeButton.setSelected(user.isLiked);
+        //mOverlayVH.btnBookAppoint.setSelected(user.isLiked);
         mOverlayVH.followButton.setSelected(user.isFollowed);
 
     }
@@ -489,6 +667,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             this.height = height;
             notifyDataSetChanged();
         }
+
+
+
+
     }
 
 
@@ -511,15 +693,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         @Bind(R.id.badge_2)
         ImageView trending;
 
-        @Bind(R.id.likes_count)
-        TextView likesCount;
+        @Bind(R.id.appointment_count)
+        TextView appointment_count;
         @Bind(R.id.followers_count)
         TextView followersCount;
         @Bind(R.id.following_count)
         TextView followingCount;
 
-        @Bind(R.id.likeButton)
-        ImageView likeButton;
+        @Bind(R.id.btnBookApoint)
+        IconicsButton btnBookAppoint;
         @Bind(R.id.followButton)
         ImageView followButton;
         @Bind(R.id.shareButton)
@@ -529,7 +711,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            likeButton.setOnClickListener(this);
+            btnBookAppoint.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
         }
@@ -551,9 +733,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         public void onClick(final View v) {
             int id = v.getId();
             Context context = v.getContext();
-            if (id == R.id.likeButton) {
-                v.setEnabled(false);
-                final User user = (User) v.getTag();
+            if (id == R.id.btnBookApoint) {
+                //v.setEnabled(false);
+                displayBookAppointment();
+                /*final User user = (User) v.getTag();
                 final boolean isLiked = v.isSelected();
                 UIController.like(context, user, !isLiked, new IResultListener<LikeResponse>() {
 
@@ -563,15 +746,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                         v.setSelected(result.success != isLiked);
                         if(isLiked){
                             user.likes_cnt=user.likes_cnt-1;
-                            mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+                            mOverlayVH.appointment_count.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
                            // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", user.likes_cnt))),Toast.LENGTH_SHORT).show();
                         }else{
                             user.likes_cnt=user.likes_cnt+1;
-                            mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
+                            mOverlayVH.appointment_count.setText(String.format(Locale.getDefault(), "%d", user.likes_cnt));
                             //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", user.likes_cnt))),Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+                });*/
             } else if (id == R.id.followButton) {
                 v.setEnabled(false);
                 final User user = (User) v.getTag();

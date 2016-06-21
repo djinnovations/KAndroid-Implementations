@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.WebActivity;
+import com.rey.material.widget.ProgressView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,12 +49,15 @@ public class ContactUsFragment extends Fragment{
     Button btnSend;
     @Bind(R.id.cbEmail)
     CheckBox cbEmail;
+    @Bind(R.id.progressBar)
+    ProgressView progressBar;
 
     List<EditText> myInputs;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //ButterKnife.bind(view);
+        progressBar.setVisibility(View.INVISIBLE);
         btnSend.setOnClickListener(btnSendClick);
         myInputs = Arrays.asList(new EditText[]{etName, etEmail, etMsgBody});
     }
@@ -63,7 +67,7 @@ public class ContactUsFragment extends Fragment{
         @Override
         public void onClick(View v) {
             if (getParams() != null)
-                ((WebActivity) getActivity()).sendContactUsInfoToServer(getParams());
+                ((WebActivity) getActivity()).sendContactUsInfoToServer(getParams(), progressBar);
         }
     };
 
@@ -89,5 +93,11 @@ public class ContactUsFragment extends Fragment{
         return true;
     }
 
+
+    public void clearForm(){
+        for (EditText et: myInputs){
+            et.setText("");
+        }
+    }
 
 }

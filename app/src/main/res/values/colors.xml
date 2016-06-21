@@ -26,8 +26,7 @@
     <color name="fabMenuButtonSelected">@color/colorPrimary</color>
     <color name="fabButtonIcon">#ffffff</color>
     <color name="fabItemLabel">#000000</color>
-
-
+    <color name="liteGrey">#33bf03bf</color>
 
 
     <color name="darkColor">#34281d</color>
@@ -131,5 +130,7 @@
         <item>@color/darkorange</item>
         <item>@color/darkred</item>
     </integer-array>
+
+    <item name="creamWhite" type="color">#F1F2EF</item>
 
 </resources>

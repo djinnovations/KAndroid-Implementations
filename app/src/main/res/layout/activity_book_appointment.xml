@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginBottom="20dp"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <ImageView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_timeline"
+                app:layout_collapseMode="parallax" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <LinearLayout
+                android:id="@+id/llScreen1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!-- <TextView
+                     android:layout_width="match_parent"
+                     android:layout_height="40dp"
+                     android:gravity="center"
+                     android:text="Book an Appointment"
+                     android:textColor="@color/Black"
+                     android:textSize="18sp" />-->
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center"
+                    android:text="Fill up your details to book an appointment"
+                    android:textColor="@color/Black"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/etName"
+                    style="@style/FormEditText"
+                    android:layout_height="40dp"
+                    android:hint="Name"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/Black"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/etPhNum"
+                    style="@style/FormEditText"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="12dp"
+                    android:hint="Contact Number"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:textColor="@color/Black"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/etMsgAppoint"
+                    style="@style/FormEditText"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="12dp"
+                    android:gravity="top|left"
+                    android:hint="Leave a Message"
+                    android:inputType="textShortMessage|textMultiLine"
+                    android:scrollHorizontally="false"
+                    android:textColor="@color/Black"
+                    android:textSize="16sp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_square_border">
+
+                    <com.rey.material.widget.ProgressView
+                        android:id="@+id/progressBar"
+                        android:layout_width="@dimen/tinyProgressBar"
+                        android:layout_height="@dimen/tinyProgressBar"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginRight="16dp"
+                        app:pv_autostart="true"
+                        app:pv_circular="true"
+                        app:pv_progressMode="indeterminate"
+                        app:pv_progressStyle="@style/Theme.AppCompat.NoActionBar"
+                        tools:visibility="gone" />
+                    <!-- <TextView
+                         android:id="@+id/tvNegative"
+                         android:layout_width="0dp"
+                         android:layout_height="wrap_content"
+                         android:layout_weight="1"
+                         android:background="?android:attr/selectableItemBackground"
+                         android:gravity="center"
+                         android:padding="16dp"
+                         android:text="Cancel"
+                         android:textColor="@color/Black"
+                         android:textSize="15sp" />
+
+                     <View
+                         android:layout_width="0.5dp"
+                         android:layout_height="match_parent"
+                         android:background="@color/colorPrimary" />-->
+
+                    <TextView
+                        android:id="@+id/tvPositive"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:text="Book Now"
+                        android:textColor="@color/Black"
+                        android:textSize="15sp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llScreen2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/llCongo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Congrats  "
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ic_tick_mark" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"
+                    android:text="Your appointment is successfully booked.\nOur customer support executive will get in touch with you shortly to schedule the appointment."
+                    android:textColor="@color/Black"
+                    android:textSize="16sp" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_square_border">
+
+                    <TextView
+                        android:id="@+id/tvOkay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:text="okay"
+                        android:textColor="@color/Black"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

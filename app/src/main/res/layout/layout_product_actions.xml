@@ -1,37 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:id="@+id/layout_product_actions"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_gravity="center"
-              android:gravity="center"
-              android:background="@drawable/shadow_overlay"
-              android:orientation="horizontal"
-              android:visibility="invisible">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_product_actions"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/shadow_overlay"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:visibility="invisible">
 
-    <ImageView
-        android:id="@+id/shareButton"
-        style="@style/RoundButton"
-        android:layout_width="@dimen/circle_button_small_height"
-        android:layout_height="@dimen/circle_button_small_height"
-        android:layout_marginLeft="@dimen/padding_default"
-        android:src="@drawable/ic_b_share"/>
 
-    <ImageView
-        android:id="@+id/buyNoBuyButton"
-        style="@style/RoundButton"
-        android:layout_width="@dimen/circle_button_small_height"
-        android:layout_height="@dimen/circle_button_small_height"
-        android:layout_marginLeft="@dimen/padding_default"
-        android:layout_marginRight="@dimen/padding_default"
-        android:src="@drawable/ic_b_opinionpoll"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/wishlistButton"
-        style="@style/RoundButton"
-        android:layout_width="@dimen/circle_button_small_height"
-        android:layout_height="@dimen/circle_button_small_height"
-        android:layout_marginRight="@dimen/padding_default"
-        android:src="@drawable/ic_b_wishlist"/>
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/btnBookApoint"
+            style="@style/BookAppointCollection"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_margin="8dp"
+            android:text="@string/icon_book_appointment" />
+
+        <ImageView
+            android:id="@+id/buyNoBuyButton"
+            style="@style/RoundButton"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_b_opinionpoll" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/shareButton"
+            style="@style/RoundButton"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_margin="8dp"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:src="@drawable/ic_b_share" />
+
+        <ImageView
+            android:id="@+id/wishlistButton"
+            style="@style/RoundButton"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_margin="8dp"
+            android:layout_marginRight="@dimen/padding_default"
+            android:src="@drawable/ic_b_wishlist" />
+    </LinearLayout>
+
+
 </LinearLayout>

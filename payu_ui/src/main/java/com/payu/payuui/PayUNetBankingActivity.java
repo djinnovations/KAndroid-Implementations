@@ -183,7 +183,6 @@ class PayUNetBankingAdapter extends BaseAdapter {
         }
 
         PaymentDetails paymentDetails = mNetBankingList.get(position);
-
         // set text here
         netbankingViewHolder.netbankingTextView.setText(paymentDetails.getBankName());
         return convertView;
@@ -192,7 +191,6 @@ class PayUNetBankingAdapter extends BaseAdapter {
 
     class NetbankingViewHolder {
         TextView netbankingTextView;
-
         NetbankingViewHolder(View view) {
             netbankingTextView = (TextView) view.findViewById(R.id.text_view_netbanking);
         }

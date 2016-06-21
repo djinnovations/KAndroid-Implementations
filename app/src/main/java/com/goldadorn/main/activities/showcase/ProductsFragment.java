@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.showcase;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
@@ -38,9 +40,9 @@ import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -176,6 +178,23 @@ public class ProductsFragment extends Fragment {
     //private boolean isFirstTime = true;
     private final int threshold = 2;
 
+
+    public void displayBookAppointment() {
+
+        Intent intent = new Intent(getActivity(), BookAppointment.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
+        /*if (mMode == MODE_COLLECTION) {
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
+        }*/
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
             SwipeFlingAdapterView.onFlingListener, SwipeFlingAdapterView.OnItemClickListener {
 
@@ -219,6 +238,7 @@ public class ProductsFragment extends Fragment {
                 holder.shareButton.setOnClickListener(this);
                 holder.buyNoBuyButton.setOnClickListener(this);
                 holder.wishlistButton.setOnClickListener(this);
+                holder.btnBookApoint.setOnClickListener(this);
 
             } else holder = (ProductViewHolder) convertView.getTag();
 
@@ -238,7 +258,9 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onClick(final View v) {
             int id = v.getId();
-            if (id == R.id.likeButton) {
+            if (id == R.id.btnBookApoint) {
+                displayBookAppointment();
+            } else if (id == R.id.likeButton) {
                 v.setEnabled(false);
                 Product product = (Product) v.getTag();
                 final boolean isLiked = v.isSelected();
@@ -296,9 +318,9 @@ public class ProductsFragment extends Fragment {
                 Log.d("djprod", "product id: " + product.id);
             } while (data.moveToNext());
             try {
-                if (isPaginateCall){
+                if (isPaginateCall) {
                     products = getNewListToDisplay(products);
-                }else {
+                } else {
                     products = products.subList(0, DbHelper.productCountPerCall);
                     initialTotalProductCount = products.size();
                     Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
@@ -317,11 +339,21 @@ public class ProductsFragment extends Fragment {
 
 
         private List<Product> getNewListToDisplay(List<Product> prodList) {
-            List<Product> tempProdList = new ArrayList<>();
-            boolean contains = false;
-            Log.d("djprod","lastSeenprodID: "+lastSeenProductId);
+            ConcurrentLinkedQueue<Product> tempProdQueue = new ConcurrentLinkedQueue<>();
+            List<Product> subList = prodList.subList(0, DbHelper.productCountPerCall);
+            //boolean contains = false;
+            Log.d("djprod", "lastSeenprodID: " + lastSeenProductId);
             try {
-                tempProdList = prodList.subList(0, DbHelper.productCountPerCall);
+                //tempProdList = prodList.subList(0, DbHelper.productCountPerCall);
+                //tempProdList = new ConcurrentLinkedQueue<>(prodList.subList(0, prodList.size()));
+                //ConcurrentLinkedQueue<Product> avoid = new ConcurrentLinkedQueue<>(pendingProductQueue.subList(0, pendingProductQueue.size()));
+                for (Product prod : pendingProductQueue) {
+                    tempProdQueue.add(prod);
+                }
+                for (Product product : subList) {
+                    tempProdQueue.add(product);
+                }
+                // ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
                 /*ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
                 Iterator<Product> iterator = toComapareList.iterator();
                 while (iterator.hasNext()){
@@ -333,13 +365,14 @@ public class ProductsFragment extends Fragment {
                         contains = true;
                     }
                 }*/
-                for (Product prod: pendingProductList){
+                //List<Product> avoidConcurrent =
+                /*for (Product prod: pendingProductQueue){
                     tempProdList.add(0, prod);
-                }
-                Log.d("djprod","final size of products to display: "+tempProdList.size());
-                initialTotalProductCount = tempProdList.size();
+                }*/
+                Log.d("djprod", "final size of products to display: " + tempProdQueue.size());
+                initialTotalProductCount = tempProdQueue.size();
                 Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
-                return tempProdList;
+                return /*tempProdList*/new ArrayList(tempProdQueue);
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -348,14 +381,15 @@ public class ProductsFragment extends Fragment {
 
         private int lastSeenProductId;
         private boolean isPaginateCall = false;
-        private List<Product> pendingProductList;
+        private ConcurrentLinkedQueue<Product> pendingProductQueue;
+
         @Override
         public void removeFirstObjectInAdapter() {
             lastSeenProductId = products.get(0).productId;
             products.remove(0);
             notifyDataSetChanged();
             initialTotalProductCount--;
-            pendingProductList = products.subList(0, products.size());
+            pendingProductQueue = new ConcurrentLinkedQueue<>(products.subList(0, products.size()));
             Log.d("djprod", "initialTotalProductCount - removeFirstObjectInAdapter: " + initialTotalProductCount);
             if (initialTotalProductCount == threshold) {
                 Log.d("djprod", "new offset - threshold reached- paginate: " + (offsetMain));
@@ -546,7 +580,7 @@ public class ProductsFragment extends Fragment {
             Log.e("iiii", "Click4");
             Product p = originalProducts.get(originalProducts.indexOf(o));
             //goToProductPage(context, (Product) o);
-            Log.d("djprod","product name onClickImage: "+ p.name);
+            Log.d("djprod", "product name onClickImage: " + p.name);
             goToProductPage(context, p);
         }
 
@@ -570,7 +604,8 @@ public class ProductsFragment extends Fragment {
             ImageView buyNoBuyButton;
             @Bind(R.id.wishlistButton)
             ImageView wishlistButton;
-
+            @Bind(R.id.btnBookApoint)
+            IconicsButton btnBookApoint;
 
             public ProductViewHolder(View itemview) {
                 this.itemview = itemview;

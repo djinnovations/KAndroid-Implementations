@@ -138,6 +138,8 @@ public class DbHelper {
                         cv.put(Tables.Users.COUNT_FOLLOWERS, userObj.optInt("followerCount"));
                         cv.put(Tables.Users.COUNT_FOLLOWING, userObj.optInt("followingCount"));
                         cv.put(Tables.Users.COUNT_LIKES, userObj.optInt(Constants.JsonConstants.TOTALLIKES));
+                        cv.put(Tables.Users.COUNT_BOOKAPPOINT, userObj.optInt("numAppts"));//changed DJphy
+
                         cv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT));
                         cv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT));
                         cv.put(Tables.Users.IS_FOLLOWING, userObj.optInt(Constants.JsonConstants.ISFOLLOWING));
