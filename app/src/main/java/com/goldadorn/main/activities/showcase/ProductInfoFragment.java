@@ -100,7 +100,7 @@ public class ProductInfoFragment extends Fragment {
         warrantyInfo_desc.setText(listOfDescription.get(0) == null ? "" : listOfDescription.get(0));
         moneyBackPolicy_desc.setText(listOfDescription.get(1) == null ? "" : listOfDescription.get(1));
         certificateType_desc.setText(listOfDescription.get(2) == null ? "" : listOfDescription.get(2));
-        estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3) + " days");
+        estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3)/* + " days"*/);
         paymentModesAvail_desc.setText(listOfDescription.get(4) == null ? "" : listOfDescription.get(4));
     }
 

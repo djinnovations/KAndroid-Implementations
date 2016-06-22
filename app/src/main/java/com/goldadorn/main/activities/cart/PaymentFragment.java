@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,9 @@ import com.payu.payuui.PayUBaseActivity;
 import com.payu.payuui.PayUCreditDebitCardActivity;
 import com.payu.payuui.PayUNetBankingActivity;
 import com.payu.payuui.PaymentsActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -279,13 +283,28 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             if (data != null) {
                 Log.d("djpay", "onActivityResult - data not null");
                 String result = data.getStringExtra("result");
-                if (result.equals(mPaymentParams.getSurl())) {
-                    Log.d("djpay", "onActivityResult - sucecss transaction");
-                    mCartData.setPaymentDone(true, false, paymentMode);
+                String status = null;
+                try {
+                    JSONObject json = new JSONObject(result);
+                    status = json.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("djpay", "onActivityResult - transaction stat: "+status);
+                if (!TextUtils.isEmpty(status)){
+                    if (status.equalsIgnoreCase("success")){
+                        Log.d("djpay", "onActivityResult - sucecss transaction");
+                        mCartData.setPaymentDone(true, false, paymentMode);
+                    }else {
+                        Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
+                    }
+                }
+               /* if (result.equals(mPaymentParams.getSurl())) {
+
                 }
                 else {
-                    Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
-                }
+
+                }*/
                 /*new AlertDialog.Builder(getContext())
                         .setCancelable(false)
                         .setMessage(data.getStringExtra("result"))

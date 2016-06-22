@@ -30,7 +30,6 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_timeline"
                 app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
@@ -223,7 +222,7 @@
                         android:background="?android:attr/selectableItemBackground"
                         android:gravity="center"
                         android:padding="16dp"
-                        android:text="okay"
+                        android:text="Okay"
                         android:textColor="@color/Black"
                         android:textSize="15sp" />
                 </LinearLayout>

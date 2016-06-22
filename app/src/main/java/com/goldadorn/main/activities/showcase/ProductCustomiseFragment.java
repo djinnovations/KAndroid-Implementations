@@ -292,8 +292,8 @@ public class ProductCustomiseFragment extends Fragment {
                 priceValue = NO_DETAILS;
             }
             else priceValue = String.valueOf(Math.round(price));*/
-            float totalTemp = price < 0 ? 0 : price;
-            Log.d("djprod","price iteration amount: "+totalTemp);
+            //float totalTemp = price < 0 ? 0 : price;
+            Log.d("djprod","price from server every iteration: "+price);
             //total = total + totalTemp;
             //Log.d("djprod","price iteration amount: "+total);
 
