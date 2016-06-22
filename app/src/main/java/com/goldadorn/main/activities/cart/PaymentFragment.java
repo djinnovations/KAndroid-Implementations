@@ -131,7 +131,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                         // close the progress bar
                         //mProgressBar.setVisibility(View.GONE);
                     }
-                }
+                } //i'll check
             }
         });
     }
@@ -209,9 +209,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 paymentMode = "net";
                 intent = new Intent(getContext(), PayUNetBankingActivity.class);
                 intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
-                Toast.makeText(getContext().getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
-                return;
-            //break;
+                //Toast.makeText(getContext().getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                //return;
+            break;
             case "Credit Card":
                 paymentMode = "cre";
                 intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);

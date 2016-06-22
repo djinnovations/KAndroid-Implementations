@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.server.ApiKeys;
@@ -128,7 +129,8 @@ public class NotificationsActivity extends BaseActivity {
                 return 4;
             case "F":
                 return 5;
-            default: return -1;
+            default:
+                return -1;
         }
     }
 
@@ -303,6 +305,7 @@ public class NotificationsActivity extends BaseActivity {
         //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
 
         postContent = createString(object);
+        Log.d("djnotify", "extractJsonContent- peopleImageUrl: " + peopleImageUrl);
         return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId, actionType);
 
     }
@@ -406,22 +409,46 @@ public class NotificationsActivity extends BaseActivity {
             String dateTime = dataObject.getDateTime();
             boolean botPost = dataObject.isBotPost();
 
-            if (peopleImageUrl != null) {
+            Log.d("djnotify", "getView- peopleImageUrl: " + peopleImageUrl);
+            if (!TextUtils.isEmpty(peopleImageUrl)) {
                 try {
-                    Picasso.with(context).load(URLHelper.parseImageURL(peopleImageUrl)).placeholder(R.drawable
-                            .vector_image_place_holder_profile_dark).into(holder.person);
+                    /*Picasso.with(context)
+                            .load(URLHelper.parseImageURL(peopleImageUrl))
+                            //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                            .into(holder.person);*/
+                    Glide.with(NotificationsActivity.this)
+                            .load(URLHelper.parseImageURL(peopleImageUrl))
+                            //.centerCrop()
+                            .placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                            .crossFade()
+                            .into(holder.person);
                 } catch (Exception ex) {
-                    Picasso.with(context).load(R.drawable
-                            .vector_image_place_holder_profile_dark).into(holder.person);
+                    /*Picasso.with(context)
+                            .load(R.drawable.vector_image_place_holder_profile_dark)
+                            .into(holder.person);*/
+                    /*Glide.with(NotificationsActivity.this)
+                            .load(R.drawable.vector_image_place_holder_profile_dark)
+                            //.centerCrop()
+                            //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                            .crossFade()
+                            .into(holder.person);*/
+                    holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
                 }
-            } else Picasso.with(context).load(R.drawable
-                    .vector_image_place_holder_profile_dark).into(holder.person);
+            } else {
+                Log.d("djnotify", "else case url null: ");
+                holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
+                /*Glide.with(NotificationsActivity.this)
+                        .load(R.drawable.vector_image_place_holder_profile_dark)
+                        //.centerCrop()
+                        //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                        .crossFade()
+                        .into(holder.person);*/
+            }
 
 
             if (!botPost) {
                 if (postImageUrl != null) {
                     try {
-                        Log.d("djnotify", "postImage url- : " + postImageUrl);
                         Picasso.with(context).load(postImageUrl).into(holder.ivPostImage);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -512,7 +539,6 @@ public class NotificationsActivity extends BaseActivity {
 
 
     private String getPostImageUrl(JSONArray jsonArray) {
-        Log.d("djnotify", "jsonArrLength - getPostImageUrl- : " + jsonArray.length());
         if (jsonArray.length() > 1) {
             return "BOT";
         } else if (jsonArray.length() == 0) {

@@ -427,12 +427,12 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         mFrameScrollDummy.setVisibility(View.INVISIBLE);
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
-            //f = new SocialFeedFragment();
-            f = new FilterTimelineFragment();
+            f = new SocialFeedFragment();
+            /*f = new FilterTimelineFragment();
             Bundle args = new Bundle();
             FilterPostParams fpp = new FilterPostParams(("C" + mCollection.id), "0", "0");
             args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
-            f.setArguments(args);
+            f.setArguments(args);*/
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);

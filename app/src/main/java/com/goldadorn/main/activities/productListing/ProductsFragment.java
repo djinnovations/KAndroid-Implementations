@@ -62,8 +62,11 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     public void onCallEnd(List<?> dataList, boolean isRefreshData) {
         super.onCallEnd(dataList,isRefreshData);
         loadLikes(dataList);
+    }
 
 
+    private void getScissoredListBasedOnIsEnabledFlag(){
+     //// TODO: 22-06-2016
     }
 
     private void loadLikes(final List<?> dataList) {

@@ -66,9 +66,10 @@ import java.util.Iterator;
         mPaymentParams.setFirstName(name);
         mPaymentParams.setEmail("soni94@gmail.com");
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
-        mPaymentParams.setSurl("https://payu.herokuapp.com/success");
+        mPaymentParams.setSurl("https://payu.herokuapp.com/success");//can you take over
         mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
-        mPaymentParams.setUserCredentials(merchantKey+":"+((Application)context.getApplicationContext()).getUser().id);
+        //mPaymentParams.setUserCredentials(merchantKey+":"+((Application)context.getApplicationContext()).getUser().id);
+        mPaymentParams.setUserCredentials(PayuConstants.DEFAULT);
         mPaymentParams.setUdf1("udf1");
         mPaymentParams.setUdf2("udf2");
         mPaymentParams.setUdf3("udf3");
@@ -84,8 +85,9 @@ import java.util.Iterator;
 
         // generate hash from server
         // just a sample. Acturally Merchant should generate from his server.
+
         if (null == salt) generateHashFromServer(mPaymentParams);
-        else generateHashFromSDK(mPaymentParams, bundle.getString(PayuConstants.SALT));
+        else generateHashFromSDK(mPaymentParams, salt);
 
 
         // generate hash from client;
@@ -174,7 +176,7 @@ import java.util.Iterator;
         checksum.setEmail(mPaymentParams.getEmail()); //here
         checksum.setSalt(salt);
         checksum.setProductinfo(mPaymentParams.getProductInfo());
-        checksum.setFirstname(mPaymentParams.getFirstName());
+        checksum.setFirstname(mPaymentParams.getFirstName());//holy, good catch
         checksum.setUdf1(mPaymentParams.getUdf1());
         checksum.setUdf2(mPaymentParams.getUdf2());
         checksum.setUdf3(mPaymentParams.getUdf3());
@@ -185,10 +187,9 @@ import java.util.Iterator;
         if (postData.getCode() == PayuErrors.NO_ERROR) {
             payuHashes.setPaymentHash(postData.getResult());
         }
-
         // checksum for payemnt related details
         // var1 should be either user credentials or default
-        var1 = var1 == null ? PayuConstants.DEFAULT : var1;
+        var1 = PayuConstants.DEFAULT ;//you have pass use//we
 
         if ((postData = calculateHash(key, PayuConstants.PAYMENT_RELATED_DETAILS_FOR_MOBILE_SDK, var1, salt)) != null && postData.getCode() == PayuErrors.NO_ERROR) // Assign post data first then check for success
             payuHashes.setPaymentRelatedDetailsForMobileSdkHash(postData.getResult());
