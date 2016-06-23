@@ -139,6 +139,7 @@ public class ProductsFragment extends Fragment {
 
         //showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         Log.d(Constants.TAG, "prod frag");
+        firstTime = true;
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
@@ -207,7 +208,7 @@ public class ProductsFragment extends Fragment {
     private int initialTotalProductCount;
     //private boolean isFirstTime = true;
     private final int threshold = 2;
-
+    private boolean firstTime;
 
     public void displayBookAppointment() {
 
@@ -585,7 +586,12 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onAdapterAboutToEmpty(int i) {
             Log.d("djprod", "swipedeck adapter position: " + i);
-            showEmptyView(i == 0);
+            if (!firstTime) {
+                showEmptyView(i == 0);
+            }
+            if (count > 1)
+                firstTime = false;
+            count++;
         }
 
         @Override
@@ -643,6 +649,8 @@ public class ProductsFragment extends Fragment {
             }
         }
     }
+
+    private int count = 0;
 
     private void isLikedHover(boolean value) {
         mLikeBg.setVisibility(value ? View.VISIBLE : View.GONE);

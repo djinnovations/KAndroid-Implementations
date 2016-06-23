@@ -42,6 +42,8 @@ public class RandomUtils {
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return "";
+        } catch (Exception ex){
+            return "";
         }
     }
 

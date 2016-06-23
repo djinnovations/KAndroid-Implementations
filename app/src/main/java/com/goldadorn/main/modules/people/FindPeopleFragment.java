@@ -37,27 +37,39 @@ import butterknife.ButterKnife;
 /**
  * Created by bhavinpadhiyar on 2/19/16.
  */
-public class FindPeopleFragment extends DefaultVerticalListView
-{
+public class FindPeopleFragment extends DefaultVerticalListView {
 
-    private void followPeope(People post,int pos) {
+    private void followPeope(People post, int pos) {
+        Log.d("djpeople", "followPeople");
         followPeopleHelper.update(post, pos);
     }
+
     PeopleUpdateHelper.UpdateResult postUpdateResult = new PeopleUpdateHelper.UpdateResult() {
         @Override
-        public void onFail(PeopleUpdateHelper host,People post, int pos) {
-            if(host instanceof FollowPeopleHelper)
-            {
+        public void onFail(PeopleUpdateHelper host, People post, int pos) {
+            Log.d("djpeople", "onFail");
+            if (host instanceof FollowPeopleHelper) {
                 int isFollowing = post.getIsFollowing();
-                isFollowing = isFollowing==0?1:0;
+                isFollowing = isFollowing == 0 ? 1 : 0;
                 post.setIsFollowing(isFollowing);
                 getAdapter().notifyItemChanged(pos);
             }
         }
+
         @Override
-        public void onSuccess(PeopleUpdateHelper host,People post, int pos) {
-            if(host instanceof FollowPeopleHelper)
+        public void onSuccess(PeopleUpdateHelper host, People post, int pos) {
+            if (host instanceof FollowPeopleHelper) {
+                int followercount;
+                Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
+                int isFollowing = post.getIsFollowing();
+                if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
+                    followercount = post.getFollowerCount() - 1;
+                } else followercount = post.getFollowerCount() + 1;
+                post.setFollowerCount(followercount);
+                Log.d("djpeople", "onSuccess - post-followercount: " + post.getFollowerCount());
                 getAdapter().notifyItemChanged(pos);
+            }
+
         }
     };
     private FollowPeopleHelper followPeopleHelper;
@@ -78,14 +90,16 @@ public class FindPeopleFragment extends DefaultVerticalListView
         super.configDataManager(dataManager);
         dataManager.setRefreshEnabled(false);
     }
+
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new DividerDecoration(this.getActivity());
     }
+
     public static class ViewTypes {
         public static final int VIEW_USER = 5;
     }
-    public void onItemClick(Object baseObject)
-    {
+
+    public void onItemClick(Object baseObject) {
         super.onItemClick(baseObject);
         gotoUser((People) baseObject);
     }
@@ -93,77 +107,72 @@ public class FindPeopleFragment extends DefaultVerticalListView
     private void logEventsAnalytics(String eventName) {
         getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
     }
+
     public void onViewCreated(View view) {
 
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: People");
         logEventsAnalytics(GAAnalyticsEventNames.PEOPLE);
 
-        followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
+        followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(), postUpdateResult);
     }
-    public int getListItemViewType(int position,Object item)
-    {
+
+    public int getListItemViewType(int position, Object item) {
         return ViewTypes.VIEW_USER;
     }
-    public View getItemView(int viewType,LayoutInflater inflater,ViewGroup container)
-    {
-        return inflater.inflate(R.layout.people_list_item,null);
+
+    public View getItemView(int viewType, LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.people_list_item, null);
     }
-    public BaseItemHolder getItemHolder(int viewType,View view)
-    {
+
+    public BaseItemHolder getItemHolder(int viewType, View view) {
         return new PeopleItemHolder(view);
     }
-    private int offset=0;
+
+    private int offset = 0;
+
     @Override
-    protected DataManager createDataManager()
-    {
-        return new DefaultProjectDataManager1(getActivity(),this,getApp().getCookies());
+    protected DataManager createDataManager() {
+        return new DefaultProjectDataManager1(getActivity(), this, getApp().getCookies());
     }
-    public class DefaultProjectDataManager1 extends com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager
-    {
-        public DefaultProjectDataManager1(Context context, IDataManagerDelegate delegate, List<Cookie> cookies)
-        {
-            super(context,delegate,cookies);
+
+    public class DefaultProjectDataManager1 extends com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager {
+        public DefaultProjectDataManager1(Context context, IDataManagerDelegate delegate, List<Cookie> cookies) {
+            super(context, delegate, cookies);
         }
+
         @Override
-        protected void updatePagingData(BaseDataParser loadedDataVO)
-        {
-            try
-            {
-                if(loadedDataVO!=null && loadedDataVO instanceof PeopleResult)
-                {
+        protected void updatePagingData(BaseDataParser loadedDataVO) {
+            try {
+                if (loadedDataVO != null && loadedDataVO instanceof PeopleResult) {
                     PeopleResult result = (PeopleResult) loadedDataVO;
-                    if(result.offset!=-1 && offset != result.offset) {
+                    if (result.offset != -1 && offset != result.offset) {
                         offset = result.offset;
                         pageData.curruntPage += 1;
                         pageData.totalPage += 1;
+                    } else {
+                        pageData.totalPage = pageData.curruntPage;
                     }
-                    else
-                    {
-                        pageData.totalPage=pageData.curruntPage;
-                    }
+                } else {
+                    pageData.totalPage = pageData.curruntPage;
                 }
-                else
-                {
-                    pageData.totalPage=pageData.curruntPage;
-                }
-            }catch (Exception e)
-            {
-                pageData.curruntPage=pageData.totalPage=1;
+            } catch (Exception e) {
+                pageData.curruntPage = pageData.totalPage = 1;
             }
         }
     }
-    public Class getLoadedDataParsingAwareClass()
-    {
+
+    public Class getLoadedDataParsingAwareClass() {
         return PeopleResult.class;
     }
-    public String getNextDataURL(PageData pageData)
-    {
-        Log.d("djpeople","pagination offset FindPeopleFragment: "+offset);
+
+    public String getNextDataURL(PageData pageData) {
+        Log.d("djpeople", "pagination offset FindPeopleFragment: " + offset);
         /*if(pageData.curruntPage==1)*/
-            return getApp().getUrlHelper().getFindPeopleServiceURL(offset);
+        return getApp().getUrlHelper().getFindPeopleServiceURL(offset);
         /*else
             return null;*/
     }
+
     public class PeopleItemHolder extends BaseItemHolder {
 
         @Bind(R.id.userImage)
@@ -188,33 +197,23 @@ public class FindPeopleFragment extends DefaultVerticalListView
         TextView countFollowersTitle;
 
 
-
-
         @Bind(R.id.followButton)
         Button followButton;
 
-        private View.OnClickListener itemClick = new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(v==userImage)
-                {
+        private View.OnClickListener itemClick = new View.OnClickListener() {
+            public void onClick(View v) {
+                if (v == userImage) {
                     gotoUser(people);
-                }
-                else if(v==userName)
-                {
+                } else if (v == userName) {
                     gotoUser(people);
-                }
-                else if(v==followButton)
-                {
+                } else if (v == followButton) {
                     int isFollowing = people.getIsFollowing();
-                    isFollowing = isFollowing==0?1:0;
+                    isFollowing = isFollowing == 0 ? 1 : 0;
                     people.setIsFollowing(isFollowing);
-                    if(people.getIsFollowing()==1) {
+                    if (people.getIsFollowing() == 1) {
                         followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
                         //followButton.setSelected(true);
-                    }
-                    else {
+                    } else {
                         followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
                         //followButton.setSelected(false);
                     }
@@ -225,8 +224,7 @@ public class FindPeopleFragment extends DefaultVerticalListView
         };
         private People people;
 
-        public PeopleItemHolder(View itemView)
-        {
+        public PeopleItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
@@ -234,39 +232,40 @@ public class FindPeopleFragment extends DefaultVerticalListView
             followButton.setOnClickListener(itemClick);
 
             TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), designer, countFollowing, countFollowers);
-            TypefaceHelper.setFont(userName,countFollowingLabel,countFollowersTitle);
+            TypefaceHelper.setFont(userName, countFollowingLabel, countFollowersTitle);
         }
-        public void updateItemView(Object item,View view,int position)
-        {
-            people =(People)item;
+
+        public void updateItemView(Object item, View view, int position) {
+            Log.d("djpeople", "updateView");
+            people = (People) item;
 
             userName.setText(people.getUserName());
-            if(people.getIsDesigner()==1)
+            if (people.getIsDesigner() == 1)
                 designer.setText("Designer");
             else
                 designer.setText("");
 
-            countFollowing.setText(people.getFollowingCount()+"");
-            countFollowers.setText(people.getFollowerCount()+"");
+            countFollowing.setText(people.getFollowingCount() + "");
+            Log.d("djpeople", "updateView - countFollowing: " + people.getFollowingCount());
+            countFollowers.setText(people.getFollowerCount() + "");
+            Log.d("djpeople", "updateView - countFollowers: " + people.getFollowerCount());
 
             Picasso.with(getContext())
                     .load(people.getProfilePic())
                     .placeholder(R.drawable.vector_image_place_holder_profile)
                     .tag(getContext())
-                    .resize(100,100)
+                    .resize(100, 100)
                     .into(userImage);
 
-            if(people.isSelf()) {
+            if (people.isSelf()) {
                 followButton.setVisibility(View.INVISIBLE);
-            }
-            else {
+            } else {
                 followButton.setVisibility(View.VISIBLE);
 
-                if(people.getIsFollowing()==1) {
+                if (people.getIsFollowing() == 1) {
                     followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
                     //followButton.setSelected(true);
-                }
-                else {
+                } else {
                     followButton.setText(getActivity().getResources().getString(R.string.icon_follow_user));
                     //followButton.setSelected(false);
                 }
@@ -275,23 +274,20 @@ public class FindPeopleFragment extends DefaultVerticalListView
     }
 
 
-
-    public static class PeopleResult extends CodeDataParser
-    {
+    public static class PeopleResult extends CodeDataParser {
         List<People> people;
         public int offset;
 
-        public List<?> getList()
-        {
+        public List<?> getList() {
             return people;
         }
-        public Object getData()
-        {
+
+        public Object getData() {
             return this;
         }
-        public void setData(Object data)
-        {
-            this.people=(List<People>)data;
+
+        public void setData(Object data) {
+            this.people = (List<People>) data;
         }
     }
 }

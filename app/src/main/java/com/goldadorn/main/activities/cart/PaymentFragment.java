@@ -283,6 +283,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             if (data != null) {
                 Log.d("djpay", "onActivityResult - data not null");
                 String result = data.getStringExtra("result");
+                Log.d("djpay", "onActivityResult - result: "+result);
                 String status = null;
                 try {
                     JSONObject json = new JSONObject(result);

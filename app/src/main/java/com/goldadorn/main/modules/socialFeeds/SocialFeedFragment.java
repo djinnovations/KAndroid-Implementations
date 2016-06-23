@@ -46,6 +46,7 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
+import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -1473,7 +1474,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             age.setText(socialPost.getAge());
 
             pollLabel.setVisibility(View.GONE);
-            details.setText(socialPost.getDescription());
+            details.setText(/*socialPost.getDescription()*/ EmojisHelper.getSpannedText(getContext(), socialPost.getDescription()));
+            Log.d("djemoticon", "post Title: "+socialPost.getDescription());
 
             commentsLabel.setText(socialPost.getCommentCount() + " ");
             likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));

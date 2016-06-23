@@ -31,10 +31,10 @@ public class MyGcmPushReceiver extends GcmListenerService {
 
         String title = null;
         String message = null;
-        String image = null;
+        //String image = null;
         String timestamp = null;
-        String iconName;
-        String ctaData = null;
+        String bannerImgUrl = null;
+        String deepLinkData = null;
         for (String key: bundle.keySet())
         {
             Log.d ("djgcm", key + " is a key in the bundle");
@@ -42,8 +42,8 @@ public class MyGcmPushReceiver extends GcmListenerService {
 
         if (bundle != null){
             message = bundle.getString("mp_message");
-            iconName = bundle.getString("mp_icnm");
-            ctaData = bundle.getString("mp_cta");
+            bannerImgUrl = bundle.getString("mp_icnm");
+            deepLinkData = bundle.getString("mp_cta");
             title = bundle.getString("mp_title");
         }
         else{
@@ -53,7 +53,7 @@ public class MyGcmPushReceiver extends GcmListenerService {
         Log.i(TAG, "From: " + from);
         Log.i(TAG, "Title: " + title);
         Log.i(TAG, "message: " + message);
-        Log.i(TAG, "ctaData: " + ctaData);
+        Log.i(TAG, "ctaData: " + deepLinkData);
         Log.i(TAG, "timestamp: " + timestamp);
  
         if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
@@ -73,10 +73,10 @@ public class MyGcmPushReceiver extends GcmListenerService {
             Intent resultIntent = new Intent(getApplicationContext(), AppStartActivity.class);
             resultIntent.putExtra("message", message);
  
-            if (TextUtils.isEmpty(image)) {
+            if (TextUtils.isEmpty(bannerImgUrl)) {
                 showNotificationMessage(getApplicationContext(), title, message, timestamp, resultIntent);
             } else {
-                showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, image);
+                showNotificationMessageWithBigImage(getApplicationContext(), title, message, timestamp, resultIntent, bannerImgUrl);
             }
         }
     }
