@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layoutParent"
     android:fitsSystemWindows="true"
     tools:context=".activities.MainActivity">
 
@@ -21,205 +21,222 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <ScrollView
 
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_margin="@dimen/padding_default_2x"
-            android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/input_layout_userName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        app:errorEnabled="true">
+            android:layout_weight="1">
 
-        <EditText
-            android:id="@+id/details"
-            android:hint="Say something about this post"
-            android:maxHeight="100dp"
-            android:maxLines="10"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/input_layout_userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    app:errorEnabled="true">
+
+                    <EditText
+                        android:id="@+id/details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Say something about this post"
+                        android:maxHeight="100dp"
+                        android:maxLines="10" />
+                </android.support.design.widget.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Add Images" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/image_palce_holder_background_dark_border"
+                        android:cropToPadding="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="1" />
+
+                        <ImageView
+
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/feed_fotter_button_bg"
+                            android:padding="10dp"
+                            android:src="@drawable/vector_icon_upload_image" />
+
+                        <ImageView
+                            android:id="@+id/previewIamge1"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_margin="1dp"
+                            android:scaleType="centerCrop" />
+
+                        <ImageButton
+                            android:id="@+id/trigger1"
+                            style="@style/circleButton"
+                            android:layout_width="@dimen/circle_button_small_height"
+                            android:layout_height="@dimen/circle_button_small_height"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/vecor_icon_pencil"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/image_palce_holder_background_dark_border"
+                        android:cropToPadding="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="2" />
+
+                        <ImageView
+
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/feed_fotter_button_bg"
+                            android:padding="10dp"
+                            android:src="@drawable/vector_icon_upload_image" />
+
+                        <ImageView
+                            android:id="@+id/previewIamge2"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_margin="1dp"
+                            android:scaleType="centerCrop" />
+
+                        <ImageButton
+                            android:id="@+id/trigger2"
+                            style="@style/circleButton"
+                            android:layout_width="@dimen/circle_button_small_height"
+                            android:layout_height="@dimen/circle_button_small_height"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/vecor_icon_pencil"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="horizontal">
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/image_palce_holder_background_dark_border"
+                        android:cropToPadding="true">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="3" />
+
+                        <ImageView
+
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/feed_fotter_button_bg"
+                            android:padding="10dp"
+                            android:src="@drawable/vector_icon_upload_image" />
+
+
+                        <ImageView
+                            android:id="@+id/previewIamge3"
+                            android:layout_width="match_parent"
+                            android:layout_height="130dp"
+                            android:layout_margin="1dp"
+                            android:scaleType="centerCrop" />
+
+                        <ImageButton
+                            android:id="@+id/trigger3"
+                            style="@style/circleButton"
+                            android:layout_width="@dimen/circle_button_small_height"
+                            android:layout_height="@dimen/circle_button_small_height"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_margin="5dp"
+                            android:src="@drawable/vecor_icon_pencil"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Add Images"/>
+            android:layout_marginTop="10dp"
+            android:paddingLeft="16dp"
+            android:text="You need to select atleat 2 products to create this type of post"
+            android:textSize="12.5sp" />
 
-        <LinearLayout android:orientation="horizontal"
-            android:layout_margin="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:cropToPadding="true"
-            android:background="@drawable/image_palce_holder_background_dark_border"
-            android:layout_marginRight="10dp">
-
-            <TextView
-                android:layout_margin="10dp"
-                android:text="1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <ImageView
-
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:padding="10dp"
-                android:background="@drawable/feed_fotter_button_bg"
-                android:src="@drawable/vector_icon_upload_image"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_margin="1dp"
-                android:id="@+id/previewIamge1"
-                android:scaleType="centerCrop"/>
-            <ImageButton
-                style="@style/circleButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:id="@+id/trigger1"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:src="@drawable/vecor_icon_pencil"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="5dp"
-                />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:cropToPadding="true"
-            android:background="@drawable/image_palce_holder_background_dark_border"
-            android:layout_marginRight="4dp"
-            android:layout_marginBottom="4dp">
-
-            <TextView
-                android:layout_margin="10dp"
-                android:text="2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:padding="10dp"
-                android:background="@drawable/feed_fotter_button_bg"
-                android:src="@drawable/vector_icon_upload_image"/>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_margin="1dp"
-                android:id="@+id/previewIamge2"
-                android:scaleType="centerCrop"/>
-            <ImageButton
-                style="@style/circleButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:id="@+id/trigger2"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:src="@drawable/vecor_icon_pencil"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="5dp"
-                />
-        </RelativeLayout>
-        </LinearLayout>
-            <LinearLayout android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_height="wrap_content">
-
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:cropToPadding="true"
-            android:background="@drawable/image_palce_holder_background_dark_border"
-            android:layout_marginRight="10dp">
-
-            <TextView
-                android:layout_margin="10dp"
-                android:text="3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <ImageView
-
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:padding="10dp"
-                android:background="@drawable/feed_fotter_button_bg"
-                android:src="@drawable/vector_icon_upload_image"/>
-
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_margin="1dp"
-                android:id="@+id/previewIamge3"
-                android:scaleType="centerCrop"/>
-            <ImageButton
-                style="@style/circleButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:id="@+id/trigger3"
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:src="@drawable/vecor_icon_pencil"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="5dp"
-                />
-        </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-    </LinearLayout>
-    </ScrollView>
         <Button
-            android:layout_margin="@dimen/padding_default_2x"
             android:id="@+id/postNow"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="Publish"
-            android:textSize="20sp"
-            android:layout_centerInParent="true"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_default_2x"
+            android:gravity="center_horizontal|center_vertical"
             android:minHeight="45dp"
-            android:layout_height="wrap_content" />
+            android:text="Publish"
+            android:textSize="20sp" />
 
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

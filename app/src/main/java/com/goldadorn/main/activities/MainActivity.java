@@ -25,6 +25,7 @@ import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
 import com.goldadorn.main.dj.gesture.SwipeHelper;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.Constants;
@@ -168,7 +169,22 @@ public class MainActivity extends BaseDrawerActivity {
         logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
 
         tourThisScreen();
+
+        //testCode();
     }
+
+    /*private void testCode() {
+        String toSend = "mihpayid=700000000011019008,mode=CC,status=success,unmappedstatus=captured," +
+                "key=gtKFFx,txnid=1466756499377,amount=10.00,cardCategory=domestic,discount=0.00,net_amount_debit=10," +
+                "addedon=2016-06-24 13:52:27,productinfo=myproduct,firstname=firstname,lastname=,address1=,address2=," +
+                "city=,state=,country=,zipcode=,email=me@itsme.com,phone=,udf1=udf1,udf2=udf2,udf3=udf3,udf4=udf4," +
+                "udf5=udf5,udf6=,udf7=,udf8=,udf9=,udf10=," +
+                "hash=a439b0edce709dfcd090959a42abd7dce0a9909c9747d20e43e2880f8eefffb1009999c26e4e0ff1a3b1894efffffb3611" +
+                "d4e6975bc92b985b3c62f0eed0b034,field1=617624148004,field2=999999,field3=8153088531361761,field4=-1,field5=," +
+                "field6=,field7=,field8=,field9=SUCCESS,payment_source=payu,PG_TYPE=HDFCPG,bank_ref_num=8153088531361761," +
+                "bankcode=CC,error=E000,error_Message=No Error";
+
+    }*/
 
 
     private void tourThisScreen() {
@@ -337,7 +353,30 @@ public class MainActivity extends BaseDrawerActivity {
         }
     }
 
+
+    public final int POST_DELETE_CALL = IDUtils.generateViewId();
+    public final int POST_HIDE_CALL = IDUtils.generateViewId();
+
+    private int position = -1;
+    public void updatePostForThisUser(int what, String postId, int position){
+        ExtendedAjaxCallback ajaxCallback = null;
+        this.position = position;
+        Map<String, String> params = new HashMap<>();
+        params.put("postid", postId);
+        Log.d("djmain", "req params - updatePostForThisUser: "+params);
+        if (what == POST_DELETE_CALL){
+            ajaxCallback = getAjaxCallback(POST_DELETE_CALL);
+            getAQuery().ajax(ApiKeys.getDeletePostAPI(), params, String.class, ajaxCallback);
+        }else if (what == POST_HIDE_CALL){
+            ajaxCallback = getAjaxCallback(POST_HIDE_CALL);
+            getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
+        }
+        //ajaxCallback.method(AQuery.METHOD_POST);
+    }
+
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djmain", "url queried- MainActivity: " + url);
+        Log.d("djmain", "response- MainActivity: " + json);
         if (id == postCallToken) {
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
@@ -356,7 +395,22 @@ public class MainActivity extends BaseDrawerActivity {
                 stopUploadProgress(success);
             }
 
-        } else
+        }else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL){
+            if (position != -1){
+                boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                        layoutParent, this);
+                if (success) {
+                    if (json == null)
+                        return;
+                    if (activePage instanceof HomePage) {
+                        ((HomePage) activePage).socialFeedFragmentpage.updatePostList(position);
+                    }
+                }
+            }
+            position = -1;
+        }
+
+        else
             super.serverCallEnds(id, url, json, status);
     }
 

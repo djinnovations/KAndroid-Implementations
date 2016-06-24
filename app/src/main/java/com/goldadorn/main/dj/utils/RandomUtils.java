@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.graphics.Paint;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.Locale;
@@ -71,4 +74,16 @@ public class RandomUtils {
         textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
+
+    public static JSONObject getJSONFromString(String mapOfValues){
+        StringBuilder sb = new StringBuilder(mapOfValues);
+        String jsontext = sb.insert(0, "{").insert(sb.length(), "}").toString();
+        try {
+            JSONObject jsonObject = new JSONObject(jsontext.replaceAll("=",":"));
+            return jsonObject;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

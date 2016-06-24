@@ -8,10 +8,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -174,6 +177,14 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 getAdapter().notifyItemChanged(pos);
         }
     };
+
+
+    public void updatePostList(int pos) {
+        //// TODO: 25-06-2016
+        Log.d("djfeed", "updatePostList");
+        getDataManager().remove(pos);
+        getAdapter().notifyItemRemoved(pos);
+    }
 
     private void likeAPost(SocialPost post, int pos) {
         likeHelper.update(post, pos);
@@ -839,6 +850,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         @Bind(R.id.detailsHolder)
         ViewGroup detailsHolder;
 
+        @Bind(R.id.tvBOT1)
+        TextView tvBOT1;
+        @Bind(R.id.tvBOT2)
+        TextView tvBOT2;
+        @Bind(R.id.tvBOT3)
+        TextView tvBOT3;
 
         @Bind(R.id.buyNow1)
         View buyNow1;
@@ -963,6 +980,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             if (item.getImg2() != null && item.getImg2().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg2(), option2Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox2.setVisibility(View.VISIBLE);
+
+                if (item.getImg1() == null) {
+                    tvBOT2.setText(String.valueOf(1));
+                }
+
                 if (isVoted)
                     option2Label.setText(item.getBof3Percent2() + "%");
                 else
@@ -978,6 +1000,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             if (item.getImg3() != null && item.getImg3().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg3(), option3Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox3.setVisibility(View.VISIBLE);
+                if (item.getImg2() == null) {
+                    tvBOT3.setText(String.valueOf(1));
+                } else if (item.getImg1() == null) {
+                    tvBOT3.setText(String.valueOf(2));
+                }
                 if (isVoted)
                     option3Label.setText(item.getBof3Percent3() + "%");
                 else
@@ -1366,7 +1393,33 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         @Bind(R.id.div)
         View recoDiv;
 
+        @Bind(R.id.ivDropdown)
+        ImageView ivDropdown;
 
+        PopupMenu.OnMenuItemClickListener postOptionsClick = new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.d("djpost", "onMenuItemClick - item: " + item.getItemId());
+                if (item.getItemId() == POST_OPTION_HIDE) {
+                    getAppMainActivity().updatePostForThisUser(getAppMainActivity().POST_HIDE_CALL,
+                            ((SocialPost) getDataManager().get(getAdapterPosition())).getPostId(), getAdapterPosition());
+                } else if (item.getItemId() == POST_OPTION_DELETE) {
+                    getAppMainActivity().updatePostForThisUser(getAppMainActivity().POST_DELETE_CALL,
+                            ((SocialPost) getDataManager().get(getAdapterPosition())).getPostId(), getAdapterPosition());
+                }
+                return true;
+            }
+        };
+
+        PopupMenu.OnDismissListener postOptionDismiss = new PopupMenu.OnDismissListener() {
+            @Override
+            public void onDismiss(PopupMenu menu) {
+                ivDropdown.animate().rotation(0).start();
+                Log.d("djpost", "onDismiss - postOptions");
+            }
+        };
+
+        PopupMenu postMenu;
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == userImage || v == userName) {
@@ -1380,6 +1433,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     people.setUserId(socialPost.getUserId());
                     people.setIsDesigner(socialPost.getIsDesigner());
                     gotoUser(people);
+                } else if (v.getId() == ivDropdown.getId()) {
+                    ivDropdown.animate().rotation(-180).start();
+                    if (postMenu != null) postMenu.dismiss();
+                    postMenu.show();
                 } else if (v == followButton) {
                     int isFollowing = socialPost.getIsFollowing();
                     isFollowing = isFollowing == 0 ? 1 : 0;
@@ -1448,7 +1505,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             String appPlayStoreURL = getString(R.string.palyStoreBasicURL) + getActivity().getPackageName();
             shareActionData = new NavigationDataObject(IDUtils.generateViewId(), NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE, appPlayStoreURL);
 
-
+            setUpPostOptions();
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
             followButton.setOnClickListener(itemClick);
@@ -1459,11 +1516,24 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             likePostButton.setOnClickListener(itemClick);
             sharePostButton.setOnClickListener(itemClick);
             commentPostButton.setOnClickListener(itemClick);
+            ivDropdown.setOnClickListener(itemClick);
 
             TypefaceHelper.setFont(userName, age, details, recomandationLabel);
 
             TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), likesLabel, pollLabel, commentsLabel, shareLabel);
 
+        }
+
+        private final int POST_OPTION_HIDE = 1991;
+        private final int POST_OPTION_DELETE = 1992;
+
+        private void setUpPostOptions() {
+            postMenu = new PopupMenu(ivDropdown.getContext(), ivDropdown);
+            Menu menu = postMenu.getMenu();
+            menu.add(Menu.NONE, POST_OPTION_HIDE, 1, "Hide");
+            menu.add(Menu.NONE, POST_OPTION_DELETE, 2, "Delete");
+            postMenu.setOnMenuItemClickListener(postOptionsClick);
+            postMenu.setOnDismissListener(postOptionDismiss);
         }
 
         final public void updateItemView(Object item, View view, int position) {
@@ -1475,7 +1545,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
             pollLabel.setVisibility(View.GONE);
             details.setText(/*socialPost.getDescription()*/ EmojisHelper.getSpannedText(getContext(), socialPost.getDescription()));
-            Log.d("djemoticon", "post Title: "+socialPost.getDescription());
+            Log.d("djemoticon", "post Title: " + socialPost.getDescription());
 
             commentsLabel.setText(socialPost.getCommentCount() + " ");
             likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));

@@ -27,5 +27,6 @@
     <string name="icon_cart_new">{faw-shopping_cart}</string>
     <string name="icon_showcase_new">{gmd-blur_circular}</string>
     <string name="icon_book_appointment">{ent-calendar}</string>
+    <string name="icon_drop_down">{gmd-arrow_drop_down}</string>
 
 </resources>

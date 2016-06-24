@@ -317,5 +317,10 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="PopupMenuTextView" parent="@style/android:Theme.Holo.Light">
+        <item name="android:textColor">#00FF00</item>
+        <item name="android:textSize">5sp</item>
+    </style>
+
     <color name="appBGColor">#ffffff</color>
 </resources>

@@ -31,6 +31,17 @@ public class EmojisHelper {
         mapOfEmojis.put(":o", R.drawable.emoji_ooh_exp);
         mapOfEmojis.put("@@", R.drawable.emoji_two_eye_love);
         mapOfEmojis.put(":*", R.drawable.emoji_kiss);
+        mapOfEmojis.put("(N)", R.drawable.emoji_hand_thumbs_down);
+        mapOfEmojis.put("(n)", R.drawable.emoji_hand_thumbs_down);
+        mapOfEmojis.put("(Y)", R.drawable.emoji_hand_thumbs_up);
+        mapOfEmojis.put("(y)", R.drawable.emoji_hand_thumbs_up);
+        mapOfEmojis.put(":p", R.drawable.emoji_tongue_out);
+        mapOfEmojis.put(":P", R.drawable.emoji_tongue_out);
+        mapOfEmojis.put("(L)", R.drawable.emoji_heart);
+        mapOfEmojis.put("(l)", R.drawable.emoji_heart);
+        mapOfEmojis.put("(ok)", R.drawable.emoji_hand_super);
+        mapOfEmojis.put("(OK)", R.drawable.emoji_hand_super);
+        mapOfEmojis.put("(Ok)", R.drawable.emoji_hand_super);
     }
 
     /*public static void with(EditText et) {

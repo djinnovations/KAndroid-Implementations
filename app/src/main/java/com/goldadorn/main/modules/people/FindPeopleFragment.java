@@ -25,6 +25,7 @@ import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
@@ -59,12 +60,19 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         @Override
         public void onSuccess(PeopleUpdateHelper host, People post, int pos) {
             if (host instanceof FollowPeopleHelper) {
+                People mySelf = getApp().getPeople();
                 int followercount;
+                int followingcount;
                 Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
                 int isFollowing = post.getIsFollowing();
                 if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
                     followercount = post.getFollowerCount() - 1;
-                } else followercount = post.getFollowerCount() + 1;
+                    followingcount = mySelf.getFollowingCount() - 1;
+                } else{
+                    followercount = post.getFollowerCount() + 1;
+                    followingcount = mySelf.getFollowingCount() + 1;
+                }
+                mySelf.setFollowingCount(followingcount);
                 post.setFollowerCount(followercount);
                 Log.d("djpeople", "onSuccess - post-followercount: " + post.getFollowerCount());
                 getAdapter().notifyItemChanged(pos);

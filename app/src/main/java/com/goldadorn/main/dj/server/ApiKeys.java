@@ -55,6 +55,15 @@ public class ApiKeys {
         return BuildConfig.END_POINT + VERB.BOOK_APPOINTMENT_API;
     }
 
+    public static final String getHidePostAPI(){
+        return BuildConfig.END_POINT + VERB.POST_HIDE;
+    }
+
+    public static final String getDeletePostAPI(){
+        return BuildConfig.END_POINT + VERB.POST_DELETE;
+    }
+
+
     private static final class VERB{
 
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
@@ -64,5 +73,7 @@ public class ApiKeys {
         private static final String UPDATE_PAYMENT_API = "notifypaymentstatus";
         private static final String NEW5_DESC_API = "getproductbasicinfo";
         private static final String BOOK_APPOINTMENT_API = "bookappointment";
+        private static final String POST_HIDE = "hidepost";
+        private static final String POST_DELETE = "deletepost";
     }
 }

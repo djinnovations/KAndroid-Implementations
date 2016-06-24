@@ -1,82 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="@dimen/padding_default"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/padding_default"
+    android:orientation="vertical">
 
-        <org.github.images.CircularImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="@dimen/padding_default"
-            tools:background="#cccccc"
-            android:id="@+id/userImage"
-            android:layout_alignParentLeft="true"
-            app:border="true"
-            app:border_color="@color/avtarBorderColor"
-            app:border_width=".5dp"
-            app:shadow="false"
-            android:layout_centerHorizontal="true"/>
+    <org.github.images.CircularImageView
+        android:id="@+id/userImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/padding_default"
+        app:border="true"
+        app:border_color="@color/avtarBorderColor"
+        app:border_width=".5dp"
+        app:shadow="false"
+        tools:background="#cccccc" />
 
-        <TextView
-            android:layout_marginLeft="@dimen/padding_default"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
-            style="@style/linkBlackButton"
-            android:id="@+id/userName"
-            android:layout_alignTop="@+id/userImage"
-            android:layout_toRightOf="@+id/userImage"
-            android:layout_toEndOf="@+id/userImage" />
+    <TextView
+        android:id="@+id/userName"
+        style="@style/linkBlackButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/userImage"
+        android:layout_marginLeft="@dimen/padding_default"
+        android:layout_toEndOf="@+id/userImage"
+        android:layout_toRightOf="@+id/userImage"
+        android:text="Medium Text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/age"
-            android:textSize="12sp"
-            android:layout_below="@+id/userName"
-            android:layout_alignLeft="@+id/userName"
-            android:layout_alignStart="@+id/userName" />
-
-
-        <com.mikepenz.iconics.view.IconicsButton
-            style="@style/postFotterButton"
-            android:layout_width="@dimen/circle_button_tiny_height"
-            android:text="@string/icon_follow_user"
-            android:layout_height="@dimen/circle_button_tiny_height"
-            android:id="@+id/followButton"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="@dimen/padding_default"
-            android:layout_alignTop="@+id/userName"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userName"
+        android:layout_alignStart="@+id/userName"
+        android:layout_below="@+id/userName"
+        android:text="Small Text"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textSize="12sp" />
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="10"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="details"
-            android:id="@+id/details"
-            android:layout_below="@+id/userImage"
-            android:layout_alignLeft="@+id/userImage"
-            android:layout_alignStart="@+id/userImage" />
+    <ImageView
+        android:id="@+id/ivDropdown"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="2dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_drop_down" />
+
+
+    <com.mikepenz.iconics.view.IconicsButton
+        android:id="@+id/followButton"
+        style="@style/postFotterButton"
+        android:layout_width="@dimen/circle_button_tiny_height"
+        android:layout_height="@dimen/circle_button_tiny_height"
+        android:layout_alignTop="@+id/userName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/ivDropdown"
+        android:text="@string/icon_follow_user" />
+
+
+    <TextView
+        android:id="@+id/details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/userImage"
+        android:layout_alignStart="@+id/userImage"
+        android:layout_below="@+id/userImage"
+        android:maxLines="10"
+        android:text="details"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
     <View
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/details"
+        android:id="@+id/divTop"
         android:layout_width="match_parent"
         android:layout_height=".5dp"
-        android:id="@+id/divTop"
+        android:layout_below="@+id/details"
         android:layout_marginLeft="@dimen/padding_default_half"
         android:layout_marginRight="@dimen/padding_default_half"
-        android:background="@color/feedFotterDivColor"/>
+        android:layout_marginTop="5dp"
+        android:background="@color/feedFotterDivColor" />
 </RelativeLayout>

@@ -25,7 +25,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector3;
     protected String getPageTitle()
     {
-        return "Best of Three";
+        return /*"Best of Three"*/"Pick the best";
     }
     protected List<File> getFiles()
     {
@@ -150,7 +150,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
 
     protected void viewCreted(People people,int maxImageSize)
     {
-        details.setText("Guys, which one is the best of these 3? #BOT");
+        details.setText("Guys, which one is the best of these? #BOT");
         imageSelector1 =  new GalleryImageSelector(this,this,previewIamge1,trigger1);
         imageSelector1.setMaxSize(maxImageSize);
         imageSelector2 =  new GalleryImageSelector(this,this,previewIamge2,trigger2);
