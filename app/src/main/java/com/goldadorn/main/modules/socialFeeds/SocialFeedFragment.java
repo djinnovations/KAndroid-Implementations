@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.socialFeeds;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -78,10 +80,13 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.listDataView.DefaultErrorHandler;
+import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.kimeeo.library.utils.NetworkUtilities;
 import com.nineoldandroids.animation.Animator;
 import com.squareup.picasso.Picasso;
 
@@ -402,7 +407,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         setUserInfoCache();
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Social feed");
         logEventsAnalytics(GAAnalyticsEventNames.SOCIAL_FEED);
-
+        //setErrorFrames();
         ButterKnife.bind(this, view);
 
         if (getAppMainActivity() != null) {
@@ -457,6 +462,126 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         followHelper = new FollowHelper(getActivity(), getApp().getCookies(), postUpdateResult);
     }
 
+    /*private View setErrorFrames(View view) {
+        *//*TextView errTextView = (TextView) view.findViewById(R.id.emptyViewMessage);
+        errTextView.setText("Oops! Looks like we had a glitch. Please restart the app to get back on");*//*
+        Button btnRefresh = (Button) view.findViewById(R.id.retry);
+        btnRefresh.setText("Restart App");
+        return view;
+    }
+
+
+    @Override
+    public void onDataLoadError(String url, Object status) {
+        //super.onDataLoadError(url, status);
+        Log.d("djfeed", "onDataLoadError");
+        mempHelper.updateView(this.getDataManager());
+        updateSwipeRefreshLayout(false);
+    }
+
+    private class MyEmptyViewHelper extends EmptyViewHelper {
+
+        private boolean showInetnetError;
+        private boolean showRetryButton;
+
+        public MyEmptyViewHelper(Context context, View emptyView, IEmptyViewHelper emptyViewHelper,
+                                 boolean showInetnetError, boolean showRetryButton) {
+            super(context, emptyView, emptyViewHelper, showInetnetError, showRetryButton);
+            this.showInetnetError = showInetnetError;
+            this.showRetryButton = showRetryButton;
+        }
+
+        @Override
+        public void updateView(List dataManager) {
+            Log.d("djfeed", "updateView - visibilty: " + mEmptyView.getVisibility());
+            if (mEmptyView != null && dataManager != null) {
+                Log.d("djfeed", "updateView- pt2: " + mEmptyView.getVisibility());
+                if (dataManager.size() == 0) {
+                    recyclerView.setVisibility(View.GONE);
+                    Log.d("djfeed", "updateView- pt3: " + mEmptyView.getVisibility());
+                    if (this.showInetnetError && !NetworkUtilities.isConnected(this.context)) {
+                        Log.d("djfeed", "updateView- pt4: " + mEmptyView.getVisibility());
+                        if (mEmptyViewImage != null) {
+                            mEmptyViewImage.setImageDrawable(mEmptyViewHelper.getInternetViewDrawable());
+                        }
+
+                        if (mEmptyViewMessage != null) {
+                            mEmptyViewMessage.setText(mEmptyViewHelper.getInternetViewMessage());
+                        }
+
+                       *//* if (this.mRetry != null) {
+                            if (this.showRetryButton) {
+                                this.mRetry.setVisibility(0);
+                            } else {
+                                this.mRetry.setVisibility(8);
+                            }
+                        }*//*
+                    } else {
+                        Log.d("djfeed", "updateView- pt5: " + mEmptyView.getVisibility());
+                        if (mEmptyViewImage != null) {
+                            mEmptyViewImage.setImageDrawable(mEmptyViewHelper.getEmptyViewDrawable());
+                        }
+
+                        if (mEmptyViewMessage != null) {
+                            mEmptyViewMessage.setText(mEmptyViewHelper.getEmptyViewMessage());
+                        }
+                        *//*if (this.mRetry != null) {
+                            this.mRetry.setVisibility(8);
+                        }*//*
+                    }
+                    Log.d("djfeed", "updateView- pt6: " + mEmptyView.getVisibility());
+
+                    if (mRetry != null) {
+                        if (this.showRetryButton) {
+                            mRetry.setVisibility(0);
+                        } else {
+                            mRetry.setVisibility(8);
+                        }
+                    }
+                    mEmptyView.setVisibility(0);
+                    Log.d("djfeed", "updateView- pt7: " + mEmptyView.getVisibility());
+
+                } else {
+                    Log.d("djfeed", "updateView- pt8: " + mEmptyView.getVisibility());
+                    mEmptyView.setVisibility(8);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            Log.d("djfeed", "updateView- recycler view visiblity: " + recyclerView.getVisibility());
+        }
+
+    }
+
+
+    DefaultErrorHandler errorHandler = new DefaultErrorHandler() {
+        @Override
+        public Resources getResources() {
+            return getAppMainActivity().getResources();
+        }
+
+        @Override
+        public void retry() {
+            RandomUtils.restartApp(getAppMainActivity());
+        }
+
+        @Override
+        public String getEmptyViewMessage() {
+            //return super.getEmptyViewMessage();
+            return "Oops! Looks like we had a glitch. Please restart the app to get back on";
+        }
+    };
+
+    MyEmptyViewHelper mempHelper;
+
+    @Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        //return super.createEmptyViewHelper();
+        View errView = LayoutInflater.from(getApp().getApplicationContext()).inflate(R.layout._fragment_recycler_empty_view, null);
+        mempHelper = new MyEmptyViewHelper(getContext(), setErrorFrames(errView), errorHandler, true, true);
+        return mempHelper;
+    }*/
+
     public void closeMenu() {
         if (mFloatingActionsMenu.isExpanded())
             mFloatingActionsMenu.collapse();
@@ -491,7 +616,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         }
     }
-
 
     protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
@@ -961,6 +1085,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 Log.d("djfeed", "BOT isVoted - must set color to pink: " + isVoted);
                 votePostButton.setSelected(true);
             } else votePostButton.setSelected(false);
+
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), option1Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox1.setVisibility(View.VISIBLE);
@@ -1027,9 +1152,17 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 param = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent2().toString()));
                 stack2.setLayoutParams(param);
 
-
                 param = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent3().toString()));
                 stack3.setLayoutParams(param);
+
+                if (item.getImg1() == null) {
+                    stack2.setText(String.valueOf(1));
+                }
+                if (item.getImg2() == null) {
+                    stack3.setText(String.valueOf(1));
+                } else if (item.getImg1() == null) {
+                    stack3.setText(String.valueOf(2));
+                }
 
                 stackBar.setWeightSum(100);
             }
@@ -1041,13 +1174,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 option2Button.setText("{hea_heart_fill}");
                 option3Button.setText("{hea_heart_fill}");
 
-
                 option1Button.setSelected(false);
                 option2Button.setSelected(false);
                 option3Button.setSelected(false);
                 voteToView.setVisibility(View.VISIBLE);
                 stackBar.setVisibility(View.GONE);
-
 
             } else if (item.getIsVoted() == 1) {
                 option1Button.setText("{hea_heart_fill}");
@@ -1058,7 +1189,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 option3Button.setSelected(true);
                 voteToView.setVisibility(View.GONE);
                 stackBar.setVisibility(View.VISIBLE);
-
 
             } else if (item.getIsVoted() == 2) {
                 option1Button.setText("{hea_heart_fill}");
@@ -1406,6 +1536,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 } else if (item.getItemId() == POST_OPTION_DELETE) {
                     getAppMainActivity().updatePostForThisUser(getAppMainActivity().POST_DELETE_CALL,
                             ((SocialPost) getDataManager().get(getAdapterPosition())).getPostId(), getAdapterPosition());
+                } else if (item.getItemId() == POST_OPTION_REPORT) {
+                    getAppMainActivity().updatePostForThisUser(getAppMainActivity().POST_REPORT_CALL,
+                            ((SocialPost) getDataManager().get(getAdapterPosition())).getPostId(), getAdapterPosition());
                 }
                 return true;
             }
@@ -1435,7 +1568,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     gotoUser(people);
                 } else if (v.getId() == ivDropdown.getId()) {
                     ivDropdown.animate().rotation(-180).start();
-                    if (postMenu != null) postMenu.dismiss();
+                    //if (postMenu != null) postMenu.dismiss();
+                    if (socialPost.isSelf()) {
+                        updateDeleteItemToPopUp(true);
+                    } else updateDeleteItemToPopUp(false);
                     postMenu.show();
                 } else if (v == followButton) {
                     int isFollowing = socialPost.getIsFollowing();
@@ -1526,14 +1662,22 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         private final int POST_OPTION_HIDE = 1991;
         private final int POST_OPTION_DELETE = 1992;
+        private final int POST_OPTION_REPORT = 1993;
 
         private void setUpPostOptions() {
             postMenu = new PopupMenu(ivDropdown.getContext(), ivDropdown);
             Menu menu = postMenu.getMenu();
             menu.add(Menu.NONE, POST_OPTION_HIDE, 1, "Hide");
-            menu.add(Menu.NONE, POST_OPTION_DELETE, 2, "Delete");
+            menu.add(Menu.NONE, POST_OPTION_REPORT, 2, "Report");
             postMenu.setOnMenuItemClickListener(postOptionsClick);
             postMenu.setOnDismissListener(postOptionDismiss);
+        }
+
+        private void updateDeleteItemToPopUp(boolean canshow) {
+            if (canshow) {
+                if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null)
+                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, 3, "Delete");
+            } else postMenu.getMenu().removeItem(POST_OPTION_DELETE);
         }
 
         final public void updateItemView(Object item, View view, int position) {

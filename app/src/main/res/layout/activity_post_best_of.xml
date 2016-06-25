@@ -225,7 +225,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:paddingLeft="16dp"
-            android:text="You need to select atleat 2 products to create this type of post"
+            android:paddingRight="16dp"
+            android:text="You need to select atleast 2 products to create this type of post"
             android:textSize="12.5sp" />
 
         <Button

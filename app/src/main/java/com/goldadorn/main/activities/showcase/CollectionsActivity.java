@@ -427,11 +427,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         mFrameScrollDummy.setVisibility(View.INVISIBLE);
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFeedFragment();
-            /*f = new FilterTimelineFragment();
-            Bundle args = new Bundle();
-            FilterPostParams fpp = new FilterPostParams(("C" + mCollection.id), "0", "0");
-            args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
+            //f = new SocialFeedFragment();
+            //Bundle args = new Bundle();
+            FilterPostParams fpp = new FilterPostParams(("C" + String.valueOf(mCollection.id)), "0", "0");
+            f = FilterTimelineFragment.newInstance(fpp);
+            /*args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
             f.setArguments(args);*/
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
@@ -568,7 +568,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
-    private void launchDesignerScreen(){
+    private void launchDesignerScreen() {
         menuAction(R.id.nav_showcase);
         finish();
     }
@@ -638,10 +638,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         @Override
         public void onClick(final View v) {
-            if (v.getId() == ownerName.getId()){
+            if (v.getId() == ownerName.getId()) {
                 launchDesignerScreen();
-            }
-            else if (v.getId() == like.getId()) {
+            } else if (v.getId() == like.getId()) {
                 v.setEnabled(false);
                 final Collection collection = (Collection) v.getTag();
                 final boolean isLiked = v.isSelected();
@@ -681,11 +680,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                                 }
                             }
                         });
-            }else if (v.getId() == btnBookApoint.getId()){
+            } else if (v.getId() == btnBookApoint.getId()) {
                 displayBookAppointment();
-            }
-
-            else if (v.getId() == share.getId()) {
+            } else if (v.getId() == share.getId()) {
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             }
         }

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.model.Comment;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
@@ -45,35 +47,33 @@ import butterknife.OnClick;
 /**
  * Created by bhavinpadhiyar on 2/26/16.
  */
-public class CommentsView extends DefaultVerticalListView
-{
+public class CommentsView extends DefaultVerticalListView {
 
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
         params.put(URLHelper.LIKE_A_POST.POST_ID, getPostID());
         return params;
     }
-    protected DataManager createDataManager()
-    {
-        return new CommentDataManager(getActivity(),this,getApp().getCookies());
+
+    protected DataManager createDataManager() {
+        return new CommentDataManager(getActivity(), this, getApp().getCookies());
     }
 
     public String getPostID() {
-        return (String)getPramas();
+        return (String) getPramas();
     }
 
     public Integer getCommentCount() {
-        if(getDataManager()!=null)
+        if (getDataManager() != null)
             return getDataManager().size();
         return -1;
     }
 
-    public class CommentDataManager extends DefaultProjectDataManager
-    {
-        public CommentDataManager(Context context, IDataManagerDelegate delegate,List<Cookie> cookies)
-        {
-            super(context,delegate,cookies);
+    public class CommentDataManager extends DefaultProjectDataManager {
+        public CommentDataManager(Context context, IDataManagerDelegate delegate, List<Cookie> cookies) {
+            super(context, delegate, cookies);
         }
+
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
         }
@@ -82,13 +82,14 @@ public class CommentsView extends DefaultVerticalListView
             if (list != null) {
                 Collections.reverse(list);
             }
-            super.dataLoadingDone(list,isRefreshPage);
+            super.dataLoadingDone(list, isRefreshPage);
         }
     }
+
     private PostCommentHelper postCommentHelper;
 
-    protected View createRootView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-        if(getDataManager().getRefreshEnabled())
+    protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getDataManager().getRefreshEnabled())
             return inflater.inflate(R.layout.feed_comments_fragment_recycler_with_swipe_refresh_layout, container, false);
         else
             return inflater.inflate(R.layout.feed_comments_fragment_recycler, container, false);
@@ -97,9 +98,11 @@ public class CommentsView extends DefaultVerticalListView
     public int getColumnsPhone() {
         return 1;
     }
+
     public int getColumnsTablet10() {
         return 1;
     }
+
     public int getColumnsTablet7() {
         return 1;
     }
@@ -108,16 +111,19 @@ public class CommentsView extends DefaultVerticalListView
         super.configDataManager(dataManager);
         dataManager.setRefreshEnabled(false);
     }
+
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new CommentDividerDecoration(this.getActivity());
     }
+
     public static class ViewTypes {
         public static final int VIEW_COMMENT = 5;
     }
-    public void onItemClick(Object baseObject)
-    {
+
+    public void onItemClick(Object baseObject) {
         super.onItemClick(baseObject);
     }
+
     @Bind(R.id.details)
     EditText details;
 
@@ -125,11 +131,12 @@ public class CommentsView extends DefaultVerticalListView
     Button send;
     PostUpdateHelper.PostUpdateResult postUpdateResult = new PostUpdateHelper.PostUpdateResult() {
         @Override
-        public void onFail(PostUpdateHelper host,SocialPost post, int pos) {
+        public void onFail(PostUpdateHelper host, SocialPost post, int pos) {
 
         }
+
         @Override
-        public void onSuccess(PostUpdateHelper host,SocialPost post, int pos) {
+        public void onSuccess(PostUpdateHelper host, SocialPost post, int pos) {
             Comment comment = new Comment();
             comment.setUserId(getApp().getUser().id);
             comment.setUserName(getApp().getUser().getName());
@@ -139,7 +146,7 @@ public class CommentsView extends DefaultVerticalListView
             comment.updateRedableDate(comment.getTimestamp());
             comment.setAge(comment.strElapsed(comment.getTimestamp()));
             getDataManager().add(comment);
-            getRecyclerView().scrollToPosition(getDataManager().size()-1);
+            getRecyclerView().scrollToPosition(getDataManager().size() - 1);
         }
     };
 
@@ -160,35 +167,33 @@ public class CommentsView extends DefaultVerticalListView
 
     public void onViewCreated(View view) {
         ButterKnife.bind(this, view);
-        postCommentHelper = new PostCommentHelper(getActivity(), getApp().getCookies(),postUpdateResult);
+        postCommentHelper = new PostCommentHelper(getActivity(), getApp().getCookies(), postUpdateResult);
         details.addTextChangedListener(new DataTextWatcher(details));
         details.setBackgroundColor(Color.parseColor("#00000000"));
         TypefaceHelper.setFont(details);
     }
 
-    public int getListItemViewType(int position,Object item)
-    {
+    public int getListItemViewType(int position, Object item) {
         return ViewTypes.VIEW_COMMENT;
     }
-    public View getItemView(int viewType,LayoutInflater inflater,ViewGroup container)
-    {
-        return inflater.inflate(R.layout.comments_list_item,null);
+
+    public View getItemView(int viewType, LayoutInflater inflater, ViewGroup container) {
+        return inflater.inflate(R.layout.comments_list_item, null);
     }
-    public BaseItemHolder getItemHolder(int viewType,View view)
-    {
+
+    public BaseItemHolder getItemHolder(int viewType, View view) {
         return new CommentItemHolder(view);
     }
-    public Class getLoadedDataParsingAwareClass()
-    {
+
+    public Class getLoadedDataParsingAwareClass() {
         return CommentResult.class;
     }
-    public String getNextDataURL(PageData pageData)
-    {
-        if(pageData.curruntPage==1)
+
+    public String getNextDataURL(PageData pageData) {
+        if (pageData.curruntPage == 1)
             return getApp().getUrlHelper().getFetchCommentsServiceURL();
         return null;
     }
-
 
 
     public class CommentItemHolder extends BaseItemHolder {
@@ -206,69 +211,60 @@ public class CommentsView extends DefaultVerticalListView
         TextView details;
 
 
-
-
-        private View.OnClickListener itemClick = new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        private View.OnClickListener itemClick = new View.OnClickListener() {
+            public void onClick(View v) {
                 People p = new People();
                 p.setUserId(comment.getUserId());
                 p.setUserName(comment.getUserName());
                 p.setProfilePic(comment.getProfilePic());
                 p.setIsSelf(comment.isSelf());
-                if(v==userImage)
-                {
+                if (v == userImage) {
                     gotoUser(p);
-                }
-                else if(v==userName)
-                {
+                } else if (v == userName) {
                     gotoUser(p);
                 }
             }
         };
         private Comment comment;
 
-        public CommentItemHolder(View itemView)
-        {
+        public CommentItemHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
         }
-        public void updateItemView(Object item,View view,int position)
-        {
-            comment =(Comment)item;
+
+        public void updateItemView(Object item, View view, int position) {
+            comment = (Comment) item;
             userName.setText(comment.getUserName());
-            TypefaceHelper.setFont(userName,details,time);
+            TypefaceHelper.setFont(userName, details, time);
 
             time.setText(comment.getRedableDate());
 
-            if(comment.getCommentText()!=null && comment.getCommentText().equals("")==false)
-                details.setText('"'+comment.getCommentText()+'"');
+            if (!TextUtils.isEmpty(comment.getCommentText()))
+                details.setText(EmojisHelper.getSpannedText(getContext(), "\"" + comment.getCommentText() + "\""));
             Picasso.with(getContext())
                     .load(comment.getProfilePic())
                     .placeholder(R.drawable.vector_image_place_holder_profile)
                     .tag(getContext())
-                    .resize(100,100)
+                    .resize(100, 100)
                     .into(userImage);
         }
     }
 
-    public static class CommentResult extends CodeDataParser
-    {
+    public static class CommentResult extends CodeDataParser {
         List<Comment> comments;
-        public List<?> getList()
-        {
+
+        public List<?> getList() {
             return comments;
         }
-        public Object getData()
-        {
+
+        public Object getData() {
             return comments;
         }
-        public void setData(Object data)
-        {
-            this.comments=(List<Comment>)data;
+
+        public void setData(Object data) {
+            this.comments = (List<Comment>) data;
         }
     }
 
@@ -288,13 +284,10 @@ public class CommentsView extends DefaultVerticalListView
         }
 
         public void afterTextChanged(Editable editable) {
-            if(view.getId() == R.id.details)
-            {
-                if(details.getText().toString().trim().equals(""))
-                {
+            if (view.getId() == R.id.details) {
+                if (details.getText().toString().trim().equals("")) {
                     send.setEnabled(false);
-                }
-                else
+                } else
                     send.setEnabled(true);
             }
         }

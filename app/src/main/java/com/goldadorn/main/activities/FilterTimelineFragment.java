@@ -1,13 +1,16 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
@@ -24,18 +27,27 @@ import java.util.Map;
  */
 public class FilterTimelineFragment extends SocialFeedFragment {
 
-    FilterPostParams fpp;
+    static FilterPostParams fpp;
 
+
+    public static FilterTimelineFragment newInstance(FilterPostParams fpp) {
+        FilterTimelineFragment f = new FilterTimelineFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
+        FilterTimelineFragment.fpp = fpp;
+        f.setArguments(bundle);
+        return f;
+    }
 
     public void onViewCreated(View view) {
         Log.d("djtimeline", "onViewCreated ");
         super.onViewCreated(view);
-        fpp = getArguments().getParcelable(IntentKeys.FILTER_POST_PARAMS);
+        //fpp = getArguments().getParcelable(IntentKeys.FILTER_POST_PARAMS);
         getFloatingActionsMenu().setVisibility(View.GONE);
         getFabBackImage().setVisibility(View.GONE);
-
         //followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
     }
+
 
     protected DataManager createDataManager() {
         return new FilterDataManager(getActivity(), this, getApp().getCookies());
@@ -46,14 +58,20 @@ public class FilterTimelineFragment extends SocialFeedFragment {
             super(context, delegate, cookies);
         }
 
+        @Override
+        public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
+            //return super.getRefreshDataServerCallParams(data);
+            return null;
+        }
+
     }
 
     protected void configDataManager(DataManager dataManager) {
         //People userData=crateUser();
         /*if(userData!=null) {
             setUser(userData);*/
-        dataManager.setRefreshItemPos(1);
-        dataManager.setRefreshEnabled(true);
+        //dataManager.setRefreshItemPos(1);
+        dataManager.setRefreshEnabled(false);
         //    dataManager.add(userData);
         //}
     }
@@ -89,7 +107,7 @@ public class FilterTimelineFragment extends SocialFeedFragment {
     }
 
     public String getRefreshDataURL(PageData pageData) {
-        isRefreshingData = true;
+        isRefreshingData = false;
         return getApp().getUrlHelper().getUsersSocialFeedServiceURL();
     }
 

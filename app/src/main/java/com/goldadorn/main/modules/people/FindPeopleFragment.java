@@ -16,16 +16,13 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.People;
-import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
-import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
@@ -61,20 +58,25 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         public void onSuccess(PeopleUpdateHelper host, People post, int pos) {
             if (host instanceof FollowPeopleHelper) {
                 People mySelf = getApp().getPeople();
+                Log.d("djpeople", "myselfremoved?: " + getDataManager().remove(mySelf));
                 int followercount;
                 int followingcount;
                 Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
+                Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
                 int isFollowing = post.getIsFollowing();
                 if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
                     followercount = post.getFollowerCount() - 1;
                     followingcount = mySelf.getFollowingCount() - 1;
-                } else{
+                } else {
                     followercount = post.getFollowerCount() + 1;
                     followingcount = mySelf.getFollowingCount() + 1;
                 }
                 mySelf.setFollowingCount(followingcount);
+                getDataManager().add((pos + 1), mySelf);
+                //getDataManager().
                 post.setFollowerCount(followercount);
                 Log.d("djpeople", "onSuccess - post-followercount: " + post.getFollowerCount());
+                Log.d("djpeople", "onSuccess - post-followingcount: " + mySelf.getFollowingCount());
                 getAdapter().notifyItemChanged(pos);
             }
 
@@ -167,6 +169,20 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                 pageData.curruntPage = pageData.totalPage = 1;
             }
         }
+
+
+        public int getPeoplePosition(People people) {
+            int position = -1;
+
+            for (int value = 0; value < this.size(); ++value) {
+                if (this.get(value) == people) {
+                    position = value;
+                    break;
+                }
+            }
+
+            return position;
+        }
     }
 
     public Class getLoadedDataParsingAwareClass() {
@@ -244,9 +260,7 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         }
 
         public void updateItemView(Object item, View view, int position) {
-            Log.d("djpeople", "updateView");
             people = (People) item;
-
             userName.setText(people.getUserName());
             if (people.getIsDesigner() == 1)
                 designer.setText("Designer");
@@ -254,9 +268,7 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                 designer.setText("");
 
             countFollowing.setText(people.getFollowingCount() + "");
-            Log.d("djpeople", "updateView - countFollowing: " + people.getFollowingCount());
             countFollowers.setText(people.getFollowerCount() + "");
-            Log.d("djpeople", "updateView - countFollowers: " + people.getFollowerCount());
 
             Picasso.with(getContext())
                     .load(people.getProfilePic())
@@ -266,10 +278,11 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                     .into(userImage);
 
             if (people.isSelf()) {
+                //mySelfPeople = people;
+                getApp().setPeople(people);
                 followButton.setVisibility(View.INVISIBLE);
             } else {
                 followButton.setVisibility(View.VISIBLE);
-
                 if (people.getIsFollowing() == 1) {
                     followButton.setText(getActivity().getResources().getString(R.string.icon_un_follow_user));
                     //followButton.setSelected(true);
@@ -278,6 +291,9 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                     //followButton.setSelected(false);
                 }
             }
+            /*int myPos = ((DefaultProjectDataManager1) getDataManager()).getPeoplePosition(getApp().getPeople());
+            Log.d("djpeople", "myPos: " + myPos);
+            ((People) getDataManager().get(myPos)).setFollowingCount(getApp().getPeople().getFollowingCount());*/
         }
     }
 

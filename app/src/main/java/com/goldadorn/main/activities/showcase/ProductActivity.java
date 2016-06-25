@@ -38,11 +38,13 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.FilterTimelineFragment;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
@@ -387,7 +389,9 @@ public class ProductActivity extends BaseDrawerActivity {
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
             id = R.id.frame_no_scroll_dummy;
-            f = new SocialFeedFragment();
+            //f = new SocialFeedFragment();
+            FilterPostParams fpp = new FilterPostParams(("P" + String.valueOf(mProduct.id)), "0", "0");
+            f = FilterTimelineFragment.newInstance(fpp);
             mFrame.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {

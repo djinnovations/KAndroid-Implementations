@@ -35,9 +35,11 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
+import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
@@ -421,7 +423,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 });
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
 
-
         tourThisScreen();
     }
 
@@ -548,7 +549,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mFrameScrollDummy.setVisibility(View.INVISIBLE);
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
-            f = new SocialFeedFragment();
+            //f = new SocialFeedFragment();
+            FilterPostParams fpp = new FilterPostParams(String.valueOf(mUser.id), "0", "0");
+            f = FilterTimelineFragment.newInstance(fpp);
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);

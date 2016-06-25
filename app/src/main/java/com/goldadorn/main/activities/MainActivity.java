@@ -28,6 +28,7 @@ import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.SocialPost;
@@ -356,6 +357,7 @@ public class MainActivity extends BaseDrawerActivity {
 
     public final int POST_DELETE_CALL = IDUtils.generateViewId();
     public final int POST_HIDE_CALL = IDUtils.generateViewId();
+    public final int POST_REPORT_CALL = IDUtils.generateViewId();
 
     private int position = -1;
     public void updatePostForThisUser(int what, String postId, int position){
@@ -363,14 +365,20 @@ public class MainActivity extends BaseDrawerActivity {
         this.position = position;
         Map<String, String> params = new HashMap<>();
         params.put("postid", postId);
-        Log.d("djmain", "req params - updatePostForThisUser: "+params);
         if (what == POST_DELETE_CALL){
             ajaxCallback = getAjaxCallback(POST_DELETE_CALL);
             getAQuery().ajax(ApiKeys.getDeletePostAPI(), params, String.class, ajaxCallback);
         }else if (what == POST_HIDE_CALL){
+            params.put("report", String.valueOf(0));
             ajaxCallback = getAjaxCallback(POST_HIDE_CALL);
             getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
+        } else if(what == POST_REPORT_CALL){
+            //// TODO: 25-06-2016
+            params.put("report", String.valueOf(1));
+            ajaxCallback = getAjaxCallback(POST_REPORT_CALL);
+            getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
         }
+        Log.d("djmain", "req params - updatePostForThisUser: "+params);
         //ajaxCallback.method(AQuery.METHOD_POST);
     }
 
@@ -395,13 +403,16 @@ public class MainActivity extends BaseDrawerActivity {
                 stopUploadProgress(success);
             }
 
-        }else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL){
+        }else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL || id == POST_REPORT_CALL){
             if (position != -1){
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         layoutParent, this);
                 if (success) {
                     if (json == null)
                         return;
+                    if (id == POST_REPORT_CALL)
+                        showDialogInfo("Thanks for notifying us! Our team will review this post and" +
+                                " take corrective action. Meanwhile, we are hiding this post from your feed", true);
                     if (activePage instanceof HomePage) {
                         ((HomePage) activePage).socialFeedFragmentpage.updatePostList(position);
                     }
@@ -412,6 +423,12 @@ public class MainActivity extends BaseDrawerActivity {
 
         else
             super.serverCallEnds(id, url, json, status);
+    }
+
+    public void showDialogInfo(String msg, boolean isPositive){
+        int color ;
+        color = isPositive ? R.color.colorPrimary : R.color.Red;
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsg(this, null, msg, color);
     }
 
     private void startUploadProgress() {

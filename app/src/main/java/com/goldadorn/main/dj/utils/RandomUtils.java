@@ -1,8 +1,15 @@
 package com.goldadorn.main.dj.utils;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.widget.TextView;
+
+import com.goldadorn.main.activities.AppStartActivity;
+import com.goldadorn.main.utils.IDUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,5 +92,17 @@ public class RandomUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static int delayToStartApp = 1000;
+    public static void restartApp(Activity activity){
+        Intent intent = new Intent(activity, AppStartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        int mPendingIntentId = IDUtils.generateViewId();
+        PendingIntent mPendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), mPendingIntentId,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)activity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, (System.currentTimeMillis() + delayToStartApp), mPendingIntent);
+        System.exit(0);
     }
 }

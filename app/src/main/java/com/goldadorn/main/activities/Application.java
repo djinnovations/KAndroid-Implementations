@@ -297,10 +297,13 @@ public class Application extends BaseApplication {
         Mint.addExtraData("User Name", user.getName());
     }
 
+    public void setPeople(People people) {
+        this.people = people;
+    }
+
     public void setUser(User user) {
         this.user = user;
         logUser(user);
-
 
         people = new People();
         people.setFollowerCount(0);

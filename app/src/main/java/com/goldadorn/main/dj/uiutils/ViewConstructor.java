@@ -130,7 +130,7 @@ public class ViewConstructor {
         alert.show();
 
         Button btnPositive = (alert.getButton(DialogInterface.BUTTON_POSITIVE));
-        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
+        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2f);
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
         btnPositive.setAllCaps(false);
         /*if(showTwoOptions){
@@ -141,7 +141,7 @@ public class ViewConstructor {
         }*/
 
         TextView tvMsg = ((TextView) alert.findViewById(android.R.id.message));
-        tvMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.7f);
+        tvMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
         tvMsg.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
 
         return alert;
