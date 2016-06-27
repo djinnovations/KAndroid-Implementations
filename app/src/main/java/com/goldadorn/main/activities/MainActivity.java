@@ -27,6 +27,7 @@ import com.goldadorn.main.dj.gesture.MyGestureListener;
 import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.support.GAUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
@@ -83,7 +84,7 @@ public class MainActivity extends BaseDrawerActivity {
     @Bind(R.id.transViewPost)
     View transViewPost;
 
-    //    private ResourceReader resRdr;
+/*    //    private ResourceReader resRdr;
 //    private MyPreferenceManager coachMarkMgr;
 //
 //    private final String msgWelcome = "You have landed on the social feed\n"
@@ -91,7 +92,7 @@ public class MainActivity extends BaseDrawerActivity {
 //    private final String msgSearch = "for designers, products\ncollections, trends and more";
 //    private final String msgNotification = "check here";
 //    private final String msgPeople = "See the user community at GoldAdorn";
-//    private final String msgPost = "Create a Post";
+//    private final String msgPost = "Create a Post";*/
     private AppTourGuideHelper mTourHelper;
 
 
@@ -171,6 +172,7 @@ public class MainActivity extends BaseDrawerActivity {
 
         tourThisScreen();
 
+        checkIfAppUpdated();
         //testCode();
     }
 
@@ -187,6 +189,11 @@ public class MainActivity extends BaseDrawerActivity {
 
     }*/
 
+
+    public void checkIfAppUpdated(){
+        GAUpdateHelper updateHelper = GAUpdateHelper.getInstance();
+        updateHelper.checkForUpdates(this);
+    }
 
     private void tourThisScreen() {
 
@@ -284,7 +291,12 @@ public class MainActivity extends BaseDrawerActivity {
                     MultipartEntity reqEntity = new MultipartEntity();
 
 
+                    if (data.getExtras().get("price") != null) {
+                        String[] price = (String[])data.getExtras().get("price");
+
+                    }
                     try {
+
                         if (data.getExtras().get("files") != null) {
                             File[] files = (File[]) data.getExtras().get("files");
 
@@ -333,6 +345,7 @@ public class MainActivity extends BaseDrawerActivity {
                     if (msg != null && msg.equals("") == false)
                         reqEntity.addPart("createpost_message", new StringBody(msg));
                     reqEntity.addPart("createpost_type", new StringBody(type + ""));
+                    //reqEntity.addPart("createpost_price", new StringBody(type + ""));
                     Map<String, Object> params = new HashMap<>();
                     params.put(AQuery.POST_ENTITY, reqEntity);
 

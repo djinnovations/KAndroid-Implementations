@@ -44,6 +44,7 @@ public class GalleryImageSelector extends ImageSelector
 {
     public static final int PICK_SERVER_GALLERY = 2;
     private String path;
+    public String price;
 
 
     public boolean isValid()
@@ -148,8 +149,10 @@ public class GalleryImageSelector extends ImageSelector
         if (requestCode==PICK_SERVER_GALLERY && resultCode == Activity.RESULT_OK)
         {
             path=data.getStringExtra("PATH");
+            price=data.getStringExtra("PRICE");
             file=null;
             selectedMethod = PICK_SERVER_GALLERY;
+
             showPreview(data.getStringExtra("PREVIEW"));
             registerImageUploadCallBack.unRegisterImageUploadCallBack(this);
         }

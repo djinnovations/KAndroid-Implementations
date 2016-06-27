@@ -87,6 +87,8 @@ android {
         targetSdkVersion 23
         versionCode 13
         versionName "2.3"
+        /*versionCode 11
+        versionName "2.1"*/
         multiDexEnabled true
         /*March 5 2016 1:46:58*/
     }
@@ -213,4 +215,5 @@ dependencies {
     //compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
     //compile group: 'com.ibm.icu', name: 'icu4j', version: '51.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.javiersantos:AppUpdater:2.1.1'
 }

@@ -95,6 +95,13 @@ public class CommentsView extends DefaultVerticalListView {
             return inflater.inflate(R.layout.feed_comments_fragment_recycler, container, false);
     }
 
+    @Override
+    public String getEmptyViewMessage() {
+        //return super.getEmptyViewMessage();
+        //return EmojisHelper.getSpannedText("Looks like nobody has liked the post yet. Go ahead and be the first one! :)");
+        return "Looks like nobody has liked the post yet. Go ahead and be the first one!";
+    }
+
     public int getColumnsPhone() {
         return 1;
     }
@@ -242,7 +249,7 @@ public class CommentsView extends DefaultVerticalListView {
             time.setText(comment.getRedableDate());
 
             if (!TextUtils.isEmpty(comment.getCommentText()))
-                details.setText(EmojisHelper.getSpannedText(getContext(), "\"" + comment.getCommentText() + "\""));
+                details.setText(EmojisHelper.getSpannedText(getContext(), /*"\"" + */comment.getCommentText()/* + "\""*/));
             Picasso.with(getContext())
                     .load(comment.getProfilePic())
                     .placeholder(R.drawable.vector_image_place_holder_profile)

@@ -2,7 +2,6 @@ package com.goldadorn.main.modules.socialFeeds;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -80,13 +79,11 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
-import com.kimeeo.library.listDataView.DefaultErrorHandler;
 import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
-import com.kimeeo.library.utils.NetworkUtilities;
 import com.nineoldandroids.animation.Animator;
 import com.squareup.picasso.Picasso;
 
@@ -573,14 +570,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     };
 
     MyEmptyViewHelper mempHelper;
-
+    */
     @Override
     protected EmptyViewHelper createEmptyViewHelper() {
-        //return super.createEmptyViewHelper();
-        View errView = LayoutInflater.from(getApp().getApplicationContext()).inflate(R.layout._fragment_recycler_empty_view, null);
-        mempHelper = new MyEmptyViewHelper(getContext(), setErrorFrames(errView), errorHandler, true, true);
-        return mempHelper;
-    }*/
+        EmptyViewHelper helper =new SocialFragmentEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        return helper;
+    }
+
+    @Override
+    public void retry() {
+        //super.retry();
+        RandomUtils.restartApp(getAppMainActivity());
+    }
+
 
     public void closeMenu() {
         if (mFloatingActionsMenu.isExpanded())
@@ -626,6 +628,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         return view;
     }
+
 
     protected MainActivity getBaseActivity() {
         return (MainActivity) getActivity();
@@ -757,6 +760,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         if (viewType == ViewTypes.VIEW_RATE_US)
             return inflater.inflate(R.layout.rate_app_card, null);
+
         else if (viewType == ViewTypes.VIEW_POLL)
             return inflater.inflate(R.layout.social_post_poll_item, null);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
@@ -884,10 +888,14 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
                 detailsHolder.setVisibility(View.VISIBLE);
-                if (isProductLink(item.getImage1()) != null)
+                if (isProductLink(item.getImage1()) != null) {
+                    //
                     buyNow.setVisibility(View.VISIBLE);
-                else
+                }
+                else {
+                    //
                     buyNow.setVisibility(View.GONE);
+                }
 
             } else {
                 detailsHolder.setVisibility(View.GONE);
@@ -1427,6 +1435,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         @Bind(R.id.buyNow)
         View buyNow;
 
+
+        @Bind(R.id.productCollectionLogo)
+        ImageView productCollectionLogo;
+
+        @Bind(R.id.productPrice)
+        TextView productPrice;
+
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == image && socialPost.getImg1() != null && socialPost.getImg1().url.trim().equals("") == false) {
@@ -1448,10 +1463,17 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public void updatePostView(final SocialPost item, View view, int position) {
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 detailsHolder.setVisibility(View.VISIBLE);
-                if (isProductLink(item.getImage1()) != null)
+                if (isProductLink(item.getImage1()) != null) {
+                    //productPrice.setText(item.getPrice1());
+                    productPrice.setVisibility(View.VISIBLE);
+                    productCollectionLogo.setVisibility(View.VISIBLE);
                     buyNow.setVisibility(View.VISIBLE);
-                else
+                }
+                else {
+                    productCollectionLogo.setVisibility(View.GONE);
+                    productPrice.setVisibility(View.GONE);
                     buyNow.setVisibility(View.GONE);
+                }
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
             } else {
                 detailsHolder.setVisibility(View.GONE);
@@ -1798,7 +1820,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     private void gotoLikes(SocialPost socialPost, boolean b) {
-        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(), "Likes by", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, LikesActivity.class);
+        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),
+                "Likes by", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, LikesActivity.class);
         Map<String, Object> data = new HashMap<>();
         data.put("POST_ID", socialPost.getPostId());
         data.put("POST", b);

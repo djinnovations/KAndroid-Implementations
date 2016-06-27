@@ -2,264 +2,265 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutParent"
+    style="@style/appackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/appackground"
     android:fitsSystemWindows="true"
-    android:id="@+id/layoutParent"
     tools:context=".activities.AppStartActivity">
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-
-        android:layout_width="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/padding_default_2x"
-        android:layout_marginRight="@dimen/padding_default_2x"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/logo"/>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_first_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/firstName"
-                android:hint="@string/hint_f_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/lastName"
-                android:hint="@string/hint_l_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_userName"
-            android:layout_marginTop="-16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/userName"
-                android:hint="@string/hint_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_marginTop="-8dp"
-            android:id="@+id/input_layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/password"
-                android:hint="@string/hint_passord"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_marginTop="-8dp"
-            android:id="@+id/input_layout_password_confirm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
-
-            <EditText
-                android:id="@+id/password_confirm"
-                android:hint="@string/hint_passord_confirm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:singleLine="true" />
-
-        </android.support.design.widget.TextInputLayout>
-
-
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:layout_marginTop="-8dp"
-            android:layout_width="wrap_content" android:orientation="horizontal"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
             android:gravity="center_vertical"
-            android:layout_height="wrap_content">
-            <TextView
+            android:orientation="vertical">
+
+            <include layout="@layout/logo" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_f_name"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_l_name"
+                    android:inputType="text"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_userName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_passord"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                app:errorEnabled="true">
+
+                <EditText
+                    android:id="@+id/password_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_passord_confirm"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/labelGender"
-                android:text="@string/labelGender"
-                />
-        <RadioGroup
-            android:layout_width="wrap_content" android:orientation="horizontal"
-            android:id="@+id/genderRadioGroup"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/labelGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/labelGender" />
 
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:text="@string/labelMale"
-                android:id="@+id/maleRadioButton"
-                android:buttonTint="@color/colorPrimary"
-                android:layout_height="wrap_content" />
-            <RadioButton
-                android:text="@string/labelFemale"
-                android:buttonTint="@color/colorPrimary"
-                android:id="@+id/femaleRadioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </RadioGroup>
+                <RadioGroup
+                    android:id="@+id/genderRadioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        </LinearLayout>
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/maleRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="@string/labelMale" />
+
+                    <RadioButton
+                        android:id="@+id/femaleRadioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="@color/colorPrimary"
+                        android:text="@string/labelFemale" />
+                </RadioGroup>
+
+            </LinearLayout>
 
 
-        <RelativeLayout
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:id="@+id/createAccount"
-                android:layout_height="wrap_content" android:text="@string/createAccountButton"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default_2x">
 
-            <com.rey.material.widget.ProgressView
-                android:visibility="gone"
-                tools:visibility="visible"
-                android:id="@+id/progressBar"
-                android:layout_width="@dimen/tinyProgressBar"
-                android:layout_height="@dimen/tinyProgressBar"
+                <Button
+                    android:id="@+id/createAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/createAccountButton" />
+
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/progressBar"
+                    android:layout_width="@dimen/tinyProgressBar"
+                    android:layout_height="@dimen/tinyProgressBar"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/padding_default_half"
+                    android:visibility="gone"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle"
+                    tools:visibility="visible" />
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_centerVertical="true"
-                app:pv_autostart = "true"
-                app:pv_circular="true"
-                app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle"
-                app:pv_progressMode="indeterminate"
-                android:layout_marginRight="@dimen/padding_default_half"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                android:layout_alignParentRight="true" />
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary" />
 
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/orLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/orRegisterWithSocial" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithFacebookButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_facebook" />
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithTwitterButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_twitter" />
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithGoogleButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_google_plus" />
 
 
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"/>
-            <TextView
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
+            <Button
+                android:id="@+id/loginAccount"
+                style="@style/linkButton"
                 android:layout_width="wrap_content"
-                android:id="@+id/orLabel"
-                android:layout_height="wrap_content" android:text="@string/orRegisterWithSocial" />
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"/>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:paddingTop="@dimen/padding_default_2x"
+                android:text="@string/loginLink" />
+
+            <TextView
+                android:id="@+id/policyText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_default_2x"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:gravity="center_horizontal"
+                android:textSize="10sp" />
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:orientation="horizontal"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.mikepenz.iconics.view.IconicsButton
-                style="@style/socialLoginButton"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:text="@string/icon_facebook"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:id="@+id/loginWithFacebookButton"/>
-
-            <com.mikepenz.iconics.view.IconicsButton
-                style="@style/socialLoginButton"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:text="@string/icon_twitter"
-                android:id="@+id/loginWithTwitterButton"/>
-            
-            <com.mikepenz.iconics.view.IconicsButton
-                style="@style/socialLoginButton"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:text="@string/icon_google_plus"
-                android:id="@+id/loginWithGoogleButton"/>
-
-   
-        </LinearLayout>
-
-        <Button
-            android:paddingTop="@dimen/padding_default_2x"
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            style="@style/linkButton"
-            android:id="@+id/loginAccount"
-            android:layout_height="wrap_content" android:text="@string/loginLink"/>
-
-        <TextView
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:layout_marginBottom="@dimen/padding_default_2x"
-            android:textSize="10sp"
-            android:id="@+id/policyText"
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            />
-
-    </LinearLayout>
 
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

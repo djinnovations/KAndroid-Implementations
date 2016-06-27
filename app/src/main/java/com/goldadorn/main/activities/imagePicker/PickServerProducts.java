@@ -22,6 +22,8 @@ public class PickServerProducts  extends ServerProducts{
             String path=".."+data.getImage().substring(data.getImage().indexOf("/product"),data.getImage().length());
             intent.putExtra("PATH",path);
             intent.putExtra("PREVIEW", data.getImage());
+            intent.putExtra("PRICE", data.getPrice());
+
             setResult(Activity.RESULT_OK, intent);
             finish();
         }

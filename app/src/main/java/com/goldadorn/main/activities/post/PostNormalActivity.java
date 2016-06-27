@@ -36,6 +36,14 @@ public class PostNormalActivity extends AbstractPostActivity {
         return null;
     }
 
+    protected List<String> getPrice()
+    {
+        List<String> list= new ArrayList<>();
+        list.add(imageSelector1.price);
+        return list;
+    }
+
+
 
     protected List<String> getLinks()
     {

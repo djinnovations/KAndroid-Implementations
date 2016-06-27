@@ -54,6 +54,13 @@ public class PostPollActivity extends AbstractPostActivity {
 
     }
 
+    protected List<String> getPrice()
+    {
+        List<String> list= new ArrayList<>();
+        list.add(imageSelector1.price);
+        return list;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;

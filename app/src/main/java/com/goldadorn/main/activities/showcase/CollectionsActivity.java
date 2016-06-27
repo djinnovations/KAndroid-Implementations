@@ -275,7 +275,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     }
                 });
 
+        /*TextView tv=null;
+        tv.setText("");
 
+*/
         setUpGuideListener();
     }
 
@@ -396,10 +399,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         if (user != null) {
             mOverlayViewHolder.followButton.setSelected(user.isFollowed);
             t = "By " + user.getName();
+            mOverlayViewHolder.ownerName.setText(t);
+            RandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
             mOverlayViewHolder.followButton.setTag(user);
         }
-
-        mOverlayViewHolder.ownerName.setText(t);
         mOverlayViewHolder.followButton.setVisibility(
                 TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);
         mOverlayViewHolder.description.setText(collection.description);
@@ -622,7 +625,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             share.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
             ownerName.setOnClickListener(this);
-            RandomUtils.underLineTv(ownerName);
+            //RandomUtils.underLineTv(ownerName);
         }
 
         public void setVisisbility(int visibility) {

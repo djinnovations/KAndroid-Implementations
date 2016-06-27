@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.widget.TextView;
 
 import com.goldadorn.main.activities.AppStartActivity;
@@ -77,8 +79,17 @@ public class RandomUtils {
     }
 
 
-    public static void underLineTv(TextView textview) {
-        textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    public static void underLineTv(TextView textview, int start, int end) {
+        try {
+            String udata=/*"Underlined Text"*/ textview.getText().toString().trim();
+            SpannableString content = new SpannableString(udata);
+            content.setSpan(new UnderlineSpan(), start, end, 0);
+            textview.setText(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+            textview.setText("");
+        }
+        //textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
 

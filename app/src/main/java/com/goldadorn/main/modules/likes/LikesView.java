@@ -24,6 +24,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.UserActivity;
+import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.Comment;
@@ -99,7 +100,12 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
         followPeopleHelper.update(people, pos);
     }
 
-
+    @Override
+    public String getEmptyViewMessage() {
+        //return super.getEmptyViewMessage();
+        //return EmojisHelper.getSpannedText("Looks like nobody has liked the post yet. Go ahead and be the first one! :)");
+        return "Looks like nobody has liked the post yet. Go ahead and be the first one!";
+    }
 
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();
@@ -175,6 +181,10 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
             }
         }
     }
+
+
+
+
     protected void configDataManager(DataManager dataManager) {
         super.configDataManager(dataManager);
         dataManager.setRefreshEnabled(false);

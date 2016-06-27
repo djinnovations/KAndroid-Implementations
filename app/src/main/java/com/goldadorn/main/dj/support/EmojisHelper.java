@@ -27,10 +27,12 @@ public class EmojisHelper {
         mapOfEmojis.put(":)", R.drawable.emoji_blush_smile);
         mapOfEmojis.put(":-)", R.drawable.emoji_blush_smile);
         mapOfEmojis.put(":D", R.drawable.emoji_teeth);
+        mapOfEmojis.put(":d", R.drawable.emoji_teeth);
         mapOfEmojis.put(":O", R.drawable.emoji_ooh_exp);
         mapOfEmojis.put(":o", R.drawable.emoji_ooh_exp);
         mapOfEmojis.put("@@", R.drawable.emoji_two_eye_love);
         mapOfEmojis.put(":*", R.drawable.emoji_kiss);
+        mapOfEmojis.put(";)", R.drawable.emoji_wink);
         mapOfEmojis.put("(N)", R.drawable.emoji_hand_thumbs_down);
         mapOfEmojis.put("(n)", R.drawable.emoji_hand_thumbs_down);
         mapOfEmojis.put("(Y)", R.drawable.emoji_hand_thumbs_up);

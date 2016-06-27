@@ -35,6 +35,9 @@ public class SocialPost extends ServerError implements IParseableObject {
     private Image img2=null;
     private Image img1=null;
     private Image img3=null;
+
+    private String price1=null;
+
     private String postId;
     private String userName;
     private String userPic;
@@ -536,5 +539,13 @@ public class SocialPost extends ServerError implements IParseableObject {
 
     public void setShareCount(Integer shareCount) {
         this.shareCount = shareCount;
+    }
+
+    public String getPrice1() {
+        return price1;
+    }
+
+    public void setPrice1(String price1) {
+        this.price1 = price1;
     }
 }

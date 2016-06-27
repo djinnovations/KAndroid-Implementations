@@ -9,177 +9,182 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.AppStartActivity">
 
-
-    <LinearLayout
-
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/padding_default_2x"
-        android:layout_marginRight="@dimen/padding_default_2x"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:paddingTop="25dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/logo" />
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_userName"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:errorEnabled="true">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/padding_default_2x"
+            android:layout_marginRight="@dimen/padding_default_2x"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/userName"
+            <include layout="@layout/logo" />
+
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_userName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_email"
-                android:inputType="textEmailAddress"
-                android:singleLine="true" />
+                android:layout_alignParentTop="true"
+                app:errorEnabled="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/userName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="-8dp"
-            app:errorEnabled="true">
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/password"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_passord"
-                android:inputType="textPassword"
-                android:singleLine="true" />
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="-8dp"
+                app:errorEnabled="true">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_passord"
+                    android:inputType="textPassword"
+                    android:singleLine="true" />
 
+            </android.support.design.widget.TextInputLayout>
 
-        <Button
-            android:id="@+id/forgotPasswordButton"
-            style="@style/linkButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="-16dp"
-            android:gravity="right"
-            android:text="@string/forgotPassword" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_default_2x">
 
             <Button
-                android:id="@+id/loginAccount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/loginButton" />
-
-
-            <com.rey.material.widget.ProgressView
-                android:id="@+id/progressBar"
-                android:layout_width="@dimen/tinyProgressBar"
-                android:layout_height="@dimen/tinyProgressBar"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="@dimen/padding_default_half"
-                android:visibility="gone"
-                app:pv_autostart="true"
-                app:pv_circular="true"
-                app:pv_progressMode="indeterminate"
-                app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle"
-
-                tools:visibility="visible" />
-
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary" />
-
-            <TextView
-                android:id="@+id/orLabel"
+                android:id="@+id/forgotPasswordButton"
+                style="@style/linkButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:text="@string/orSocialLogin" />
+                android:layout_gravity="right"
+                android:layout_marginTop="10dp"
+                android:gravity="right"
+                android:text="@string/forgotPassword" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_default_2x">
+
+                <Button
+                    android:id="@+id/loginAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/loginButton" />
+
+
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/progressBar"
+                    android:layout_width="@dimen/tinyProgressBar"
+                    android:layout_height="@dimen/tinyProgressBar"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/padding_default_half"
+                    android:visibility="gone"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle"
+
+                    tools:visibility="visible" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/orLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/orSocialLogin" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithFacebookButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_facebook" />
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithTwitterButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_twitter" />
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/loginWithGoogleButton"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small_height"
+                    android:layout_height="@dimen/circle_button_small_height"
+                    android:layout_marginLeft="@dimen/padding_default_2x"
+                    android:layout_marginRight="@dimen/padding_default_2x"
+                    android:text="@string/icon_google_plus" />
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/createAccount"
+                style="@style/linkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/padding_default_2x"
+                android:maxLines="2"
+                android:paddingTop="@dimen/padding_default_2x"
+                android:text="@string/createAccountLink" />
+
+
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal">
-
-            <com.mikepenz.iconics.view.IconicsButton
-                android:id="@+id/loginWithFacebookButton"
-                style="@style/socialLoginButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:text="@string/icon_facebook" />
-
-            <com.mikepenz.iconics.view.IconicsButton
-                android:id="@+id/loginWithTwitterButton"
-                style="@style/socialLoginButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:text="@string/icon_twitter" />
-
-            <com.mikepenz.iconics.view.IconicsButton
-                android:id="@+id/loginWithGoogleButton"
-                style="@style/socialLoginButton"
-                android:layout_width="@dimen/circle_button_small_height"
-                android:layout_height="@dimen/circle_button_small_height"
-                android:layout_marginLeft="@dimen/padding_default_2x"
-                android:layout_marginRight="@dimen/padding_default_2x"
-                android:text="@string/icon_google_plus" />
-
-
-        </LinearLayout>
-
-
-        <Button
-            android:id="@+id/createAccount"
-            style="@style/linkButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/padding_default_2x"
-            android:maxLines="2"
-            android:paddingTop="@dimen/padding_default_2x"
-            android:text="@string/createAccountLink" />
-
-
-    </LinearLayout>
-
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -49,6 +49,8 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     protected abstract List<String> getFilesPath();
 
+    protected abstract List<String> getPrice();
+
     protected abstract List<String> getLinks();
 
     @Bind(R.id.details)
@@ -140,6 +142,9 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
             if (fileData != null && fileData.equals("") == false)
                 intent.putExtra("fileData", fileData);
+
+            List<String> price = getPrice();
+            intent.putExtra("price", price.toArray());
 
             List<File> fileList = getFiles();
             if (fileList != null && fileList.size() != 0) {

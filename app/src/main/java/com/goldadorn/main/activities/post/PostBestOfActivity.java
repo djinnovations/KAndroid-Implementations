@@ -27,6 +27,16 @@ public class PostBestOfActivity extends AbstractPostActivity {
     {
         return /*"Best of Three"*/"Pick the best";
     }
+
+    protected List<String> getPrice()
+    {
+        List<String> list= new ArrayList<>();
+        list.add(imageSelector1.price);
+        list.add(imageSelector2.price);
+        list.add(imageSelector3.price);
+        return list;
+    }
+
     protected List<File> getFiles()
     {
         boolean isAdded=false;

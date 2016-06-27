@@ -101,6 +101,15 @@ public class VotersView extends DefaultVerticalListView implements DefaultProjec
         params.put(URLHelper.LIKE_A_POST.OFFSET,0);
         return params;
     }
+
+
+    @Override
+    public String getEmptyViewMessage() {
+        //return super.getEmptyViewMessage();
+        //return EmojisHelper.getSpannedText("Looks like nobody has voted the post yet. Go ahead and be the first one! :)");
+        return "Looks like nobody has voted the post yet. Go ahead and be the first one!";
+    }
+
     protected DataManager createDataManager()
     {
         return new CommentDataManager(getActivity(),this,getApp().getCookies());

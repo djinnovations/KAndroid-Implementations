@@ -334,7 +334,9 @@ public class ProductActivity extends BaseDrawerActivity {
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         Log.e("iiii--", mUser.id + "--" + mUser.isFollowed + "---" + mUser.followers_cnt);
         if (mUser != null) {
-            mOverlayVH.mProductOwner.setText("By " + mUser.getName());
+            String temp = "By " + mUser.getName();
+            mOverlayVH.mProductOwner.setText(temp);
+            RandomUtils.underLineTv(mOverlayVH.mProductOwner, 3, mOverlayVH.mProductOwner.length());
             mOverlayVH.followButton.setTag(mUser);
             mOverlayVH.followButton.setSelected(mUser.isFollowed);
         } else {
@@ -536,7 +538,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     }
 
-    public void launchDesignerScreen(){
+    public void launchDesignerScreen() {
         menuAction(R.id.nav_showcase);
         finish();
     }
@@ -613,7 +615,7 @@ public class ProductActivity extends BaseDrawerActivity {
             cartButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
             mProductOwner.setOnClickListener(this);
-            RandomUtils.underLineTv(mProductOwner);
+            //RandomUtils.underLineTv(mProductOwner);
         }
 
         public void setVisisbility(int visibility) {
@@ -663,11 +665,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 }
             } else if (v.getId() == R.id.btnBookApoint) {
                 displayBookAppointment();
-            }else if (v.getId() == mProductOwner.getId()){
+            } else if (v.getId() == mProductOwner.getId()) {
                 launchDesignerScreen();
-            }
-
-            else if (v == like) {
+            } else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);

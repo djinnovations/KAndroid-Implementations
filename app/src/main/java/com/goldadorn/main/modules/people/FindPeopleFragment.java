@@ -60,13 +60,15 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                 People mySelf = getApp().getPeople();
                 Log.d("djpeople", "myselfremoved?: " + getDataManager().remove(mySelf));
                 int followercount;
-                int followingcount;
+                int followingcount = 0;
                 Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
                 Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
                 int isFollowing = post.getIsFollowing();
                 if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
                     followercount = post.getFollowerCount() - 1;
-                    followingcount = mySelf.getFollowingCount() - 1;
+                    if (mySelf.getFollowingCount() == 0) {
+                        followercount = 0;
+                    } else followingcount = mySelf.getFollowingCount() - 1;
                 } else {
                     followercount = post.getFollowerCount() + 1;
                     followingcount = mySelf.getFollowingCount() + 1;

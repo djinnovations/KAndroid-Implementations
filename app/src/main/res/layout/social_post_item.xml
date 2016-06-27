@@ -42,6 +42,17 @@
             android:background="@drawable/vector_icons_buy_now"
             android:layout_width="25dp"
             android:layout_height="25dp"/>
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/productCollectionLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <include layout="@layout/social_post_footer"/>

@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -345,7 +346,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mTabLayout.animate().setDuration(0).y(tabStart);
         mTabViewHolder.initTabs(getString(R.string.collections), getString(R.string.products), getString(R.string.social), mTabClickListener);
 
-
+        //setUpInterceptListener();
         mAppBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
@@ -425,6 +426,19 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
         tourThisScreen();
     }
+
+    private void setUpInterceptListener() {
+
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        //mAppBarLayout.onTouchEvent(motionEvent);
+        mAppBarLayout.onInterceptTouchEvent(motionEvent);
+        return super.dispatchTouchEvent(motionEvent);
+    }
+
 
     //Author DJphy
     @Bind(R.id.transViewMain)
