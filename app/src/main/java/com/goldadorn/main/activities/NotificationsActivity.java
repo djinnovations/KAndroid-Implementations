@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -256,7 +257,7 @@ public class NotificationsActivity extends BaseActivity {
 
         String peopleImageUrl = null;
         boolean botPost = false;
-        String postImageUrl = null;
+        List<String> postImageUrl = null;
         String dateTime = null;
         String postContent = null;
         String postId = null;
@@ -305,9 +306,7 @@ public class NotificationsActivity extends BaseActivity {
         //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
 
         postContent = createString(object);
-        Log.d("djnotify", "extractJsonContent- peopleImageUrl: " + peopleImageUrl);
         return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId, actionType);
-
     }
 
 
@@ -396,7 +395,9 @@ public class NotificationsActivity extends BaseActivity {
                 holder.person = (CircularImageView) convertView.findViewById(R.id.userImage);
                 holder.data = (TextView) convertView.findViewById(R.id.data);
                 holder.time = (TextView) convertView.findViewById(R.id.time);
-                holder.ivPostImage = (ImageView) convertView.findViewById(R.id.contentImage);
+                holder.ivPostImage1 = (ImageView) convertView.findViewById(R.id.contentImage);
+                holder.ivPostImage2 = (ImageView) convertView.findViewById(R.id.contentImage2);
+                holder.ivPostImage3 = (ImageView) convertView.findViewById(R.id.contentImage3);
                 convertView.setTag(holder);
             } else {
                 holder = (NotificationHolder) convertView.getTag();
@@ -404,12 +405,11 @@ public class NotificationsActivity extends BaseActivity {
 
             NotificationDataObject dataObject = getItem(position);
             String peopleImageUrl = dataObject.getPeopleImageUrl();
-            String postImageUrl = dataObject.getPostImageUrl();
+            List<String> postImageUrl = dataObject.getPostImageUrl();
             String notifyContent = dataObject.getNotifyContent();
             String dateTime = dataObject.getDateTime();
             boolean botPost = dataObject.isBotPost();
 
-            Log.d("djnotify", "getView- peopleImageUrl: " + peopleImageUrl);
             if (!TextUtils.isEmpty(peopleImageUrl)) {
                 try {
                     /*Picasso.with(context)
@@ -435,7 +435,6 @@ public class NotificationsActivity extends BaseActivity {
                     holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
                 }
             } else {
-                Log.d("djnotify", "else case url null: ");
                 holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
                 /*Glide.with(NotificationsActivity.this)
                         .load(R.drawable.vector_image_place_holder_profile_dark)
@@ -445,16 +444,20 @@ public class NotificationsActivity extends BaseActivity {
                         .into(holder.person);*/
             }
 
-
-            if (!botPost) {
-                if (postImageUrl != null) {
+            holder.ivPostImage3.setVisibility(View.GONE);
+            holder.ivPostImage2.setVisibility(View.GONE);
+            if (postImageUrl != null) {
+                if (postImageUrl.size() != 0) {
                     try {
-                        Picasso.with(context).load(postImageUrl).into(holder.ivPostImage);
+                        if (!dataObject.isBotPost())
+                            Picasso.with(context).load(postImageUrl.get(0)).into(holder.ivPostImage1);
+                        else setPostImages(postImageUrl, holder);
+                        //Picasso.with(context).load(postImageUrl).into(holder.ivPostImage1);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            } else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage);
+            }/* else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage1);*/
 
             if (dateTime != null)
                 holder.time.setText(dateTime);
@@ -464,7 +467,21 @@ public class NotificationsActivity extends BaseActivity {
             return convertView;
         }
 
-
+        private void setPostImages(List<String> urlList, NotificationHolder holder) {
+            if (urlList.size() == 1)
+                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+            else if (urlList.size() == 2) {
+                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                holder.ivPostImage2.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
+            } else if (urlList.size() == 3) {
+                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                holder.ivPostImage2.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
+                holder.ivPostImage3.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(urlList.get(2)).into(holder.ivPostImage3);
+            }
+        }
     }
 
 
@@ -538,20 +555,23 @@ public class NotificationsActivity extends BaseActivity {
     }
 
 
-    private String getPostImageUrl(JSONArray jsonArray) {
-        if (jsonArray.length() > 1) {
+    private List<String> getPostImageUrl(JSONArray jsonArray) {
+        /*if (jsonArray.length() > 1) {
             return "BOT";
         } else if (jsonArray.length() == 0) {
             return null;
-        } else {
-            try {
-                String imageUrl = jsonArray.getString(0);
-                return URLHelper.parseImageURL(imageUrl);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
+        } else {*/
+        List<String> urlList = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                urlList.add(URLHelper.parseImageURL(jsonArray.getString(i)));
             }
+            return urlList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
+        //}
     }
 
 
@@ -559,6 +579,6 @@ public class NotificationsActivity extends BaseActivity {
         CircularImageView person;
         TextView data;
         TextView time;
-        ImageView ivPostImage;
+        ImageView ivPostImage1, ivPostImage2, ivPostImage3;
     }
 }

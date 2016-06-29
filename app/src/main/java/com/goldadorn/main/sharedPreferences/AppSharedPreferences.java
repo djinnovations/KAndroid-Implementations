@@ -23,9 +23,9 @@ public class AppSharedPreferences {
     public class AppRater
     {
         public final static String PREF_NAME = "apprater";
-        public final static int DAYS_UNTIL_PROMPT = 3;
-        public final static int LAUNCHES_UNTIL_PROMPT = 7;
-        public final static int DAYS_UNTIL_PROMPT_FOR_REMIND_LATER = 3;
-        public final static int LAUNCHES_UNTIL_PROMPT_FOR_REMIND_LATER = 7;
+        public final static int DAYS_UNTIL_PROMPT = 5;
+        public final static int LAUNCHES_UNTIL_PROMPT = 5;
+        //public final static int DAYS_UNTIL_PROMPT_FOR_REMIND_LATER = 3;
+        //public final static int LAUNCHES_UNTIL_PROMPT_FOR_REMIND_LATER = 7;
     }
 }

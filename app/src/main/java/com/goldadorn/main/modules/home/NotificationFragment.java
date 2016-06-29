@@ -121,7 +121,6 @@ public class NotificationFragment extends DefaultVerticalListView
                    .tag(getContext())
                    .resize(100,100)
                    .into(userImage);
-
         }
     }
 

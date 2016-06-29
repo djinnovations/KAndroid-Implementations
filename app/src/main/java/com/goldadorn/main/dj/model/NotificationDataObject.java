@@ -3,6 +3,9 @@ package com.goldadorn.main.dj.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by User on 26-05-2016.
  */
@@ -11,13 +14,13 @@ public class NotificationDataObject implements Parcelable {
     private String peopleImageUrl;
     private String notifyContent;
     private String dateTime;
-    private String postImageUrl;
+    private List<String> postImageUrl;
     private boolean botPost;
     private String postId;
     private String actionType;
 
     public NotificationDataObject(String peopleImageUrl, String notifyContent, String dateTime,
-                                  String postImageUrl, boolean botPost, String postId, String actionType) {
+                                  List<String> postImageUrl, boolean botPost, String postId, String actionType) {
         this.peopleImageUrl = peopleImageUrl;
         this.notifyContent = notifyContent;
         this.dateTime = dateTime;
@@ -43,7 +46,7 @@ public class NotificationDataObject implements Parcelable {
         return dateTime;
     }
 
-    public String getPostImageUrl() {
+    public List<String> getPostImageUrl() {
         return postImageUrl;
     }
 
@@ -59,9 +62,14 @@ public class NotificationDataObject implements Parcelable {
         peopleImageUrl = in.readString();
         notifyContent = in.readString();
         dateTime = in.readString();
-        postImageUrl = in.readString();
-        postId = in.readString();
+        if (in.readByte() == 0x01) {
+            postImageUrl = new ArrayList<String>();
+            in.readList(postImageUrl, String.class.getClassLoader());
+        } else {
+            postImageUrl = null;
+        }
         botPost = in.readByte() != 0x00;
+        postId = in.readString();
         actionType = in.readString();
     }
 
@@ -75,9 +83,14 @@ public class NotificationDataObject implements Parcelable {
         dest.writeString(peopleImageUrl);
         dest.writeString(notifyContent);
         dest.writeString(dateTime);
-        dest.writeString(postImageUrl);
-        dest.writeString(postId);
+        if (postImageUrl == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(postImageUrl);
+        }
         dest.writeByte((byte) (botPost ? 0x01 : 0x00));
+        dest.writeString(postId);
         dest.writeString(actionType);
     }
 

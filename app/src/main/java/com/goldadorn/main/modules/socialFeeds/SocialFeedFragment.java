@@ -302,6 +302,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     }
 
+
     private void fadeOutRefreshTriger() {
         if (refreshTrigerhandler != null)
             refreshTrigerhandler.removeCallbacks(runnablelocal);
@@ -573,7 +574,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     */
     @Override
     protected EmptyViewHelper createEmptyViewHelper() {
-        EmptyViewHelper helper =new SocialFragmentEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        EmptyViewHelper helper = new SocialFragmentEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
         return helper;
     }
 
@@ -835,6 +836,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == buy) {
                     if (!isVoted(socialPost, true)) {
+                        ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(1);
                         buy.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(buy);
@@ -891,8 +893,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 if (isProductLink(item.getImage1()) != null) {
                     //
                     buyNow.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     //
                     buyNow.setVisibility(View.GONE);
                 }
@@ -1016,6 +1017,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == option1Button) {
                     if (!isVoted(socialPost, true)) {
+                        ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(1);
                         option1Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option1Button);
@@ -1027,6 +1029,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option2Button) {
                     if (!isVoted(socialPost, true)) {
+                        ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(2);
                         option2Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option2Button);
@@ -1038,6 +1041,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option3Button) {
                     if (!isVoted(socialPost, true)) {
+                        ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(3);
                         option3Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option3Button);
@@ -1246,6 +1250,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
         return null;
     }
+
 
     private void zoomImages(SocialPost socialPost, int index) {
 
@@ -1468,8 +1473,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     productPrice.setVisibility(View.VISIBLE);
                     productCollectionLogo.setVisibility(View.VISIBLE);
                     buyNow.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     productCollectionLogo.setVisibility(View.GONE);
                     productPrice.setVisibility(View.GONE);
                     buyNow.setVisibility(View.GONE);
@@ -1625,8 +1629,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     isLiked = isLiked == 0 ? 1 : 0;
                     if (isLiked == 0)
                         socialPost.setLikeCount(socialPost.getLikeCount() - 1);
-                    else
+                    else {
+                        if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST)
+                            ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setLikeCount(socialPost.getLikeCount() + 1);
+                    }
                     likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));
 
                     socialPost.setIsLiked(isLiked);

@@ -1,9 +1,9 @@
 package com.goldadorn.main.modules.socialFeeds;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.kimeeo.library.listDataView.EmptyViewHelper;
@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by User on 27-06-2016.
  */
-public class SocialFragmentEmptyViewHelper extends EmptyViewHelper {
-    public SocialFragmentEmptyViewHelper(Context context, View emptyView, EmptyViewHelper.IEmptyViewHelper emptyViewHelper,
-                                         boolean showInetnetError, boolean showRetryButton) {
+public class LikesEmptyViewHelper extends EmptyViewHelper {
+    public LikesEmptyViewHelper(Context context, View emptyView, IEmptyViewHelper emptyViewHelper,
+                                boolean showInetnetError, boolean showRetryButton) {
         super(context, emptyView, emptyViewHelper, showInetnetError, showRetryButton);
     }
 
@@ -25,10 +25,9 @@ public class SocialFragmentEmptyViewHelper extends EmptyViewHelper {
     public void updateView(List dataManager) {
         super.updateView(dataManager);
         if (NetworkUtilities.isConnected(super.context)) {
-            mEmptyViewMessage.setText("Oops! Looks like we had a glitch. Please restart the app to get back on");
+            mEmptyViewMessage.setText("Looks like nobody has liked the post yet. Go ahead and be the first one!");
             mEmptyViewMessage.setTextSize(16);
-            ((Button) mRetry).setText("Restart App");
-            mRetry.setVisibility(View.VISIBLE);
+            mEmptyViewMessage.setGravity(Gravity.CENTER);
             RandomUtils.setPaddingLeftRight(mEmptyViewMessage);
         }
     }

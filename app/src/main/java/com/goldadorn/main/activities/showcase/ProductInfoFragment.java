@@ -184,6 +184,7 @@ public class ProductInfoFragment extends Fragment {
     public void bindProductInfo(ProductInfo summary) {
         if (summary != null) {
             setAllDescription(summary.new5details);
+            //int height = summary.getDisplayHeight() == -1 ? "NA" : ;
             mProductDetail.setText(getString(R.string.product_desc, summary.code,
                     summary.getDisplayHeight(), summary.getDisplayWidth(),
                     summary.getDisplayWeight()));

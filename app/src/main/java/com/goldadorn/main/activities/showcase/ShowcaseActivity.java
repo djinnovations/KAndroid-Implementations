@@ -453,7 +453,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());
-        coachMarkMgr = MyPreferenceManager.getInstance(getApplicationContext());*/
+        coachMarkMgr = DjphyPreferenceManager.getInstance(getApplicationContext());*/
         mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override

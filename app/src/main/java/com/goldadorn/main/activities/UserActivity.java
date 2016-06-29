@@ -43,7 +43,7 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
     @Bind(R.id.transView)
     View transView;
     /*private ResourceReader resRdr;
-    private MyPreferenceManager coachMarkMgr;
+    private DjphyPreferenceManager coachMarkMgr;
 
     private final String msgTimeLine = "You are on a user's timeline\n"
             +"all the recent activities of the \n user can be viewed here";*/

@@ -3,11 +3,13 @@ package com.goldadorn.main.activities;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,7 +30,10 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.server.ApiKeys;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -38,9 +43,9 @@ import com.goldadorn.main.server.response.ObjectResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
-import com.goldadorn.main.utils.URLHelper;
+import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
-import com.mixpanel.android.util.StringUtils;
+import com.rey.material.widget.ProgressView;
 import com.seatgeek.placesautocomplete.DetailsCallback;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
 import com.seatgeek.placesautocomplete.PlacesAutocompleteTextView;
@@ -54,9 +59,12 @@ import com.vlonjatg.progressactivity.ProgressActivity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -121,6 +129,28 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.doneButton)
     Button mDone;
 
+    @Bind(R.id.ivLockEP)
+    ImageView ivLockEP;
+    @Bind(R.id.ivNextPage)
+    ImageView ivNextPage;
+    @Bind(R.id.rlEditPassword)
+    View rlEditPassword;
+    @Bind(R.id.layPasswordSet)
+    View layPasswordSet;
+
+    @Bind(R.id.etCurrentPassword)
+    EditText etCurrentPassword;
+    @Bind(R.id.etNewPassword)
+    EditText etNewPassword;
+    @Bind(R.id.etRetypeNewPassword)
+    EditText etRetypeNewPassword;
+    @Bind(R.id.scrollLayEP)
+    View scrollLayEP;
+    @Bind(R.id.llPassword)
+    View llPassword;
+    @Bind(R.id.tvResetPassword)
+    View tvResetPassword;
+
     /*@Bind(R.id.progress_frame)
     View mProgress;*/
 
@@ -130,10 +160,12 @@ public class ProfileEditActivity extends BaseActivity {
     SimpleDateFormat mFormat;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
+    @Bind(R.id.labelChangePassword)
+    TextView labelChangePassword;
 
 
     public void setupStyle() {
-        View[] viewList = new View[14];
+        View[] viewList = new View[20];
         viewList[0] = mEmail;
         viewList[1] = mFirstName;
         viewList[2] = mLastName;
@@ -148,7 +180,12 @@ public class ProfileEditActivity extends BaseActivity {
         viewList[11] = mPincode;
         viewList[12] = titleBasic;
         viewList[13] = titleAddress;
-
+        viewList[14] = titlePassword;
+        viewList[15] = etCurrentPassword;
+        viewList[16] = etNewPassword;
+        viewList[17] = etRetypeNewPassword;
+        viewList[18] = tvResetPassword;
+        viewList[19] = labelChangePassword;
 
         TypefaceHelper.setFont(viewList);
 
@@ -183,7 +220,8 @@ public class ProfileEditActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            finish();
+            //finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -191,6 +229,9 @@ public class ProfileEditActivity extends BaseActivity {
     ResourceReader rsRdr;
     @Bind(R.id.progressActivity)
     ProgressActivity pga;
+    @Bind(R.id.titlePassword)
+    TextView titlePassword;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -243,20 +284,21 @@ public class ProfileEditActivity extends BaseActivity {
             }
         });
 
+        setDrawablesForPassword();
+        setOnClickListeners();
         setupStyle();
         if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()) {
             setUpCalendarAndBindUi();
-        }
-        else showNetworkErr();
+        } else showNetworkErr();
     }
 
 
     private View.OnClickListener retryClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Log.d("dj","network stat: "+ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable());
+            Log.d("dj", "network stat: " + ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable());
             pga.showLoading();
-            if (!ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()){
+            if (!ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()) {
                 showNetworkErr();
                 return;
             }
@@ -265,16 +307,17 @@ public class ProfileEditActivity extends BaseActivity {
     };
 
 
-    private void showNetworkErr(){
+    private void showNetworkErr() {
         pga.showError(rsRdr.getDrawableFromResId(R.drawable._vector_icon_internet_connection),
                 null, "No network connection", "Retry", retryClick);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             pga.setBackground(new ColorDrawable(rsRdr.getColorFromResource(R.color.disabled_grey)));
-        }else pga.setBackgroundDrawable(new ColorDrawable(rsRdr.getColorFromResource(R.color.disabled_grey)));
+        } else
+            pga.setBackgroundDrawable(new ColorDrawable(rsRdr.getColorFromResource(R.color.disabled_grey)));
     }
 
 
-    private void setUpCalendarAndBindUi(){
+    private void setUpCalendarAndBindUi() {
 
         setUpAutoComplete();
         setupDOB();
@@ -290,6 +333,165 @@ public class ProfileEditActivity extends BaseActivity {
     }
 
 
+    private void setOnClickListeners() {
+        if (Application.getInstance().getPrefManager().getSocialLoginStat()){
+            layPasswordSet.setVisibility(View.GONE);
+            return;
+        }
+        mPasswordInput.add(etCurrentPassword);
+        mPasswordInput.add(etNewPassword);
+        mPasswordInput.add(etRetypeNewPassword);
+        rlEditPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bringUpPasswordScreen();
+            }
+        });
+
+        tvResetPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (canProceed()) {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("oldpassword", etCurrentPassword.getText().toString().trim());
+                    params.put("newpassword", etNewPassword.getText().toString().trim());
+                    params.put("confirmnewpassword", etRetypeNewPassword.getText().toString().trim());
+                    postChangePasswordToServer(params);
+                }
+            }
+        });
+    }
+
+    private boolean canProceed() {
+        for (EditText et : mPasswordInput) {
+            if (TextUtils.isEmpty(et.getText().toString().trim())) {
+                Toast.makeText(getApplicationContext(), "fields are empty", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public void clearForm() {
+        for (EditText et : mPasswordInput) {
+            et.setText("");
+        }
+    }
+
+    @Bind(R.id.progressBar)
+    ProgressView pgView;
+
+    private void showOverLay() {
+        tvResetPassword.setEnabled(false);
+        tvResetPassword.setClickable(false);
+        pgView.setVisibility(View.VISIBLE);
+    }
+
+    private void dismissOverLay() {
+        tvResetPassword.setEnabled(true);
+        tvResetPassword.setClickable(true);
+        pgView.setVisibility(View.GONE);
+    }
+
+
+    private void bringUpPasswordScreen() {
+        setTitle("Change Password");
+        try {
+            UiRandomUtils.startAnim(scrollLayEP, R.anim.slide_out_into_left);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                scrollLayEP.setAlpha(0);
+                scrollLayEP.setVisibility(View.GONE);
+                llPassword.setVisibility(View.VISIBLE);
+                try {
+                    UiRandomUtils.startAnim(llPassword, R.anim.slide_in_from_right);
+                    llPassword.setAlpha(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 300);
+    }
+
+    private final int CHANGE_PASSWORD_CALL = IDUtils.generateViewId();
+
+    private void postChangePasswordToServer(Map<String, String> params) {
+        showOverLay();
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(CHANGE_PASSWORD_CALL);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        getAQuery().ajax(ApiKeys.getChangePasswordAPI(), params, String.class, ajaxCallback);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if (llPassword.getVisibility() == View.VISIBLE) {
+            bringUpEditProfileScreen();
+        } else askBeforeExit();
+    }
+
+    List<EditText> mPasswordInput = new ArrayList<>();
+
+    private void bringUpEditProfileScreen() {
+        clearForm();
+        setTitle("Profile");
+        try {
+            UiRandomUtils.startAnim(llPassword, R.anim.slide_out_into_right);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                llPassword.setAlpha(0);
+                llPassword.setVisibility(View.GONE);
+                scrollLayEP.setVisibility(View.VISIBLE);
+                try {
+                    UiRandomUtils.startAnim(scrollLayEP, R.anim.slide_in_from_left);
+                    scrollLayEP.setAlpha(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 300);
+    }
+
+    private void askBeforeExit() {
+        final Snackbar snackbar = Snackbar.make(layoutParent, "Profile changes will be lost, if not saved", Snackbar.LENGTH_LONG);
+        snackbar.setAction("Okay", new View.OnClickListener() {
+            public void onClick(View v) {
+                snackbar.dismiss();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finish();
+                    }
+                }, 200);
+            }
+        });
+        ColoredSnackbar.alert(snackbar).show();
+    }
+
+    private void setDrawablesForPassword() {
+        ResourceReader rsrdr = ResourceReader.getInstance(getApplicationContext());
+        Drawable drawablelock = rsrdr.getDrawableFromResId(R.drawable.ic_lock);
+        drawablelock.setColorFilter(rsrdr.getColorFromResource(com.kimeeo.library.R.color._emptyViewMessageColor),
+                PorterDuff.Mode.SRC_ATOP);
+        Drawable drawableNext = rsrdr.getDrawableFromResId(R.drawable.ic_next_page);
+        drawableNext.setColorFilter(rsrdr.getColorFromResource(com.kimeeo.library.R.color._emptyViewMessageColor),
+                PorterDuff.Mode.SRC_ATOP);
+        ivLockEP.setImageDrawable(drawablelock);
+        ivNextPage.setImageDrawable(drawableNext);
+    }
+
 
     private String addrLine1;
     DetailsCallback placeDetailsCallBack = new DetailsCallback() {
@@ -298,7 +500,7 @@ public class ProfileEditActivity extends BaseActivity {
             Log.d("djplace", "complete address: " + places_autocomplete.getText());
             String addLine2 = getSecondLineAddr(places_autocomplete.getText().toString().trim());
             addrLine1 = getAddrLine1(places_autocomplete.getText().toString().trim());
-            mAddress2.setText(addLine2 == null ? "": addLine2);
+            mAddress2.setText(addLine2 == null ? "" : addLine2);
             places_autocomplete.setSelection(0);
             for (AddressComponent component : placeDetails.address_components) {
                 for (AddressComponentType type : component.types) {
@@ -382,7 +584,6 @@ public class ProfileEditActivity extends BaseActivity {
     final private int postCallToken = IDUtils.generateViewId();
 
 
-
     protected void submitProfile(ProfileData mProfileData) {
         MultipartEntity reqEntity = new MultipartEntity();
 
@@ -391,7 +592,7 @@ public class ProfileEditActivity extends BaseActivity {
             reqEntity.addPart("file1", new FileBody(mProfileData.imageToUpload));
 
         int genderCode = mProfileData.genderType == 1 ? 2 : 1;
-        String genderText = genderCode == 2 ? "Male":"Female";
+        String genderText = genderCode == 2 ? "Male" : "Female";
 
         String bday = mDob.getText().toString().trim();
         putStringBody(reqEntity, "prof_username", mProfileData.email);
@@ -417,12 +618,13 @@ public class ProfileEditActivity extends BaseActivity {
         ajaxCallback.setClazz(String.class);
         ajaxCallback.setParams(params);
         ajaxCallback.method(AQuery.METHOD_POST);
-        Log.d("djplace","updateProfile reqJson: "+reqEntity);
+        Log.d("djplace", "updateProfile reqJson: " + reqEntity);
         getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
-        Log.d("djplace","response setBasicProfile: "+json);
+        Log.d("djweb", "url queried- ProfileEditActivity: " + url);
+        Log.d("djweb", "response- ProfileEditActivity: " + json);
         if (id == postCallToken) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {
@@ -431,8 +633,34 @@ public class ProfileEditActivity extends BaseActivity {
 
             }
 
+        } else if (id == CHANGE_PASSWORD_CALL) {
+            dismissOverLay();
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mImage, this);
+            if (success) {
+                if (json == null)
+                    return;
+                Toast.makeText(ProfileEditActivity.this, "Password has been updated", Toast.LENGTH_SHORT).show();
+                bringUpEditProfileScreen();
+
+            } else {
+                String errMsg = "";
+                try {
+                    errMsg = new JSONObject((String) json).getString("msg");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    errMsg = /*Constants.ERR_MSG_1*/ "Password could not be updated, try again";
+                }
+                failedInfo(errMsg);
+            }
+
         } else
             super.serverCallEnds(id, url, json, status);
+    }
+
+    private void failedInfo(String msg) {
+        final Snackbar snackbar = Snackbar.make(mImage, msg, Snackbar.LENGTH_SHORT);
+        ColoredSnackbar.alert(snackbar).show();
     }
 
     private void putStringBody(MultipartEntity reqEntity, String key, String value) {
@@ -445,12 +673,11 @@ public class ProfileEditActivity extends BaseActivity {
     }
 
 
-
     private void bindUI(ProfileData profileData) {
         mProfileData = profileData;
         mCalendar = Calendar.getInstance();
         mCalendar.setTimeZone(TimeZone.getDefault());
-        mCalendar.setTimeInMillis(mProfileData.dob == 0? System.currentTimeMillis(): mProfileData.dob);
+        mCalendar.setTimeInMillis(mProfileData.dob == 0 ? System.currentTimeMillis() : mProfileData.dob);
 
         if (!TextUtils.isEmpty(mProfileData.email))
             mEmail.setText(mProfileData.email);
@@ -466,7 +693,7 @@ public class ProfileEditActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mProfileData.phone))
             mPhone.setText(mProfileData.phone);
 
-        if(!TextUtils.isEmpty(mProfileData.address1))
+        if (!TextUtils.isEmpty(mProfileData.address1))
             places_autocomplete.setText(mProfileData.address1);
 
         if (!TextUtils.isEmpty(mProfileData.address2))
@@ -480,15 +707,15 @@ public class ProfileEditActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mProfileData.state))
             mState.setText(mProfileData.state);
 
-        mGender.setSelection(mProfileData.genderType == 2 ? 1: 0);
+        mGender.setSelection(mProfileData.genderType == 2 ? 1 : 0);
         mCountry.setSelection(0);
 
 
         Log.d(Constants.TAG, "profilePic url - bindUI()-ProfileEditActivity: " + mProfileData.imageUrl);
         try {
             if (!TextUtils.isEmpty(mProfileData.imageUrl.trim()))
-            Picasso.with(this).load(mProfileData.imageUrl.trim()).placeholder(R.drawable
-                    .vector_image_place_holder_profile_dark).into(mImage);
+                Picasso.with(this).load(mProfileData.imageUrl.trim()).placeholder(R.drawable
+                        .vector_image_place_holder_profile_dark).into(mImage);
             else Log.d(Constants.TAG, "no profile pic loaded bindUI()-ProfileEditActivity: ");
         } catch (Exception ex) {
             Picasso.with(this).load(R.drawable

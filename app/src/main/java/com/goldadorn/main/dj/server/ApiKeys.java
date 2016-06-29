@@ -64,16 +64,27 @@ public class ApiKeys {
     }
 
 
-    private static final class VERB{
+    public static final String getChangePasswordAPI(){
+        return BuildConfig.END_POINT + VERB.CHANGE_PASSWORD;
+    }
 
+    public static final String getPaymentHashesAPI(){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.PAYMENT_HASHES_API;
+    }
+
+
+    private static final class VERB{
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
         private static final String SET_CART_ADDRESS_API = "setuseraddress";
         private static final String CONTACT_US_API = "contactus";
         private static final String UPDATE_NOTIFICATION_COUNT = "updatenotification";
         private static final String UPDATE_PAYMENT_API = "notifypaymentstatus";
+        @Deprecated
         private static final String NEW5_DESC_API = "getproductbasicinfo";
         private static final String BOOK_APPOINTMENT_API = "bookappointment";
         private static final String POST_HIDE = "hidepost";
         private static final String POST_DELETE = "deletepost";
+        private static final String CHANGE_PASSWORD = "changepassword";
+        private static final String PAYMENT_HASHES_API = "generatepaymenthash";
     }
 }

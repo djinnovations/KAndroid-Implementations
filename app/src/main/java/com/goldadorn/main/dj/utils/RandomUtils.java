@@ -11,6 +11,8 @@ import android.text.style.UnderlineSpan;
 import android.widget.TextView;
 
 import com.goldadorn.main.activities.AppStartActivity;
+import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.utils.IDUtils;
 
 import org.json.JSONException;
@@ -103,6 +105,12 @@ public class RandomUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static void setPaddingLeftRight(TextView textView){
+        DisplayProperties dispProp = Application.getInstance().getDisplayPropInstance();
+        textView.setPadding((int) (5*dispProp.getXPixelsPerCell()), 0,
+                (int) (5*dispProp.getXPixelsPerCell()), (int) (5*dispProp.getYPixelsPerCell()));
     }
 
     public static int delayToStartApp = 1000;

@@ -24,10 +24,9 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
-import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
-import com.goldadorn.main.dj.support.GAUpdateHelper;
+import com.goldadorn.main.dj.support.GARaterUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
@@ -84,8 +83,11 @@ public class MainActivity extends BaseDrawerActivity {
     @Bind(R.id.transViewPost)
     View transViewPost;
 
+    public final int INTIMATION_COUNT_FOR_SESSION = 2;
+
+
 /*    //    private ResourceReader resRdr;
-//    private MyPreferenceManager coachMarkMgr;
+//    private DjphyPreferenceManager coachMarkMgr;
 //
 //    private final String msgWelcome = "You have landed on the social feed\n"
 //            +"where you can see all the social\nactivity happening in the app";
@@ -173,6 +175,7 @@ public class MainActivity extends BaseDrawerActivity {
         tourThisScreen();
 
         checkIfAppUpdated();
+        getApp().getPrefManager().updateSessionCounts();
         //testCode();
     }
 
@@ -190,15 +193,37 @@ public class MainActivity extends BaseDrawerActivity {
     }*/
 
 
+
+    ;
+
+
+
+
+
+
+    private int intimationCountForThisSession = 1;
+    public void displayDialogForIntimation(){
+        if (getApp().getPrefManager().getIsStopIntimation())
+            return;
+        if (intimationCountForThisSession > INTIMATION_COUNT_FOR_SESSION )
+            return;
+        getApp().getPrefManager().updateIntimationCount();
+        showDialogInfo("Great choice! Now tap on the product image to check it out in our Showcase", true);
+        intimationCountForThisSession++;
+    }
+
+
+    private GARaterUpdateHelper updateHelper;
     public void checkIfAppUpdated(){
-        GAUpdateHelper updateHelper = GAUpdateHelper.getInstance();
+        updateHelper = GARaterUpdateHelper.getInstance();
         updateHelper.checkForUpdates(this);
+        updateHelper.rateApp(this);
     }
 
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());
-        coachMarkMgr = MyPreferenceManager.getInstance(getApplicationContext());*/
+        coachMarkMgr = DjphyPreferenceManager.getInstance(getApplicationContext());*/
         mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -240,6 +265,12 @@ public class MainActivity extends BaseDrawerActivity {
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
+        super.onDestroy();
+    }
 
     final public static int POST_FEED = 1;
 
@@ -290,7 +321,8 @@ public class MainActivity extends BaseDrawerActivity {
                     String msg = data.getStringExtra("msg");
                     MultipartEntity reqEntity = new MultipartEntity();
 
-
+                    //// TODO: 28-06-2016
+                    //change string[] to list or json array.
                     if (data.getExtras().get("price") != null) {
                         String[] price = (String[])data.getExtras().get("price");
 
@@ -441,7 +473,7 @@ public class MainActivity extends BaseDrawerActivity {
     public void showDialogInfo(String msg, boolean isPositive){
         int color ;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
-        WindowUtils.getInstance(getApplicationContext()).genericInfoMsg(this, null, msg, color);
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
 
     private void startUploadProgress() {
@@ -489,4 +521,10 @@ public class MainActivity extends BaseDrawerActivity {
         }
     }
 
+
+    /*@Override
+    public void onStart() {
+        super.onStart();
+        updateHelper.onStartObserverForRateApp(this);
+    }*/
 }

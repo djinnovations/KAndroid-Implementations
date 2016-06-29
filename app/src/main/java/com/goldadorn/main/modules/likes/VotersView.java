@@ -26,9 +26,11 @@ import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.people.FollowPeopleHelper;
 import com.goldadorn.main.modules.people.PeopleUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.CommentDividerDecoration;
+import com.goldadorn.main.modules.socialFeeds.VotesEmptyViewHelper;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
+import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
@@ -103,11 +105,17 @@ public class VotersView extends DefaultVerticalListView implements DefaultProjec
     }
 
 
-    @Override
+    /*@Override
     public String getEmptyViewMessage() {
         //return super.getEmptyViewMessage();
         //return EmojisHelper.getSpannedText("Looks like nobody has voted the post yet. Go ahead and be the first one! :)");
         return "Looks like nobody has voted the post yet. Go ahead and be the first one!";
+    }*/
+
+    @Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        EmptyViewHelper helper = new VotesEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        return helper;
     }
 
     protected DataManager createDataManager()

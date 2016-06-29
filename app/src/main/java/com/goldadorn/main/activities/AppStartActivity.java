@@ -37,6 +37,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.kobakei.ratethisapp.RateThisApp;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -182,6 +183,7 @@ public class AppStartActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
+        RateThisApp.onStart(this);
         checkbranchio();
     }
 

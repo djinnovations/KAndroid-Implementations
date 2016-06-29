@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
@@ -176,6 +175,6 @@ public class WebActivity extends BaseActivity {
     private void showDialogInfo(String msg, boolean isPositive){
         int color ;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
-        WindowUtils.getInstance(getApplicationContext()).genericInfoMsg(this, null, msg, color);
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOkay(this, null, msg, color);
     }
 }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.animation.TranslateAnimation;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
-import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 
 import tourguide.tourguide.ChainTourGuide;
@@ -52,7 +50,7 @@ public class AppTourGuideHelper {
     private final String msgProductTab = "Tap on a tab to know more about the product";
 
     private ResourceReader resRdr;
-    private MyPreferenceManager coachMarkMgr;
+    private DjphyPreferenceManager coachMarkMgr;
     private final String overLayBgColor = "#55000000";
     private final String overLayBgColorShowcase = "#66000000";//55000000
     private final String toolTipBgColor = "#33E2E4E7";
@@ -85,7 +83,7 @@ public class AppTourGuideHelper {
         fadeOutAnim.setFillAfter(true);
 
         resRdr = ResourceReader.getInstance(appContext);
-        coachMarkMgr = MyPreferenceManager.getInstance(appContext);
+        coachMarkMgr = DjphyPreferenceManager.getInstance(appContext);
     }
 
 

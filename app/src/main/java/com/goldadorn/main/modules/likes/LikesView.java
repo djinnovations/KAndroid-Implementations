@@ -1,18 +1,12 @@
 package com.goldadorn.main.modules.likes;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,29 +18,21 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.activities.UserActivity;
-import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.eventBusEvents.AppActions;
-import com.goldadorn.main.model.Comment;
 import com.goldadorn.main.model.Liked;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
-import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
 import com.goldadorn.main.modules.people.FollowPeopleHelper;
 import com.goldadorn.main.modules.people.PeopleUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.CommentDividerDecoration;
-import com.goldadorn.main.modules.socialFeeds.helper.FollowHelper;
-import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
-import com.goldadorn.main.modules.socialFeeds.helper.PostCommentHelper;
-import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
-import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
-import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
+import com.goldadorn.main.modules.socialFeeds.LikesEmptyViewHelper;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
-import com.goldadorn.main.utils.URLHelper;
+import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
@@ -57,15 +43,12 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by bhavinpadhiyar on 2/26/16.
@@ -100,12 +83,20 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
         followPeopleHelper.update(people, pos);
     }
 
-    @Override
+    /*@Override
     public String getEmptyViewMessage() {
         //return super.getEmptyViewMessage();
         //return EmojisHelper.getSpannedText("Looks like nobody has liked the post yet. Go ahead and be the first one! :)");
         return "Looks like nobody has liked the post yet. Go ahead and be the first one!";
+    }*/
+
+
+    @Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        EmptyViewHelper helper = new LikesEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        return helper;
     }
+
 
     protected Application getApp() {
         BaseActivity baseActivity =(BaseActivity)getActivity();

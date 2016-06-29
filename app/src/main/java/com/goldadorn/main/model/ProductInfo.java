@@ -134,10 +134,14 @@ public class ProductInfo {
     }
 
     public CharSequence getDisplayHeight() {
+        if (height < 0)
+            return "NA";
         return String.format(Locale.getDefault(), "%.2f %s", height, sizeUnit);
     }
 
     public CharSequence getDisplayWidth() {
+        if (width < 0)
+            return "NA";
         return String.format(Locale.getDefault(), "%.2f %s", width, sizeUnit);
     }
 

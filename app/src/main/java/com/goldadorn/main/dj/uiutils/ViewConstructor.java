@@ -102,9 +102,9 @@ public class ViewConstructor {
         return alert;
     }
 
-    public AlertDialog displayInfo(Activity activity, String title, String infoMsg, int infoMsgColor) {
+    public AlertDialog displayInfo(Activity activity, String title, String infoMsg, String positiveText, int infoMsgColor) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setMessage(infoMsg).setPositiveButton("Okay",
+        builder.setMessage(infoMsg).setPositiveButton(positiveText,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -130,7 +130,7 @@ public class ViewConstructor {
         alert.show();
 
         Button btnPositive = (alert.getButton(DialogInterface.BUTTON_POSITIVE));
-        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2f);
+        btnPositive.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
         btnPositive.setAllCaps(false);
         /*if(showTwoOptions){
@@ -141,7 +141,7 @@ public class ViewConstructor {
         }*/
 
         TextView tvMsg = ((TextView) alert.findViewById(android.R.id.message));
-        tvMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.2f);
+        tvMsg.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2.4f);
         tvMsg.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(infoMsgColor));
 
         return alert;

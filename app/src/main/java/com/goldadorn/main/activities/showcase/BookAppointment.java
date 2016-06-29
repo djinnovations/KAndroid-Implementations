@@ -216,7 +216,7 @@ public class BookAppointment extends BaseActivity {
     }
 
     private void sendAppointmentRequest(Map<String, String> params) {
-        showOverLay(null, R.color.colorPrimaryDark);
+        showOverLay();
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(BOOK_APPOINTMENT_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         getAQuery().ajax(ApiKeys.getAppointmentAPI(), params, String.class, ajaxCallback);
@@ -253,7 +253,7 @@ public class BookAppointment extends BaseActivity {
     @Bind(R.id.progressBar)
     ProgressView pgView;
 
-    private void showOverLay(String text, int colorResId) {
+    private void showOverLay() {
         /*if (overLayDialog == null) {
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);

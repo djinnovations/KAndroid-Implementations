@@ -95,12 +95,18 @@ public class CommentsView extends DefaultVerticalListView {
             return inflater.inflate(R.layout.feed_comments_fragment_recycler, container, false);
     }
 
-    @Override
+    /*@Override
     public String getEmptyViewMessage() {
         //return super.getEmptyViewMessage();
         //return EmojisHelper.getSpannedText("Looks like nobody has liked the post yet. Go ahead and be the first one! :)");
-        return "Looks like nobody has liked the post yet. Go ahead and be the first one!";
-    }
+        return "Looks like nobody has commented on the post yet. Go ahead and be the first one!";
+    }*/
+
+    /*@Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        EmptyViewHelper helper = new CommentsEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        return helper;
+    }*/
 
     public int getColumnsPhone() {
         return 1;

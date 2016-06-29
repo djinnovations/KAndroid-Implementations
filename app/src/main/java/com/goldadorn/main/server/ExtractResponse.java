@@ -69,10 +69,14 @@ public class ExtractResponse {
         if (response.responseContent != null) {
             JSONObject jsonObject = new JSONObject(response.responseContent);
             ProfileData profileData = response.object = new ProfileData();
-            profileData.firstName = jsonObject.optString("fname");
-            profileData.lastName = jsonObject.optString("lname");
-            profileData.email = jsonObject.optString("username");
-            profileData.phone = jsonObject.optString("phone");
+            if (!jsonObject.isNull("fname"))
+                profileData.firstName = jsonObject.getString("fname");
+            if (!jsonObject.isNull("lname"))
+                profileData.lastName = jsonObject.getString("lname");
+            if (!jsonObject.isNull("username"))
+                profileData.email = jsonObject.getString("username");
+            if (!jsonObject.isNull("phone"))
+                profileData.phone = jsonObject.getString("phone");
             if (jsonObject.has("profilePic")) {
                 String url = jsonObject.optString("profilePic", null);
                 if (url != null && !TextUtils.isEmpty(url)) {
@@ -80,12 +84,18 @@ public class ExtractResponse {
                 }
                 profileData.imageUrl = url;
             }
-            profileData.address1 = jsonObject.optString("address1");
-            profileData.address2 = jsonObject.optString("address2");
-            profileData.country = jsonObject.optString("country");
-            profileData.state = jsonObject.optString("state");
-            profileData.city = jsonObject.optString("city");
-            profileData.pincode = jsonObject.optString("pincode");
+            if (!jsonObject.isNull("address1"))
+                profileData.address1 = jsonObject.getString("address1");
+            if (!jsonObject.isNull("address2"))
+                profileData.address2 = jsonObject.getString("address2");
+            if (!jsonObject.isNull("country"))
+                profileData.country = jsonObject.getString("country");
+            if (!jsonObject.isNull("state"))
+                profileData.state = jsonObject.getString("state");
+            if (!jsonObject.isNull("city"))
+                profileData.city = jsonObject.getString("city");
+            if (!jsonObject.isNull("pincode"))
+                profileData.pincode = jsonObject.getString("pincode");
             profileData.dob = getBdayInLong(jsonObject);
             profileData.genderType = jsonObject.isNull("gender") ? 0 : getGenderTypeFromText(jsonObject.getString("gender"));
             Log.d("dj", "genderType: " + profileData.genderType);

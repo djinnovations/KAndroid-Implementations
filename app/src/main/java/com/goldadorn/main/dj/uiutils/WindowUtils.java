@@ -56,8 +56,12 @@ public class WindowUtils {
     }
 
 
-    public void genericInfoMsg(Activity activity, String title, String infoMsg, int colorInfoMsg){
-        mViewConstructor.displayInfo(activity, title, infoMsg, colorInfoMsg);
+    public void genericInfoMsgWithOkay(Activity activity, String title, String infoMsg, int colorInfoMsg){
+        mViewConstructor.displayInfo(activity, title, infoMsg, "Okay",colorInfoMsg);
+    }
+
+    public void genericInfoMsgWithOK(Activity activity, String title, String infoMsg, int colorInfoMsg){
+        mViewConstructor.displayInfo(activity, title, infoMsg, "OK",colorInfoMsg);
     }
 
 

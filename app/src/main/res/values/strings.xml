@@ -118,5 +118,9 @@
     <string name="prompt_country">Country</string>
     <string name="hint_forgot_password">Enter your Email Id below. A link to reset your password will be sent to you shortly.</string>
 
-
+    <string name="rate_app_title">Rate Us</string>
+    <string name="rate_app_msg">If you enjoyed using this App, would you mind taking a moment to rate Us. Thank you for your support</string>
+    <string name="rate_app_later">Later</string>
+    <string name="rate_app_no">Not Interested</string>
+    <string name="rate_app_yes">Rate now</string>
 </resources>

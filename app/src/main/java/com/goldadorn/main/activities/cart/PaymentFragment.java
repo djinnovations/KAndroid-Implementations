@@ -114,14 +114,14 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     MerchantWebService merchantWebService = new MerchantWebService();
                     merchantWebService.setKey(mPaymentParams.getKey());
                     merchantWebService.setCommand(PayuConstants.PAYMENT_RELATED_DETAILS_FOR_MOBILE_SDK);
-                    merchantWebService.setVar1(mPaymentParams.getUserCredentials() == null ? "default" : mPaymentParams.getUserCredentials());
+                    merchantWebService.setVar1(mPaymentParams.getUserCredentials() == null ? PayuConstants.DEFAULT : mPaymentParams.getUserCredentials());
                     // hash we have to generate
                     merchantWebService.setHash(mPayUHashes.getPaymentRelatedDetailsForMobileSdkHash());
                     PostData postData = new MerchantWebServicePostParams(merchantWebService).getMerchantWebServicePostParams();
                     if (postData.getCode() == PayuErrors.NO_ERROR) {
                         // ok we got the post params, let make an api call to payu to fetch the payment related details
                         mPayuConfig.setData(postData.getResult());
-                        Log.d("djpay", "merchant web service call");
+                        Log.d("djpay", "merchant web service call- postData.getResult(): "+postData.getResult());
                         // lets set the visibility of progress bar
                         //mProgressBar.setVisibility(View.VISIBLE);
                         GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
@@ -277,13 +277,11 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("djpay", "onActivityResult");
+        Log.d("djpay", "onActivityResult - PaymentFragment");
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
-            Log.d("djpay", "onActivityResult - req by payu");
             if (data != null) {
-                Log.d("djpay", "onActivityResult - data not null");
-                String result = data.getStringExtra("result");
-                Log.d("djpay", "onActivityResult - result: "+result);
+                String result = data.getStringExtra("payu_response");
+                Log.d("djpay", "onActivityResult - payu_response: "+result);
                 String status = null;
                 try {
                     JSONObject json = new JSONObject(result);

@@ -1,6 +1,8 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
@@ -12,8 +14,9 @@ import com.goldadorn.main.activities.cart.CartManagerActivity;
 import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.support.DjphyPreferenceManager;
 import com.goldadorn.main.dj.support.GAFacebookAnalytics;
-import com.goldadorn.main.dj.support.MyPreferenceManager;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.icons.GoldadornIconFont;
 import com.goldadorn.main.icons.HeartIconFont;
@@ -35,6 +38,7 @@ import com.kimeeo.library.actions.Action;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.model.BaseApplication;
 import com.kimeeo.library.model.IFragmentData;
+import com.kobakei.ratethisapp.RateThisApp;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.Iconics;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
@@ -92,11 +96,11 @@ public class Application extends BaseApplication {
         return ourInstance;
     }
 
-    private MyPreferenceManager mPrefInstance;
-    public MyPreferenceManager getPrefManager(){
+    private DjphyPreferenceManager mPrefInstance;
+    public DjphyPreferenceManager getPrefManager(){
 
         if (mPrefInstance == null){
-            mPrefInstance = MyPreferenceManager.getInstance(this);
+            mPrefInstance = DjphyPreferenceManager.getInstance(this);
         }
         return mPrefInstance;
     }
@@ -213,11 +217,35 @@ public class Application extends BaseApplication {
         initGoogleAnalytics();
         initFacebook();
         initMixPanel();
+        initAppRater();
+    }
+
+    //public int numOfDaysToWait = 5;
+    //public int numOfUsesToWait = 5;
+
+    private void initAppRater(){
+        RateThisApp.Config config = new RateThisApp.Config();
+// Custom title ,message and buttons names
+        config.setTitle(R.string.rate_app_title);
+        config.setMessage(R.string.rate_app_msg);
+        config.setYesButtonText(R.string.rate_app_yes);
+        config.setNoButtonText(R.string.rate_app_no);
+        config.setCancelButtonText(R.string.rate_app_later);
+        RateThisApp.init(config);
+        getPrefManager().startDayCountForRating();
+        //setAppRateCallBack();
+
+        /*if (getPrefManager().getAppRatingStatus())
+            RateThisApp.stopRateDialog(this);*/
     }
 
     private void initMixPanel(){
         Log.d("dj","mix panel init");
         mMixPanelInstance = MixpanelAPI.getInstance(this, Constants.MIX_PANEL_PROJECT_TOKEN);
+    }
+
+    public DisplayProperties getDisplayPropInstance(){
+        return DisplayProperties.getInstance(this, DisplayProperties.ORIENTATION_PORTRAIT);
     }
 
     private GAFacebookAnalytics mFbAnalyticsInstance;

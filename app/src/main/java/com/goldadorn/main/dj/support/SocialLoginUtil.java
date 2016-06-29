@@ -190,6 +190,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
     public void performGoogleLogout() {
 
+        indicateSignedOut();
         Log.d(Constants.TAG, "performGoogleLogout called; signed in stat"+isSignedIn);
         if (!isSignedIn)
             return;
@@ -230,6 +231,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         //// TODO: 5/6/2016
         if (!isFbSignedIn)
             return;
+        indicateSignedOut();
         LoginManager.getInstance().logOut();
         Log.d(Constants.TAG, "performFbLogout success: ");
         isFbSignedIn = false;
@@ -667,6 +669,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 ((Application) mActivity.getApplication()).setUser(user);
 
                 ((Application) mActivity.getApplication()).setCookies(cookies);
+                Application.getInstance().getPrefManager().setSocialLoginStat(true);
                 /*SharedPreferences sharedPreferences = mAppContext.getSharedPreferences(AppSharedPreferences.LoginInfo.NAME, Context.MODE_PRIVATE);
                 sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, true)
                         .putString(AppSharedPreferences.LoginInfo.USER_NAME, loginResult.getUsername().trim())
@@ -679,6 +682,11 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                 new Action(mActivity).launchActivity(MainActivity.class, true);
             }
         }.start();
+    }
+
+
+    public void indicateSignedOut(){
+        Application.getInstance().getPrefManager().setSocialLoginStat(false);
     }
 
 

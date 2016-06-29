@@ -14,6 +14,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -118,7 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false)
                     .putString(AppSharedPreferences.LoginInfo.USER_NAME, "")
                     .putString(AppSharedPreferences.LoginInfo.PASSWORD, "").commit();
-
+            SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
             stopProgress();
             new Action(this).launchActivity(LandingPageActivity.class,true);
         }

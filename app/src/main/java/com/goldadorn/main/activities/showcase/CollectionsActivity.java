@@ -276,9 +276,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                 });
 
         /*TextView tv=null;
-        tv.setText("");
+        tv.setText("");*/
 
-*/
         setUpGuideListener();
     }
 

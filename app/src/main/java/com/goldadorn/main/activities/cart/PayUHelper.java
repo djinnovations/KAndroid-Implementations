@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.payu.india.Extras.PayUChecksum;
 import com.payu.india.Extras.PayUSdkDetails;
 import com.payu.india.Model.PaymentParams;
@@ -43,7 +44,7 @@ import java.util.Iterator;
     private PayUChecksum checksum;
     private PostData postData;
     private String key;
-    private String salt="TppVcnTs";
+    //private String salt="TppVcnTs";
     private String var1;
     private Bundle bundle = new Bundle();
     //    private mPaymentParams mPaymentParams;
@@ -66,8 +67,8 @@ import java.util.Iterator;
         mPaymentParams.setFirstName(name);
         mPaymentParams.setEmail("soni94@gmail.com");
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
-        mPaymentParams.setSurl("https://payu.herokuapp.com/success");//can you take over
-        mPaymentParams.setFurl("https://payu.herokuapp.com/failure");
+        mPaymentParams.setSurl("http://demo.eremotus-portal.com/goldadorn_prod/html/success.html");//can you take over
+        mPaymentParams.setFurl("http://demo.eremotus-portal.com/goldadorn_prod/html/fail.html");
         //mPaymentParams.setUserCredentials(merchantKey+":"+((Application)context.getApplicationContext()).getUser().id);
         mPaymentParams.setUserCredentials(PayuConstants.DEFAULT);
         mPaymentParams.setUdf1("udf1");
@@ -75,7 +76,7 @@ import java.util.Iterator;
         mPaymentParams.setUdf3("udf3");
         mPaymentParams.setUdf4("udf4");
         mPaymentParams.setUdf5("udf5");
-        payuConfig.setEnvironment(PRODUCTION ? PayuConstants.PRODUCTION_ENV : PayuConstants.MOBILE_STAGING_ENV);
+        //payuConfig.setEnvironment(PRODUCTION ? PayuConstants.PRODUCTION_ENV : PayuConstants.MOBILE_STAGING_ENV);
 
         // optional
 //        mPaymentParams.setOfferKey(inputData);
@@ -86,8 +87,8 @@ import java.util.Iterator;
         // generate hash from server
         // just a sample. Acturally Merchant should generate from his server.
 
-        if (null == salt) generateHashFromServer(mPaymentParams);
-        else generateHashFromSDK(mPaymentParams, salt);
+        /*if (null == salt)*/ generateHashFromServer(mPaymentParams);
+        /*else generateHashFromSDK(mPaymentParams, salt);*/
 
 
         // generate hash from client;
@@ -114,7 +115,7 @@ import java.util.Iterator;
          *  merchant should generate the hash from his server.
          *
          */
-        bundle.putString(PayuConstants.SALT, salt);
+        //bundle.putString(PayuConstants.SALT, salt);
         mInitListner.onResult(bundle);
     }
 
@@ -126,7 +127,7 @@ import java.util.Iterator;
         // lets create the post params
 
         StringBuffer postParamsBuffer = new StringBuffer();
-        postParamsBuffer.append(concatParams(PayuConstants.KEY, mPaymentParams.getKey()));
+        //postParamsBuffer.append(concatParams(PayuConstants.KEY, mPaymentParams.getKey()));
         postParamsBuffer.append(concatParams(PayuConstants.AMOUNT, mPaymentParams.getAmount()));
         postParamsBuffer.append(concatParams(PayuConstants.TXNID, mPaymentParams.getTxnId()));
         postParamsBuffer.append(concatParams(PayuConstants.EMAIL, null == mPaymentParams.getEmail() ? "" : mPaymentParams.getEmail()));
@@ -148,6 +149,7 @@ import java.util.Iterator;
 
         String postParams = postParamsBuffer.charAt(postParamsBuffer.length() - 1) == '&' ? postParamsBuffer.substring(0, postParamsBuffer.length() - 1).toString() : postParamsBuffer.toString();
         // make api call
+        Log.d("djpayu", "req params- generateHashFromServer: "+postParams);
         GetHashesFromServerTask getHashesFromServerTask = new GetHashesFromServerTask();
         getHashesFromServerTask.execute(postParams);
     }
@@ -163,7 +165,7 @@ import java.util.Iterator;
     // lets generate hashes.
     // This should be done from server side..
     // Do not keep salt anywhere in app.
-    public void generateHashFromSDK(PaymentParams mPaymentParams, String Salt) {
+    /*public void generateHashFromSDK(PaymentParams mPaymentParams, String Salt) {
         PayuHashes payuHashes = new PayuHashes();
         postData = new PostData();
 
@@ -229,7 +231,7 @@ import java.util.Iterator;
 
         // we have generated all the hases now lest launch sdk's ui
         onBundleReady(payuHashes); //
-    }
+    }*/
 
     // deprecated, should be used only for testing.
     private PostData calculateHash(String key, String command, String var1, String salt) {
@@ -251,7 +253,7 @@ import java.util.Iterator;
 //                URL url = new URL(PayuConstants.MOBILE_TEST_FETCH_DATA_URL);
 //                        URL url = new URL("http://10.100.81.49:80/merchant/postservice?form=2");;
 
-                URL url = new URL("https://payu.herokuapp.com/get_hash");
+                URL url = new URL(ApiKeys.getPaymentHashesAPI());
 
                 // get the payuConfig first
                 String postParam = postParams[0];
@@ -260,8 +262,8 @@ import java.util.Iterator;
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Content-Length", String.valueOf(postParamsByte.length));
+                /*conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestProperty("Content-Length", String.valueOf(postParamsByte.length));*/
                 conn.setDoOutput(true);
                 conn.getOutputStream().write(postParamsByte);
 
@@ -272,8 +274,9 @@ import java.util.Iterator;
                     responseStringBuffer.append(new String(byteContainer, 0, i));
                 }
 
-                JSONObject response = new JSONObject(responseStringBuffer.toString());
-
+                JSONObject result = new JSONObject(responseStringBuffer.toString());
+                Log.d("djpayu","response- paymentHashes: "+result);
+                JSONObject response = result.getJSONObject("result");
                 Iterator<String> payuHashIterator = response.keys();
                 while (payuHashIterator.hasNext()) {
                     String key = payuHashIterator.next();
