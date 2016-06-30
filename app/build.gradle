@@ -50,6 +50,8 @@ android {
             buildConfigField 'String', 'SHOWCASE_SOCIAL', '"107.170.99.118"'
 
             buildConfigField 'String', 'PAYU_ENVIRONMENT', '"1"'
+            buildConfigField 'String', 'PAYU_SURL', '"http://107.170.48.64/goldadorn_prod/html/success.html"'
+            buildConfigField 'String', 'PAYU_FURL', '"http://107.170.48.64/goldadorn_prod/html/failure.html"'
         }
 
         live {
@@ -73,6 +75,8 @@ android {
             buildConfigField 'String', 'SHOWCASE_SOCIAL', '"goldadorn.cloudapp.net"'
 
             buildConfigField 'String', 'PAYU_ENVIRONMENT', '"0"'
+            buildConfigField 'String', 'PAYU_SURL', '"http://demo.eremotus-portal.com/goldadorn_prod/html/success.html"'
+            buildConfigField 'String', 'PAYU_FURL', '"http://demo.eremotus-portal.com/goldadorn_prod/html/failure.html"'
         }
     }
 
@@ -126,6 +130,7 @@ dependencies {
     compile "com.android.support:customtabs:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    //compile "com.android.support:support-v4:$SUPPORT_LIBRARY_VERSION"//not needed - DJphy
     compile "com.android.support:palette-v7:$SUPPORT_LIBRARY_VERSION"
     compile 'com.mixpanel.android:mixpanel-android:4.+'
     compile 'com.facebook.android:facebook-android-sdk:4.+'
@@ -174,11 +179,16 @@ dependencies {
     compile 'com.squareup.okio:okio:1.4.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     //    compile 'com.payu.custombrowser:payu-custom-browser:5.2.2'
-    compile(name: 'CustomBrowser-release', ext: 'aar')
+    /*compile(name: 'CustomBrowser-release', ext: 'aar')
     compile(name: 'PayU-release', ext: 'aar')
-    compile project(':payu_ui')/*){
-        exclude group: 'com.nineoldandroids', module: 'library'
-    }*/
+    compile project(':payu_ui')*/
+
+    //Djphy payu
+    compile project(':payu_ui')
+    //compile 'com.payu.india:payu-sdk:4.3.4'
+    //compile 'com.payu.magicretry:magicretry:1.0.4'
+    //compile 'com.payu.custombrowser:payu-custom-browser:5.3.7'
+
     compile 'com.flaviofaria:kenburnsview:1.0.7'
     compile 'com.github.jkwiecien:EasyImage:1.2.1'
     compile 'com.android.support:multidex:1.0.1'

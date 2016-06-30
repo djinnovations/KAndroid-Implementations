@@ -28,9 +28,9 @@ public class PostBestOfActivity extends AbstractPostActivity {
         return /*"Best of Three"*/"Pick the best";
     }
 
-    protected List<String> getPrice()
+    protected List<Integer> getPrice()
     {
-        List<String> list= new ArrayList<>();
+        List<Integer> list= new ArrayList<>();
         list.add(imageSelector1.price);
         list.add(imageSelector2.price);
         list.add(imageSelector3.price);
@@ -134,6 +134,51 @@ public class PostBestOfActivity extends AbstractPostActivity {
         return null;
     }
 
+    @Override
+    protected List<Integer> getCollIds() {
+
+        List<Integer> collIdList = new ArrayList<>();
+        boolean isAdded = false;
+        if (imageSelector1.isValid()){
+            isAdded = true;
+            collIdList.add(imageSelector1.getCollId());
+        }
+        if (imageSelector2.isValid()){
+            isAdded = true;
+            collIdList.add(imageSelector2.getCollId());
+        }
+        if (imageSelector3.isValid()){
+            isAdded = true;
+            collIdList.add(imageSelector3.getCollId());
+        }
+        if(isAdded)
+            return collIdList;
+        else return null;
+        //// TODO: 30-06-2016
+    }
+
+    @Override
+    protected List<Integer> getDesignerIds() {
+
+        List<Integer> desIdList = new ArrayList<>();
+        boolean isAdded = false;
+        if (imageSelector1.isValid()){
+            isAdded = true;
+            desIdList.add(imageSelector1.getDesId());
+        }
+        if (imageSelector2.isValid()){
+            isAdded = true;
+            desIdList.add(imageSelector2.getDesId());
+        }
+        if (imageSelector3.isValid()){
+            isAdded = true;
+            desIdList.add(imageSelector3.getDesId());
+        }
+        if(isAdded)
+            return desIdList;
+        else return null;
+        //// TODO: 30-06-2016
+    }
 
 
     protected int getPostType()

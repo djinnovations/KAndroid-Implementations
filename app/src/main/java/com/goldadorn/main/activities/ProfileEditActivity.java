@@ -477,7 +477,7 @@ public class ProfileEditActivity extends BaseActivity {
                 }, 200);
             }
         });
-        ColoredSnackbar.alert(snackbar).show();
+        ColoredSnackbar.warning(snackbar).show();
     }
 
     private void setDrawablesForPassword() {

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.server.ApiKeys;
@@ -67,8 +68,8 @@ import java.util.Iterator;
         mPaymentParams.setFirstName(name);
         mPaymentParams.setEmail("soni94@gmail.com");
         mPaymentParams.setTxnId("" + System.currentTimeMillis());
-        mPaymentParams.setSurl("http://demo.eremotus-portal.com/goldadorn_prod/html/success.html");//can you take over
-        mPaymentParams.setFurl("http://demo.eremotus-portal.com/goldadorn_prod/html/fail.html");
+        mPaymentParams.setSurl(BuildConfig.PAYU_SURL);//can you take over
+        mPaymentParams.setFurl(BuildConfig.PAYU_FURL);
         //mPaymentParams.setUserCredentials(merchantKey+":"+((Application)context.getApplicationContext()).getUser().id);
         mPaymentParams.setUserCredentials(PayuConstants.DEFAULT);
         mPaymentParams.setUdf1("udf1");

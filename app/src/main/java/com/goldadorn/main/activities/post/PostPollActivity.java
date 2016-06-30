@@ -54,9 +54,8 @@ public class PostPollActivity extends AbstractPostActivity {
 
     }
 
-    protected List<String> getPrice()
-    {
-        List<String> list= new ArrayList<>();
+    protected List<Integer> getPrice() {
+        List<Integer> list = new ArrayList<>();
         list.add(imageSelector1.price);
         return list;
     }
@@ -144,6 +143,26 @@ public class PostPollActivity extends AbstractPostActivity {
             return "Please upload image";
         else if (details.getText().toString().equals(""))
             return "Please enter some details";
+        return null;
+    }
+
+    @Override
+    protected List<Integer> getCollIds() {
+        if (imageSelector1.isValid()) {
+            List<Integer> collIdList = new ArrayList<>();
+            collIdList.add(imageSelector1.getCollId());
+            return collIdList;
+        }
+        return null;
+    }
+
+    @Override
+    protected List<Integer> getDesignerIds() {
+        if (imageSelector1.isValid()) {
+            List<Integer> desIdList = new ArrayList<>();
+            desIdList.add(imageSelector1.getDesId());
+            return desIdList;
+        }
         return null;
     }
 

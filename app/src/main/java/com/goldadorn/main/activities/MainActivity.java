@@ -47,6 +47,7 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONArray;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -323,10 +324,9 @@ public class MainActivity extends BaseDrawerActivity {
 
                     //// TODO: 28-06-2016
                     //change string[] to list or json array.
-                    if (data.getExtras().get("price") != null) {
+                    /*if (data.getExtras().get("price") != null) {
                         String[] price = (String[])data.getExtras().get("price");
-
-                    }
+                    }*/
                     try {
 
                         if (data.getExtras().get("files") != null) {
@@ -368,6 +368,54 @@ public class MainActivity extends BaseDrawerActivity {
                             link = links[i];
                             if (link != null && link.equals("") == false) {
                                 reqEntity.addPart("link" + count, new StringBody(link + ""));
+                                count++;
+                            }
+                        }
+                    }
+
+                    if (data.getExtras().get("collIdList") != null){
+                        int[] collIdArr = (int[]) data.getExtras().get("collIdList");
+                        /*JSONArray jsonArray = new JSONArray();
+                        try {
+                            for (int colId : collIdArr){
+                                jsonArray.put(colId);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (jsonArray.length() != 0){
+                            reqEntity.addPart("createpost_collids", new );
+                        }*/
+                        int collId;
+                        int count = 1;
+                        for (int i = 0; i < collIdArr.length; i++){
+                            collId = collIdArr[i];
+                            if (collId != -1){
+                                reqEntity.addPart("createpost_collid"+count, new StringBody(String.valueOf(collId)));
+                                count++;
+                            }
+                        }
+                    }
+
+                    if (data.getExtras().get("desIdList") != null){
+                        int[] desIdArr = (int[]) data.getExtras().get("desIdList");
+                        /*JSONArray jsonArray = new JSONArray();
+                        try {
+                            for (int colId : collIdArr){
+                                jsonArray.put(colId);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if (jsonArray.length() != 0){
+                            reqEntity.addPart("createpost_collids", new );
+                        }*/
+                        int desId;
+                        int count = 1;
+                        for (int i = 0; i < desIdArr.length; i++){
+                            desId = desIdArr[i];
+                            if (desId != -1){
+                                reqEntity.addPart("createpost_desgnid"+count, new StringBody(String.valueOf(desId)));
                                 count++;
                             }
                         }

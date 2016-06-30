@@ -44,8 +44,17 @@ public class GalleryImageSelector extends ImageSelector
 {
     public static final int PICK_SERVER_GALLERY = 2;
     private String path;
-    public String price;
+    public int price;
+    private int collId;
+    private int desId;
 
+    public int getCollId(){
+        return collId;
+    }
+
+    public int getDesId(){
+        return desId;
+    }
 
     public boolean isValid()
     {
@@ -149,7 +158,9 @@ public class GalleryImageSelector extends ImageSelector
         if (requestCode==PICK_SERVER_GALLERY && resultCode == Activity.RESULT_OK)
         {
             path=data.getStringExtra("PATH");
-            price=data.getStringExtra("PRICE");
+            price=data.getIntExtra("PRICE", -1);
+            collId = data.getIntExtra("COLLID", -1);
+            desId = data.getIntExtra("DESID", -1);
             file=null;
             selectedMethod = PICK_SERVER_GALLERY;
 

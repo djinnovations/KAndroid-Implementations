@@ -22,6 +22,7 @@ import com.payu.custombrowser.PayUWebViewClient;
 import com.payu.india.Extras.PayUSdkDetails;
 import com.payu.india.Model.PayuConfig;
 import com.payu.india.Payu.PayuConstants;
+import com.payu.magicretry.MagicRetryFragment;
 
 
 public class PaymentsActivity extends AppCompatActivity{
@@ -163,7 +164,9 @@ public class PaymentsActivity extends AppCompatActivity{
                 finish();
             }
             mWebView.setWebChromeClient(new PayUWebChromeClient(bank));
-            mWebView.setWebViewClient(new PayUWebViewClient(bank));
+            //mWebView.setWebViewClient(new PayUWebViewClient(bank));
+            MagicRetryFragment magicRetryFragment = new MagicRetryFragment();
+            mWebView.setWebViewClient(new PayUWebViewClient(bank, magicRetryFragment, merchantKey));
             mWebView.postUrl(url, payuConfig.getData().getBytes());
         } catch (ClassNotFoundException e) {
             mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);

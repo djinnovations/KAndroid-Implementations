@@ -30,7 +30,6 @@
                 android:id="@+id/text_view_transaction_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
                 android:text="Transaction id : " />
         </LinearLayout>
 

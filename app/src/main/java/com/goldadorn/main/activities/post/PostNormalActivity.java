@@ -21,66 +21,79 @@ import butterknife.Bind;
  */
 public class PostNormalActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
-    protected String getPageTitle()
-    {
+
+    protected String getPageTitle() {
         return "Post";
     }
-    protected List<File> getFiles()
-    {
-        if(imageSelector1.isValid()) {
-            List<File> map= new ArrayList<>();
-            if(imageSelector1.getFile()!=null)
+
+    protected List<File> getFiles() {
+        if (imageSelector1.isValid()) {
+            List<File> map = new ArrayList<>();
+            if (imageSelector1.getFile() != null)
                 map.add(imageSelector1.getFile());
             return map;
         }
         return null;
     }
 
-    protected List<String> getPrice()
-    {
-        List<String> list= new ArrayList<>();
+    protected List<Integer> getPrice() {
+        List<Integer> list = new ArrayList<>();
         list.add(imageSelector1.price);
         return list;
     }
 
 
-
-    protected List<String> getLinks()
-    {
-        if(imageSelector1.isValid())
-        {
-            List<String> map= new ArrayList<>();
-            if(imageSelector1.getLink()!=null)
+    protected List<String> getLinks() {
+        if (imageSelector1.isValid()) {
+            List<String> map = new ArrayList<>();
+            if (imageSelector1.getLink() != null)
                 map.add(imageSelector1.getLink());
             return map;
         }
         return null;
     }
-    protected List<String> getFilesPath()
-    {
-        if(imageSelector1.isValid())
-        {
-            List<String> map= new ArrayList<>();
-            if(imageSelector1.getFilePath()!=null)
+
+    protected List<String> getFilesPath() {
+        if (imageSelector1.isValid()) {
+            List<String> map = new ArrayList<>();
+            if (imageSelector1.getFilePath() != null)
                 map.add(imageSelector1.getFilePath());
             return map;
         }
         return null;
     }
-    protected int getPostType()
-    {
+
+    protected int getPostType() {
         return SocialPost.POST_TYPE_NORMAL_POST;
     }
 
-    protected String isValid()
-    {
-        if(details.getText().toString().equals(""))
+    protected String isValid() {
+        if (details.getText().toString().equals(""))
             return "Please enter some details";
         return null;
     }
 
-    protected int getmainResID()
-    {
+    @Override
+    protected List<Integer> getCollIds() {
+        if (imageSelector1.isValid()) {
+            List<Integer> collIdList = new ArrayList<>();
+            collIdList.add(imageSelector1.getCollId());
+            return collIdList;
+        }
+        return null;
+    }
+
+    @Override
+    protected List<Integer> getDesignerIds() {
+        if (imageSelector1.isValid()) {
+            List<Integer> desIdList = new ArrayList<>();
+            desIdList.add(imageSelector1.getDesId());
+            return desIdList;
+        }
+        return null;
+    }
+
+    protected int getmainResID() {
         return R.layout.activity_post_normal;
     }
 
@@ -91,9 +104,8 @@ public class PostNormalActivity extends AbstractPostActivity {
     View trigger;
 
 
-    protected void viewCreted(People people,int maxImageSize)
-    {
-        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge,trigger);
+    protected void viewCreted(People people, int maxImageSize) {
+        imageSelector1 = new GalleryImageSelector(this, this, previewIamge, trigger);
         imageSelector1.setMaxSize(maxImageSize);
     }
 

@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
@@ -88,6 +89,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ((CartManagerActivity)getActivity()).showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
         setUpPaymentMethodView(view);
 
@@ -131,6 +133,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                         // close the progress bar
                         //mProgressBar.setVisibility(View.GONE);
                     }
+                    ((CartManagerActivity)getActivity()).dismissOverLay();
                 } //i'll check
             }
         });
@@ -145,8 +148,8 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 }
             };
 
-    private final String[] payMethodArr = new String[]{"Net Banking", "Credit Card", "EMI", "Debit Card", "Cash on Delivery"};
-
+    //private final String[] payMethodArr = new String[]{"Net Banking", "Credit Card", "EMI", "Debit Card", "Cash on Delivery"};
+    private final String[] payMethodArr = new String[]{"Debit Card", "Net Banking", "Credit Card", "Cash on Delivery", "EMI"};
     private void setUpPaymentMethodView(View view) {
         /*payMethodList = new ArrayList<>();
 
@@ -186,15 +189,16 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             }
         });
         ArrayList<PaymentMethodsViewController.PaymentMethodsDataObj> list = new ArrayList<>();
+        int selection = 0;// select debit card by default
         int i = 0;
         for (String str : payMethodArr) {
-            if (i == 1)
+            /*if (i == 1)*/if (i == selection)
                 list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, true));
             else list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, false));
             i++;
         }
         new PaymentMethodsViewController(paymethodContainer, payMethodListener).displayMethods(list);
-        modeChosen = payMethodArr[1];
+        modeChosen = /*payMethodArr[1]*/payMethodArr[selection];
     }
 
 
@@ -277,7 +281,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("djpay", "onActivityResult - PaymentFragment");
+        Log.d("djpay", "onActivityResult - PaymentFragment: "+data);
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
                 try {
@@ -305,11 +309,16 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    String result = data.getStringExtra("result");
-                    if(result.contains(mPaymentParams.getSurl())){
-                        mCartData.setPaymentDone(true, false, paymentMode);
-                    }else {
-                        Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
+                    try {
+                        String result = data.getStringExtra("result");
+                        if(result.contains(mPaymentParams.getSurl())){
+                            mCartData.setPaymentDone(true, false, paymentMode);
+                        }else {
+                            Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        Toast.makeText(getContext(), "Couldn't retrieve transaction details", Toast.LENGTH_SHORT).show();
                     }
                 }
                /* if (result.equals(mPaymentParams.getSurl())) {
@@ -327,7 +336,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                             }
                         }).show();*/
             } else {
-                Toast.makeText(getContext(), "Could not receive data", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Couldn't retrieve transaction details", Toast.LENGTH_SHORT).show();
             }
         }
     }

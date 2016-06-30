@@ -36,6 +36,11 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     abstract protected String isValid();
 
+    abstract protected List<Integer> getCollIds();
+
+    abstract protected List<Integer> getDesignerIds();
+
+
     abstract protected void viewCreted(People people, int maxImageSize);
 
 
@@ -49,7 +54,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     protected abstract List<String> getFilesPath();
 
-    protected abstract List<String> getPrice();
+    protected abstract List<Integer> getPrice();
 
     protected abstract List<String> getLinks();
 
@@ -143,8 +148,12 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             if (fileData != null && fileData.equals("") == false)
                 intent.putExtra("fileData", fileData);
 
-            List<String> price = getPrice();
+            List<Integer> price = getPrice();
             intent.putExtra("price", price.toArray());
+            List<Integer> collIdList = getCollIds();
+            intent.putExtra("collIdList", collIdList.toArray());
+            List<Integer> desIdList = getDesignerIds();
+            intent.putExtra("desIdList", desIdList.toArray());
 
             List<File> fileList = getFiles();
             if (fileList != null && fileList.size() != 0) {

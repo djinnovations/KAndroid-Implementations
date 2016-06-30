@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.payu.india.Model.PaymentDefaultParams;
 import com.payu.india.Model.PaymentDetails;
 import com.payu.india.Model.PaymentParams;
 import com.payu.india.Model.PayuConfig;
@@ -23,7 +24,9 @@ import com.payu.india.Model.PayuHashes;
 import com.payu.india.Model.PostData;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.india.Payu.PayuErrors;
+import com.payu.india.PostParams.NBPostParams;
 import com.payu.india.PostParams.PaymentPostParams;
+import com.payu.payuui.customutil.GACurrencyUtil;
 
 import java.util.ArrayList;
 
@@ -102,8 +105,12 @@ public class PayUNetBankingActivity extends AppCompatActivity implements View.On
         payuConfig = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
         payuConfig = null != payuConfig ? payuConfig : new PayuConfig();
 
-        (amountTextView = (TextView) findViewById(R.id.text_view_amount)).setText(PayuConstants.AMOUNT + ": " + mPaymentParams.getAmount());
+        /*(amountTextView = (TextView) findViewById(R.id.text_view_amount)).setText(PayuConstants.AMOUNT + ": " + mPaymentParams.getAmount());
+        (transactionIdTextView = (TextView) findViewById(R.id.text_view_transaction_id)).setText(PayuConstants.TXNID + ": " + mPaymentParams.getTxnId());*/
+        (amountTextView = (TextView) findViewById(R.id.text_view_amount))
+                .setText(/*PayuConstants.AMOUNT*/"Amount" + ": " + GACurrencyUtil.getIndianCurrencyFormat(mPaymentParams.getAmount(), true) +"/-");
         (transactionIdTextView = (TextView) findViewById(R.id.text_view_transaction_id)).setText(PayuConstants.TXNID + ": " + mPaymentParams.getTxnId());
+        transactionIdTextView.setVisibility(View.GONE);
 
     }
 
@@ -183,6 +190,7 @@ class PayUNetBankingAdapter extends BaseAdapter {
         }
 
         PaymentDetails paymentDetails = mNetBankingList.get(position);
+
         // set text here
         netbankingViewHolder.netbankingTextView.setText(paymentDetails.getBankName());
         return convertView;
@@ -191,6 +199,7 @@ class PayUNetBankingAdapter extends BaseAdapter {
 
     class NetbankingViewHolder {
         TextView netbankingTextView;
+
         NetbankingViewHolder(View view) {
             netbankingTextView = (TextView) view.findViewById(R.id.text_view_netbanking);
         }

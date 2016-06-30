@@ -372,7 +372,7 @@ public class ProductCustomiseFragment extends Fragment {
 
                /* tblr.addRow(name+ "\t\t\t\t\t\t\t\t", *//**priceUnit+" "+ dcmf.format(vat)*//*
                             *//*String.valueOf(Math.round(vat))*//*RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));*/
-
+                Log.d("djprod","VAT - calc from formula: "+vat);
                 PriceValueModel pvm = new PriceValueModel(name, RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
                 priceBreakDownList.add(pvm);
 
@@ -418,7 +418,7 @@ public class ProductCustomiseFragment extends Fragment {
        /* String totalRowTxtVal = total < 0 ? NO_DETAILS: *//*priceUnit +" "+dcmf.format(total)*//*
                     *//*String.valueOf(Math.round(total)*//*RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true);*/
 
-        Log.d("djprod","totalRowTxtVal: "+RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
+        Log.d("djprod","totalRow: "+RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
         PriceValueModel pvm = new PriceValueModel("Total", RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
         priceBreakDownList.add(pvm);
 

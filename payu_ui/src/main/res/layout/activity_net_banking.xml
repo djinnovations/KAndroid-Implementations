@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.payuResponse.testapp.NetBankingActivity">
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -63,12 +62,13 @@
                 android:layout_margin="10dp"
                 android:text="Pay now" />
         </LinearLayout>
+
         <include
             android:id="@+id/footer"
+            layout="@layout/footer_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/footer_image"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true" />
     </LinearLayout>
 
 </LinearLayout>

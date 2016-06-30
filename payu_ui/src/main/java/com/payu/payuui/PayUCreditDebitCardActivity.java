@@ -12,10 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.payu.india.Model.CCDCCard;
+import com.payu.india.Model.PaymentDefaultParams;
 import com.payu.india.Model.PaymentParams;
 import com.payu.india.Model.PayuConfig;
 import com.payu.india.Model.PayuHashes;
@@ -23,10 +26,12 @@ import com.payu.india.Model.PostData;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.india.Payu.PayuErrors;
 import com.payu.india.Payu.PayuUtils;
+import com.payu.india.PostParams.CCDCPostParams;
 import com.payu.india.PostParams.PaymentPostParams;
+import com.payu.payuui.customutil.GACurrencyUtil;
 
 
-public class PayUCreditDebitCardActivity extends AppCompatActivity implements View.OnClickListener {
+    public class PayUCreditDebitCardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button payNowButton;
     private EditText cardNameEditText;
@@ -84,10 +89,10 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
         payuConfig = bundle.getParcelable(PayuConstants.PAYU_CONFIG);
         payuConfig = null != payuConfig ? payuConfig : new PayuConfig();
 
-        int amount=Integer.valueOf(Math.round(Float.valueOf(mPaymentParams.getAmount())));
-        (amountTextView = (TextView) findViewById(R.id.text_view_amount)).setText("Amount: Rs " + amount+"/-");
+        (amountTextView = (TextView) findViewById(R.id.text_view_amount))
+                .setText(/*PayuConstants.AMOUNT*/"Amount" + ": " + GACurrencyUtil.getIndianCurrencyFormat(mPaymentParams.getAmount(), true) +"/-");
         (transactionIdTextView = (TextView) findViewById(R.id.text_view_transaction_id)).setText(PayuConstants.TXNID + ": " + mPaymentParams.getTxnId());
-
+        transactionIdTextView.setVisibility(View.GONE);
         // lets not show the save card check box if user credentials is not found!
         if(null == mPaymentParams.getUserCredentials())
             saveCardCheckBox.setVisibility(View.GONE);
