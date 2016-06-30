@@ -280,19 +280,33 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         Log.d("djpay", "onActivityResult - PaymentFragment");
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
-                String result = data.getStringExtra("payu_response");
-                Log.d("djpay", "onActivityResult - payu_response: "+result);
-                String status = null;
                 try {
-                    JSONObject json = new JSONObject(result);
-                    status = json.getString("status");
-                } catch (JSONException e) {
+                    String result = data.getStringExtra("payu_response");
+                /*String result = data.getStringExtra("result");
+                if(result.equals(mPaymentParams.getSurl())){
+                    mCartData.setPaymentDone(true);
+                }*/
+                    Log.d("djpay", "onActivityResult - payu_response: "+result);
+                    String status = null;
+                    try {
+                        JSONObject json = new JSONObject(result);
+                        status = json.getString("status");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("djpay", "onActivityResult - transaction stat: "+status);
+                    if (!TextUtils.isEmpty(status)){
+                        if (status.equalsIgnoreCase("success")){
+                            Log.d("djpay", "onActivityResult - sucecss transaction");
+                            mCartData.setPaymentDone(true, false, paymentMode);
+                        }else {
+                            Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
-                }
-                Log.d("djpay", "onActivityResult - transaction stat: "+status);
-                if (!TextUtils.isEmpty(status)){
-                    if (status.equalsIgnoreCase("success")){
-                        Log.d("djpay", "onActivityResult - sucecss transaction");
+                    String result = data.getStringExtra("result");
+                    if(result.contains(mPaymentParams.getSurl())){
                         mCartData.setPaymentDone(true, false, paymentMode);
                     }else {
                         Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
