@@ -1,6 +1,5 @@
 package com.goldadorn.main.activities.showcase;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +33,7 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.activities.FilterTimelineFragment;
+import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
@@ -48,7 +47,6 @@ import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.mikepenz.iconics.view.IconicsButton;
@@ -481,7 +479,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.layout_image, parent, false)) {
+            RecyclerView.ViewHolder vh = new RecyclerView.ViewHolder(getLayoutInflater().inflate(R.layout.collection_layout_image, parent, false)) {
             };
             return vh;
         }

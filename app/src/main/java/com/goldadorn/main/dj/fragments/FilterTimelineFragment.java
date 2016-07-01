@@ -1,4 +1,4 @@
-package com.goldadorn.main.activities;
+package com.goldadorn.main.dj.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,12 +7,11 @@ import android.view.View;
 
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.utils.IntentKeys;
-import com.goldadorn.main.model.Collection;
-import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
-import com.goldadorn.main.model.User;
+import com.goldadorn.main.modules.socialFeeds.FilterEmptyViewHelper;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.URLHelper;
+import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 
@@ -46,6 +45,14 @@ public class FilterTimelineFragment extends SocialFeedFragment {
         getFloatingActionsMenu().setVisibility(View.GONE);
         getFabBackImage().setVisibility(View.GONE);
         //followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
+    }
+
+
+    @Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        EmptyViewHelper helper = new FilterEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this,
+                this.showInternetError(), this.showInternetRetryButton());
+        return helper;
     }
 
 

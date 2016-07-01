@@ -13,6 +13,7 @@ import com.github.javiersantos.appupdater.enums.Display;
 import com.github.javiersantos.appupdater.objects.Update;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.kobakei.ratethisapp.RateThisApp;
 
 /**
@@ -111,11 +112,12 @@ public class GARaterUpdateHelper {
             @Override
             public void onYesClicked() {
                 Log.d("djapprate", "Rate app: yes clicked by user");
-                Application.getInstance().getPrefManager().setAppRatingDone();
+                /*Application.getInstance().getPrefManager().setAppRatingDone();
                 Intent toPlayStore = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + Application.getInstance().getPackageName()));
                 toPlayStore.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                 Application.getInstance().startActivity(toPlayStore);
-                RateThisApp.stopRateDialog(Application.getInstance());
+                RateThisApp.stopRateDialog(Application.getInstance());*/
+                RandomUtils.performAppRateTask();
             }
 
             @Override

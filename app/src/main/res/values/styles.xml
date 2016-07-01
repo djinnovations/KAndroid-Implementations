@@ -312,9 +312,10 @@
     </style>
 
     <style name="ExpandedText" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/Black</item>
         <item name="android:textStyle">normal</item>
+        <!--<item name="android:gravity">left</item>-->
     </style>
 
     <style name="PopupMenuTextView" parent="@style/android:Theme.Holo.Light">

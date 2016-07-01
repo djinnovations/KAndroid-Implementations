@@ -84,7 +84,7 @@ public class MainActivity extends BaseDrawerActivity {
     @Bind(R.id.transViewPost)
     View transViewPost;
 
-    public final int INTIMATION_COUNT_FOR_SESSION = 2;
+    public final int INTIMATION_COUNT_FOR_SESSION = 3;
 
 
 /*    //    private ResourceReader resRdr;
@@ -310,10 +310,10 @@ public class MainActivity extends BaseDrawerActivity {
 
     final private int postCallToken = IDUtils.generateViewId();
 
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
+        Log.d("djpost","onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
             try {
                 //String fileData=data.getStringExtra("fileData");
@@ -373,9 +373,9 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                     }
 
-                    if (data.getExtras().get("collIdList") != null){
+                    /*if (data.getExtras().get("collIdList") != null){
                         int[] collIdArr = (int[]) data.getExtras().get("collIdList");
-                        /*JSONArray jsonArray = new JSONArray();
+                        *//*JSONArray jsonArray = new JSONArray();
                         try {
                             for (int colId : collIdArr){
                                 jsonArray.put(colId);
@@ -385,7 +385,7 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                         if (jsonArray.length() != 0){
                             reqEntity.addPart("createpost_collids", new );
-                        }*/
+                        }*//*
                         int collId;
                         int count = 1;
                         for (int i = 0; i < collIdArr.length; i++){
@@ -399,7 +399,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                     if (data.getExtras().get("desIdList") != null){
                         int[] desIdArr = (int[]) data.getExtras().get("desIdList");
-                        /*JSONArray jsonArray = new JSONArray();
+                        *//*JSONArray jsonArray = new JSONArray();
                         try {
                             for (int colId : collIdArr){
                                 jsonArray.put(colId);
@@ -409,13 +409,27 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                         if (jsonArray.length() != 0){
                             reqEntity.addPart("createpost_collids", new );
-                        }*/
+                        }*//*
                         int desId;
                         int count = 1;
                         for (int i = 0; i < desIdArr.length; i++){
                             desId = desIdArr[i];
                             if (desId != -1){
                                 reqEntity.addPart("createpost_desgnid"+count, new StringBody(String.valueOf(desId)));
+                                count++;
+                            }
+                        }
+                    }*/
+
+
+                    if (data.getExtras().get("clubbed") != null){
+                        String[] clubbedArr = (String[]) data.getExtras().get("clubbed");
+                        String clubbedTxt;
+                        int count = 1;
+                        for (int i=0 ; i< clubbedArr.length ; i++){
+                            clubbedTxt = clubbedArr[i];
+                            if (clubbedTxt != null){
+                                reqEntity.addPart("p"+count, new StringBody(clubbedTxt));
                                 count++;
                             }
                         }
@@ -442,6 +456,7 @@ public class MainActivity extends BaseDrawerActivity {
 
 
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println(e);
             }
         }

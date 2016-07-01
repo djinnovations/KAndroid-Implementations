@@ -1,4 +1,4 @@
-package com.goldadorn.main.dj;
+package com.goldadorn.main.dj.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

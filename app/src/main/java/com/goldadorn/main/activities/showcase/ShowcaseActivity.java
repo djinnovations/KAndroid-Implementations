@@ -36,7 +36,7 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.activities.FilterTimelineFragment;
+import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
@@ -47,7 +47,6 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
@@ -671,7 +670,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
-            ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
+            ImageView image = (ImageView) holder.itemView.findViewById(R.id./*image*/coverImage);
             if (!TextUtils.isEmpty(user.imageUrl)) {
                 Picasso.with(mContext).load(user.imageUrl).into(image);
                 image.getLayoutParams().width = this.width;

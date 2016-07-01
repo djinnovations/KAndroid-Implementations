@@ -134,7 +134,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
         return null;
     }
 
-    @Override
+    /*@Override
     protected List<Integer> getCollIds() {
 
         List<Integer> collIdList = new ArrayList<>();
@@ -178,6 +178,36 @@ public class PostBestOfActivity extends AbstractPostActivity {
             return desIdList;
         else return null;
         //// TODO: 30-06-2016
+    }*/
+
+    @Override
+    protected List<String> getProductAppendedColDesIdPrice() {
+        boolean isAdded = false;
+        List<String> list = new ArrayList<>();
+        if (imageSelector1.isValid()) {
+            if (imageSelector1.getProductId() != -1){
+                isAdded = true;
+                list.add(imageSelector1.getProductId()+":"+imageSelector1.getCollId()+":"+imageSelector1.getDesId()+":"+imageSelector1.getPrice());
+            }
+        }
+
+        if (imageSelector2.isValid()) {
+            if (imageSelector2.getProductId() != -1){
+                isAdded = true;
+                list.add(imageSelector2.getProductId()+":"+imageSelector2.getCollId()+":"+imageSelector2.getDesId()+":"+imageSelector2.getPrice());
+            }
+        }
+
+        if (imageSelector3.isValid()) {
+            if (imageSelector3.getProductId() != -1){
+                isAdded = true;
+                list.add(imageSelector3.getProductId()+":"+imageSelector3.getCollId()+":"+imageSelector3.getDesId()+":"+imageSelector3.getPrice());
+            }
+        }
+
+        if(isAdded)
+            return list;
+        else return null;
     }
 
 

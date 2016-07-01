@@ -146,7 +146,7 @@ public class PostPollActivity extends AbstractPostActivity {
         return null;
     }
 
-    @Override
+   /* @Override
     protected List<Integer> getCollIds() {
         if (imageSelector1.isValid()) {
             List<Integer> collIdList = new ArrayList<>();
@@ -162,6 +162,18 @@ public class PostPollActivity extends AbstractPostActivity {
             List<Integer> desIdList = new ArrayList<>();
             desIdList.add(imageSelector1.getDesId());
             return desIdList;
+        }
+        return null;
+    }*/
+
+    @Override
+    protected List<String> getProductAppendedColDesIdPrice() {
+        if (imageSelector1.isValid()) {
+            if (imageSelector1.getProductId() == -1)
+                return null;
+            List<String> list = new ArrayList<>();
+            list.add(imageSelector1.getProductId()+":"+imageSelector1.getCollId()+":"+imageSelector1.getDesId()+":"+imageSelector1.getPrice());
+            return list;
         }
         return null;
     }

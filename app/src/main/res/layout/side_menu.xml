@@ -317,6 +317,15 @@
             android:text="@string/contactUs"
             android:textSize="16sp" />
 
+        <Button
+            android:id="@+id/nav_rate_us_new"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="Rate Us"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_my_profile"

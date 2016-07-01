@@ -34,6 +34,7 @@ import com.goldadorn.main.dj.uiutils.BadgeDrawable;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
@@ -72,7 +73,12 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         setupMenu();
     }
 
-    @OnClick({R.id.nav_home, R.id.nav_shop_by, R.id.nav_timeline, R.id.nav_feed, R.id.nav_showcase, R.id.nav_collections, R.id.nav_cart, R.id.nav_wishlist, R.id.nav_share, R.id.nav_share_facebook, R.id.nav_rate_us, R.id.nav_contact_us,
+    @OnClick({R.id.nav_home, R.id.nav_shop_by,
+            R.id.nav_timeline, R.id.nav_feed,
+            R.id.nav_showcase, R.id.nav_collections,
+            R.id.nav_cart, R.id.nav_wishlist,
+            R.id.nav_share, R.id.nav_share_facebook,
+            R.id.nav_rate_us, R.id.nav_contact_us, R.id.nav_rate_us_new,
             R.id.nav_my_profile,
             R.id.nav_order_tracking,
             R.id.nav_about_us,
@@ -89,7 +95,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @OnClick({R.id.labelHome, R.id.labelshopBy, R.id.labelTimeLine, R.id.labelShowcase, R.id.labelCollection, R.id.labelCart, R.id.labelWishlist})
+    @OnClick({R.id.labelHome, R.id.labelshopBy, R.id.labelTimeLine,
+            R.id.labelShowcase, R.id.labelCollection, R.id.labelCart, R.id.labelWishlist})
     public void menuLabelClick(View view) {
         int id = view.getId();
         if (id == R.id.labelHome)
@@ -111,6 +118,11 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     protected void menuAction(int id) {
 
+        if (id == R.id.nav_rate_us_new){
+            RandomUtils.performAppRateTask();
+            return;
+        }
+
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
         if (navigationDataObject != null) {
             action(navigationDataObject);
@@ -121,7 +133,13 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @Bind({R.id.nav_share, R.id.nav_share_facebook, R.id.nav_rate_us, R.id.nav_contact_us, R.id.labelHome, R.id.labelFeed, R.id.labelTimeLine, R.id.labelShowcase, R.id.labelCollection, R.id.labelCart, R.id.labelWishlist, R.id.labelshopBy,
+    @Bind({R.id.nav_share, R.id.nav_share_facebook,
+            R.id.nav_rate_us, R.id.nav_contact_us, R.id.nav_rate_us_new,
+            R.id.labelHome, R.id.labelFeed,
+            R.id.labelTimeLine, R.id.labelShowcase,
+            R.id.labelCollection, R.id.labelCart,
+            R.id.labelWishlist,
+            R.id.labelshopBy,
             R.id.nav_my_profile,
             R.id.nav_order_tracking,
             R.id.nav_about_us,

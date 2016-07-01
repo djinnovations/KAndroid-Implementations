@@ -36,10 +36,11 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     abstract protected String isValid();
 
-    abstract protected List<Integer> getCollIds();
+    /*abstract protected List<Integer> getCollIds();
 
-    abstract protected List<Integer> getDesignerIds();
+    abstract protected List<Integer> getDesignerIds();*/
 
+    abstract protected List<String> getProductAppendedColDesIdPrice();
 
     abstract protected void viewCreted(People people, int maxImageSize);
 
@@ -150,10 +151,22 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
             List<Integer> price = getPrice();
             intent.putExtra("price", price.toArray());
-            List<Integer> collIdList = getCollIds();
+            /*List<Integer> collIdList = getCollIds();
             intent.putExtra("collIdList", collIdList.toArray());
             List<Integer> desIdList = getDesignerIds();
-            intent.putExtra("desIdList", desIdList.toArray());
+            intent.putExtra("desIdList", desIdList.toArray());*/
+            List<String> prodColDesIdPrice = getProductAppendedColDesIdPrice();
+            if (prodColDesIdPrice != null){
+                if (prodColDesIdPrice.size() != 0){
+                    String[] clubbedArr = new String[prodColDesIdPrice.size()];
+                    int index = 0;
+                    for (String s : prodColDesIdPrice){
+                        clubbedArr[index] = s;
+                        index++;
+                    }
+                    intent.putExtra("clubbed", clubbedArr);
+                }
+            }
 
             List<File> fileList = getFiles();
             if (fileList != null && fileList.size() != 0) {

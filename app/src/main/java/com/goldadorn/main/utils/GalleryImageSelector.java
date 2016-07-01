@@ -47,6 +47,15 @@ public class GalleryImageSelector extends ImageSelector
     public int price;
     private int collId;
     private int desId;
+    private int productId;
+
+    public int getProductId(){
+        return productId;
+    }
+
+    public int getPrice(){
+        return price;
+    }
 
     public int getCollId(){
         return collId;
@@ -161,6 +170,7 @@ public class GalleryImageSelector extends ImageSelector
             price=data.getIntExtra("PRICE", -1);
             collId = data.getIntExtra("COLLID", -1);
             desId = data.getIntExtra("DESID", -1);
+            productId = data.getIntExtra("PRODID", -1);
             file=null;
             selectedMethod = PICK_SERVER_GALLERY;
 

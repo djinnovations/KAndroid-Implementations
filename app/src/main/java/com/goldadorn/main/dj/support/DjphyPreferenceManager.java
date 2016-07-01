@@ -180,7 +180,7 @@ public class DjphyPreferenceManager {
     }
 
 
-    private final int INTIMATION_COUNT_LIMIT = 3;
+    private final int INTIMATION_COUNT_LIMIT = 9;
 
     public void updateIntimationCount() {
         editor.putInt(KEY_INTIMATION_COUNT, (getIntimationCount() + 1));

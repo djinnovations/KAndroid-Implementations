@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.goldadorn.main.activities.AppStartActivity;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.utils.IDUtils;
+import com.kobakei.ratethisapp.RateThisApp;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,5 +125,15 @@ public class RandomUtils {
         AlarmManager mgr = (AlarmManager)activity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, (System.currentTimeMillis() + delayToStartApp), mPendingIntent);
         System.exit(0);
+    }
+
+
+    public static void performAppRateTask(){
+        Application.getInstance().getPrefManager().setAppRatingDone();
+        Intent toPlayStore = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + Application.getInstance().getPackageName()));
+        toPlayStore.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+        toPlayStore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Application.getInstance().startActivity(toPlayStore);
+        RateThisApp.stopRateDialog(Application.getInstance());
     }
 }

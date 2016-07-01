@@ -206,7 +206,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             Boolean t = likeMap.get(collection.id);
             holder.like.setSelected(t == null ? collection.isLiked : t);
             holder.like.setTag(collection);
-            holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
+            //holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
             Log.e("iii",collection.getImageUrl());
             Picasso.with(context).load(collection.getImageUrl()).into(holder.image);
 

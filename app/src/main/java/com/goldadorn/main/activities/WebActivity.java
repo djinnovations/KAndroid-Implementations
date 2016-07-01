@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
-import com.goldadorn.main.dj.ContactUsFragment;
+import com.goldadorn.main.dj.fragments.ContactUsFragment;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;

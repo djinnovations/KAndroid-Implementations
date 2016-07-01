@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -34,6 +35,7 @@ import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -163,6 +165,25 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.labelChangePassword)
     TextView labelChangePassword;
 
+    String oldData;
+    String newData;
+
+    private String getData(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(mEmail.getText().toString().trim())
+                .append(mFirstName.getText().toString().trim())
+                .append(mLastName.getText().toString().trim())
+                .append((String) mGender.getSelectedItem())
+                .append(mDob.getText().toString().trim())
+                .append(mPhone.getText().toString().trim())
+                .append(places_autocomplete.getText().toString().trim())
+                .append(mAddress2.getText().toString().trim())
+                .append(mState.getText().toString().trim())
+                .append(mCity.getText().toString().trim())
+                .append(mPincode.getText().toString().trim());
+        return sb.toString();
+    }
+
 
     public void setupStyle() {
         View[] viewList = new View[20];
@@ -231,6 +252,8 @@ public class ProfileEditActivity extends BaseActivity {
     ProgressActivity pga;
     @Bind(R.id.titlePassword)
     TextView titlePassword;
+    @Bind(R.id.progressBarScreen1)
+    ProgressView progressBarScreen1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -254,24 +277,30 @@ public class ProfileEditActivity extends BaseActivity {
         mDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mProfileData == null)
-                    mProfileData = new ProfileData();
-                mProfileData.email = mEmail.getText().toString().trim();
-                mProfileData.firstName = mFirstName.getText().toString().trim();
-                mProfileData.lastName = mLastName.getText().toString().trim();
-                mProfileData.genderType = mGender.getSelectedItemPosition();
-                mProfileData.phone = mPhone.getText().toString().trim();
-                mProfileData.address1 = addrLine1;
-                mProfileData.address2 = mAddress2.getText().toString().trim();
-                mProfileData.country = mCountry.getSelectedItem().toString().trim();
-                mProfileData.state = mState.getText().toString().trim();
-                mProfileData.city = mCity.getText().toString().trim();
-                mProfileData.pincode = mPincode.getText().toString().trim();
-                if (mCalendar != null)
-                    mProfileData.dob = mCalendar.getTimeInMillis();
-                mProfileData.imageToUpload = mImageFile;
+                showOverLayScreen1(null, 0);
+                try {
+                    if (mProfileData == null)
+                        mProfileData = new ProfileData();
+                    mProfileData.email = mEmail.getText().toString().trim();
+                    mProfileData.firstName = mFirstName.getText().toString().trim();
+                    mProfileData.lastName = mLastName.getText().toString().trim();
+                    mProfileData.genderType = mGender.getSelectedItemPosition();
+                    mProfileData.phone = mPhone.getText().toString().trim();
+                    mProfileData.address1 = addrLine1;
+                    mProfileData.address2 = mAddress2.getText().toString().trim();
+                    mProfileData.country = mCountry.getSelectedItem().toString().trim();
+                    mProfileData.state = mState.getText().toString().trim();
+                    mProfileData.city = mCity.getText().toString().trim();
+                    mProfileData.pincode = mPincode.getText().toString().trim();
+                    if (mCalendar != null)
+                        mProfileData.dob = mCalendar.getTimeInMillis();
+                    mProfileData.imageToUpload = mImageFile;
 
-                submitProfile(mProfileData);
+                    submitProfile(mProfileData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    dismissOverLayScreen1();
+                }
 
             }
         });
@@ -327,6 +356,7 @@ public class ProfileEditActivity extends BaseActivity {
                 //mProgress.setVisibility(View.GONE);
                 if (result.success) {
                     bindUI(result.object);
+                    oldData = getData();
                 }
             }
         });
@@ -392,6 +422,30 @@ public class ProfileEditActivity extends BaseActivity {
         tvResetPassword.setEnabled(true);
         tvResetPassword.setClickable(true);
         pgView.setVisibility(View.GONE);
+    }
+
+    private Dialog overLayDialog;
+
+    private void showOverLayScreen1(String text, int colorResId) {
+        if (overLayDialog == null) {
+            // WindowUtils.marginForProgressViewInGrid = 6;
+            WindowUtils.justPlainOverLay = true;
+            progressBarScreen1.setVisibility(View.VISIBLE);
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
+        }
+        overLayDialog.show();
+    }
+
+    private void dismissOverLayScreen1() {
+        if (overLayDialog != null) {
+            //WindowUtils.marginForProgressViewInGrid = 5;
+            if (overLayDialog.isShowing()) {
+                WindowUtils.justPlainOverLay = false;
+                progressBarScreen1.setVisibility(View.INVISIBLE);
+                overLayDialog.dismiss();
+            }
+        }
     }
 
 
@@ -464,20 +518,26 @@ public class ProfileEditActivity extends BaseActivity {
         }, 300);
     }
 
+    //Press the DONE button below to save changes
     private void askBeforeExit() {
-        final Snackbar snackbar = Snackbar.make(layoutParent, "Profile changes will be lost, if not saved", Snackbar.LENGTH_LONG);
-        snackbar.setAction("Okay", new View.OnClickListener() {
-            public void onClick(View v) {
-                snackbar.dismiss();
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        finish();
-                    }
-                }, 200);
-            }
-        });
-        ColoredSnackbar.warning(snackbar).show();
+        newData = getData();
+        if (oldData.length() != newData.length() || isProfileImageChanged) {
+            final Snackbar snackbar = Snackbar.make(layoutParent, /*"Profile changes will be lost, if not saved"*/
+                    "Press DONE to save changes", Snackbar.LENGTH_LONG);
+            snackbar.setAction("Exit", new View.OnClickListener() {
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 200);
+                }
+            });
+            ColoredSnackbar.warning(snackbar).show();
+        }
+        else finish();
     }
 
     private void setDrawablesForPassword() {
@@ -625,9 +685,12 @@ public class ProfileEditActivity extends BaseActivity {
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
         Log.d("djweb", "url queried- ProfileEditActivity: " + url);
         Log.d("djweb", "response- ProfileEditActivity: " + json);
+        isProfileImageChanged = false;
         if (id == postCallToken) {
+            dismissOverLayScreen1();
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {
+                oldData = getData();
                 Toast.makeText(ProfileEditActivity.this, "Profile has been updated", Toast.LENGTH_SHORT).show();
             } else {
 
@@ -747,6 +810,7 @@ public class ProfileEditActivity extends BaseActivity {
             mDialog.dismiss();
     }
 
+    private boolean isProfileImageChanged = false;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -761,8 +825,8 @@ public class ProfileEditActivity extends BaseActivity {
             public void onImagePicked(final File imageFile, EasyImage.ImageSource source, int type) {
                 //Handle the mImage
                 mImageFile = imageFile;
+                isProfileImageChanged = true;
                 Picasso.with(ProfileEditActivity.this).load(mImageFile).into(mImage);
-
             }
 
         });
