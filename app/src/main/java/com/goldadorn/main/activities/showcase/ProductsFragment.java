@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +23,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.androidquery.AQuery;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.LoginPageActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
+import com.goldadorn.main.dj.model.BookAppointmentDataObj;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -34,16 +46,36 @@ import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
+import com.goldadorn.main.server.ParamsBuilder;
+import com.goldadorn.main.server.ServerRequest;
 import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.UrlBuilder;
+import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.L;
+import com.goldadorn.main.utils.NetworkUtilities;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.mikepenz.iconics.view.IconicsButton;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.picasso.Picasso;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import butterknife.Bind;
@@ -113,21 +145,18 @@ public class ProductsFragment extends Fragment {
     private Dialog overLayDialog;
 
     private void showOverLay(String text, int colorResId, int gravity) {
-        //if (overLayDialog == null){
-        overLayDialog = WindowUtils.getInstance(getContext().getApplicationContext()).displayOverlay(getActivity(), text, colorResId,
-                gravity);
-        //}
+        if (overLayDialog == null) {
+            overLayDialog = WindowUtils.getInstance(getContext().getApplicationContext()).displayOverlay(getActivity(), text, colorResId,
+                    gravity);
+        }
         overLayDialog.show();
     }
 
     private void dismissOverLay() {
-        Log.d("djprod", "overLayDialog dismiss");
         if (overLayDialog != null) {
-            Log.d("djprod", "overLayDialog not null");
-            /*if (overLayDialog.isShowing()) {*/
-                Log.d("djprod", "overLayDialog dismisal");
+            if (overLayDialog.isShowing()) {
                 overLayDialog.dismiss();
-            //}
+            }
         }
     }
 
@@ -153,6 +182,7 @@ public class ProductsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        //setUserIdAndCollectionId();
         mEndView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,12 +210,199 @@ public class ProductsFragment extends Fragment {
     }
 
 
+    public static final int DES_COLL_ID_CALL = IDUtils.generateViewId();
+
+    private void setNewTry() {
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
+        Activity activity = getActivity();
+        ExtendedAjaxCallback ajaxCallback = null;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("prodIds", new JSONArray().put(mProduct.id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (activity instanceof ShowcaseActivity) {
+            ajaxCallback = ((ShowcaseActivity) activity).getAjaxCallBackCustom(DES_COLL_ID_CALL);
+        } else if (activity instanceof CollectionsActivity) {
+            ajaxCallback = ((CollectionsActivity) activity).getAjaxCallBackCustom(DES_COLL_ID_CALL);
+        }
+        HttpEntity entity = null;
+        try {
+            entity = new StringEntity(jsonObject.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        Map<String, Object> paramsMap = new HashMap<>();
+        paramsMap.put(AQuery.POST_ENTITY, entity);
+        ajaxCallback.setParams(paramsMap);
+        if (activity instanceof ShowcaseActivity) {
+            ((ShowcaseActivity) activity).getAQueryCustom().ajax(ApiKeys.getProductsAPI(), paramsMap, String.class, ajaxCallback);
+        } else if (activity instanceof CollectionsActivity) {
+            ((CollectionsActivity) activity).getAQueryCustom().ajax(ApiKeys.getProductsAPI(), paramsMap, String.class, ajaxCallback);
+        }
+    }
+
+
+    public void continueTry(String response) {
+        //Log.d("djprod", "url queried: " + ApiKeys.getProductsAPI());
+        //Log.d("djprod", "response: " + response);
+        int collectionid = -1;
+        int desId = -1;
+        try {
+            JSONObject jsonObj = new JSONObject(response.toString().replace("[", "").replace("]", ""));
+            Log.d("djprod", "jsonObj- after removing braces: " + response);
+            try {
+                if (!jsonObj.isNull("collectionId"))
+                    collectionid = jsonObj.getInt("collectionId");
+                if (!jsonObj.isNull("userId"))
+                    desId = jsonObj.getInt("userId");
+            } catch (JSONException e) {
+                e.printStackTrace();
+                collectionid = -1;
+                desId = -1;
+            }
+            if (desId == -1 && collectionid == -1) {
+                Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            continueOnBAA(collectionid, desId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /*private void setUserIdAndCollectionId() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("prodIds", new JSONArray().put(mProduct.id));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.POST, ApiKeys.getProductsAPI(),
+                jsonObject, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+                JSONObject loginResponse = response;
+                Log.d("djprod", "url queried: " + ApiKeys.getProductsAPI());
+                //Log.d("djprod", "response: " + response);
+                int collectionid = -1;
+                int desId = -1;
+                try {
+                    JSONObject jsonObj = new JSONObject(response.toString().replace("[", "").replace("]", ""));
+                    try {
+                        if (!jsonObj.isNull("collectionId"))
+                            collectionid = jsonObj.getInt("collectionId");
+                        if (!jsonObj.isNull("userId"))
+                            desId = jsonObj.getInt("userId");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        collectionid = -1;
+                        desId = -1;
+                    }
+                    if (desId == -1 && collectionid == -1) {
+                        Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    continueOnBAA(collectionid, desId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("dj", "volley error: ");
+                error.printStackTrace();
+                Toast.makeText(getContext(), "No Network", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(loginRequest);
+    }*/
+
+
+    /*private static HashMap<String, String> getHeaders(Context context, ParamsBuilder paramsBuilder) {
+        HashMap<String, String> headers = new HashMap<>();
+        if (paramsBuilder.mResponse.mCookies != null)
+            headers.put("Cookie", paramsBuilder.mResponse.mCookies);
+        return headers;
+    }*/
+
+    /*protected static String getProducts(Context context, int id) throws IOException, JSONException {
+        *//*if (response.mCookies == null || response.mCookies.isEmpty()) {
+            response.responseCode = BasicResponse.FORBIDDEN;
+            response.success = false;
+            return null;
+        }*//*
+        if (NetworkUtilities.isConnected(context)) {
+            UrlBuilder urlBuilder = new UrlBuilder();
+            urlBuilder.mUrlType = 2;
+
+            urlBuilder.mResponse = response;
+            ParamsBuilder paramsBuilder = new ParamsBuilder().build(response);
+            paramsBuilder.mContext = context;
+            paramsBuilder.mApiType = 2;
+
+            final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("prodIds", new JSONArray().put(id));
+
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            L.d("getProducts post body content " + jsonObject.toString());
+
+
+            com.squareup.okhttp.Response httpResponse = ServerRequest.doPostRequest(context, ApiKeys.getProductsAPI(),
+                    getHeaders(context, paramsBuilder), body);
+            response.responseCode = httpResponse.code();
+            response.responseContent = httpResponse.body().string();
+            L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            return response.responseContent.toString();
+        } else {
+            response.success = false;
+            response.responseCode = BasicResponse.IO_EXE;
+            return null;
+        }
+    }*/
+
+
+    private void continueOnBAA(int collectionId, int desId) {
+        Intent intent = new Intent(getActivity(), BookAppointment.class);
+       /* Bundle bundle = new Bundle();
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
+        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
+        *//*if (mMode == MODE_COLLECTION) {
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
+            bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
+        }*//*
+        intent.putExtras(bundle);*/
+        dismissOverLay();
+        BookAppointmentDataObj baaDataObj = new BookAppointmentDataObj(BookAppointment.PRODUCTS);
+        baaDataObj.setCollectionId(String.valueOf(collectionId))
+                .setDesignerId(String.valueOf(desId))
+                .setProductId(String.valueOf(mProduct.id))
+                .setItemImageUrl(mProduct.getImageUrl())
+                .setItemName(mProduct.name);
+        intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
+        startActivity(intent);
+    }
+
+
     private void setData() {
         Log.d("djprod", "setData");
         mProduct = mSwipeDeckAdapter.getItem(0);
         mNameText.setText(mProduct.name);
         mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
-        Log.d("djprod", "setData - price val: "+mProduct.getDisplayPrice().trim().length());
+        Log.d("djprod", "setData - price val: " + mProduct.getDisplayPrice().trim().length());
         /*if (mProduct.getDisplayPrice().trim().length() > 0)
             dismissOverLay();*/
     }
@@ -211,19 +428,27 @@ public class ProductsFragment extends Fragment {
     private boolean firstTime;
 
     public void displayBookAppointment() {
+        if (!canProceedToBAA()) {
+            Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (mMode == MODE_COLLECTION){
+            Log.d("djprod","desId: "+mCollection.userId);
+            Log.d("djprod","collId: "+mCollection.id);
+            continueOnBAA(mCollection.id, mCollection.userId);
+        }else
+        setNewTry();
+    }
 
-        Intent intent = new Intent(getActivity(), BookAppointment.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
-        bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
-        /*if (mMode == MODE_COLLECTION) {
-            bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
-            bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
-        }*/
-        intent.putExtras(bundle);
-        startActivity(intent);
-
+    private boolean canProceedToBAA() {
+        if (mProduct != null) {
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl())
+                    && mProduct.id != -1) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,

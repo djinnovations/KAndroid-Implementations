@@ -47,7 +47,6 @@
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="8dp"
-            android:layout_marginLeft="@dimen/padding_default"
             android:src="@drawable/ic_b_share" />
 
         <ImageView
@@ -56,7 +55,6 @@
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="8dp"
-            android:layout_marginRight="@dimen/padding_default"
             android:src="@drawable/ic_b_wishlist" />
     </LinearLayout>
 

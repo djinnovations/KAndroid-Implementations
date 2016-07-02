@@ -31,12 +31,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
@@ -49,8 +52,14 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -150,6 +159,34 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djweb", "url queried- CollectionActivity: " + url);
+        Log.d("djweb", "response- CollectionActivity: " + json);
+        if (id == ProductsFragment.DES_COLL_ID_CALL){
+            if (prodFrag != null) {
+                boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                        prodFrag.mCardStack, this);
+                if (success) {
+                    if (json == null)
+                        return;
+                    prodFrag.continueTry( (String) json);
+                }
+                else {
+                    String errMsg = "";
+                    try {
+                        errMsg = new JSONObject((String) json).getString("msg");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        errMsg = Constants.ERR_MSG_1;
+                    }
+                    Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else super.serverCallEnds(id, url, json, status);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -322,7 +359,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
-
+/*
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
@@ -334,7 +371,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                 finish();
             }
         }, 1000);
-    }
+    }*/
 
 
     @Override
@@ -419,6 +456,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
     }
 
+    ProductsFragment prodFrag;
     private void configureUI(int uiState) {
         Log.d("djcoll", "uistate value: " + uiState);
         Fragment f = null;
@@ -440,7 +478,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         } else if (uiState == UISTATE_PRODUCT) {
             Log.d("djcoll", "uistate - product frag");
-            f = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
+            f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
         }
         if (f != null) {
             FragmentTransaction fragmentTransaction =
@@ -553,19 +591,67 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
-    public void displayBookAppointment() {
 
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_BAA && resultCode == RESULT_OK) {
+            mCollection.numAppts = mUser.numAppts + 1;
+            mOverlayVH.appointment_count.setText(String.format(Locale.getDefault(), "%d", mUser.numAppts));
+        }
+    }*/
+
+    private final int REQUEST_CODE_BAA = IDUtils.generateViewId();
+
+    public void displayBookAppointment() {
         try {
+            if (!canProceedToBAA()) {
+                Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(this, BookAppointment.class);
-            Bundle bundle = new Bundle();
+            /*Bundle bundle = new Bundle();
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mCollection.name);
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mCollection.getImageUrl());
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mCollection.id));
-            intent.putExtras(bundle);
+            intent.putExtras(bundle);*/
+
+            BookAppointmentDataObj baaDataObj = new BookAppointmentDataObj(BookAppointment.COLLECTION);
+            baaDataObj.setCollectionId(String.valueOf(mCollection.id))
+                    .setDesignerId(String.valueOf(mCollection.userId))
+                    .setItemImageUrl(mCollection.getImageUrl())
+                    .setItemName(mCollection.name);
+            intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
+            //startActivityForResult(intent, REQUEST_CODE_BAA);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean canProceedToBAA() {
+        if (mCollection != null) {
+            if (!TextUtils.isEmpty(mCollection.name) && !TextUtils.isEmpty(mCollection.getImageUrl())
+                    && mCollection.id != -1 && mCollection.userId != -1) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId) {
+        return getAjaxCallback(requestId);
+    }
+
+    public AQuery getAQueryCustom() {
+        return getAQuery();
+    }
+
+
+    public int getCollectionId(){
+        return mCollection.id;
     }
 
     private void launchDesignerScreen() {

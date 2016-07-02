@@ -34,12 +34,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
+import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
@@ -50,9 +52,14 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,16 +138,49 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     public static boolean isCollectionLike = false;
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_BAA && resultCode == RESULT_OK) {
+            mUser.numAppts = mUser.numAppts + 1;
+            mOverlayVH.appointment_count.setText(String.format(Locale.getDefault(), "%d", mUser.numAppts));
+        }
+    }
+
+    private boolean canProceedToBAA() {
+        if (mUser != null) {
+            if (!TextUtils.isEmpty(mUser.name) && !TextUtils.isEmpty(mUser.getImageUrl())
+                    && mUser.id != -1) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    private final int REQUEST_CODE_BAA = IDUtils.generateViewId();
+
     public void displayBookAppointment() {
 
         try {
+            if (!canProceedToBAA()) {
+                Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(this, BookAppointment.class);
-            Bundle bundle = new Bundle();
+            /*Bundle bundle = new Bundle();
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mUser.name);
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mUser.getImageUrl());
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mUser.id));
-            intent.putExtras(bundle);
-            startActivity(intent);
+            intent.putExtras(bundle);*/
+            BookAppointmentDataObj baaDataObj = new BookAppointmentDataObj(BookAppointment.DESIGNER);
+            baaDataObj.setDesignerId(String.valueOf(mUser.id))
+                    .setItemImageUrl(mUser.getImageUrl())
+                    .setItemName(mUser.name);
+            intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
+            startActivityForResult(intent, REQUEST_CODE_BAA);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -280,6 +320,39 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             } else srspListener.onNegativeResponse();
         } else super.serverCallEnds(id, url, json, status);
     }*/
+
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d("djweb", "url queried- ShowcaseActivity: " + url);
+        Log.d("djweb", "response- ShowcaseActivity: " + json);
+        if (id == ProductsFragment.DES_COLL_ID_CALL){
+            if (prodFrag != null) {
+                boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                        prodFrag.mCardStack, this);
+                if (success) {
+                    if (json == null)
+                        return;
+                    prodFrag.continueTry( (String) json);
+                }
+                else {
+                    String errMsg = "";
+                    try {
+                        errMsg = new JSONObject((String) json).getString("msg");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        errMsg = Constants.ERR_MSG_1;
+                    }
+                    Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        else super.serverCallEnds(id, url, json, status);
+    }
+
+    public int getUserId(){
+        return mUser.id;
+    }
 
     public ExtendedAjaxCallback getAjaxCallBackCustom(int requestId) {
         return getAjaxCallback(requestId);
@@ -484,7 +557,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     @Override
     protected void onResume() {
-        if (mUser != null) {
+        /*if (mUser != null) {
             Log.e("iii--Notnull--", "" + mUser.id);
             mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mUser.id, true);
             bindOverlay(mUser);
@@ -501,7 +574,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             }
         } else {
             Log.e("iii--null--", "");
-        }
+        }*/
         super.onResume();
 
 
@@ -555,6 +628,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
     };
 
+    ProductsFragment prodFrag;
     private void configureUI(int uiState) {
         Fragment f = null;
         int id = R.id.frame;
@@ -570,7 +644,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             mFrameScrollDummy.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
-            f = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
+            f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
         } else {
             f = CollectionsFragment.newInstance(mUser);
             id = R.id.frame_no_scroll_dummy;
@@ -689,8 +763,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             this.height = height;
             notifyDataSetChanged();
         }
-
-
 
 
     }

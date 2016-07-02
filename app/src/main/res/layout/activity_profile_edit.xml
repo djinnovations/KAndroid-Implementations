@@ -121,7 +121,7 @@
                                 style="@style/FormEditText"
                                 android:layout_weight="1"
                                 android:inputType="date"
-                                android:text="@string/hint_birthday" />
+                                android:text="Date of Birth" />
 
                             <EditText
                                 android:id="@+id/phone"

@@ -19,10 +19,10 @@ import java.util.Map;
  * Created by Kiran BH on 06/03/16.
  */
 public class Product implements Serializable {
-    public final int id;
+    public int id = -1;
     public int transid;
     public int productId=-1;
-    public int userId, collectionId=-1;
+    public int userId = -1, collectionId=-1;
     public String name, description;
     public long unitPrice;
     public String priceUnit = " RS";

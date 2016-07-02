@@ -72,6 +72,9 @@ public class ApiKeys {
         return BuildConfig.END_POINT_COMERCIAL + VERB.PAYMENT_HASHES_API;
     }
 
+    public static final String getProductsAPI(){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.GET_PRODUCTS;
+    }
 
     private static final class VERB{
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
@@ -86,5 +89,6 @@ public class ApiKeys {
         private static final String POST_DELETE = "deletepost";
         private static final String CHANGE_PASSWORD = "changepassword";
         private static final String PAYMENT_HASHES_API = "generatepaymenthash";
+        private static final String GET_PRODUCTS = "getproducts";
     }
 }

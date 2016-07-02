@@ -44,6 +44,7 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
@@ -520,22 +521,45 @@ public class ProductActivity extends BaseDrawerActivity {
     public void displayBookAppointment() {
 
         try {
+
+            if (!canProceedToBAA()) {
+                Toast.makeText(getApplicationContext(), "Loading...", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(this, BookAppointment.class);
-            Bundle bundle = new Bundle();
+           /* Bundle bundle = new Bundle();
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_NAME, mProduct.name);
             bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_URL, mProduct.getImageUrl());
-            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));
+            bundle.putString(IntentKeys.BOOK_APPOINT_DETAILS_ID, String.valueOf(mProduct.id));*/
         /*if (mMode == MODE_COLLECTION) {
             bundle.putString(IntentKeys.COLLECTION_DETAILS_NAME, mCollection.name);
             bundle.putString(IntentKeys.COLLECTION_DETAILS_ID, String.valueOf(mCollection.id));
         }*/
-            intent.putExtras(bundle);
+            BookAppointmentDataObj baaDataObj = new BookAppointmentDataObj(BookAppointment.PRODUCTS);
+            baaDataObj.setCollectionId(String.valueOf(mProduct.collectionId))
+                    .setDesignerId(String.valueOf(mProduct.userId))
+                    .setProductId(String.valueOf(mProduct.id))
+                    .setItemImageUrl(mProduct.getImageUrl())
+                    .setItemName(mProduct.name);
+            intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
+    private boolean canProceedToBAA() {
+        if (mProduct != null) {
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl())
+                    && mProduct.id != -1 && mProduct.collectionId != -1 && mProduct.userId != -1) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
 
     public void launchDesignerScreen() {
         menuAction(R.id.nav_showcase);

@@ -44,6 +44,7 @@ public class Constants {
     public static final int REQUEST_TIMEOUT_SOCIAL_LOGIN = 6000;
 
     public static final String ERR_MSG_1 = "Something went wrong";
+    public static final String ERR_MSG_ISE = "Internal Server Error";
     public static final String ERR_MSG_NETWORK = "network error";
 
     public static final String INFO_MSG_PERM_DENIED = "Operation terminated!, cannot continue without the permission";
