@@ -28,5 +28,6 @@
     <string name="icon_showcase_new">{gmd-blur_circular}</string>
     <string name="icon_book_appointment">{ent-calendar}</string>
     <string name="icon_drop_down">{gmd-arrow_drop_down}</string>
+    <string name="icon_showcase_spotlight">{cmd-spotlight}</string>
 
 </resources>

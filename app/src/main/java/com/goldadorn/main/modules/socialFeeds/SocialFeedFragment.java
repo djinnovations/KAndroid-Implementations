@@ -1695,19 +1695,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         private void setUpPostOptions() {
             postMenu = new PopupMenu(ivDropdown.getContext(), ivDropdown);
-            Menu menu = postMenu.getMenu();
+            /*Menu menu = postMenu.getMenu();
             menu.add(Menu.NONE, POST_OPTION_HIDE, 1, "Hide");
-            menu.add(Menu.NONE, POST_OPTION_REPORT, 2, "Report");
+            menu.add(Menu.NONE, POST_OPTION_REPORT, 2, "Report Inappropriate");*/
             postMenu.setOnMenuItemClickListener(postOptionsClick);
             postMenu.setOnDismissListener(postOptionDismiss);
         }
 
         private void updateDeleteItemToPopUp(boolean canshow) {
             if (canshow) {
-                if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null) {
+                /*if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null) {*/
                     postMenu.getMenu().clear();
-                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, 1, "Delete");
-                }
+                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, Menu.NONE, "Delete") ;
+                //}
             } else {
                 //postMenu.getMenu().removeItem(POST_OPTION_DELETE);
                 postMenu.getMenu().clear();

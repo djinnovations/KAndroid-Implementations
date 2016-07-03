@@ -166,6 +166,7 @@ dependencies {
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'//DJphy
     compile 'com.mikepenz:entypo-typeface:1.0.0.1@aar'//DJphy
+    compile 'com.mikepenz:community-material-typeface:1.5.54.1@aar'//DJphy
 
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'

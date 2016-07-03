@@ -90,14 +90,24 @@
                 android:layout_weight="1"
                 tools:background="#ddffcc">
 
-                <ImageButton
+                <!--<ImageButton
                     android:id="@+id/nav_showcase"
                     style="@style/menuButton"
                     android:layout_width="@dimen/circle_button_small1_height"
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_people" />
+                    android:src="@drawable/vector_icon_people" />-->
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/nav_showcase"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:textSize="28sp"
+                    android:text="@string/icon_showcase_spotlight" />
 
                 <TextView
                     android:id="@+id/labelShowcase"
