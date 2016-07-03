@@ -15,7 +15,7 @@ public class Collection implements Serializable {
     public int userId = -1;
     public String name, description, category;
     public float image_a_r = 1;
-    public int likecount = 0, productcount = 0;
+    public int likecount = 0, productcount = 0, numAppts;
     public boolean isTrending,isFeatured;
     public boolean isLiked;
     public int selectedPos=0;
@@ -30,6 +30,7 @@ public class Collection implements Serializable {
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Collections.DESCRIPTION));
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Collections.USER_ID));
         t.likecount = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_LIKES));
+        t.numAppts = cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_BOOKAPPOINT));
         t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Collections.IS_LIKED))==1;
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Collections.IMAGE_ASPECT_RATIO));
         t.category = cursor.getString(cursor.getColumnIndex(Tables.Collections.CATEGORY));

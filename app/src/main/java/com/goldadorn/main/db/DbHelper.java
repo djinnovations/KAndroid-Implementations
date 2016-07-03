@@ -161,6 +161,7 @@ public class DbHelper {
                                 collcv.put(Tables.Collections._ID, collId);
                                 collcv.put(Tables.Collections.USER_ID, userId);
                                 collcv.put(Tables.Collections.COUNT_LIKES, collObj.optLong(Constants.JsonConstants.TOTALLIKES));
+                                collcv.put(Tables.Collections.COUNT_BOOKAPPOINT, collObj.optInt("numAppts"));
                                 collcv.put(Tables.Collections.IS_LIKED, collObj.optInt(Constants.JsonConstants.ISLIKED, 0));
                                 int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collId + ""});
                                 if (updatecollcnt == 0)

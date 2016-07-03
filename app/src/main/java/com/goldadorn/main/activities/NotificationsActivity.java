@@ -468,6 +468,10 @@ public class NotificationsActivity extends BaseActivity {
         }
 
         private void setPostImages(List<String> urlList, NotificationHolder holder) {
+            /*if (urlList.size() == 1){
+                if (!TextUtils.isEmpty(urlList.get(0)))
+                    Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                else holder.ivPostImage1.setVisibility(View.GONE);}*/
             if (urlList.size() == 1)
                 Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
             else if (urlList.size() == 2) {
@@ -564,7 +568,12 @@ public class NotificationsActivity extends BaseActivity {
         List<String> urlList = new ArrayList<>();
         try {
             for (int i = 0; i < jsonArray.length(); i++) {
-                urlList.add(URLHelper.parseImageURL(jsonArray.getString(i)));
+                String url = null;
+                if (!jsonArray.isNull(i)) {
+                    url = jsonArray.getString(i);
+                    //if (!TextUtils.isEmpty(url))
+                    urlList.add(URLHelper.parseImageURL(url));
+                }
             }
             return urlList;
         } catch (Exception e) {

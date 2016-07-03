@@ -1704,9 +1704,17 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         private void updateDeleteItemToPopUp(boolean canshow) {
             if (canshow) {
-                if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null)
-                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, 3, "Delete");
-            } else postMenu.getMenu().removeItem(POST_OPTION_DELETE);
+                if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null) {
+                    postMenu.getMenu().clear();
+                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, 1, "Delete");
+                }
+            } else {
+                //postMenu.getMenu().removeItem(POST_OPTION_DELETE);
+                postMenu.getMenu().clear();
+                Menu menu = postMenu.getMenu();
+                menu.add(Menu.NONE, POST_OPTION_HIDE, 1, "Hide");
+                menu.add(Menu.NONE, POST_OPTION_REPORT, 2, "Report Inappropriate");
+            }
         }
 
         final public void updateItemView(Object item, View view, int position) {

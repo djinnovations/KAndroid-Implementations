@@ -73,6 +73,7 @@ public class Tables {
         public static final String CATEGORY = "category";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String COUNT_LIKES = "likes";
+        public static final String COUNT_BOOKAPPOINT = "appointments";
         public static final String COUNT_PRODUCTS = "products";
         public static final String IS_LIKED = "isliked";
 
@@ -222,6 +223,7 @@ public class Tables {
                 Collections.CATEGORY + " TEXT," +
                 Collections.IMAGE_ASPECT_RATIO + " REAL DEFAULT 1," +
                 Collections.COUNT_LIKES + " INTEGER DEFAULT 0," +
+                Collections.COUNT_BOOKAPPOINT + " INTEGER DEFAULT 0," +
                 Collections.IS_LIKED + " INTEGER DEFAULT 0," +
                 Collections.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";

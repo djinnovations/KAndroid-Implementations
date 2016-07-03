@@ -304,24 +304,24 @@ public class BookAppointment extends BaseActivity {
         if (id == BOOK_APPOINTMENT_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     etPhNum, this);
-            if (json == null) {
+            /*if (json == null) {
                 srspListener.onNegativeResponse(Constants.ERR_MSG_ISE);
                 return;
-            }
-            String errMsg = "";
+            }*/
+            /*String errMsg = "";
             try {
                 errMsg = new JSONObject((String) json).getString("msg");
             } catch (JSONException e) {
                 e.printStackTrace();
                 errMsg = Constants.ERR_MSG_1;
-            }
+            }*/
             if (success) {
-                if (json == null) {
+                /*if (json == null) {
                     srspListener.onNegativeResponse(errMsg);
-                } else {
+                } else {*/
                     srspListener.onPositiveResponse();
-                }
-            } else srspListener.onNegativeResponse(errMsg);
+                //}
+            } //else srspListener.onNegativeResponse(errMsg);
         } else super.serverCallEnds(id, url, json, status);
     }
 

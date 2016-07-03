@@ -164,16 +164,15 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
         Log.d("djweb", "url queried- CollectionActivity: " + url);
         Log.d("djweb", "response- CollectionActivity: " + json);
-        if (id == ProductsFragment.DES_COLL_ID_CALL){
+        if (id == ProductsFragment.DES_COLL_ID_CALL) {
             if (prodFrag != null) {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         prodFrag.mCardStack, this);
                 if (success) {
                     if (json == null)
                         return;
-                    prodFrag.continueTry( (String) json);
-                }
-                else {
+                    prodFrag.continueTry((String) json);
+                } else {
                     String errMsg = "";
                     try {
                         errMsg = new JSONObject((String) json).getString("msg");
@@ -184,8 +183,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        else super.serverCallEnds(id, url, json, status);
+        } else super.serverCallEnds(id, url, json, status);
     }
 
     @Override
@@ -310,6 +308,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     }
                 });
 
+        bindOverlay(mCollection, false);
         /*TextView tv=null;
         tv.setText("");*/
 
@@ -388,11 +387,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
     @Override
     protected void onResume() {
-        if (mCollection != null) {
+        /*if (mCollection != null) {
             isFirstTime = false;
-            bindOverlay(mCollection);
+            bindOverlay(mCollection, true);
         } else {
-        }
+        }*/
         super.onResume();
     }
 
@@ -415,7 +414,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private void onCollectionChange(Collection collection) {
         if (collection != null && !collection.equals(mCollection)) {
             mCollection = collection;
-            bindOverlay(mCollection);
+            bindOverlay(mCollection, false);
             if (!isFirstTime) {
                 isFirstTime = true;
                 Log.d("djcoll", "onCollectionChange");
@@ -426,7 +425,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
-    private void bindOverlay(Collection collection) {
+    private void bindOverlay(Collection collection, boolean isOnResume) {
+        if (isOnResume)
+            return;
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfoDB(collection.userId, true);
         String t = "";
@@ -442,6 +443,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(
                 String.format(Locale.getDefault(), "%d", collection.likecount));
+        mOverlayViewHolder.appointment_count.setText(
+                String.format(Locale.getDefault(), "%d", collection.numAppts));
         mOverlayViewHolder.extra.setText("");
         mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
         mOverlayViewHolder.like.setTag(collection);
@@ -457,6 +460,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     ProductsFragment prodFrag;
+
     private void configureUI(int uiState) {
         Log.d("djcoll", "uistate value: " + uiState);
         Fragment f = null;
@@ -602,6 +606,15 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }*/
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_BAA && resultCode == RESULT_OK) {
+            mCollection.numAppts = mCollection.numAppts + 1;
+            mOverlayViewHolder.appointment_count.setText(String.format(Locale.getDefault(), "%d", mCollection.numAppts));
+        }
+    }
+
     private final int REQUEST_CODE_BAA = IDUtils.generateViewId();
 
     public void displayBookAppointment() {
@@ -624,7 +637,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     .setItemName(mCollection.name);
             intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             //startActivityForResult(intent, REQUEST_CODE_BAA);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_CODE_BAA);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -650,7 +663,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
 
-    public int getCollectionId(){
+    public int getCollectionId() {
         return mCollection.id;
     }
 

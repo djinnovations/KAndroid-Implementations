@@ -120,14 +120,24 @@
                 android:layout_weight="1"
                 tools:background="#66ffcc">
 
-                <ImageButton
+                <!--<ImageButton
                     android:id="@+id/nav_cart"
                     style="@style/menuButton"
                     android:layout_width="@dimen/circle_button_small1_height"
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_people" />
+                    android:src="@drawable/vector_icon_people" />-->
+
+                <com.mikepenz.iconics.view.IconicsButton
+                    android:id="@+id/nav_cart"
+                    style="@style/socialLoginButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:textSize="22sp"
+                    android:text="@string/icon_cart_new" />
 
                 <TextView
                     android:id="@+id/labelCart"
@@ -274,15 +284,109 @@
             android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
+            android:id="@+id/nav_my_profile"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/myProfile"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_contact_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/contactUs"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_rate_us_new"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="Rate Us"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_about_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/aboutUS"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_faqs"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/faqs"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/nav_shipping_and_return"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/shippingAndReturnPolicy"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_privacy_policy"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/privacyPolicy"
+            android:textSize="16sp" />
+
+
+        <Button
+            android:id="@+id/nav_terms_conditions"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/termsAndConditions"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_logout"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/logout"
+            android:textSize="16sp" />
+
+
+        <Button
             android:id="@+id/nav_share"
             style="@style/linkButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
-
             android:text="@string/share"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/nav_share_facebook"
@@ -307,35 +411,6 @@
             android:textSize="16sp"
             android:visibility="gone" />
 
-        <Button
-            android:id="@+id/nav_contact_us"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/contactUs"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/nav_rate_us_new"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="Rate Us"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/nav_my_profile"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/myProfile"
-            android:textSize="16sp" />
 
         <Button
             android:id="@+id/nav_order_tracking"
@@ -345,61 +420,8 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/orderTracking"
-            android:textSize="16sp" />
-
-
-        <Button
-            android:id="@+id/nav_about_us"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/aboutUS"
-            android:textSize="16sp" />
-
-
-        <Button
-            android:id="@+id/nav_faqs"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/faqs"
-            android:textSize="16sp" />
-
-
-        <Button
-            android:id="@+id/nav_shipping_and_return"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/shippingAndReturnPolicy"
-            android:textSize="16sp" />
-
-
-        <Button
-            android:id="@+id/nav_privacy_policy"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/privacyPolicy"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/nav_terms_conditions"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/termsAndConditions"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/nav_settings"
@@ -409,18 +431,8 @@
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
             android:text="@string/settings"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/nav_logout"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/logout"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 
