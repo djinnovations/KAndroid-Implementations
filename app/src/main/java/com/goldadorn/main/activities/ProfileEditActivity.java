@@ -46,6 +46,7 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
+import com.google.repacked.apache.commons.lang3.StringUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.rey.material.widget.ProgressView;
 import com.seatgeek.placesautocomplete.DetailsCallback;
@@ -168,7 +169,7 @@ public class ProfileEditActivity extends BaseActivity {
     String oldData;
     String newData;
 
-    private String getData(){
+    private String getData() {
         StringBuilder sb = new StringBuilder();
         sb.append(mEmail.getText().toString().trim())
                 .append(mFirstName.getText().toString().trim())
@@ -364,7 +365,7 @@ public class ProfileEditActivity extends BaseActivity {
 
 
     private void setOnClickListeners() {
-        if (Application.getInstance().getPrefManager().getSocialLoginStat()){
+        if (Application.getInstance().getPrefManager().getSocialLoginStat()) {
             layPasswordSet.setVisibility(View.GONE);
             return;
         }
@@ -536,8 +537,7 @@ public class ProfileEditActivity extends BaseActivity {
                 }
             });
             ColoredSnackbar.warning(snackbar).show();
-        }
-        else finish();
+        } else finish();
     }
 
     private void setDrawablesForPassword() {
@@ -658,7 +658,24 @@ public class ProfileEditActivity extends BaseActivity {
         putStringBody(reqEntity, "prof_username", mProfileData.email);
         putStringBody(reqEntity, "prof_fname", mProfileData.firstName);
         putStringBody(reqEntity, "prof_gender", genderText);
-        putStringBody(reqEntity, "prof_address1", mProfileData.address1);
+        /*if (TextUtils.isEmpty(mProfileData.address1)){
+            Log.d("djprof", "adress1toserver: " + places_autocomplete.getText().toString().trim());
+            putStringBody(reqEntity, "prof_address1", places_autocomplete.getText().toString().trim());
+        }else {
+            int commacount = mProfileData.address1.length() - mProfileData.address1.replace(",", "").length();
+            //StringUtils. places_autocomplete.getText().toString().trim()
+            if (commacount <= 1) {
+                Log.d("djprof", "adress1toserver: " + places_autocomplete.getText().toString().trim());
+                putStringBody(reqEntity, "prof_address1", places_autocomplete.getText().toString().trim());
+            } else {
+                Log.d("djprof", "adress1toserver: " + mProfileData.address1);
+                putStringBody(reqEntity, "prof_address1", mProfileData.address1);
+            }
+        }*/
+
+        Log.d("djprof", "adress1toserver: " + places_autocomplete.getText().toString().trim());
+        putStringBody(reqEntity, "prof_address1", places_autocomplete.getText().toString().trim());
+
         putStringBody(reqEntity, "prof_address2", mProfileData.address2);
         putStringBody(reqEntity, "prof_lname", mProfileData.lastName);
         putStringBody(reqEntity, "prof_birthday", bday);
@@ -678,7 +695,7 @@ public class ProfileEditActivity extends BaseActivity {
         ajaxCallback.setClazz(String.class);
         ajaxCallback.setParams(params);
         ajaxCallback.method(AQuery.METHOD_POST);
-        Log.d("djplace", "updateProfile reqJson: " + reqEntity);
+        //Log.d("djplace", "updateProfile reqJson: " + reqEntity);
         getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
 
@@ -811,6 +828,7 @@ public class ProfileEditActivity extends BaseActivity {
     }
 
     private boolean isProfileImageChanged = false;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

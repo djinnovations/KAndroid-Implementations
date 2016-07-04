@@ -54,6 +54,11 @@ public class FilterTimelineFragment extends SocialFeedFragment {
                 this.showInternetError(), this.showInternetRetryButton());
         return helper;
     }
+    @Override
+    public void retry() {
+        //super.retry();
+    }
+
 
 
     protected DataManager createDataManager() {

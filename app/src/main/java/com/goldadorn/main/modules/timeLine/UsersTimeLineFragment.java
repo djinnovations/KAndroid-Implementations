@@ -2,13 +2,10 @@ package com.goldadorn.main.modules.timeLine;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.graphics.Palette;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,34 +18,26 @@ import com.androidquery.callback.BitmapAjaxCallback;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
-import com.goldadorn.main.icons.GoldadornIconFont;
-import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
-import com.goldadorn.main.modules.modulesCore.CodeDataParser;
-import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.people.FollowPeopleHelper;
 import com.goldadorn.main.modules.people.PeopleUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
+import com.goldadorn.main.modules.socialFeeds.UserTimelineEmptyViewHelper;
 import com.goldadorn.main.utils.URLHelper;
-import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
+import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
@@ -77,7 +66,16 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
     };
     private FollowPeopleHelper followPeopleHelper;
 
+    @Override
+    protected EmptyViewHelper createEmptyViewHelper() {
+        EmptyViewHelper helper = new UserTimelineEmptyViewHelper(this.getActivity(), this.createEmptyView(this.mRootView), this, this.showInternetError(), this.showInternetRetryButton());
+        return helper;
+    }
 
+    @Override
+    public void retry() {
+        //super.retry();
+    }
 
     private People user;
     protected DataManager createDataManager()
@@ -113,6 +111,9 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
         }
  */
     }
+
+
+
 
     /*
     protected View createRootView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
