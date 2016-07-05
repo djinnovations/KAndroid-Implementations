@@ -32,6 +32,10 @@ public class DjphyPreferenceManager {
     private final String KEY_IS_SHOWCASE_DONE = "screen_showcase";
     private final String KEY_IS_COLLECTION_DONE = "screen_collection";
     private final String KEY_IS_PRODUCTS_DONE = "screen_product";
+    private final String KEY_IS_SEARCH_DONE = "screen_create_search";
+    private final String KEY_IS_NOTIFICATION_DONE = "screen_notification";
+    private final String KEY_IS_PRODUCT_SHOWCASE_DONE = "screen_product_showcase";
+
     private static final String KEY_NOTIFICATIONS_GCM = "notifications";
     private final String KEY_IS_APP_RATING_DONE = "goldadorn.app_rating";
     private final String KEY_IS_INTIMATION_STOP = "intimation_stat";
@@ -70,6 +74,54 @@ public class DjphyPreferenceManager {
 
         boolean stat = pref.getBoolean(KEY_IS_HOMESCREEN_DONE, false);
         Log.d(Constants.TAG, "home screen coach mark stat - DjphyPreferenceManager: " + stat);
+        return stat;
+    }
+
+
+    public void setSearchTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_SEARCH_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "isSearchScreenTourDone : " + isDone);
+    }
+
+
+    public boolean isSearchScreenTourDone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_SEARCH_DONE, false);
+        Log.d(Constants.TAG, "isSearchScreenTourDone - DjphyPreferenceManager: " + stat);
+        return stat;
+    }
+
+
+    public void setProductShowcaseTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_PRODUCT_SHOWCASE_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "isSearchScreenTourDone : " + isDone);
+    }
+
+
+    public boolean isProductShowcaseTourDone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_PRODUCT_SHOWCASE_DONE, false);
+        Log.d(Constants.TAG, "isSearchScreenTourDone - DjphyPreferenceManager: " + stat);
+        return stat;
+    }
+
+
+    public void setNotificationTourGuideStatus(boolean isDone) {
+
+        editor.putBoolean(KEY_IS_NOTIFICATION_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "setNotificationTourGuideStatus : " + isDone);
+    }
+
+
+    public boolean isNotificationTourDone() {
+
+        boolean stat = pref.getBoolean(KEY_IS_NOTIFICATION_DONE, false);
+        Log.d(Constants.TAG, "isNotificationTourDone - DjphyPreferenceManager: " + stat);
         return stat;
     }
 

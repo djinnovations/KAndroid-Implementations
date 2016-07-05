@@ -142,7 +142,7 @@ public class ProductInfoFragment extends Fragment {
         });
 
         if (mUser != null) {
-            mProductOwnerName.setText(mUser.name);
+            mProductOwnerName.setText(mUser.name.trim());
             RandomUtils.underLineTv(mProductOwnerName, 0, mProductOwnerName.length());
             followButton.setSelected(mUser.isFollowed);
             followButton.setOnClickListener(new View.OnClickListener() {
@@ -413,7 +413,7 @@ public class ProductInfoFragment extends Fragment {
 
     public void bindCollectionUI(Collection collection) {
         if (collection != null) {
-            mCollectionName.setText(collection.name);
+            mCollectionName.setText(collection.name.trim());
             RandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
             mCollectionStyle.setText(collection.category);
         } else {

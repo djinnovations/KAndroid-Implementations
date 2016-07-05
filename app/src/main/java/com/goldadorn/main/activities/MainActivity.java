@@ -96,7 +96,6 @@ public class MainActivity extends BaseDrawerActivity {
 //    private final String msgNotification = "check here";
 //    private final String msgPeople = "See the user community at GoldAdorn";
 //    private final String msgPost = "Create a Post";*/
-    private AppTourGuideHelper mTourHelper;
 
 
     public View getPageIndicator() {
@@ -160,6 +159,11 @@ public class MainActivity extends BaseDrawerActivity {
         }
     };
 
+
+    /*public View getCenterView(){
+        return transView;
+    }*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -199,9 +203,6 @@ public class MainActivity extends BaseDrawerActivity {
 
 
 
-
-
-
     private int intimationCountForThisSession = 1;
     public void displayDialogForIntimation(){
         if (getApp().getPrefManager().getIsStopIntimation())
@@ -221,6 +222,7 @@ public class MainActivity extends BaseDrawerActivity {
         updateHelper.rateApp(this);
     }
 
+    private AppTourGuideHelper mTourHelper;
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());

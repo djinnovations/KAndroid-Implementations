@@ -430,16 +430,20 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             return;
         mOverlayViewHolder.name.setText(collection.name);
         User user = UserInfoCache.getInstance(mContext).getUserInfoDB(collection.userId, true);
-        String t = "";
+        String desName = "";
         if (user != null) {
             mOverlayViewHolder.followButton.setSelected(user.isFollowed);
-            t = "By " + user.getName();
-            mOverlayViewHolder.ownerName.setText(t);
+            desName = "By " + user.getName();
+            desName = desName.trim();
+            mOverlayViewHolder.ownerName.setText(desName);
+            /*int vis = mOverlayViewHolder.ownerName.getVisibility();
+            float textsize = mOverlayViewHolder.ownerName.getTextSize();
+            int color = mOverlayViewHolder.ownerName.getCurrentTextColor();*/
             RandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
             mOverlayViewHolder.followButton.setTag(user);
         }
         mOverlayViewHolder.followButton.setVisibility(
-                TextUtils.isEmpty(t) ? View.GONE : View.VISIBLE);
+                TextUtils.isEmpty(desName) ? View.GONE : View.VISIBLE);
         mOverlayViewHolder.description.setText(collection.description);
         mOverlayViewHolder.likesCount.setText(
                 String.format(Locale.getDefault(), "%d", collection.likecount));
@@ -668,7 +672,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     private void launchDesignerScreen() {
-        menuAction(R.id.nav_showcase);
+        //menuAction(R.id.nav_showcase);
+        Intent intent = new Intent(this, ShowcaseActivity.class);
+        intent.putExtra(IntentKeys.DESIGNER_ID, mCollection.userId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
         finish();
     }
 
@@ -738,7 +746,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         @Override
         public void onClick(final View v) {
             if (v.getId() == ownerName.getId()) {
-                launchDesignerScreen();
+                //launchDesignerScreen();
+                RandomUtils.launchDesignerScreen(CollectionsActivity.this, mCollection.userId);
             } else if (v.getId() == like.getId()) {
                 v.setEnabled(false);
                 final Collection collection = (Collection) v.getTag();

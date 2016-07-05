@@ -261,10 +261,12 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-
-            RequestBody body = RequestBody.create(JSON, response.idsForProducts.toString());
-            L.d("getDesigners post body content " + response.idsForProducts.toString());
-
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("idlist", response.idsForProducts);
+            jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            //body.
+            L.d("getDesigners post body content " + jsonObject.toString());
 
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();

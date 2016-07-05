@@ -26,7 +26,8 @@ android {
 
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://107.170.99.118/goldadorn_dev/"'
+            //buildConfigField 'String', 'IMAGE_END_POINT', '"http://107.170.99.118/goldadorn_dev/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/"'
 
             //buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://107.170.48.64/goldadorn_prod/rest/"'

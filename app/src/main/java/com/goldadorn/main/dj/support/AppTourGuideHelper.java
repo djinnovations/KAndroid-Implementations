@@ -48,12 +48,13 @@ public class AppTourGuideHelper {
     private final String msgSwipeRightLeft = "Swipe right to like and left to dislike.\n" +
             "Tap on a product to view its full details.";
     private final String msgProductTab = "Tap on a tab to know more about the product";
+    private final String msgBAA = "To Book an Appointment with this designer, click here";
 
     private ResourceReader resRdr;
     private DjphyPreferenceManager coachMarkMgr;
     private final String overLayBgColor = "#55000000";
     private final String overLayBgColorShowcase = "#66000000";//55000000
-    private final String toolTipBgColor = "#33E2E4E7";
+    //private final String toolTipBgColor = "#33E2E4E7";
 
     private static AppTourGuideHelper ourInstance;
     private Context appContext;
@@ -103,11 +104,11 @@ public class AppTourGuideHelper {
             Pointer pointer1 = new Pointer().setColor(Color.WHITE)
                     .setGravity(Gravity.CENTER);
 
-            Overlay overlay = new Overlay()
+            /*Overlay overlay = new Overlay()
                     .setBackgroundColor(Color.parseColor(overLayBgColor))
                     .setStyle(Overlay.Style.Circle)
                     .setEnterAnimation(fadeInAnim)
-                    .setExitAnimation(fadeOutAnim);
+                    .setExitAnimation(fadeOutAnim);*/
 
             ChainTourGuide tourGuideMain = ChainTourGuide.init(homeActivity)
                     .setToolTip(new ToolTip()
@@ -134,10 +135,10 @@ public class AppTourGuideHelper {
                             .setDescription(msgPeople)
                             .setGravity(Gravity.BOTTOM | Gravity.CENTER)
                     )
-                    .setOverlay(overlay)
+                    //.setOverlay(overlay)
                     .playLater(viewsInSequence[1]);
 
-            ChainTourGuide tourGuideSearch = ChainTourGuide.init(homeActivity)
+            /*ChainTourGuide tourGuideSearch = ChainTourGuide.init(homeActivity)
                     .setPointer(pointer)
                     .setToolTip(new ToolTip()
                             .setTitle("Search")
@@ -164,7 +165,7 @@ public class AppTourGuideHelper {
                     .setOverlay(overlay)
                     .playLater(viewsInSequence[3]);
 
-            ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
+            */ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
                     .setPointer(pointer1)
                     .setToolTip(new ToolTip()
                             .setTitle("Post")
@@ -174,12 +175,12 @@ public class AppTourGuideHelper {
                             .setDescription(msgPost)
                             .setGravity(Gravity.TOP | Gravity.LEFT)
                     )
-                    .setOverlay(overlay)
+                    //.setOverlay(overlay)
                     .playLater(viewsInSequence[4]);
 
             Sequence sequence = new Sequence.SequenceBuilder()
-                    .add(tourGuideMain, tourGuidePeople, tourGuideSearch,
-                            tourGuideNotification, tourGuidePost)
+                    .add(tourGuideMain, tourGuidePeople /*, tourGuideSearch,
+                            tourGuideNotification*/, tourGuidePost)
                     .setDefaultOverlay(new Overlay()
                             .setEnterAnimation(fadeInAnim)
                             .setExitAnimation(fadeOutAnim).setOnClickListener(new View.OnClickListener() {
@@ -187,7 +188,7 @@ public class AppTourGuideHelper {
                                 public void onClick(View v) {
                                     mTourGuideHandler.next();
                                     count++;
-                                    if (count == 5){
+                                    if (count == /*5*/3){
                                         mTourGuideHandler.cleanUp();
                                         count = 0;
                                         handleArrowDialog(homeActivity);
@@ -201,12 +202,12 @@ public class AppTourGuideHelper {
 
             mTourGuideHandler = ChainTourGuide.init(homeActivity).playInSequence(sequence);
         }catch (OutOfMemoryError ex){
-
+            ex.printStackTrace();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        coachMarkMgr.setHomeScreenTourGuideStatus(true);
+        //coachMarkMgr.setHomeScreenTourGuideStatus(true);// TODO: 05-07-2016
     }
 
 
@@ -274,6 +275,216 @@ public class AppTourGuideHelper {
     }
 
 
+    //private TourGuide tgCreatePost;
+   /* public void displaySearchScreenTour(Activity homeActivity, View centeredView){
+        if (coachMarkMgr.isCreatePostTourDone())
+            return;
+        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+        int toolTipTextColor = Color.WHITE;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setTitle("Post")
+                    .setTextColor(toolTipTextColor)
+                    .setBackgroundColor(toolTipBgColor)
+                    .setShadow(true)
+                    .setDescription(msgPost)
+                    .setEnterAnimation(bounceAnim)
+                    .setGravity(Gravity.CENTER);
+
+
+            *//*Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*//**//*.setColor(Color.RED)*//**//*
+                    .setGravity(Gravity.BOTTOM);*//*
+            Pointer pointer1 = new Pointer().setColor(Color.WHITE)
+                    .setGravity(Gravity.CENTER);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
+
+            tgCreatePost = TourGuide.init(homeActivity)
+                    .setToolTip(toolTip)
+                    .setOverlay(*//*new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColor))*//*overlay)
+                    .setPointer(pointer1)
+                    .playOn(centeredView);
+
+            tgCreatePost.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    tgCreatePost.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgCreatePost != null)
+                tgCreatePost.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        //coachMarkMgr.setPeopleScreenTourGuideStatus(true);// TODO: 05-07-2016  
+    }*/
+
+
+
+
+    private TourGuide tgNotificationScreen;
+    public void displayNotificationScreenTour(Activity notificationActivity, View centeredView){
+        if (coachMarkMgr.isNotificationTourDone())
+            return;
+        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+        int toolTipTextColor = Color.WHITE;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setTitle("Notification")
+                    .setTextColor(toolTipTextColor)
+                    .setBackgroundColor(toolTipBgColor)
+                    .setShadow(true)
+                    .setDescription(msgNotification)
+                    .setEnterAnimation(bounceAnim)
+                    .setGravity(Gravity.CENTER);
+
+
+            /*Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*//*.setColor(Color.RED)*//*
+                    .setGravity(Gravity.BOTTOM);*/
+            Pointer pointer1 = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimary))
+                    .setGravity(Gravity.CENTER);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
+
+            tgNotificationScreen = TourGuide.init(notificationActivity)
+                    .setToolTip(toolTip)
+                    .setOverlay(/*new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColor))*/overlay)
+                    .setPointer(pointer1)
+                    .playOn(centeredView);
+
+            tgNotificationScreen.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tgNotificationScreen.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgNotificationScreen != null)
+                tgNotificationScreen.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        //coachMarkMgr.setNotificationTourGuideStatus(true);// TODO: 05-07-2016
+    }
+
+
+    private TourGuide tgSearchScreen;
+    public void displaySearchScreenTour(Activity searchActivity, View centeredView){
+        if (coachMarkMgr.isSearchScreenTourDone())
+            return;
+        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+        int toolTipTextColor = Color.WHITE;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setTitle("Search")
+                    .setTextColor(toolTipTextColor)
+                    .setBackgroundColor(toolTipBgColor)
+                    .setShadow(true)
+                    .setDescription(msgSearch)
+                    .setEnterAnimation(bounceAnim)
+                    .setGravity(Gravity.CENTER);
+
+
+            /*Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*//*.setColor(Color.RED)*//*
+                    .setGravity(Gravity.BOTTOM);*/
+            Pointer pointer1 = new Pointer().setColor(Color.WHITE)
+                    .setGravity(Gravity.CENTER);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
+
+            tgSearchScreen = TourGuide.init(searchActivity)
+                    .setToolTip(toolTip)
+                    .setOverlay(/*new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColor))*/overlay)
+                    .setPointer(pointer1)
+                    .playOn(centeredView);
+
+            tgSearchScreen.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    tgSearchScreen.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgSearchScreen != null)
+                tgSearchScreen.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        //coachMarkMgr.setSearchTourGuideStatus(true);// TODO: 05-07-2016
+    }
+
+
+
+    public void displayProductShowcaseScreenTour(Activity searchActivity, View centeredView){
+        if (coachMarkMgr.isProductShowcaseTourDone())
+            return;
+        int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
+        int toolTipTextColor = Color.WHITE;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setTitle("Browse Products")
+                    .setTextColor(toolTipTextColor)
+                    .setBackgroundColor(toolTipBgColor)
+                    .setShadow(true)
+                    .setDescription(msgViewProduct)
+                    .setEnterAnimation(fadeInAnim)
+                    .setGravity(Gravity.TOP | Gravity.RIGHT);
+
+
+            /*Pointer pointer = new Pointer().setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*//*.setColor(Color.RED)*//*
+                    .setGravity(Gravity.BOTTOM);*/
+            Pointer pointer1 = new Pointer().setColor(Color.WHITE)
+                    .setGravity(Gravity.CENTER);
+            Overlay overlay = new Overlay()
+                    .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                    .setStyle(Overlay.Style.Circle)
+                    .setEnterAnimation(fadeInAnim)
+                    .setExitAnimation(fadeOutAnim);
+
+            tgSearchScreen = TourGuide.init(searchActivity)
+                    .setToolTip(toolTip)
+                    .setOverlay(/*new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColor))*/overlay)
+                    .setPointer(pointer1)
+                    .playOn(centeredView);
+
+            tgSearchScreen.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    tgSearchScreen.cleanUp();
+                }
+            });
+        }catch (OutOfMemoryError ex){
+            if (tgSearchScreen != null)
+                tgSearchScreen.cleanUp();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        //coachMarkMgr.setProductShowcaseTourGuideStatus(true);// TODO: 05-07-2016
+    }
+
+
+
 
 
     public void displayShowcaseTour(Activity showcaseActivity, View[] viewsInSequence){
@@ -326,12 +537,15 @@ public class AppTourGuideHelper {
             ChainTourGuide tourGuideProducts = ChainTourGuide.init(showcaseActivity)
                     .setPointer(pointer)
                     .setToolTip(new ToolTip()
-                            .setTitle("Browse Products")
+                            //.setTitle("Browse Products")
+                            .setTitle("Book Appointment")
                             .setTextColor(toolTipTextColor)
                             .setBackgroundColor(toolTipBgColor)
                             .setShadow(true)
-                            .setDescription(msgViewProduct)
-                            .setGravity(Gravity.TOP | Gravity.RIGHT)
+                            //.setDescription(msgViewProduct)
+                            .setDescription(msgBAA)
+                            //.setGravity(Gravity.TOP | Gravity.RIGHT)
+                            .setGravity(Gravity.CENTER)
                     )
                     .setOverlay(overlay)
                     .playLater(viewsInSequence[2]);
@@ -353,8 +567,7 @@ public class AppTourGuideHelper {
         catch (Exception e) {
             e.printStackTrace();
         }
-
-        coachMarkMgr.setShowcaseTourGuideStatus(true);
+        //coachMarkMgr.setShowcaseTourGuideStatus(true); // TODO: 05-07-2016  
     }
 
 

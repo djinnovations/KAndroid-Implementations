@@ -73,4 +73,8 @@ public class User implements Serializable {
         return info;
     }
 
+
+    public static int getUserId(Cursor cursor){
+        return cursor.getInt(cursor.getColumnIndex(Users._ID));
+    }
 }

@@ -3,6 +3,7 @@ package com.goldadorn.main.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.server.ApiKeys;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -64,6 +66,8 @@ public class NotificationsActivity extends BaseActivity {
     ProgressBar progressBar;
     @Bind(R.id.emptyViewMessage)
     TextView emptyTextView;
+    @Bind(R.id.transView)
+    View transView;
 
 
     final private int postCallToken = IDUtils.generateViewId();
@@ -92,8 +96,25 @@ public class NotificationsActivity extends BaseActivity {
         //refresh();
         requestNotificationPaginate(offsetMain);
         setUpListenerListView();
+
+        tourThisScreen();
         // TODO: 26-05-2016
     }
+
+    private AppTourGuideHelper mTourHelper;
+    private void tourThisScreen() {
+        mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                /*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*/
+                mTourHelper.displayNotificationScreenTour(NotificationsActivity.this, transView);
+            }
+        }, 1200);
+    }
+
 
     NotificationDataObject lastClicked;
 

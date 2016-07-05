@@ -19,7 +19,7 @@ public class ProductInfo {
     public float size, height, width;
     public float weight;
     public int imageCount;
-    public ArrayList<String> images = new ArrayList<>();
+    //public static ArrayList<String> imageUrlList;
     public String productType;
     public Double productDefaultPrice = 0.0;
     public float productmaking_charges = 0, metalrate = 0, metalWeight = 0;
@@ -114,6 +114,8 @@ public class ProductInfo {
         }
         return p;
     }
+
+
 
 
     private static String getFullNamePay(String payModeFromServer) {

@@ -187,6 +187,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         ArrayList<String> data = new ArrayList<>(1);
         data.add(mProduct.getImageUrl());
+        Log.d("djprod", "imageurlList: " + data);
 
 
         mContext = this;
@@ -253,7 +254,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     public void onResult(ProductResponse result) {
                         if (result.success) {
                             mProductInfo = result.info;
-                            mProductAdapter.changeData(mProductInfo.images);
+                            mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
                             mProInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             if (mProInfoFragment != null)
                                 mProInfoFragment.bindProductInfo(mProductInfo);
@@ -289,6 +290,21 @@ public class ProductActivity extends BaseDrawerActivity {
         tourThisScreen();
     }
 
+
+    private ArrayList<String> getVariousProductLooks(int lookcount) {
+        if (lookcount == 0)
+            return new ArrayList<>();
+        ArrayList<String> imageUrlList = new ArrayList<>();
+        String defaultUrl = mProduct.getImageUrl();
+        int indexToReplace = defaultUrl.indexOf('-') + 1;
+        char[] charArrOriginal = defaultUrl.toCharArray();
+        for (int i = 1; i <= lookcount; i++) {
+            char[] toreplace = String.valueOf(i).toCharArray();
+            charArrOriginal[indexToReplace] = toreplace[0];
+            imageUrlList.add(String.copyValueOf(charArrOriginal));
+        }
+        return imageUrlList;
+    }
 
     public ArrayList<String> getDescriptions() {
         return list;
@@ -335,6 +351,7 @@ public class ProductActivity extends BaseDrawerActivity {
         Log.e("iiii--", mUser.id + "--" + mUser.isFollowed + "---" + mUser.followers_cnt);
         if (mUser != null) {
             String temp = "By " + mUser.getName();
+            temp = temp.trim();
             mOverlayVH.mProductOwner.setText(temp);
             RandomUtils.underLineTv(mOverlayVH.mProductOwner, 3, mOverlayVH.mProductOwner.length());
             mOverlayVH.followButton.setTag(mUser);
@@ -562,8 +579,9 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     public void launchDesignerScreen() {
-        menuAction(R.id.nav_showcase);
-        finish();
+        /*menuAction(R.id.nav_showcase);
+        finish();*/
+        RandomUtils.launchDesignerScreen(this, mProduct.userId);
     }
 
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

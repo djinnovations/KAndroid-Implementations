@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.activities.AppStartActivity;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.utils.IDUtils;
 import com.kobakei.ratethisapp.RateThisApp;
@@ -84,14 +85,15 @@ public class RandomUtils {
 
 
     public static void underLineTv(TextView textview, int start, int end) {
+        String udata = "";
         try {
-            String udata=/*"Underlined Text"*/ textview.getText().toString().trim();
+            udata=/*"Underlined Text"*/ textview.getText().toString().trim();
             SpannableString content = new SpannableString(udata);
             content.setSpan(new UnderlineSpan(), start, end, 0);
             textview.setText(content);
         } catch (Exception e) {
             e.printStackTrace();
-            textview.setText("");
+            textview.setText(udata);
         }
         //textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
@@ -135,5 +137,13 @@ public class RandomUtils {
         toPlayStore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Application.getInstance().startActivity(toPlayStore);
         RateThisApp.stopRateDialog(Application.getInstance());
+    }
+
+    public static void launchDesignerScreen(Activity activity, int userId){
+        Intent intent = new Intent(activity, ShowcaseActivity.class);
+        intent.putExtra(IntentKeys.DESIGNER_ID, userId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(intent);
+        activity.finish();
     }
 }

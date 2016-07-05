@@ -1,6 +1,7 @@
 package com.goldadorn.main.modules.home;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.gesture.SwipeHelper;
+import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -116,12 +118,31 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
         if (getDataManager() != null && data != null) {
             for (int i = 0; i < getDataManager().size(); i++) {
                 if (getDataManager().get(i) == data) {
+                    /*if (i == 1)
+                        setUpTourGuideForPeople();*/
                     gotoItem(i, false);
                     break;
                 }
             }
         }
     }
+
+    /*private AppTourGuideHelper mTourHelper;
+    private void setUpTourGuideForPeople() {
+        Log.d("djhomePage", "onClickPeopleTab");
+        *//*resRdr = ResourceReader.getInstance(getApplicationContext());
+        coachMarkMgr = DjphyPreferenceManager.getInstance(getApplicationContext());*//*
+        mTourHelper = AppTourGuideHelper.getInstance(Application.getInstance());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                *//*if (!coachMarkMgr.isHomeScreenTourDone())
+                    testTourGuide();*//*
+                mTourHelper.displayPeopleScreenTour(getActivity(), ((MainActivity) getActivity()).getCenterView());
+            }
+        }, 800);
+    }*/
 
     //public static ViewPager viewPager;
 

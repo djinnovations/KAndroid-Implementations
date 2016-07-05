@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.Product;
@@ -113,11 +114,21 @@ public class DbHelper {
         }
     }
 
+    public static SparseArray<Integer> mapOfUserIds;;
+
     public static void writeDesignersSocial(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject dataObj = new JSONObject(response.responseContent);
             if (dataObj.has(Constants.JsonConstants.DESIGNERS)) {
                 JSONArray userlist = dataObj.getJSONArray(Constants.JsonConstants.DESIGNERS);
+                mapOfUserIds = new SparseArray<>();
+                for (int i= 0; i<userlist.length(); i++){
+                    try {
+                        mapOfUserIds.put(userlist.getJSONObject(i).getInt(Constants.JsonConstants.USERID), i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
                 if (userlist.length() != 0) {
                     if (response.mPageCount == 0) {
                         context.getContentResolver().delete(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, null, null);
@@ -126,7 +137,6 @@ public class DbHelper {
                     for (int i = 0; i < userlist.length(); i++) {
                         JSONObject userObj = userlist.getJSONObject(i);
                         int userId = userObj.optInt(Constants.JsonConstants.USERID, -1);
-
                         JSONObject jsonforpost = new JSONObject();
                         jsonforpost.put("desgnId", userId);
                         ContentValues cv = new ContentValues();

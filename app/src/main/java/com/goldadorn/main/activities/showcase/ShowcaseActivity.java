@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -37,9 +38,9 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
@@ -157,7 +158,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
         return false;
     }
-
 
 
     private final int REQUEST_CODE_BAA = IDUtils.generateViewId();
@@ -326,16 +326,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
         Log.d("djweb", "url queried- ShowcaseActivity: " + url);
         Log.d("djweb", "response- ShowcaseActivity: " + json);
-        if (id == ProductsFragment.DES_COLL_ID_CALL){
+        if (id == ProductsFragment.DES_COLL_ID_CALL) {
             if (prodFrag != null) {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         prodFrag.mCardStack, this);
                 if (success) {
                     if (json == null)
                         return;
-                    prodFrag.continueTry( (String) json);
-                }
-                else {
+                    prodFrag.continueTry((String) json);
+                } else {
                     String errMsg = "";
                     try {
                         errMsg = new JSONObject((String) json).getString("msg");
@@ -346,11 +345,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                     Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        else super.serverCallEnds(id, url, json, status);
+        } else super.serverCallEnds(id, url, json, status);
     }
 
-    public int getUserId(){
+    public int getUserId() {
         return mUser.id;
     }
 
@@ -380,6 +378,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
     }
 
+
+    LinearLayoutManager recyclerLinLayManger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -411,8 +411,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         final int maxPad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 64, dm);
         final int maxHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 160, dm);
 
+        recyclerLinLayManger = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setAdapter(mShowCaseAdapter = new ShowcasePagerAdapter(mContext, dm.widthPixels - 2 * pad, mStartHeight));
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+        mRecyclerView.setLayoutManager(recyclerLinLayManger);
 
         mFrame.animate().setDuration(0).y(mStartHeight);
         mTabLayout.animate().setDuration(0).y(tabStart);
@@ -491,6 +492,20 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                     public void onResult(TimelineResponse result) {
                         //mProgressFrame.setVisibility(View.GONE);
                         dismissOverLay();
+                        Intent data = getIntent();
+                        if (data != null) {
+                            int userId = data.getIntExtra(IntentKeys.DESIGNER_ID, -1);
+                            if (userId != -1) {
+                                if (DbHelper.mapOfUserIds == null || DbHelper.mapOfUserIds.size() == 0){
+                                    int position = offlinemapOfUser.get(userId);
+                                    if (position != -1) smoothScrollToPosition(position);
+                                }else {
+                                    int position = DbHelper.mapOfUserIds.get(userId);
+                                    if (position != -1) smoothScrollToPosition(position);
+                                }
+                            }
+                        }
+
                         getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
                     }
                 });
@@ -499,10 +514,29 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         tourThisScreen();
     }
 
-    private void setUpInterceptListener() {
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent != null) {
+            int userId = intent.getIntExtra(IntentKeys.DESIGNER_ID, -1);
+            if (userId != -1) {
+                int position = DbHelper.mapOfUserIds.get(userId);
+                if (position != -1) smoothScrollToPosition(position);
+            }
+        }
     }
 
+    private void smoothScrollToPosition(int position) {
+        mCurrentPosition = position;
+        /*if (mCurrentPosition < 0) mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
+        else if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1) mCurrentPosition = 0;*/
+        mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+        mHandler.removeCallbacks(mUserChangeRunnable);
+        mHandler.postDelayed(mUserChangeRunnable, 100);
+        configureUI(mUIState);
+        mTabViewHolder.setSelected(0);
+        //recyclerLinLayManger.scrollToPosition(position);
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
@@ -519,6 +553,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     View transViewSwipeUp;
     @Bind(R.id.transViewProds)
     View transViewProds;
+    @Bind(R.id.transViewBAA)
+    View transViewBAA;
 
     private AppTourGuideHelper mTourHelper;
 
@@ -534,7 +570,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 /*if (!coachMarkMgr.isHomeScreenTourDone())
                     testTourGuide();*/
                 Log.d(Constants.TAG, "tour showcase");
-                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{transViewMain, transViewSwipeUp, transViewProds});
+                mTourHelper.displayShowcaseTour(ShowcaseActivity.this, new View[]{transViewMain, transViewSwipeUp, /*transViewProds*/
+                        transViewBAA});
             }
         }, 1500);
     }
@@ -629,6 +666,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     };
 
     ProductsFragment prodFrag;
+
     private void configureUI(int uiState) {
         Fragment f = null;
         int id = R.id.frame;
@@ -644,6 +682,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             mFrameScrollDummy.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
         } else if (uiState == UISTATE_PRODUCT) {
+            startTourGuideForProduct();
             f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
         } else {
             f = CollectionsFragment.newInstance(mUser);
@@ -658,6 +697,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             fragmentTransaction.replace(id, f);
             fragmentTransaction.commit();
         }
+    }
+
+    private void startTourGuideForProduct() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mTourHelper.displayProductShowcaseScreenTour(ShowcaseActivity.this, transViewProds);
+            }
+        }, 500);
     }
 
 
@@ -710,11 +758,14 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     }
 
+    private SparseArray<Integer> offlinemapOfUser;
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private int height;
         private int width;
         Cursor cursor = null;
+        List<User> userList;
+        boolean isOrderedSetAvailable = false;
 
         public ShowcasePagerAdapter(Context context, int width, int height) {
             this.context = context;
@@ -722,16 +773,81 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             this.height = height;
         }
 
+
+        private void setResponseState(){
+            boolean temp1 = DbHelper.mapOfUserIds == null ? false: true;
+            boolean temp2 = false;
+            if (temp1)
+                temp2 = DbHelper.mapOfUserIds.size() == 0 ? false : true;
+
+            isOrderedSetAvailable = temp1 && temp2 ? true: false;
+        }
+
         public User getUser(int position) {
-            if (cursor != null && cursor.moveToPosition(position))
-                return User.extractFromCursor(cursor);
+            if (isOrderedSetAvailable)
+                return userList.get(position);
+            else {
+                if (cursor != null && cursor.moveToPosition(position)) {
+                    return User.extractFromCursor(cursor);
+                }
+            }
+
             return null;
         }
 
         public void changeCursor(Cursor cursor) {
-            this.cursor = cursor;
+            setResponseState();
+            //this.cursor = cursor;
+            if (isOrderedSetAvailable)
+                userList = getOrdereduser(cursor);
+            else {
+                this.cursor = cursor;
+                setOfflinedataMap(cursor);
+            }
             notifyDataSetChanged();
         }
+
+        private void setOfflinedataMap(Cursor cursor) {
+            offlinemapOfUser = new SparseArray<>();
+            if (cursor != null){
+                if (cursor.getCount() == 0)
+                    return;
+                int i = 0;
+                if (cursor.moveToFirst()){
+                    do {
+                        offlinemapOfUser.put(User.getUserId(cursor), i);
+                        i++;
+                    }while (cursor.moveToNext());
+
+                }
+            }
+        }
+
+        private List<User> getOrdereduser(Cursor randomOrderedUser/*, int position*/) {
+            if (randomOrderedUser != null) {
+                if (randomOrderedUser.getCount() == 0)
+                    return null;
+                List<User> userListTemp = new ArrayList<>();
+                for (int i =0 ; i< randomOrderedUser.getCount(); i++){
+                    userListTemp.add(null);
+                }
+                //userListTemp.clear();
+                Log.d("dj", "size of userListTemp: "+userListTemp.size());
+                if (randomOrderedUser.moveToFirst()) {
+                    do {
+                        //int desId = DbHelper.mapOfUserIds.keyAt(position);
+                        int cursorDesId = User.getUserId(randomOrderedUser);
+                        int positionToAllot = DbHelper.mapOfUserIds.get(cursorDesId);
+                        userListTemp.set(positionToAllot, User.extractFromCursor(randomOrderedUser));
+                        /*if (desId == cursorDesId)
+                            return User.extractFromCursor(cursor);*/
+                    } while (randomOrderedUser.moveToNext());
+                }
+                return userListTemp;
+            }
+            return null;
+        }
+
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -755,7 +871,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
         @Override
         public int getItemCount() {
-            return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
+            if (isOrderedSetAvailable)
+                return userList == null ? 0 : userList.size();
+            else return cursor == null || cursor.isClosed() ? 0 : cursor.getCount();
         }
 
         public void setDimens(int width, int height) {
