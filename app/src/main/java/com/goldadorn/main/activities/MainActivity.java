@@ -210,7 +210,7 @@ public class MainActivity extends BaseDrawerActivity {
         if (intimationCountForThisSession > INTIMATION_COUNT_FOR_SESSION )
             return;
         getApp().getPrefManager().updateIntimationCount();
-        showDialogInfo("Great choice! Now tap on the product image to check it out in our Showcase", true);
+        showDialogInfo("Great choice! Now tap on the product's image to check it out in our Showcase", true);
         intimationCountForThisSession++;
     }
 

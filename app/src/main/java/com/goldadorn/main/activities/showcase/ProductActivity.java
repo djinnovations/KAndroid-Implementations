@@ -48,6 +48,7 @@ import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
@@ -154,6 +155,8 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
+    boolean isSocialFeed;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,9 +188,11 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         }
 
-        ArrayList<String> data = new ArrayList<>(1);
+        isSocialFeed = getIntent().getBooleanExtra(IntentKeys.CALLER_SOCIAL_FEED, false);
+
+        /*ArrayList<String> data = new ArrayList<>(1);
         data.add(mProduct.getImageUrl());
-        Log.d("djprod", "imageurlList: " + data);
+        Log.d("djprod", "imageurlList: " + data);*/
 
 
         mContext = this;
@@ -197,9 +202,9 @@ public class ProductActivity extends BaseDrawerActivity {
         mStartHeight = (int) (.8f * dm.heightPixels);
         mCollapsedHeight = (int) (.4f * dm.heightPixels);
 
-        mOverlayVH.pager.setAdapter(
+        /*mOverlayVH.pager.setAdapter(
                 mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), data));
-        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
+        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);*/
 
         mPagerDummy.getLayoutParams().height = mStartHeight;
         mBrandButtonsLayout.getLayoutParams().height = mStartHeight;
@@ -254,7 +259,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     public void onResult(ProductResponse result) {
                         if (result.success) {
                             mProductInfo = result.info;
-                            mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
+                            //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
+                            setAdapterForProdImages(mProductInfo.imageCount);
                             mProInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             if (mProInfoFragment != null)
                                 mProInfoFragment.bindProductInfo(mProductInfo);
@@ -302,8 +308,15 @@ public class ProductActivity extends BaseDrawerActivity {
             char[] toreplace = String.valueOf(i).toCharArray();
             charArrOriginal[indexToReplace] = toreplace[0];
             imageUrlList.add(String.copyValueOf(charArrOriginal));
+            Log.d("djprod","productimageurls: "+imageUrlList.get(i-1));
         }
         return imageUrlList;
+    }
+
+    private void setAdapterForProdImages(int lookcount){
+        mOverlayVH.pager.setAdapter(
+                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), getVariousProductLooks(lookcount)));
+        mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
     }
 
     public ArrayList<String> getDescriptions() {
@@ -353,7 +366,7 @@ public class ProductActivity extends BaseDrawerActivity {
             String temp = "By " + mUser.getName();
             temp = temp.trim();
             mOverlayVH.mProductOwner.setText(temp);
-            RandomUtils.underLineTv(mOverlayVH.mProductOwner, 3, mOverlayVH.mProductOwner.length());
+            UiRandomUtils.underLineTv(mOverlayVH.mProductOwner, 3, mOverlayVH.mProductOwner.length());
             mOverlayVH.followButton.setTag(mUser);
             mOverlayVH.followButton.setSelected(mUser.isFollowed);
         } else {
@@ -521,7 +534,7 @@ public class ProductActivity extends BaseDrawerActivity {
         @Override
         public Fragment getItem(int position) {
             ShowcaseFragment f = new ShowcaseFragment();
-            Bundle b = new Bundle(1);
+            Bundle b = new Bundle();
             b.putString(ShowcaseFragment.EXTRA_IMAGE_URL,
                     images != null ? images.get(position) : "");
             f.setArguments(b);
@@ -582,6 +595,19 @@ public class ProductActivity extends BaseDrawerActivity {
         /*menuAction(R.id.nav_showcase);
         finish();*/
         RandomUtils.launchDesignerScreen(this, mProduct.userId);
+    }
+
+    public void launchCollectionScreen(){
+        if (isSocialFeed)
+            showDialogInfo("Link couldn't be Established! Please visit our Showcase section", false);
+            //RandomUtils.launchCollectionScreen(this, mProduct.collectionId);
+        else finish();
+    }
+
+    public void showDialogInfo(String msg, boolean isPositive){
+        int color ;
+        color = isPositive ? R.color.colorPrimary : R.color.Red;
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
 
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -655,7 +681,9 @@ public class ProductActivity extends BaseDrawerActivity {
             like.setOnClickListener(this);
             cartButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
+
             mProductOwner.setOnClickListener(this);
+            mProductCollection.setOnClickListener(this);
             //RandomUtils.underLineTv(mProductOwner);
         }
 
@@ -708,7 +736,10 @@ public class ProductActivity extends BaseDrawerActivity {
                 displayBookAppointment();
             } else if (v.getId() == mProductOwner.getId()) {
                 launchDesignerScreen();
-            } else if (v == like) {
+            } else if (v.getId() == mProductCollection.getId()){
+                launchCollectionScreen();
+            }
+            else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);
@@ -905,7 +936,8 @@ public class ProductActivity extends BaseDrawerActivity {
                         (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(
                                 "" + UISTATE_PRODUCT);
                 if (mProInfoFragment != null) mProInfoFragment.bindCollectionUI(mCollection);
-                mOverlayVH.mProductCollection.setText(mCollection.name);
+                mOverlayVH.mProductCollection.setText(mCollection.name.trim());
+                UiRandomUtils.underLineTv(mOverlayVH.mProductCollection, 0, mOverlayVH.mProductCollection.length());
             } else {
                 mOverlayVH.mProductCollection.setText("");
             }

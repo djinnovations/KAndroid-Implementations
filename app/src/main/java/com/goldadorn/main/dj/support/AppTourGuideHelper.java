@@ -90,6 +90,7 @@ public class AppTourGuideHelper {
 
     private int count = 0;
     private ChainTourGuide mTourGuideHandler;
+
     public void displayHomeTour(final Activity homeActivity, View[] viewsInSequence) {
 
         if (coachMarkMgr.isHomeScreenTourDone())
@@ -165,7 +166,8 @@ public class AppTourGuideHelper {
                     .setOverlay(overlay)
                     .playLater(viewsInSequence[3]);
 
-            */ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
+            */
+            ChainTourGuide tourGuidePost = ChainTourGuide.init(homeActivity)
                     .setPointer(pointer1)
                     .setToolTip(new ToolTip()
                             .setTitle("Post")
@@ -188,7 +190,7 @@ public class AppTourGuideHelper {
                                 public void onClick(View v) {
                                     mTourGuideHandler.next();
                                     count++;
-                                    if (count == /*5*/3){
+                                    if (count == /*5*/3) {
                                         mTourGuideHandler.cleanUp();
                                         count = 0;
                                         handleArrowDialog(homeActivity);
@@ -201,17 +203,16 @@ public class AppTourGuideHelper {
                     .build();
 
             mTourGuideHandler = ChainTourGuide.init(homeActivity).playInSequence(sequence);
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             ex.printStackTrace();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //coachMarkMgr.setHomeScreenTourGuideStatus(true);// TODO: 05-07-2016
+        coachMarkMgr.setHomeScreenTourGuideStatus(true);
     }
 
 
-    private void handleArrowDialog(Activity homeActivity){
+    private void handleArrowDialog(Activity homeActivity) {
         View view = LayoutInflater.from(appContext).inflate(R.layout.dialog_arrow_coach_mark, null);
         WindowUtils.dialogDimAmount = 0.5f;
         final Dialog arrowDialog = WindowUtils.getInstance(appContext).displayDialogNoTitle(homeActivity, view);
@@ -230,6 +231,7 @@ public class AppTourGuideHelper {
     }
 
     private TourGuide tgTimeLine;
+
     public void displayTimeLineTour(Activity timeLineActivity, View centeredView) {
 
         if (coachMarkMgr.isTimeLineTourdone())
@@ -264,11 +266,10 @@ public class AppTourGuideHelper {
                     tgTimeLine.cleanUp();
                 }
             });
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             if (tgTimeLine != null)
                 tgTimeLine.cleanUp();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         coachMarkMgr.setTimeLineTourGuideStatus(true);
@@ -327,10 +328,9 @@ public class AppTourGuideHelper {
     }*/
 
 
-
-
     private TourGuide tgNotificationScreen;
-    public void displayNotificationScreenTour(Activity notificationActivity, View centeredView){
+
+    public void displayNotificationScreenTour(Activity notificationActivity, View centeredView) {
         if (coachMarkMgr.isNotificationTourDone())
             return;
         int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
@@ -369,19 +369,19 @@ public class AppTourGuideHelper {
                     tgNotificationScreen.cleanUp();
                 }
             });
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             if (tgNotificationScreen != null)
                 tgNotificationScreen.cleanUp();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //coachMarkMgr.setNotificationTourGuideStatus(true);// TODO: 05-07-2016
+        coachMarkMgr.setNotificationTourGuideStatus(true);
     }
 
 
     private TourGuide tgSearchScreen;
-    public void displaySearchScreenTour(Activity searchActivity, View centeredView){
+
+    public void displaySearchScreenTour(Activity searchActivity, View centeredView) {
         if (coachMarkMgr.isSearchScreenTourDone())
             return;
         int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
@@ -421,19 +421,17 @@ public class AppTourGuideHelper {
                     tgSearchScreen.cleanUp();
                 }
             });
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             if (tgSearchScreen != null)
                 tgSearchScreen.cleanUp();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //coachMarkMgr.setSearchTourGuideStatus(true);// TODO: 05-07-2016
     }
 
 
-
-    public void displayProductShowcaseScreenTour(Activity searchActivity, View centeredView){
+    public void displayProductShowcaseScreenTour(Activity searchActivity, View centeredView) {
         if (coachMarkMgr.isProductShowcaseTourDone())
             return;
         int toolTipBgColor = resRdr.getColorFromResource(R.color.colorPrimaryDark);
@@ -473,21 +471,17 @@ public class AppTourGuideHelper {
                     tgSearchScreen.cleanUp();
                 }
             });
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             if (tgSearchScreen != null)
                 tgSearchScreen.cleanUp();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //coachMarkMgr.setProductShowcaseTourGuideStatus(true);// TODO: 05-07-2016
+        coachMarkMgr.setProductShowcaseTourGuideStatus(true);// TODO: 05-07-2016
     }
 
 
-
-
-
-    public void displayShowcaseTour(Activity showcaseActivity, View[] viewsInSequence){
+    public void displayShowcaseTour(Activity showcaseActivity, View[] viewsInSequence) {
 
         if (coachMarkMgr.isShowcaseTourdone())
             return;
@@ -561,20 +555,19 @@ public class AppTourGuideHelper {
                     .build();
 
             ChainTourGuide.init(showcaseActivity).playInSequence(sequence);
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //coachMarkMgr.setShowcaseTourGuideStatus(true); // TODO: 05-07-2016  
+        coachMarkMgr.setShowcaseTourGuideStatus(true); // TODO: 05-07-2016
     }
 
 
     private boolean collectionTour = false;
     private TourGuide tgColl;
-    public void displayCollectionScreenTour (Activity collectionActivity, View centeredView){
 
+    public void displayCollectionScreenTour(Activity collectionActivity, View centeredView) {
         if (coachMarkMgr.isCollectionTourdone())
             return;
         if (collectionTour)
@@ -612,7 +605,7 @@ public class AppTourGuideHelper {
         } catch (OutOfMemoryError e) {
             if (tgColl != null)
                 tgColl.cleanUp();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -621,7 +614,8 @@ public class AppTourGuideHelper {
 
 
     private TourGuide tgProduct;
-    public void displayProductsTour(Activity productActivity, View centeredView){
+
+    public void displayProductsTour(Activity productActivity, View centeredView) {
 
         if (coachMarkMgr.isProductTourdone())
             return;
@@ -654,11 +648,10 @@ public class AppTourGuideHelper {
                     tgProduct.cleanUp();
                 }
             });
-        }catch (OutOfMemoryError ex){
+        } catch (OutOfMemoryError ex) {
             if (tgProduct != null)
                 tgProduct.cleanUp();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         coachMarkMgr.setProductTourGuideStatus(true);

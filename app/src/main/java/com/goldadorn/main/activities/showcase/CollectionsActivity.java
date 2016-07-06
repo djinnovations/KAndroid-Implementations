@@ -20,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
@@ -42,6 +43,7 @@ import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
@@ -194,6 +196,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: COLLECTION_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
 
+        Intent intent = getIntent();
+        if (intent != null){
+            collectionId = intent.getIntExtra(IntentKeys.COLLECTION_ID, -1);
+        }
+
         //showOverLay("Loading Collections", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         drawerLayout.setBackgroundColor(Color.WHITE);
         mContext = this;
@@ -314,6 +321,16 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         setUpGuideListener();
     }
+
+    int collectionId;
+
+    private void scrollToPosition(int collId){
+        if (mapOfCollection == null)
+            return;
+        int position = mapOfCollection.get(collId);
+        mRecyclerView.smoothScrollToPosition(position);
+    }
+
 
 
     //Author DJphy
@@ -439,7 +456,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             /*int vis = mOverlayViewHolder.ownerName.getVisibility();
             float textsize = mOverlayViewHolder.ownerName.getTextSize();
             int color = mOverlayViewHolder.ownerName.getCurrentTextColor();*/
-            RandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
+            UiRandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
             mOverlayViewHolder.followButton.setTag(user);
         }
         mOverlayViewHolder.followButton.setVisibility(
@@ -506,6 +523,22 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         //mTabViewHolder.productsCount(count);
     }
 
+    private SparseArray<Integer> mapOfCollection;
+    private void setMapofCollection(Cursor cursor){
+        mapOfCollection = new SparseArray<>();
+        if (cursor!=null){
+            if (cursor.getCount() == 0)
+                return;
+            if (cursor.moveToFirst()){
+                int i =0;
+                do {
+                    mapOfCollection.put(Collection.getCollectionId(cursor), i);
+                    i++;
+                }while (cursor.moveToNext());
+            }
+        }
+    }
+
     private class CollectionsPagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private int height;
@@ -520,6 +553,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         public void changeCursor(Cursor cursor) {
             this.cursor = cursor;
+            setMapofCollection(cursor);
+            if (collectionId != -1)
+                scrollToPosition(collectionId);
             notifyDataSetChanged();
         }
 

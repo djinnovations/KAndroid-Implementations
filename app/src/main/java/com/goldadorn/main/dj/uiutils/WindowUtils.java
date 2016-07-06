@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -128,7 +130,7 @@ public class WindowUtils {
                     .getColorFromResource(colorResId));
         } else tvTemp.setVisibility(View.GONE);
         if (!justPlainOverLay){
-            setGravity(((ProgressView) overLay.findViewById(R.id.progressBar)), customGravity);
+            setGravity(overLay.findViewById(R.id.progressBar), customGravity);
         }else (overLay.findViewById(R.id.progressBar)).setVisibility(View.GONE);
         dialog.setContentView(overLay);
         dialog.setCancelable(false);
@@ -141,7 +143,7 @@ public class WindowUtils {
     public static boolean justPlainOverLay = false;
     public static int marginForProgressViewInGrid = 5;
 
-    private void setGravity(ProgressView proView, int gravity) {
+    private void setGravity(View proView, int gravity) {
         RelativeLayout.LayoutParams rlParams = /*new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)*/ (RelativeLayout.LayoutParams) proView.getLayoutParams();
         if (gravity == PROGRESS_FRAME_GRAVITY_CENTER)
@@ -154,5 +156,50 @@ public class WindowUtils {
             rlParams.bottomMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
         }
         proView.setLayoutParams(rlParams);
+    }
+
+
+
+    public Dialog displayOverlayLogo(Activity activityToDisplayOverlay, String infoMsg, int colorResId, int customGravity){
+        Dialog dialog = new Dialog(activityToDisplayOverlay);
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		/*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*/
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0.0f;
+
+        View overLay = LayoutInflater.from(appContext).inflate(R.layout.window_util_overlay_logo/*dialog_overlay*/, null);
+        TextView tvTemp = (TextView) overLay.findViewById(R.id.tvOverlayInfo);
+        if (infoMsg != null) {
+            tvTemp.setText(infoMsg);
+            tvTemp.setTextColor(ResourceReader.getInstance(appContext)
+                    .getColorFromResource(colorResId));
+        } else tvTemp.setVisibility(View.GONE);
+        if (!justPlainOverLay){
+            setGravity(overLay.findViewById(R.id.ivLogo), customGravity);
+            try {
+                startAnim(overLay.findViewById(R.id.ivLogo), R.anim.continous_rotation);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else (overLay.findViewById(R.id.ivLogo)).setVisibility(View.GONE);
+        dialog.setContentView(overLay);
+        dialog.setCancelable(false);
+
+        dialog.getWindow().setAttributes(tempParams);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        return dialog;
+    }
+
+
+    private void startAnim(View view, int animResID) throws Exception {
+        Animation anim = AnimationUtils.loadAnimation(appContext, animResID);
+        anim.setDuration(1200);
+        view.startAnimation(anim);
     }
 }

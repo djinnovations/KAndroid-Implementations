@@ -17,6 +17,8 @@ public class IntentKeys {
 
     public static final String BOOK_APPOINT_DATA = "goldadorn.BAA";
     public static final String DESIGNER_ID = "goldadorn.designer.id";
+    public static final String COLLECTION_ID = "goldadorn.collection.id";
+    public static final String CALLER_SOCIAL_FEED = "goldadorn.socialfeed";
     /*public static final String COLLECTION_DETAILS_ID = "goldadorn.collection.id";
     public static final String COLLECTION_DETAILS_NAME = "goldadorn.collection.name";
     public static final String PRODUCT_DETAILS_ID = "goldadorn.product.id";

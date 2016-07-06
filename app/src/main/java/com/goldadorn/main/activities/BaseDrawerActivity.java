@@ -1,14 +1,6 @@
 package com.goldadorn.main.activities;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -25,14 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.UserInfoCache;
-import com.goldadorn.main.dj.uiutils.BadgeDrawable;
-import com.goldadorn.main.dj.uiutils.DisplayProperties;
-import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -224,7 +213,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    public static void displayUnreadData(final Context context, final String count) {
+    /*public static void displayUnreadData(final Context context, final String count) {
         if (count == null)
             return;
         new Handler().postDelayed(new Runnable() {
@@ -236,7 +225,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         }, 100);
     }
 
-  /*  private Drawable buildCounterDrawable(int count, int backgroundImageId) {
+  *//*  private Drawable buildCounterDrawable(int count, int backgroundImageId) {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.counter_menuitem, null);
         view.setBackgroundResource(backgroundImageId);
@@ -259,7 +248,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         view.setDrawingCacheEnabled(false);
 
         return new BitmapDrawable(getResources(), bitmap);
-    }*/
+    }*//*
 
 
     private static Button btnBadge;
@@ -309,9 +298,9 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
         BadgeDrawable badge; // Reuse drawable if possible
         icon.mutate();
-        /*badge = new BadgeDrawable(context);
+        *//*badge = new BadgeDrawable(context);
         icon.mutate();
-        icon.setDrawableByLayerId(R.id.ic_badge, badge);*/
+        icon.setDrawableByLayerId(R.id.ic_badge, badge);*//*
 
         Drawable reuse = icon.findDrawableByLayerId(R.id.ic_badge); //getting the layer 2
         if (reuse != null && reuse instanceof BadgeDrawable) {
@@ -327,8 +316,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         Log.d("dj", "badge left: "+bounds.left);
         Log.d("dj", "badge top: "+bounds.top);
         Log.d("dj", "badge bottom: "+bounds.bottom);
-        /*if (bounds.right == 0 && bounds.left == 0 && bounds.top == 0 && bounds.bottom == 0)
-            badge.setBounds(0, 0, 50, 50);*/
+        *//*if (bounds.right == 0 && bounds.left == 0 && bounds.top == 0 && bounds.bottom == 0)
+            badge.setBounds(0, 0, 50, 50);*//*
         badge.setCount(count);
        // icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_badge, badge);
@@ -350,7 +339,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
         child.setLayoutParams(childParams);
         parent.addView(child);
-    }
+    }*/
 
 
     protected void bindViews() {
@@ -385,6 +374,11 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (id == R.id.nav_my_search){
+            Toast.makeText(getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
         boolean returnVal = false;
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
         if (navigationDataObject != null)

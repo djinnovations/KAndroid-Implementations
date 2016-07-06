@@ -40,6 +40,10 @@ public class Collection implements Serializable {
         return t;
     }
 
+    public static int getCollectionId(Cursor cursor){
+        return cursor.getInt(cursor.getColumnIndex(Tables.Collections._ID));
+    }
+
     public String getImageUrl() {
         return ImageFilePath.getImageUrlForCollection(id);
     }

@@ -3,9 +3,8 @@ package com.goldadorn.main.modules.socialFeeds;
 import android.content.Context;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
-import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.utils.NetworkUtilities;
 
@@ -29,7 +28,7 @@ public class SocialFragmentEmptyViewHelper extends EmptyViewHelper {
             mEmptyViewMessage.setTextSize(16);
             ((Button) mRetry).setText("Restart App");
             mRetry.setVisibility(View.VISIBLE);
-            RandomUtils.setPaddingLeftRight(mEmptyViewMessage);
+            UiRandomUtils.setPaddingLeftRight(mEmptyViewMessage);
         }
     }
 

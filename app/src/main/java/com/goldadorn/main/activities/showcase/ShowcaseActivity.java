@@ -364,7 +364,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
-            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
         }
         overLayDialog.show();
@@ -861,6 +861,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id./*image*/coverImage);
+            Log.d("dj","desImageUrl: "+user.imageUrl);
             if (!TextUtils.isEmpty(user.imageUrl)) {
                 Picasso.with(mContext).load(user.imageUrl).into(image);
                 image.getLayoutParams().width = this.width;

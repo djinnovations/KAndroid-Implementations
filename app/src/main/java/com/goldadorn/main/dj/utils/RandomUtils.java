@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.activities.AppStartActivity;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.showcase.CollectionsActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.utils.IDUtils;
@@ -84,21 +85,6 @@ public class RandomUtils {
     }
 
 
-    public static void underLineTv(TextView textview, int start, int end) {
-        String udata = "";
-        try {
-            udata=/*"Underlined Text"*/ textview.getText().toString().trim();
-            SpannableString content = new SpannableString(udata);
-            content.setSpan(new UnderlineSpan(), start, end, 0);
-            textview.setText(content);
-        } catch (Exception e) {
-            e.printStackTrace();
-            textview.setText(udata);
-        }
-        //textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-    }
-
-
     public static JSONObject getJSONFromString(String mapOfValues){
         StringBuilder sb = new StringBuilder(mapOfValues);
         String jsontext = sb.insert(0, "{").insert(sb.length(), "}").toString();
@@ -109,12 +95,6 @@ public class RandomUtils {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static void setPaddingLeftRight(TextView textView){
-        DisplayProperties dispProp = Application.getInstance().getDisplayPropInstance();
-        textView.setPadding((int) (5*dispProp.getXPixelsPerCell()), 0,
-                (int) (5*dispProp.getXPixelsPerCell()), (int) (5*dispProp.getYPixelsPerCell()));
     }
 
     public static int delayToStartApp = 1000;
@@ -142,6 +122,14 @@ public class RandomUtils {
     public static void launchDesignerScreen(Activity activity, int userId){
         Intent intent = new Intent(activity, ShowcaseActivity.class);
         intent.putExtra(IntentKeys.DESIGNER_ID, userId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        activity.startActivity(intent);
+        activity.finish();
+    }
+
+    public static void launchCollectionScreen(Activity activity, int collId){
+        Intent intent = new Intent(activity, CollectionsActivity.class);
+        intent.putExtra(IntentKeys.DESIGNER_ID, collId);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
         activity.finish();

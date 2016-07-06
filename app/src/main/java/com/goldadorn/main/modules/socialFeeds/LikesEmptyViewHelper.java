@@ -3,9 +3,8 @@ package com.goldadorn.main.modules.socialFeeds;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 
-import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.utils.NetworkUtilities;
 
@@ -28,7 +27,7 @@ public class LikesEmptyViewHelper extends EmptyViewHelper {
             mEmptyViewMessage.setText("Looks like nobody has liked the post yet. Go ahead and be the first one!");
             mEmptyViewMessage.setTextSize(16);
             mEmptyViewMessage.setGravity(Gravity.CENTER);
-            RandomUtils.setPaddingLeftRight(mEmptyViewMessage);
+            UiRandomUtils.setPaddingLeftRight(mEmptyViewMessage);
         }
     }
 

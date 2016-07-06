@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.View;
 
-import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.kimeeo.library.listDataView.EmptyViewHelper;
 import com.kimeeo.library.utils.NetworkUtilities;
 
@@ -27,7 +27,7 @@ public class UserTimelineEmptyViewHelper extends EmptyViewHelper {
             mEmptyViewMessage.setText("Nothing here yet! Create a post in 'Social Feed' to start seeing them here");
             mEmptyViewMessage.setTextSize(16);
             mEmptyViewMessage.setGravity(Gravity.CENTER);
-            RandomUtils.setPaddingLeftRight(mEmptyViewMessage);
+            UiRandomUtils.setPaddingLeftRight(mEmptyViewMessage);
         }
     }
 

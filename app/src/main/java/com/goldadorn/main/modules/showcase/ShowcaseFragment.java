@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.showcase;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
-import com.kimeeo.library.fragments.BaseFragment;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by Vijith Menon on 6/3/16.
  */
-public class ShowcaseFragment extends BaseFragment {
+public class ShowcaseFragment extends Fragment {
 
     private final static String TAG = ShowcaseFragment.class.getSimpleName();
     private final static boolean DEBUG = true;
@@ -46,9 +46,9 @@ public class ShowcaseFragment extends BaseFragment {
         }
     }
 
-    @Override
+   /* @Override
     protected void garbageCollectorCall() {
 
-    }
+    }*/
 
 }

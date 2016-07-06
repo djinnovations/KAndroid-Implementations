@@ -2,6 +2,7 @@ package com.goldadorn.main.modules.socialFeeds;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.icons.GoldadornIconFont;
@@ -883,9 +885,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             votePostButton.setText("{hea_buy_or_not}");
 
-            /*if (socialPost.getIsVoted() == 1) {
+            if (socialPost.getIsVoted() == 1) {
+                Log.d("djfeed", "poll post isVoted - must set color to pink: ");
                 votePostButton.setSelected(true);
-            } else votePostButton.setSelected(false);*/
+            } else votePostButton.setSelected(false);
 
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp);
@@ -903,10 +906,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
 
             Boolean isVoted = isVoted(item, false);
-            if (isVoted) {
-                Log.d("djfeed", "poll post isVoted - must set color to pink: " + isVoted);
+           /* if (isVoted) {
                 votePostButton.setSelected(true);
-            }
+            }*/
             if (isVoted) {
                 buyLabel.setText("Buy: " + item.getYesPercent() + "%");
                 notBuyLabel.setText("Not Buy: " + item.getNoPercent() + "%");
@@ -1289,7 +1291,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
             if (prodCursor.getCount() != 0) {
                 Product product = Product.extractFromCursor(prodCursor);
-                startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+                proceedToProductActivity(product);
             } else
                 productInfoFromServer(socialPost, id.trim());
 
@@ -1309,6 +1311,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             navigationDataObject.setParam(data);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
         }
+    }
+
+
+    private void proceedToProductActivity(Product product){
+        Intent intent = ProductActivity.getLaunchIntent(getActivity(), product);
+        intent.putExtra(IntentKeys.CALLER_SOCIAL_FEED, true);
+        startActivity(intent);
     }
 
 
@@ -1419,7 +1428,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 Toast.makeText(getContext(), "No Product Details Available", Toast.LENGTH_SHORT).show();
                 return;
             }
-            startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            //startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
+            proceedToProductActivity(product);
         } catch (Exception e) {
             Toast.makeText(getContext(), "No Product Details Available", Toast.LENGTH_SHORT).show();
             e.printStackTrace();

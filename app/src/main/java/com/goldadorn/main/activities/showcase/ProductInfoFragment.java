@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
@@ -28,9 +29,7 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -131,7 +130,8 @@ public class ProductInfoFragment extends Fragment {
         mCollectionName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                //getActivity().finish();
+                ((ProductActivity) getActivity()).launchCollectionScreen();
             }
         });
         mProductOwnerName.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +143,7 @@ public class ProductInfoFragment extends Fragment {
 
         if (mUser != null) {
             mProductOwnerName.setText(mUser.name.trim());
-            RandomUtils.underLineTv(mProductOwnerName, 0, mProductOwnerName.length());
+            UiRandomUtils.underLineTv(mProductOwnerName, 0, mProductOwnerName.length());
             followButton.setSelected(mUser.isFollowed);
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -414,7 +414,7 @@ public class ProductInfoFragment extends Fragment {
     public void bindCollectionUI(Collection collection) {
         if (collection != null) {
             mCollectionName.setText(collection.name.trim());
-            RandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
+            UiRandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
             mCollectionStyle.setText(collection.category);
         } else {
             mCollectionName.setVisibility(View.GONE);
