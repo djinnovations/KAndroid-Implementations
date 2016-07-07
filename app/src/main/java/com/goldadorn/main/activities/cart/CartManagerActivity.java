@@ -106,7 +106,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
 
     public void showOverLay(String text, int colorResId, int gravity) {
         //if (overLayDialog == null) {
-        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
                 gravity);
         //}
         Log.d("djcart", "showOverLay");
@@ -309,6 +309,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         return false;
     }
 
+    SummaryFragment summaryFragment;
     public void configureUI(int uistate) {
         mUIState = uistate;
         Fragment f = null;
@@ -327,7 +328,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             paymentModeUI.setVisibility(View.VISIBLE);
             mContinueButton.setVisibility(View.INVISIBLE);
         } else if (uistate == UISTATE_FINAL) {
-            f = new SummaryFragment();
+            f =summaryFragment= new SummaryFragment();
             Bundle args = new Bundle();
             args.putBoolean(IntentKeys.COD_CALL, isCOD);
             f.setArguments(args);
@@ -390,15 +391,28 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         }
     }
 
+    public void showDialogInfo(String msg, boolean isPositive){
+        int color ;
+        color = isPositive ? R.color.colorPrimary : R.color.Red;
+        WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
+    }
+
     private View.OnClickListener mClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.image) {
+                if (summaryFragment != null) {
+                    if (summaryFragment.getUserVisibleHint()) {
+                        showDialogInfo("Sorry, you cannot go back!", false);
+                        return;
+                    }
+                }
                 boolean complete = (boolean) v.getTag(TAG_PROGRESS);
                 if (complete) {
                     int uistate = (int) v.getTag();
-                    if (uistate != UISTATE_FINAL)
+                    if (uistate != UISTATE_FINAL){
                         configureUI(uistate);
+                    }
                 }
             } else {
                 if (mUIState == UISTATE_CART) {
@@ -414,9 +428,9 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                         Toast.makeText(mContext, "Please Select or Add an address", Toast.LENGTH_SHORT).show();
                     }
                 } else if (mUIState == UISTATE_FINAL) {
-                    Intent in = new Intent(mContext, MainActivity.class);
-                    in.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(in);
+                    Intent intent = new Intent(mContext, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                    startActivity(intent);
                     finish();
                 }
             }

@@ -187,7 +187,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                                 });
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(v.getContext(), "Something wrong happened!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(v.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });

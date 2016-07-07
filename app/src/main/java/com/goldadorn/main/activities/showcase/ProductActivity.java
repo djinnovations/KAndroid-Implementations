@@ -26,8 +26,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -139,15 +141,15 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private Dialog overLayDialog;
 
-    private void showOverLay(String text, int colorResId) {
+    public void showOverLay(String text, int colorResId) {
         //if (overLayDialog == null){
-        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
                 WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         //}
         overLayDialog.show();
     }
 
-    private void dismissOverLay() {
+    public void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
                 overLayDialog.dismiss();
@@ -163,7 +165,7 @@ public class ProductActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        showOverLay("Loading...", R.color.colorPrimary);
+        showOverLay(null, R.color.colorPrimary);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
 
@@ -308,14 +310,15 @@ public class ProductActivity extends BaseDrawerActivity {
             char[] toreplace = String.valueOf(i).toCharArray();
             charArrOriginal[indexToReplace] = toreplace[0];
             imageUrlList.add(String.copyValueOf(charArrOriginal));
-            Log.d("djprod","productimageurls: "+imageUrlList.get(i-1));
+            Log.d("djprod", "productimageurls: " + imageUrlList.get(i - 1));
         }
         return imageUrlList;
     }
 
-    private void setAdapterForProdImages(int lookcount){
+    private void setAdapterForProdImages(int lookcount) {
         mOverlayVH.pager.setAdapter(
                 mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), getVariousProductLooks(lookcount)));
+        mOverlayVH.pager.setOffscreenPageLimit(lookcount);
         mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
     }
 
@@ -516,9 +519,31 @@ public class ProductActivity extends BaseDrawerActivity {
         dialog.show();
     }
 
+   /* private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    public Fragment getRegisteredFragment(int fragmentPosition) {
+
+        return registeredFragments.get(fragmentPosition);
+    }*/
+
     private class ProductPagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<String> images;
+
+       /* @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Log.d("djpager", "destroyed items FragPageAdapter");
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            Log.d("djpager", "destroyed items FragPageAdapter");
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }*/
+
 
         public ProductPagerAdapter(FragmentManager fm, ArrayList<String> data) {
             super(fm);
@@ -533,6 +558,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         @Override
         public Fragment getItem(int position) {
+            Log.d("djpager", "position- getItem() " + position);
             ShowcaseFragment f = new ShowcaseFragment();
             Bundle b = new Bundle();
             b.putString(ShowcaseFragment.EXTRA_IMAGE_URL,
@@ -597,15 +623,15 @@ public class ProductActivity extends BaseDrawerActivity {
         RandomUtils.launchDesignerScreen(this, mProduct.userId);
     }
 
-    public void launchCollectionScreen(){
-        if (isSocialFeed)
-            showDialogInfo("Link couldn't be Established! Please visit our Showcase section", false);
-            //RandomUtils.launchCollectionScreen(this, mProduct.collectionId);
-        else finish();
+    public void launchCollectionScreen() {
+        if (isSocialFeed) {
+            // showDialogInfo("Link couldn't be Established! Please visit our Showcase section", false);
+            RandomUtils.launchCollectionScreen(this, mProduct.userId, mProduct.collectionId);
+        } else finish();
     }
 
-    public void showDialogInfo(String msg, boolean isPositive){
-        int color ;
+    public void showDialogInfo(String msg, boolean isPositive) {
+        int color;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
@@ -736,10 +762,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 displayBookAppointment();
             } else if (v.getId() == mProductOwner.getId()) {
                 launchDesignerScreen();
-            } else if (v.getId() == mProductCollection.getId()){
+            } else if (v.getId() == mProductCollection.getId()) {
                 launchCollectionScreen();
-            }
-            else if (v == like) {
+            } else if (v == like) {
                 v.setEnabled(false);
                 final boolean isLiked = v.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);

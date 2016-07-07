@@ -244,7 +244,7 @@ public class ApiFactory extends ExtractResponse {
         return headers;
     }
 
-    protected static void getDesigners(Context context, TimelineResponse response) throws IOException, JSONException {
+    public static void getDesigners(Context context, TimelineResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -440,7 +440,7 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
-    protected static void getDesignersSocial(Context context, TimelineResponse response) throws IOException, JSONException {
+    public static void getDesignersSocial(Context context, TimelineResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;

@@ -46,12 +46,14 @@ import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ProductTemp;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -73,6 +75,7 @@ import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
+import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.IDUtils;
@@ -393,6 +396,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     private void setUserInfoCache() {
+
+       /* ApiFactory.getDesignersSocial(context, response);
+        if (response.success && response.responseContent != null) {
+            DbHelper.writeDesignersSocial(context, response);*/
         UIController.getShowCase(getContext(),
                 new IResultListener<TimelineResponse>() {
                     @Override
@@ -1286,14 +1293,16 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             String[] selArgs = new String[]{id.trim()};
 
             Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
-            prodCursor.moveToFirst();
-
-            Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
-            if (prodCursor.getCount() != 0) {
-                Product product = Product.extractFromCursor(prodCursor);
-                proceedToProductActivity(product);
-            } else
-                productInfoFromServer(socialPost, id.trim());
+            if (prodCursor != null) {
+                prodCursor.moveToFirst();
+                Log.d(Constants.TAG, "cursor count- zoomImages: " + prodCursor.getCount());
+                if (prodCursor.getCount() != 0) {
+                    Product product = Product.extractFromCursor(prodCursor);
+                    proceedToProductActivity(product);
+                    return;
+                }
+            }
+            productInfoFromServer(socialPost, id.trim());
 
             /*
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
@@ -1314,7 +1323,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
-    private void proceedToProductActivity(Product product){
+    private void proceedToProductActivity(Product product) {
         Intent intent = ProductActivity.getLaunchIntent(getActivity(), product);
         intent.putExtra(IntentKeys.CALLER_SOCIAL_FEED, true);
         startActivity(intent);
@@ -1323,12 +1332,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     private Dialog displayOverlay(String infoMsg, int colorResId) {
 
-        Dialog dialog = new Dialog(getActivity());
+        Dialog dialog = WindowUtils.getInstance(getApp()).displayOverlayLogo(getActivity(), null, 0,
+                WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER); /*new Dialog(getActivity());
         WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
         tempParams.copyFrom(dialog.getWindow().getAttributes());
 
-		/*tempParams.width = dialogWidthInPx;
-        tempParams.height = dialogHeightInPx;*/
+		*//*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*//*
         tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         tempParams.height = WindowManager.LayoutParams.MATCH_PARENT;
 
@@ -1345,7 +1355,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         dialog.setCancelable(false);
 
         dialog.getWindow().setAttributes(tempParams);
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);*/
         return dialog;
     }
 
@@ -1715,8 +1725,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         private void updateDeleteItemToPopUp(boolean canshow) {
             if (canshow) {
                 /*if (postMenu.getMenu().findItem(POST_OPTION_DELETE) == null) {*/
-                    postMenu.getMenu().clear();
-                    postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, Menu.NONE, "Delete") ;
+                postMenu.getMenu().clear();
+                postMenu.getMenu().add(Menu.NONE, POST_OPTION_DELETE, Menu.NONE, "Delete");
                 //}
             } else {
                 //postMenu.getMenu().removeItem(POST_OPTION_DELETE);

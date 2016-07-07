@@ -123,7 +123,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     if (postData.getCode() == PayuErrors.NO_ERROR) {
                         // ok we got the post params, let make an api call to payu to fetch the payment related details
                         mPayuConfig.setData(postData.getResult());
-                        Log.d("djpay", "merchant web service call- postData.getResult(): "+postData.getResult());
+                        //Log.d("djpay", "merchant web service call- postData.getResult(): "+postData.getResult());
                         // lets set the visibility of progress bar
                         //mProgressBar.setVisibility(View.VISIBLE);
                         GetPaymentRelatedDetailsTask paymentRelatedDetailsForMobileSdkTask = new GetPaymentRelatedDetailsTask(PaymentFragment.this);
@@ -345,7 +345,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onPaymentRelatedDetailsResponse(PayuResponse payuResponse) {
         mPayuResponse = payuResponse;
         //mProgressBar.setVisibility(View.GONE);
-        Log.d("djpay", "onPaymentRelatedDetailsResponse");
+        //Log.d("djpay", "onPaymentRelatedDetailsResponse");
         /*for (PaymentDetails paymentDetails: payuResponse.getNetBanks()){
             Log.d("djpay","bank name: "+paymentDetails.getBankCode());
         }*/

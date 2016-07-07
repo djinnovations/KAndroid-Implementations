@@ -197,7 +197,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         logEventsAnalytics(GAAnalyticsEventNames.COLLECTION_SCREEN);
 
         Intent intent = getIntent();
-        if (intent != null){
+        if (intent != null) {
             collectionId = intent.getIntExtra(IntentKeys.COLLECTION_ID, -1);
         }
 
@@ -324,13 +324,17 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
     int collectionId;
 
-    private void scrollToPosition(int collId){
+    private void scrollToPosition(int collId) {
         if (mapOfCollection == null)
             return;
         int position = mapOfCollection.get(collId);
+        mCurrentPosition = position;
+        //mRecyclerView.scrollToPosition(position);
         mRecyclerView.smoothScrollToPosition(position);
+        mHandler.removeCallbacks(mCollectionChangeRunnable);
+        mHandler.postDelayed(mCollectionChangeRunnable, 100);
+        mTabViewHolder.setSelected(0);
     }
-
 
 
     //Author DJphy
@@ -432,11 +436,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         if (collection != null && !collection.equals(mCollection)) {
             mCollection = collection;
             bindOverlay(mCollection, false);
-            if (!isFirstTime) {
-                isFirstTime = true;
-                Log.d("djcoll", "onCollectionChange");
-                configureUI(mUIState);
-            }
+            /*if (!isFirstTime) {*/
+            isFirstTime = true;
+            Log.d("djcoll", "onCollectionChange");
+            configureUI(mUIState);
+            //}
             for (CollectionChangeListener l : mCollectionChangeListeners)
                 l.onCollectionChange(mCollection);
         }
@@ -524,17 +528,18 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     private SparseArray<Integer> mapOfCollection;
-    private void setMapofCollection(Cursor cursor){
+
+    private void setMapofCollection(Cursor cursor) {
         mapOfCollection = new SparseArray<>();
-        if (cursor!=null){
+        if (cursor != null) {
             if (cursor.getCount() == 0)
                 return;
-            if (cursor.moveToFirst()){
-                int i =0;
+            if (cursor.moveToFirst()) {
+                int i = 0;
                 do {
                     mapOfCollection.put(Collection.getCollectionId(cursor), i);
                     i++;
-                }while (cursor.moveToNext());
+                } while (cursor.moveToNext());
             }
         }
     }
@@ -553,9 +558,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
         public void changeCursor(Cursor cursor) {
             this.cursor = cursor;
-            setMapofCollection(cursor);
-            if (collectionId != -1)
-                scrollToPosition(collectionId);
             notifyDataSetChanged();
         }
 
@@ -618,11 +620,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     mHandler.post(mCollectionChangeRunnable);
                     mRecyclerView.smoothScrollToPosition(mCollection.selectedPos);
                     mCurrentPosition = mCollection.selectedPos;
-
-                    //mHandler.removeCallbacks(mCollectionChangeRunnable);
-                    // mHandler.postDelayed(mCollectionChangeRunnable, 100);
-
-                    // configureUI(mUIState);
+                    setMapofCollection(cursor);
+                    if (collectionId != -1)
+                        scrollToPosition(collectionId);
                 }
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }

@@ -139,6 +139,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     public static boolean isCollectionLike = false;
 
 
+
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -365,7 +368,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
-                    WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         }
         overLayDialog.show();
     }
@@ -530,7 +533,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mCurrentPosition = position;
         /*if (mCurrentPosition < 0) mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
         else if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1) mCurrentPosition = 0;*/
-        mRecyclerView.smoothScrollToPosition(mCurrentPosition);
+        mRecyclerView.scrollToPosition(mCurrentPosition);
         mHandler.removeCallbacks(mUserChangeRunnable);
         mHandler.postDelayed(mUserChangeRunnable, 100);
         configureUI(mUIState);
@@ -538,12 +541,19 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         //recyclerLinLayManger.scrollToPosition(position);
     }
 
-    @Override
+    /*@Override
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        //mAppBarLayout.onTouchEvent(motionEvent);
-        mAppBarLayout.onInterceptTouchEvent(motionEvent);
-        return super.dispatchTouchEvent(motionEvent);
-    }
+        mAppBarLayout.onTouchEvent(motionEvent);
+        mRecyclerView.onTouchEvent(motionEvent);
+        mFrame.onTouchEvent(motionEvent);
+        topLayout.onTouchEvent(motionEvent);
+        mTabLayout.onTouchEvent(motionEvent);
+        //mAppBarLayout.onInterceptTouchEvent(motionEvent);
+        mCoordinatorLayout.onTouchEvent(motionEvent);
+        if (mUIState == UISTATE_SOCIAL)
+            return *//*super.dispatchTouchEvent(motionEvent)*//*false;
+        else return super.dispatchTouchEvent(motionEvent);
+    }*/
 
 
     //Author DJphy
