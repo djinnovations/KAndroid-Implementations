@@ -368,7 +368,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
-                    WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+                    WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
         }
         overLayDialog.show();
     }
@@ -529,6 +529,18 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
     }
 
+
+    private void manupilateToggle(){
+        mAppBarLayout.setExpanded(false);
+        //mOverlayVH.brandName.setVisibility(View.GONE);
+        mOverlayVH.setVisisbility(View.GONE);
+        /*layout1.setVisibility(View.GONE);
+        layout2.setVisibility(View.GONE);
+        mProductCollection.setVisibility(View.GONE);
+        mProductCost.setVisibility(View.GONE);*/
+        //mTabLayout.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
+    }
+
     private void smoothScrollToPosition(int position) {
         mCurrentPosition = position;
         /*if (mCurrentPosition < 0) mCurrentPosition = mShowCaseAdapter.getItemCount() - 1;
@@ -685,6 +697,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         if (uiState == UISTATE_SOCIAL) {
             //f = new SocialFeedFragment();
+            manupilateToggle();
             FilterPostParams fpp = new FilterPostParams(String.valueOf(mUser.id), "0", "0");
             f = FilterTimelineFragment.newInstance(fpp);
             id = R.id.frame_no_scroll_dummy;

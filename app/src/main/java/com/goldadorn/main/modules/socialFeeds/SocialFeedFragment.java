@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
@@ -192,6 +193,25 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         getDataManager().remove(pos);
         getAdapter().notifyItemRemoved(pos);
     }
+
+
+    public void postAdded(SocialPost socialPost) {
+
+        // refreshPosts(0);
+
+        /*FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.detach(this).attach(this).commit();*/
+        //askToRefresh();
+        if (socialPost == null) {
+            Log.d("djfeed", "postAdded- refresh");
+            refreshPosts(0);
+        } else {
+            Log.d("djfeed", "postAdded- custom");
+            getDataManager().add(0, socialPost);
+            getAdapter().notifyItemInserted(0);
+        }
+    }
+
 
     private void likeAPost(SocialPost post, int pos) {
         likeHelper.update(post, pos);
@@ -644,10 +664,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         return (MainActivity) getActivity();
     }
 
-    public void postAdded(SocialPost socialPost) {
-        refreshPosts(0);
-        //askToRefresh();
-    }
 
     Handler refreshTrigerhandler = new Handler();
     Runnable runnablelocal = new Runnable() {
@@ -767,7 +783,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     public View getItemView(int viewType, LayoutInflater inflater, ViewGroup container) {
-
+        Log.d("dj", "viewType: " + viewType);
         if (viewType == ViewTypes.VIEW_RATE_US)
             return inflater.inflate(R.layout.rate_app_card, null);
 
@@ -992,12 +1008,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         @Bind(R.id.detailsHolder)
         ViewGroup detailsHolder;
 
-        @Bind(R.id.tvBOT1)
+        /*@Bind(R.id.tvBOT1)
         TextView tvBOT1;
         @Bind(R.id.tvBOT2)
         TextView tvBOT2;
         @Bind(R.id.tvBOT3)
-        TextView tvBOT3;
+        TextView tvBOT3;*/
 
         @Bind(R.id.buyNow1)
         View buyNow1;
@@ -1127,9 +1143,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg2(), option2Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox2.setVisibility(View.VISIBLE);
 
-                if (item.getImg1() == null) {
+               /* if (item.getImg1() == null) {
                     tvBOT2.setText(String.valueOf(1));
-                }
+                }*/
 
                 if (isVoted)
                     option2Label.setText(item.getBof3Percent2() + "%");
@@ -1146,11 +1162,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             if (item.getImg3() != null && item.getImg3().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg3(), option3Image, R.drawable.vector_image_logo_square_100dp);
                 optionBox3.setVisibility(View.VISIBLE);
-                if (item.getImg2() == null) {
+                /*if (item.getImg2() == null) {
                     tvBOT3.setText(String.valueOf(1));
-                } else if (item.getImg1() == null) {
+                } else */
+                /*if (item.getImg1() == null) {
                     tvBOT3.setText(String.valueOf(2));
-                }
+                }*/
                 if (isVoted)
                     option3Label.setText(item.getBof3Percent3() + "%");
                 else
@@ -1176,14 +1193,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 param = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, Float.parseFloat(item.getBof3Percent3().toString()));
                 stack3.setLayoutParams(param);
 
-                if (item.getImg1() == null) {
+                /*if (item.getImg1() == null) {
                     stack2.setText(String.valueOf(1));
                 }
-                if (item.getImg2() == null) {
-                    stack3.setText(String.valueOf(1));
-                } else if (item.getImg1() == null) {
+                if (item.getImg1() == null) {
                     stack3.setText(String.valueOf(2));
-                }
+                }*/
 
                 stackBar.setWeightSum(100);
             }
@@ -1508,6 +1523,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     }
 
+
+    protected boolean allowPostOptions() {
+        return true;
+    }
+
     abstract public class PostItemHolder extends BaseItemHolder {
 
         @Bind(R.id.userImage)
@@ -1702,6 +1722,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             sharePostButton.setOnClickListener(itemClick);
             commentPostButton.setOnClickListener(itemClick);
             ivDropdown.setOnClickListener(itemClick);
+            ivDropdown.setVisibility(allowPostOptions() ? View.VISIBLE : View.INVISIBLE);
 
             TypefaceHelper.setFont(userName, age, details, recomandationLabel);
 

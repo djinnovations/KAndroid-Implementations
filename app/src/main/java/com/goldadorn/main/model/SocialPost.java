@@ -36,8 +36,6 @@ public class SocialPost extends ServerError implements IParseableObject {
     private Image img1=null;
     private Image img3=null;
 
-    private String price1=null;
-
     private String postId;
     private String userName;
     private String userPic;
@@ -54,6 +52,36 @@ public class SocialPost extends ServerError implements IParseableObject {
     private Integer isLiked;
     private String image1;
     private String[] images;
+    private String price2;
+    private String price3;
+    private String price1=null;
+
+    public String getPrice1() {
+        return price1;
+    }
+
+    public void setPrice1(String price1) {
+        this.price1 = price1;
+    }
+
+    public String getPrice2(){
+        return price2;
+    }
+
+    public String getPrice3(){
+        return price3;
+    }
+
+    public void setPrice2(String price2){
+        this.price2 = price2;
+    }
+
+    public void setPrice3(String price3){
+        this.price3 = price3;
+    }
+
+
+
     /**
      * isFollowing : 1
      */
@@ -187,16 +215,19 @@ public class SocialPost extends ServerError implements IParseableObject {
         userPic = URLHelper.parseImageURL(userPic);
 
         String oldData = image1;
+        Log.d("dj","image1: "+image1);
         if(image1!=null && image1.trim().equals("")==false)
             image1= URLHelper.parseImageURL(image1);
         else
             image1=null;
 
+        Log.d("dj","image2: "+image2);
         if(image2!=null && image2.trim().equals("")==false)
             image2= URLHelper.parseImageURL(image2);
         else
             image2=null;
 
+        Log.d("dj","image3: "+image3);
         if(image3!=null && image3.trim().equals("")==false)
             image3= URLHelper.parseImageURL(image3);
         else
@@ -541,11 +572,4 @@ public class SocialPost extends ServerError implements IParseableObject {
         this.shareCount = shareCount;
     }
 
-    public String getPrice1() {
-        return price1;
-    }
-
-    public void setPrice1(String price1) {
-        this.price1 = price1;
-    }
 }

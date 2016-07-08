@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.util.Log;
@@ -24,6 +25,7 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
+import com.goldadorn.main.dj.model.TemporaryCreatePostObj;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
@@ -31,6 +33,7 @@ import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.TemporarySocialPostParser;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
@@ -48,6 +51,8 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -135,7 +140,7 @@ public class MainActivity extends BaseDrawerActivity {
             //Toast.makeText(TestPayment.this.getApplicationContext(), "swipe right", Toast.LENGTH_SHORT).show();
             boolean isActive = ((HomePage) activePage).socialFeedFragmentpage.getUserVisibleHint();
             Log.d("djgest", "isSocialfeedactive?: " + isActive);
-            if (isActive){
+            if (isActive) {
                 menuAction(R.id.nav_showcase);
             }
         }
@@ -196,18 +201,15 @@ public class MainActivity extends BaseDrawerActivity {
                 "bankcode=CC,error=E000,error_Message=No Error";
 
     }*/
-
-
-
     ;
 
 
-
     private int intimationCountForThisSession = 1;
-    public void displayDialogForIntimation(){
+
+    public void displayDialogForIntimation() {
         if (getApp().getPrefManager().getIsStopIntimation())
             return;
-        if (intimationCountForThisSession > INTIMATION_COUNT_FOR_SESSION )
+        if (intimationCountForThisSession > INTIMATION_COUNT_FOR_SESSION)
             return;
         getApp().getPrefManager().updateIntimationCount();
         showDialogInfo("Great choice! Now tap on the product's image to check it out in our Showcase", true);
@@ -216,13 +218,15 @@ public class MainActivity extends BaseDrawerActivity {
 
 
     private GARaterUpdateHelper updateHelper;
-    public void checkIfAppUpdated(){
+
+    public void checkIfAppUpdated() {
         updateHelper = GARaterUpdateHelper.getInstance();
         updateHelper.checkForUpdates(this);
         updateHelper.rateApp(this);
     }
 
     private AppTourGuideHelper mTourHelper;
+
     private void tourThisScreen() {
 
         /*resRdr = ResourceReader.getInstance(getApplicationContext());
@@ -311,17 +315,22 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
     final private int postCallToken = IDUtils.generateViewId();
+    private int recentlyPostedPost = -1;
+    TemporaryCreatePostObj tempPostObj;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("djpost","onActResult");
+        Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
             try {
                 //String fileData=data.getStringExtra("fileData");
-                int type = data.getIntExtra("type", -1);
+                int type = recentlyPostedPost = data.getIntExtra("type", -1);
                 if (type != -1) {
+                    tempPostObj = new TemporaryCreatePostObj();
+                    tempPostObj.setPostType(type);
                     String msg = data.getStringExtra("msg");
+                    tempPostObj.setMsg(msg);
                     MultipartEntity reqEntity = new MultipartEntity();
 
                     //// TODO: 28-06-2016
@@ -333,7 +342,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                         if (data.getExtras().get("files") != null) {
                             File[] files = (File[]) data.getExtras().get("files");
-
+                            tempPostObj.setFileList(files);
                             File file;
                             int count = 1;
                             for (int i = 0; i < files.length; i++) {
@@ -347,7 +356,7 @@ public class MainActivity extends BaseDrawerActivity {
                     } catch (Exception e) {
                         if (data.getExtras().get("filesURIs") != null) {
                             String[] uris = (String[]) data.getExtras().get("filesURIs");
-
+                            tempPostObj.setFileUriList(uris);
                             File file;
                             int count = 1;
                             for (int i = 0; i < uris.length; i++) {
@@ -363,7 +372,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                     if (data.getExtras().get("links") != null) {
                         String[] links = (String[]) data.getExtras().get("links");
-
+                        tempPostObj.setLinksList(links);
                         String link;
                         int count = 1;
                         for (int i = 0; i < links.length; i++) {
@@ -424,14 +433,15 @@ public class MainActivity extends BaseDrawerActivity {
                     }*/
 
 
-                    if (data.getExtras().get("clubbed") != null){
+                    if (data.getExtras().get("clubbed") != null) {
                         String[] clubbedArr = (String[]) data.getExtras().get("clubbed");
+                        tempPostObj.setClubbedList(clubbedArr);
                         String clubbedTxt;
                         int count = 1;
-                        for (int i=0 ; i< clubbedArr.length ; i++){
+                        for (int i = 0; i < clubbedArr.length; i++) {
                             clubbedTxt = clubbedArr[i];
-                            if (clubbedTxt != null){
-                                reqEntity.addPart("p"+count, new StringBody(clubbedTxt));
+                            if (clubbedTxt != null) {
+                                reqEntity.addPart("p" + count, new StringBody(clubbedTxt));
                                 count++;
                             }
                         }
@@ -470,25 +480,26 @@ public class MainActivity extends BaseDrawerActivity {
     public final int POST_REPORT_CALL = IDUtils.generateViewId();
 
     private int position = -1;
-    public void updatePostForThisUser(int what, String postId, int position){
+
+    public void updatePostForThisUser(int what, String postId, int position) {
         ExtendedAjaxCallback ajaxCallback = null;
         this.position = position;
         Map<String, String> params = new HashMap<>();
         params.put("postid", postId);
-        if (what == POST_DELETE_CALL){
+        if (what == POST_DELETE_CALL) {
             ajaxCallback = getAjaxCallback(POST_DELETE_CALL);
             getAQuery().ajax(ApiKeys.getDeletePostAPI(), params, String.class, ajaxCallback);
-        }else if (what == POST_HIDE_CALL){
+        } else if (what == POST_HIDE_CALL) {
             params.put("report", String.valueOf(0));
             ajaxCallback = getAjaxCallback(POST_HIDE_CALL);
             getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
-        } else if(what == POST_REPORT_CALL){
+        } else if (what == POST_REPORT_CALL) {
             //// TODO: 25-06-2016
             params.put("report", String.valueOf(1));
             ajaxCallback = getAjaxCallback(POST_REPORT_CALL);
             getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
         }
-        Log.d("djmain", "req params - updatePostForThisUser: "+params);
+        Log.d("djmain", "req params - updatePostForThisUser: " + params);
         //ajaxCallback.method(AQuery.METHOD_POST);
     }
 
@@ -499,22 +510,58 @@ public class MainActivity extends BaseDrawerActivity {
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {
-                if (socialPostHost != null && socialPostHost.get() != null)
+                /*if (socialPostHost != null && socialPostHost.get() != null)
                     socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
 
-                socialPostHost = null;
+                socialPostHost = null;*/
+                /*if (activePage instanceof HomePage) {
+                    ((HomePage) activePage).socialFeedFragmentpage.postAdded();
+                }*/
 
+                // TODO: 08-07-2016  
+                /*if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
+                    if (socialPostHost != null && socialPostHost.get() != null)
+                        socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
+                    socialPostHost = null;
+                } else {
+                    Fragment frg = getSupportFragmentManager().findFragmentByTag(TAG_FOR_HOME_FRAGMENT);
+                    Log.d("djmain", "updatingpost - fragment val" +frg);
+                    final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commit();
+                }*/
+                if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
+
+                    if (socialPostHost != null && socialPostHost.get() != null)
+                        socialPostHost.get().postAdded(null);
+                }
+                else {
+                    int postId = -1;
+                    try {
+                        postId = new JSONObject((String) json).getInt("postid");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        postId = -1;
+                    }
+                    tempPostObj.setPostId(postId);
+                    com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
+                    if (activePage instanceof HomePage) {
+                        ((HomePage) activePage).socialFeedFragmentpage.postAdded(socialPost);
+                    }
+                }
                 stopUploadProgress(true);
 
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
                 Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
+
             } else {
                 stopUploadProgress(success);
             }
 
-        }else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL || id == POST_REPORT_CALL){
-            if (position != -1){
+        } else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL || id == POST_REPORT_CALL) {
+            if (position != -1) {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         layoutParent, this);
                 if (success) {
@@ -529,14 +576,12 @@ public class MainActivity extends BaseDrawerActivity {
                 }
             }
             position = -1;
-        }
-
-        else
+        } else
             super.serverCallEnds(id, url, json, status);
     }
 
-    public void showDialogInfo(String msg, boolean isPositive){
-        int color ;
+    public void showDialogInfo(String msg, boolean isPositive) {
+        int color;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
@@ -549,6 +594,8 @@ public class MainActivity extends BaseDrawerActivity {
         progressBar.setVisibility(View.GONE);
     }
 
+    private final String TAG_FOR_HOME_FRAGMENT = "goldadorn.homefragment";
+
     public boolean action(NavigationDataObject navigationDataObject) {
         if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW)) {
             Action action = new Action(this);
@@ -556,18 +603,17 @@ public class MainActivity extends BaseDrawerActivity {
 
             if (activePageData != null && activePageData.getIdInt() == navigationDataObject.getIdInt()) {
                 isAdded = true;
-
             }
 
             if (!isAdded) {
-                BaseFragment view = BaseFragment.newInstance(navigationDataObject);
-                if (view != null) {
+                BaseFragment fragment = BaseFragment.newInstance(navigationDataObject);
+                if (fragment != null) {
                     //setTitle(navigationDataObject.getTitle());
                     setTitle("");
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.container, view);
+                    ft.replace(R.id.container, fragment, TAG_FOR_HOME_FRAGMENT);
                     ft.commit();
-                    activePage = view;
+                    activePage = fragment;
                     activePageData = navigationDataObject;
                     if (backEntry == false)
                         history.add(activePageData);

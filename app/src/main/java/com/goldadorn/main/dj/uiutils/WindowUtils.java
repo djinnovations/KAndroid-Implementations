@@ -146,8 +146,9 @@ public class WindowUtils {
     private void setGravity(View proView, int gravity) {
         RelativeLayout.LayoutParams rlParams = /*new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT)*/ (RelativeLayout.LayoutParams) proView.getLayoutParams();
-        if (gravity == PROGRESS_FRAME_GRAVITY_CENTER)
-            return;
+        if (gravity == PROGRESS_FRAME_GRAVITY_CENTER){
+            rlParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        }
         else if (gravity == PROGRESS_FRAME_GRAVITY_TOP) {
             rlParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             rlParams.topMargin = (int) (marginForProgressViewInGrid * mDispProp.getYPixelsPerCell());
@@ -181,7 +182,7 @@ public class WindowUtils {
                     .getColorFromResource(colorResId));
         } else tvTemp.setVisibility(View.GONE);
         if (!justPlainOverLay){
-            setGravity(overLay.findViewById(R.id.ivLogo), customGravity);
+            setGravity(overLay.findViewById(R.id.rlImageHolder), customGravity);
             try {
                 startAnim(overLay.findViewById(R.id.ivLogo), R.anim.continous_rotation);
             } catch (Exception e) {

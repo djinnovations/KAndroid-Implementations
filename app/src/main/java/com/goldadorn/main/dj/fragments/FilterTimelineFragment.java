@@ -47,6 +47,11 @@ public class FilterTimelineFragment extends SocialFeedFragment {
         //followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(),postUpdateResult);
     }
 
+    @Override
+    protected boolean allowPostOptions() {
+        //return super.allowPostOptions();
+        return false;
+    }
 
     @Override
     protected EmptyViewHelper createEmptyViewHelper() {
