@@ -61,6 +61,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_below="@+id/tempView"
+            android:layout_centerInParent="true"
             android:background="@drawable/white_circle_with_shadow" />
 
         <ImageView
