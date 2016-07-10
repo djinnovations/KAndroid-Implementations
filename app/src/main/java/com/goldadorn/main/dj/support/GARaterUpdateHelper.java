@@ -128,6 +128,7 @@ public class GARaterUpdateHelper {
             @Override
             public void onCancelClicked() {
                 Log.d("djapprate", "Rate app: later clicked by user");
+                Application.getInstance().getPrefManager().resetAppRateSessionCount();
             }
         });
     }

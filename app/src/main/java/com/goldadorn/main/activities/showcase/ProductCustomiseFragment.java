@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -44,7 +48,7 @@ public class ProductCustomiseFragment extends Fragment {
     private ProductActivity mProductActivity;
     private SingleItemAdapter mPriceAdapter;
     private ProductOptions mProductOption;
-    private int density= 0;
+    private int density = 0;
     //private ArrayList<PriceValueModel> dataForPriceBreakDown;
 
     @Nullable
@@ -57,6 +61,8 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
     PriceBreakDownAdapter pbda;
+    SizeListSpinnerAdapter sizeSpinnerAdapter;
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -67,8 +73,10 @@ public class ProductCustomiseFragment extends Fragment {
         mAdapter = new MergeRecycleAdapter(new ViewHolderFactory(getActivity()));
         mAdapter.addAdapter(getTitleAdapter("Price BreakDown"));
         //mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
-       ArrayList<PriceValueModel> tempList = new ArrayList<>();
+        //ArrayList<PriceValueModel> tempList = new ArrayList<>();
         mAdapter.addAdapter(pbda = new PriceBreakDownAdapter(false, ViewHolderFactory.TYPE.VHT_PBCA));
+        //mAdapter.addAdapter(getTitleAdapter("Size"));//// TODO: 10-07-2016  
+        //mAdapter.addAdapter(sizeSpinnerAdapter = new SizeListSpinnerAdapter(getContext(), false));
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
 //        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
@@ -109,6 +117,11 @@ public class ProductCustomiseFragment extends Fragment {
                 //mPriceAdapter.setEnabled(false);
                 pbda.setEnabled(false);
             }
+
+            /*if (*//*options.sizeList.size() > 0*//*true) {
+                sizeSpinnerAdapter.setEnabled(true);
+                sizeSpinnerAdapter.setData(getDataForSizeSpinner());//// TODO: 10-07-2016
+            } else sizeSpinnerAdapter.setEnabled(false);*/
         }
     }
 
@@ -293,7 +306,7 @@ public class ProductCustomiseFragment extends Fragment {
             }
             else priceValue = String.valueOf(Math.round(price));*/
             //float totalTemp = price < 0 ? 0 : price;
-            Log.d("djprod","price from server every iteration: "+price);
+            Log.d("djprod", "price from server every iteration: " + price);
             //total = total + totalTemp;
             //Log.d("djprod","price iteration amount: "+total);
 
@@ -303,7 +316,7 @@ public class ProductCustomiseFragment extends Fragment {
                 }
                 name=name+spaces;*/
 
-            if(name.contains("Metal")){
+            if (name.contains("Metal")) {
 
                 //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 12
@@ -311,35 +324,34 @@ public class ProductCustomiseFragment extends Fragment {
                                 RandomUtils.getIndianCurrencyFormat(Math.round(price), true)
                             *//*String.valueOf(price)*//*);*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
                         RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
                 priceBreakDownList.add(pvm);
 
                /* float tempVat = price < 0 ? 0 : price;
                 vatTotal=vatTotal+tempVat;*/
                 //name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
-            }
-            else if(name.contains("Stone")){
+            } else if (name.contains("Stone")) {
                 //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 12
                 /*tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: *//*priceUnit+" "+dcmf.format(price)*//*
                             *//*String.valueOf(Math.round(price))*//* RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
-                            RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
+                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
                 priceBreakDownList.add(pvm);
 
                /* float tempVat = price < 0 ? 0 : price;
                 vatTotal=vatTotal+tempVat;*/
                    /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
-            }else if(name.contains("Making Charges")){
+            } else if (name.contains("Making Charges")) {
                 //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 3
                /* tblr.addRow(name+ "\t\t\t", price < 0 ? NO_DETAILS: *//*priceUnit+" "+ dcmf.format(price)*//*
                             *//*String.valueOf(Math.round(price))*//*RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS:
+                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
                         RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
                 priceBreakDownList.add(pvm);
 
@@ -356,7 +368,7 @@ public class ProductCustomiseFragment extends Fragment {
                     }else{
                         name = name + "\t\t\t\t\t\t\t\t\t";
                     }*/
-            }else{
+            } else {
                 //price=(float)(vatTotal*0.01);
                 //tb = tb.addLine(name + "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 8
@@ -364,7 +376,7 @@ public class ProductCustomiseFragment extends Fragment {
                 double vat;
                 try {
                     double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
-                    vat = (displayPrice - (displayPrice/1.01));
+                    vat = (displayPrice - (displayPrice / 1.01));
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                     vat = 0.0;
@@ -372,7 +384,7 @@ public class ProductCustomiseFragment extends Fragment {
 
                /* tblr.addRow(name+ "\t\t\t\t\t\t\t\t", *//**priceUnit+" "+ dcmf.format(vat)*//*
                             *//*String.valueOf(Math.round(vat))*//*RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));*/
-                Log.d("djprod","VAT - calc from formula: "+vat);
+                Log.d("djprod", "VAT - calc from formula: " + vat);
                 PriceValueModel pvm = new PriceValueModel(name, RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
                 priceBreakDownList.add(pvm);
 
@@ -418,7 +430,7 @@ public class ProductCustomiseFragment extends Fragment {
        /* String totalRowTxtVal = total < 0 ? NO_DETAILS: *//*priceUnit +" "+dcmf.format(total)*//*
                     *//*String.valueOf(Math.round(total)*//*RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true);*/
 
-        Log.d("djprod","totalRow: "+RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
+        Log.d("djprod", "totalRow: " + RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
         PriceValueModel pvm = new PriceValueModel("Total", RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
         priceBreakDownList.add(pvm);
 
@@ -446,8 +458,16 @@ public class ProductCustomiseFragment extends Fragment {
         return priceBreakDownList;
     }
 
+    public List<String> getDataForSizeSpinner() {
+        List<String> list = new ArrayList<>();
+        for (int i = 1; i <= 10; i++)
+            list.add(String.valueOf(i));
+        return list;
+    }
 
-    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder> implements IResultListener<Map.Entry<OptionKey, OptionValue>> {
+
+    private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder>
+            implements IResultListener<Map.Entry<OptionKey, OptionValue>> {
 
         List<Map.Entry<OptionKey, ArrayList<OptionValue>>> options;
 
@@ -548,19 +568,82 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
 
+    private class SizeListSpinnerAdapter extends RecyclerAdapter<ViewHolder> implements AdapterView.OnItemSelectedListener {
+
+        private List<String> sizeList = new ArrayList<>();
+        SimpleAdapterForTv adapterForTv;
+        private int mSelectedIndex;
+
+        public SizeListSpinnerAdapter(Context context, boolean enabled) {
+            super(context, enabled);
+        }
+
+        public void setData(List<String> sizeList) {
+            this.sizeList = sizeList;
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return ViewHolderFactory.TYPE.VHT_SIZE_SPINNER;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Spinner spinner = ((Spinner) holder.itemView.findViewById(R.id.spinnerSize));
+            spinner.setOnItemSelectedListener(this);
+            spinner.setAdapter(adapterForTv = new SimpleAdapterForTv(getContext(), R.layout.adapter_spinner_size_prod_customization,
+                    R.id.tvAdapter, sizeList));
+        }
+
+        @Override
+        public int getItemCount() {
+            return 1;
+        }
 
 
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            // TODO: 09-07-2016
+            mSelectedIndex = position;
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+
+        private class SimpleAdapterForTv extends ArrayAdapter<String> {
+
+            public SimpleAdapterForTv(Context context, int layResIdHavingTv, int textViewResourceId, List<String> objects) {
+                super(context, layResIdHavingTv, textViewResourceId, objects);
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View itemView =  super.getDropDownView(position, convertView, parent);
+
+                if (position == mSelectedIndex) {
+                    itemView.setBackgroundColor(Color.parseColor("#33000000"));
+                } else {
+                    itemView.setBackgroundColor(Color.TRANSPARENT);
+                }
+
+                return itemView;
+            }
+
+        }
+    }
 
 
-
-    private class PriceBreakDownAdapter extends RecyclerAdapter<MyViewHolderNew>{
+    private class PriceBreakDownAdapter extends RecyclerAdapter<MyViewHolderNew> {
 
         private ArrayList<PriceValueModel> ourList = new ArrayList<>();
         private final int mViewType;
 
         public PriceBreakDownAdapter(boolean enabled, int viewType) {
             super(getActivity(), enabled);
-            mViewType =  viewType;
+            mViewType = viewType;
         }
 
         /*public PriceBreakDownAdapter(ArrayList<PriceValueModel> ourList) {
@@ -573,7 +656,7 @@ public class ProductCustomiseFragment extends Fragment {
         }
 
 
-        public void setList(ArrayList<PriceValueModel> ourList){
+        public void setList(ArrayList<PriceValueModel> ourList) {
             this.ourList = ourList;
             notifyDataSetChanged();
         }
@@ -608,7 +691,7 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
 
-    private class PriceValueModel{
+    private class PriceValueModel {
         private String tvTitle;
         private String tvValue;
 

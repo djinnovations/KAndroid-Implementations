@@ -425,6 +425,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (uiState == UISTATE_SOCIAL) {
             id = R.id.frame_no_scroll_dummy;
             //f = new SocialFeedFragment();
+            manupilateToggle();
             FilterPostParams fpp = new FilterPostParams(("P" + String.valueOf(mProduct.id)), "0", "0");
             f = FilterTimelineFragment.newInstance(fpp);
             mFrame.setVisibility(View.INVISIBLE);
@@ -448,6 +449,18 @@ public class ProductActivity extends BaseDrawerActivity {
             fragmentTransaction.replace(id, mProInfoFragment, "" + uiState);
             fragmentTransaction.commit();
         }
+    }
+
+
+    private void manupilateToggle(){
+        mAppBarLayout.setExpanded(false);
+        //mOverlayVH.brandName.setVisibility(View.GONE);
+        mOverlayVH.setVisisbility(View.GONE);
+        /*layout1.setVisibility(View.GONE);
+        layout2.setVisibility(View.GONE);
+        mProductCollection.setVisibility(View.GONE);
+        mProductCost.setVisibility(View.GONE);*/
+        //mTabLayout.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
     }
 
     /*public void addToCart() {

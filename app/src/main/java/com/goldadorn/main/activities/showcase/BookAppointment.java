@@ -178,16 +178,16 @@ public class BookAppointment extends BaseActivity {
 
             try {
                 if (TextUtils.isEmpty(etName.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "Please provide your designerName", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please provide your Name", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (etPhNum.getText().toString().trim().length() < 10) {
-                    Toast.makeText(getApplicationContext(), "Enter a valid mobile number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Enter a valid Mobile number", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (tvBookDate.getText().toString().trim().equalsIgnoreCase("appointment date")) {
                     Toast.makeText(getApplicationContext(), "Please provide Appointment date", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (TextUtils.isEmpty(etMsgAppoint.getText().toString().trim())) {
-                    Toast.makeText(getApplicationContext(), "Please leave a message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Please leave a Message", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 doTransition();

@@ -80,7 +80,6 @@ class TabViewHolder implements View.OnClickListener {
     View divider2;
 
 
-
     @Bind(R.id.shadow_left)
     View shadowLeft;
     @Bind(R.id.shadow_right)
@@ -104,7 +103,7 @@ class TabViewHolder implements View.OnClickListener {
     }
 
     public void initTabs(String tabName1, String tabName2, String tabName3,
-            TabClickListener tabClickListener) {
+                         TabClickListener tabClickListener) {
         this.tabName1.setText(tabName1);
         this.tabName2.setText(tabName2);
         if (TextUtils.isEmpty(tabName3)) {
@@ -117,33 +116,31 @@ class TabViewHolder implements View.OnClickListener {
     }
 
     public void setCounts(int count1, int count2) {
-        if(count1>0){
+        if (count1 > 0) {
             tabCount1.setVisibility(View.VISIBLE);
             tabCount1.setText(String.format(Locale.getDefault(), "%d", count1));
-        }else
+        } else
             tabCount1.setVisibility(View.GONE);
 
         if (count2 > 0) {
             tabCount2.setVisibility(View.VISIBLE);
             tabCount2.setText(String.format(Locale.getDefault(), "%d", count2));
-        }
-        else tabCount2.setVisibility(View.GONE);
+        } else tabCount2.setVisibility(View.GONE);
     }
 
-    public void collectionCount(int count){
-        if(count>0){
+    public void collectionCount(int count) {
+        if (count > 0) {
             tabCount1.setVisibility(View.VISIBLE);
             tabCount1.setText(String.format(Locale.getDefault(), "%d", count));
-        }else
+        } else
             tabCount1.setText(String.format(Locale.getDefault(), "%d", 0));
     }
 
-    public void productsCount(int count){
+    public void productsCount(int count) {
         if (count > 0) {
             tabCount2.setVisibility(View.VISIBLE);
             tabCount2.setText(String.format(Locale.getDefault(), "%d", count));
-        }
-        else tabCount2.setText(String.format(Locale.getDefault(), "%d", 0));
+        } else tabCount2.setText(String.format(Locale.getDefault(), "%d", 0));
     }
 
     public void setSelected(int pos) {
@@ -235,7 +232,7 @@ class TabViewHolder implements View.OnClickListener {
         }
     }
 
-    public void setSides(int pad){
+    public void setSides(int pad) {
         LinearLayout.LayoutParams lp1 = (LinearLayout.LayoutParams) shadowLeft.getLayoutParams();
         lp1.width = pad;
         shadowLeft.setLayoutParams(lp1);

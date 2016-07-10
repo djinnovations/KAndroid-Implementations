@@ -496,6 +496,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         if (uiState == UISTATE_SOCIAL) {
             //f = new SocialFeedFragment();
             //Bundle args = new Bundle();
+            manupilateToggle();
             FilterPostParams fpp = new FilterPostParams(("C" + String.valueOf(mCollection.id)), "0", "0");
             f = FilterTimelineFragment.newInstance(fpp);
             /*args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
@@ -515,6 +516,17 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             fragmentTransaction.replace(id, f);
             fragmentTransaction.commit();
         }
+    }
+
+    private void manupilateToggle(){
+        mAppBarLayout.setExpanded(false);
+        //mOverlayVH.brandName.setVisibility(View.GONE);
+        mOverlayViewHolder.setVisisbility(View.GONE);
+        /*layout1.setVisibility(View.GONE);
+        layout2.setVisibility(View.GONE);
+        mProductCollection.setVisibility(View.GONE);
+        mProductCost.setVisibility(View.GONE);*/
+        //mTabLayout.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
     }
 
     @Override

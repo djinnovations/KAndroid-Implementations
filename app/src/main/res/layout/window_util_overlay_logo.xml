@@ -10,7 +10,7 @@
         android:id="@+id/tvOverlayInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/ivLogo"
+        android:layout_above="@+id/rlImageHolder"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
@@ -32,11 +32,44 @@
         app:pv_progressStyle="@style/Theme.AppCompat.NoActionBar"
         tools:visibility="visible" />-->
 
-    <ImageView
-        android:id="@+id/ivLogo"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <!--<android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddTechnicians"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/vector_icon_logo_square"/>
+        android:clickable="true"
+        android:scaleType="centerCrop"
+        app:backgroundTint="@color/White"
+        app:borderWidth="0dp"
+        app:elevation="8dp" />-->
+
+    <RelativeLayout
+        android:id="@+id/rlImageHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <View
+            android:id="@+id/tempView"
+            android:layout_width="1dp"
+            android:layout_height="1.5dp"
+            android:visibility="invisible"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/ivLogoBg"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/tempView"
+            android:background="@drawable/white_circle_with_shadow" />
+
+        <ImageView
+            android:id="@+id/ivLogo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/white_circle_with_logo_inside" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

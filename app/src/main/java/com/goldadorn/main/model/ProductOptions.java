@@ -29,6 +29,8 @@ public class ProductOptions {
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
     public final ArrayList<Map.Entry<OptionKey, ArrayList<OptionValue>>> customisationOptions = new ArrayList<>();
 
+    public List<String> sizeList;
+
     public ProductOptions(int id) {
         this.id = id;
     }

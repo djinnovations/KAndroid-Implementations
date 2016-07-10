@@ -271,8 +271,10 @@ public class DjphyPreferenceManager {
     public boolean canStartForRatingApp() {
         if (getDaysDiffFromStarted() >= AppSharedPreferences.AppRater.DAYS_UNTIL_PROMPT
                 || getSessionCount() >= AppSharedPreferences.AppRater.LAUNCHES_UNTIL_PROMPT) {
-            Log.d("dj", "canStartForRatingApp- DjphyPreferenceManager: true");
-            return true;
+            if (getSessionCount() >= AppSharedPreferences.AppRater.LAUNCHES_UNTIL_PROMPT) {
+                Log.d("dj", "canStartForRatingApp- DjphyPreferenceManager: true");
+                return true;
+            }
         }
         Log.d("dj", "canStartForRatingApp- DjphyPreferenceManager: false");
         return false;
@@ -284,6 +286,11 @@ public class DjphyPreferenceManager {
 
     public void updateSessionCounts() {
         editor.putInt(KEY_RATING_SESSION_COUNT, getSessionCount() + 1);
+        editor.commit();
+    }
+
+    public void resetAppRateSessionCount() {
+        editor.putInt(KEY_RATING_SESSION_COUNT, 0);
         editor.commit();
     }
 

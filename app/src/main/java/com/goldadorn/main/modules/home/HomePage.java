@@ -1,5 +1,6 @@
 package com.goldadorn.main.modules.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -9,7 +10,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +23,7 @@ import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.gesture.SwipeHelper;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -74,12 +79,14 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
         return baseActivity.getApp();
     }
 
+    RecyclerTabLayout indicatorMain;
+
     protected View createIndicator(View rootView) {
         View indicator = rootView.findViewById(R.id.indicator);
         if (getActivity() instanceof MainActivity && ((MainActivity) getActivity()).getPageIndicator() != null) {
             if (indicator != null)
                 indicator.setVisibility(View.GONE);
-            return ((MainActivity) getActivity()).getPageIndicator();
+            return indicatorMain = (RecyclerTabLayout) ((MainActivity) getActivity()).getPageIndicator();
         }
         return indicator;
     }
@@ -160,6 +167,7 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
         @Override
         protected View getView(ViewGroup parent, int var2) {
             return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_custom_tab_view, parent, false);
+            //return LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_two_tab_indicators, parent, false);
         }
 
         public int getItemCount() {
@@ -171,9 +179,28 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
 
             @Bind(R.id.textView)
             public TextView textView;
-
             @Bind(R.id.selected)
             public View selected;
+
+            @Bind(R.id.tabParent)
+            RelativeLayout tabParent;
+            /*@Bind(R.id.shadow_left_bottom_square)
+            View shadow_left_bottom_square;
+            @Bind(R.id.textView)
+            TextView textView;
+            @Bind(R.id.shadow_pillar_left)
+            View shadow_pillar_left;
+            @Bind(R.id.shadow_selected_bottom)
+            View shadow_selected_bottom;
+            @Bind(R.id.shadow_pillar_right)
+            View shadow_pillar_right;
+            @Bind(R.id.right_pillar)
+            View right_pillar;
+            @Bind(R.id.shadow_right_bottom_square)
+            View shadow_right_bottom_square;
+            @Bind(R.id.layoutTab)
+            LinearLayout layoutTab;*/
+
 
             public MyViewHolder(View itemView) {
                 super(itemView);
@@ -185,8 +212,32 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
                         gotoData(data);
                     }
                 });
-
+                setTabWidth();
+                /*DisplayProperties properties = DisplayProperties
+                        .getInstance(getContext(), DisplayProperties.ORIENTATION_PORTRAIT);
+                tabParent.getLayoutParams().width = (int) (17 * properties.getXPixelsPerCell());*/
+                //textView.setTextSize((float) (1.8 * properties.getXPixelsPerCell()));
                 TypefaceHelper.setFont(itemView.getResources().getString(R.string.font_name_text_secondary), textView);
+            }
+
+            private void setTabWidth() {
+                ViewTreeObserver vto = indicatorMain.getViewTreeObserver();
+                vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        try {
+                            int indicatorWidth = indicatorMain.getWidth();
+                            Log.d("dj", " indicator width: " + indicatorWidth);
+                            tabParent.getLayoutParams().width = indicatorWidth / 2;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                indicatorMain.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            } else
+                                indicatorMain.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
 
             NavigationDataObject data;
@@ -196,13 +247,25 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimary));
                 selected.setVisibility(View.VISIBLE);
+               /* shadow_left_bottom_square.setVisibility(View.INVISIBLE);
+                shadow_pillar_left.setVisibility(View.VISIBLE);
+                shadow_selected_bottom.setVisibility(View.INVISIBLE);
+                shadow_pillar_right.setVisibility(View.VISIBLE);
+                shadow_right_bottom_square.setVisibility(View.VISIBLE);
+                right_pillar.setVisibility(View.INVISIBLE);*/
             }
 
             public void updatedNormalItem(Object o) {
                 data = (NavigationDataObject) o;
                 textView.setText(data.getName());
                 textView.setTextColor(textView.getResources().getColor(R.color.colorPrimaryAlpha));
-                selected.setVisibility(View.GONE);
+                selected.setVisibility(View.INVISIBLE);
+                /*shadow_left_bottom_square.setVisibility(View.INVISIBLE);
+                shadow_pillar_left.setVisibility(View.INVISIBLE);
+                shadow_selected_bottom.setVisibility(View.INVISIBLE);
+                shadow_pillar_right.setVisibility(View.INVISIBLE);
+                shadow_right_bottom_square.setVisibility(View.INVISIBLE);
+                right_pillar.setVisibility(View.INVISIBLE);*/
             }
         }
     }
