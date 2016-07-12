@@ -336,7 +336,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                             }
                         }).show();*/
             } else {
-                Toast.makeText(getContext(), "Couldn't retrieve transaction details", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), "Couldn't retrieve transaction details", Toast.LENGTH_SHORT).show();
             }
         }
     }

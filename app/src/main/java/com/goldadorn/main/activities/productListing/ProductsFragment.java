@@ -95,6 +95,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                 {
                     @Override
                     public void done(String url, Object json, Object status) {
+                        String resp = (String) json;
+                        Log.d("djfilter","filter response: "+resp);
                             if(json!=null && json instanceof String) {
                                 json = ResultFormating.formating((String) json);
                                 Gson gson = new Gson();

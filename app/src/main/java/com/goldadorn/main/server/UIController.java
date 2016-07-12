@@ -3,6 +3,7 @@ package com.goldadorn.main.server;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
@@ -124,7 +125,7 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void addToCart(final Context context, Product product, final IResultListener<ProductResponse> listener) {
+    /*public static void addToCart(final Context context, Product product, final IResultListener<ProductResponse> listener) {
         final ProductResponse response =ProductResponse.getAddToListResponse(product);
         Runnable runnable = new Runnable() {
             public void run() {
@@ -139,11 +140,22 @@ public class UIController {
             }
         };
         new Thread(runnable).start();
-    }
+    }*/
 
 
     public static void addToCartNewProduct(final Context context, Product product, ProductInfo mProductInfo, ProductOptions mProductOptions, final IResultListener<ProductResponse> listener) {
         final ProductResponse response = ProductResponse.getAddToListResponseNew(product,mProductInfo,mProductOptions);
+        if (response == null){
+            Toast.makeText(Application.getInstance(), "Product details not available, please reload this screen", Toast.LENGTH_LONG).show();
+            Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (listener != null) listener.onResult(null);
+                }
+            });
+            return;
+        }
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

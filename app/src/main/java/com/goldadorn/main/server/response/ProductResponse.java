@@ -52,21 +52,25 @@ public class ProductResponse extends BasicResponse {
         return response;
     }
     public static ProductResponse getAddToListResponseNew(Product product,ProductInfo mProductInfo,ProductOptions mProductOptions) {
-        ProductResponse response = new ProductResponse();
-        response.product = product;
-        response.productId = product.id;
-        response.metalWeight=mProductInfo.metalWeight;
-        response.metalrate=mProductInfo.metalrate;
-        response.productmaking_charges=mProductInfo.productmaking_charges;
-        response.stonesDetails=mProductInfo.stonesDetails;
-        response.productDefaultPrice=mProductInfo.productDefaultPrice;
-        response.primaryMetalPurity=mProductOptions.primaryMetalPurity;
-        response.primaryMetal=mProductOptions.primaryMetal;
-        response.primaryMetalColor=mProductOptions.primaryMetalColor;
-        response.priceUnits=mProductOptions.priceUnits;
-        response.size=mProductOptions.size;
-        //response.userId=product.userId;
-        return response;
+        try {
+            ProductResponse response = new ProductResponse();
+            response.product = product;
+            response.productId = product.id;
+            response.metalWeight=mProductInfo.metalWeight;
+            response.metalrate=mProductInfo.metalrate;
+            response.productmaking_charges=mProductInfo.productmaking_charges;
+            response.stonesDetails=mProductInfo.stonesDetails;
+            response.productDefaultPrice=mProductInfo.productDefaultPrice;
+            response.primaryMetalPurity=mProductOptions.primaryMetalPurity;
+            response.primaryMetal=mProductOptions.primaryMetal;
+            response.primaryMetalColor=mProductOptions.primaryMetalColor;
+            response.priceUnits=mProductOptions.priceUnits;
+            response.size=mProductOptions.size;
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

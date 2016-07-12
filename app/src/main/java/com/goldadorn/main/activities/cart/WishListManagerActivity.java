@@ -43,10 +43,10 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     private Context mContext;
     private RecyclerView mRecyclerView;
     private Adapter mAdapter;
-    private View.OnClickListener mAddToCartClick = new View.OnClickListener() {
+   /* private View.OnClickListener mAddToCartClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (v.getTag() != null && v.getTag() instanceof Product) {
+            if (v.getTag() != null && v.getTag() instanceof Product) {//DJphy // TODO: 12-07-2016  
                 Product p = (Product) v.getTag();
                 UIController.addToCart(mContext, p, new IResultListener<ProductResponse>() {
                     @Override
@@ -56,7 +56,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
                 });
             }
         }
-    };
+    };*/
     private View.OnClickListener mDeleteClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {

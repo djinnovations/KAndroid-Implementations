@@ -23,6 +23,7 @@
             android:paddingBottom="6dp"
             android:paddingTop="4dp"
             android:paddingLeft="12dp"
+            android:textStyle="bold"
             tools:text="New Text"
             android:textSize="16sp"/>
 

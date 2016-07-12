@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +17,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.MergeRecycleAdapter;
 import com.goldadorn.main.assist.RecyclerAdapter;
 import com.goldadorn.main.assist.SingleItemAdapter;
 import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.ProductOptions;
+import com.rey.material.widget.CircleCheckedTextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -75,8 +75,10 @@ public class ProductCustomiseFragment extends Fragment {
         //mAdapter.addAdapter(mPriceAdapter = new SingleItemAdapter(mContext, false, 0, ViewHolderFactory.TYPE.VHT_PB).setViewBinder(mPriceBinder));
         //ArrayList<PriceValueModel> tempList = new ArrayList<>();
         mAdapter.addAdapter(pbda = new PriceBreakDownAdapter(false, ViewHolderFactory.TYPE.VHT_PBCA));
-        //mAdapter.addAdapter(getTitleAdapter("Size"));//// TODO: 10-07-2016  
-        //mAdapter.addAdapter(sizeSpinnerAdapter = new SizeListSpinnerAdapter(getContext(), false));
+
+        mAdapter.addAdapter(getTitleAdapter("Size"));//// TODO: 10-07-2016
+        mAdapter.addAdapter(sizeSpinnerAdapter = new SizeListSpinnerAdapter(getContext(), false));
+
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
 //        mAdapter.addAdapter(new CustomizeSpinnerAdapter(getActivity()));
@@ -118,10 +120,10 @@ public class ProductCustomiseFragment extends Fragment {
                 pbda.setEnabled(false);
             }
 
-            /*if (*//*options.sizeList.size() > 0*//*true) {
+            if (/*options.sizeList.size() > 0*/true) {
                 sizeSpinnerAdapter.setEnabled(true);
                 sizeSpinnerAdapter.setData(getDataForSizeSpinner());//// TODO: 10-07-2016
-            } else sizeSpinnerAdapter.setEnabled(false);*/
+            } else sizeSpinnerAdapter.setEnabled(false);
         }
     }
 
@@ -467,9 +469,10 @@ public class ProductCustomiseFragment extends Fragment {
 
 
     private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder>
-            implements IResultListener<Map.Entry<OptionKey, OptionValue>> {
+            implements CustomizeMainHolder.IResultListener<Map.Entry<OptionKey, /*OptionValue*/Swatches.MixedSwatch>> {
 
-        List<Map.Entry<OptionKey, ArrayList<OptionValue>>> options;
+        //List<Map.Entry<OptionKey, ArrayList<OptionValue>>> options;
+        List<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> options;
 
         public CustomizeMainAdapter(Context context) {
             super(context, true);
@@ -482,7 +485,8 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
-            Map.Entry<OptionKey, ArrayList<OptionValue>> option = options.get(position);
+            //Map.Entry<OptionKey, ArrayList<OptionValue>> option = options.get(position);
+            Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>> option = options.get(position);
             holder.setOptionSelectedListener(this);
             holder.bindUI(option);
         }
@@ -492,15 +496,16 @@ public class ProductCustomiseFragment extends Fragment {
             return options == null ? 0 : options.size();
         }
 
-        public void changeData(List<Map.Entry<OptionKey, ArrayList<OptionValue>>> optionsList) {
+        /*public void changeData(List<Map.Entry<OptionKey, ArrayList<OptionValue>>> optionsList) {*/
+        public void changeData(List<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> optionsList) {
             options = optionsList;
             Log.d("changeData ", "" + optionsList.size());
             notifyDataSetChanged();
         }
 
         @Override
-        public void onResult(Map.Entry<OptionKey, OptionValue> result) {
-            mProductActivity.addCustomisation(result.getKey(), result.getValue());
+        public void onResult(Map.Entry<OptionKey, /*OptionValue*/Swatches.MixedSwatch> result) {
+            //mProductActivity.addCustomisation(result.getKey(), result.getValue());
         }
     }
 

@@ -717,7 +717,7 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-    protected static void addToCart(Context context, ProductResponse response) throws IOException, JSONException {
+    /*protected static void addToCart(Context context, ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -763,7 +763,7 @@ public class ApiFactory extends ExtractResponse {
             response.success = false;
             response.responseCode = BasicResponse.IO_EXE;
         }
-    }
+    }*/
 
 
     protected static void addToCartNew(Context context, ProductResponse response) throws IOException, JSONException {

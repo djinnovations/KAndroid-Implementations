@@ -21,8 +21,8 @@ import java.util.Map;
 public class Product implements Serializable {
     public int id = -1;
     public int transid;
-    public int productId=-1;
-    public int userId = -1, collectionId=-1;
+    public int productId = -1;
+    public int userId = -1, collectionId = -1;
     public String name, description;
     public long unitPrice;
     public String priceUnit = " RS";
@@ -63,11 +63,11 @@ public class Product implements Serializable {
     }
 
     public long getTotalPriceNew() {
-        return (long)(pricePaid * orderQty);
+        return (long) (pricePaid * orderQty);
     }
 
     public String getDisplayPrice() {
-        if(/*priceUnit!=null &&*/ unitPrice>0)
+        if (/*priceUnit!=null &&*/ unitPrice > 0)
             return /*priceUnit + ". " +*/ String.valueOf(unitPrice);
         else
             return "";
@@ -85,7 +85,7 @@ public class Product implements Serializable {
     }
 
 
-    public static Product extractFromProductTemp(ProductTemp productTemp, boolean isLiked, int likecount){
+    public static Product extractFromProductTemp(ProductTemp productTemp, boolean isLiked, int likecount) {
 
         Product thisProduct = new Product(productTemp.getProductId());
         thisProduct.userId = productTemp.getUserId();
@@ -107,7 +107,7 @@ public class Product implements Serializable {
     public static Product extractFromCursor(Cursor cursor) {
         Product t = new Product(cursor.getInt(cursor.getColumnIndex(Tables.Products._ID)));
         t.userId = cursor.getInt(cursor.getColumnIndex(Tables.Products.USER_ID));
-        t.productId=cursor.getInt(cursor.getColumnIndex(Tables.Products._ID));
+        t.productId = cursor.getInt(cursor.getColumnIndex(Tables.Products._ID));
         t.collectionId = cursor.getInt(cursor.getColumnIndex(Tables.Products.COLLECTION_ID));
         t.name = cursor.getString(cursor.getColumnIndex(Tables.Products.NAME));
         t.description = cursor.getString(cursor.getColumnIndex(Tables.Products.DESCRIPTION));
@@ -130,7 +130,7 @@ public class Product implements Serializable {
         p.unitPrice = productInfo.optLong(Constants.JsonConstants.PRODUCTPRICE);
         p.quantity = 1;
         p.orderQty = productInfo.optInt("orderQty");
-        p.pricePaid=productInfo.optDouble("pricePaid");
+        p.pricePaid = productInfo.optDouble("pricePaid");
 
         // alternate customisation
         OptionValue v;
@@ -160,9 +160,9 @@ public class Product implements Serializable {
     }
 
     public void addDefaultCustomisation(ProductOptions productOptions) {
-        for (Map.Entry<OptionKey, ArrayList<OptionValue>> entry : productOptions.customisationOptions) {
+        /*for (Map.Entry<OptionKey, ArrayList<OptionValue>> entry : productOptions.customisationOptions) {
             if (!entry.getKey().isOptional)
                 addCustomisation(entry.getKey(), entry.getValue().get(0));
-        }
+        }*/
     }
 }

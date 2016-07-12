@@ -228,7 +228,7 @@ public class Api {
         }
     }
 
-    public static void addToCart(Context context, ProductResponse response, int retryCount) {
+    /*public static void addToCart(Context context, ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
             ApiFactory.addToCart(context, response);
@@ -238,7 +238,7 @@ public class Api {
             extractException(context, response, e);
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static void addToCartNew(Context context, ProductResponse response, int retryCount) {
         try {

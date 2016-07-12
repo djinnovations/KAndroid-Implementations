@@ -44,6 +44,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1067734393749-8g882h7rappp4jk2ub8ugl65uc5oc9g7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.goldadorn.main",
+            "certificate_hash": "2CC7B6080964AFEB74BB99FC53B6892C5FCE9C28"
+          }
+        },
+        {
           "client_id": "1067734393749-ojd6omgjp0f9a797918vpnic2k8uhovp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

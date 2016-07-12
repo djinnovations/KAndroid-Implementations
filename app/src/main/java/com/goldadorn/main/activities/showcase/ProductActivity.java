@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.activities.post.PostPollActivity;
@@ -53,6 +54,7 @@ import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
+import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -480,20 +482,24 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public void addToCartNew(final View cartBtn) {
 
+        if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()){
+            Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         //cartBtn.setEnabled(false);
         showOverLay("Adding to cart..", R.color.colorPrimary);
         UIController.addToCartNewProduct(mContext, mProduct, mProductInfo, mProductOptions,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                        logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
-                        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
                         //logEventsAnalytics(AppEventsConstants.EVENT_NAME_ADDED_TO_CART);
                         dismissOverLay();
-                       /* Toast.makeText(mContext,
-                                result.success ? "Added to cart successfully!" :
-                                        "Adding to cart failed.", Toast.LENGTH_LONG).show();*/
+                        if (result == null)
+                            return;
                         if (result.success) {
+                            logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
+                            Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
                             confirmedToCart(cartBtn);
                         }
                     }
