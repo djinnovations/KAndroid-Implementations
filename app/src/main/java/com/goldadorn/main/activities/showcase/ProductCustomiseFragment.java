@@ -76,8 +76,8 @@ public class ProductCustomiseFragment extends Fragment {
         //ArrayList<PriceValueModel> tempList = new ArrayList<>();
         mAdapter.addAdapter(pbda = new PriceBreakDownAdapter(false, ViewHolderFactory.TYPE.VHT_PBCA));
 
-        mAdapter.addAdapter(getTitleAdapter("Size"));//// TODO: 10-07-2016
-        mAdapter.addAdapter(sizeSpinnerAdapter = new SizeListSpinnerAdapter(getContext(), false));
+        /*mAdapter.addAdapter(getTitleAdapter("Size"));//// TODO: 10-07-2016
+        mAdapter.addAdapter(sizeSpinnerAdapter = new SizeListSpinnerAdapter(getContext(), false));*/
 
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
@@ -120,10 +120,10 @@ public class ProductCustomiseFragment extends Fragment {
                 pbda.setEnabled(false);
             }
 
-            if (/*options.sizeList.size() > 0*/true) {
+           /* if (*//*options.sizeList.size() > 0*//*true) {
                 sizeSpinnerAdapter.setEnabled(true);
                 sizeSpinnerAdapter.setData(getDataForSizeSpinner());//// TODO: 10-07-2016
-            } else sizeSpinnerAdapter.setEnabled(false);
+            } else sizeSpinnerAdapter.setEnabled(false);*/
         }
     }
 

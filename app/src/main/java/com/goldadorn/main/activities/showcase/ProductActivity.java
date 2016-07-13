@@ -301,12 +301,13 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    //http://demo.eremotus-portal.com/products/3045/3045-1.jpg
     private ArrayList<String> getVariousProductLooks(int lookcount) {
         if (lookcount == 0)
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
         String defaultUrl = mProduct.getImageUrl();
-        int indexToReplace = defaultUrl.indexOf('-') + 1;
+        int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/- 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {
             char[] toreplace = String.valueOf(i).toCharArray();
