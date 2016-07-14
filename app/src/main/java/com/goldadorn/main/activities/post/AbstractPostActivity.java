@@ -13,12 +13,19 @@ import android.widget.EditText;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.dj.model.FilterPostParams;
+import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.SocialPost;
+import com.goldadorn.main.utils.GalleryImageSelector;
 import com.goldadorn.main.utils.ImageSelector;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -208,9 +215,69 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             this.imageSelector = null;
     }
 
+    GalleryImageSelector ga1;
+    GalleryImageSelector ga2;
+    GalleryImageSelector ga3;
+    protected void setGalleryImageObjects(GalleryImageSelector ga1, GalleryImageSelector ga2, GalleryImageSelector ga3){
+        this.ga1 = ga1;
+        this.ga2 = ga2;
+        this.ga3 = ga3;
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (imageSelector != null)
-            imageSelector.onActivityResult(requestCode, resultCode, data);
+
+        /*if (imageSelector != null)
+            imageSelector.onActivityResult(requestCode, resultCode, data);*/
+
+        if (imageSelector != null) {
+            if (getPostType() == SocialPost.POST_TYPE_BEST_OF){
+                if (requestCode == GalleryImageSelector.PICK_SERVER_GALLERY && resultCode == RESULT_OK) {
+                    ArrayList<HashMap<String, Object>> listOfMapData = getListOfMapData(data);
+                    if (listOfMapData.size() == 3) {
+                        ga3.setDataFromOutside(listOfMapData.get(2), GalleryImageSelector.PICK_SERVER_GALLERY);
+                        ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
+                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                        rlimageholder2.setVisibility(View.VISIBLE);
+                        rlimageholder3.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    if (listOfMapData.size() <= 2) {
+                        ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
+                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                        rlimageholder2.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    if (listOfMapData.size() == 1) {
+                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                    }
+                }else imageSelector.onActivityResult(requestCode, resultCode, data);
+            }
+            else imageSelector.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private ArrayList<HashMap<String, Object>> getListOfMapData(Intent data) {
+        ArrayList<FilterProductListing> dataFromSelection =  data.getParcelableArrayListExtra(IntentKeys.FILTER_OBJ);
+        ArrayList<HashMap<String, Object>> dataMap = new ArrayList<>();
+        for (FilterProductListing params: dataFromSelection){
+            HashMap<String, Object> eachMap = new HashMap<>();
+            String path = ".."+params.getImage().substring(params.getImage().indexOf("/product"),params.getImage().length());
+            eachMap.put(GalleryImageSelector.KEY_PATH, path);
+            eachMap.put(GalleryImageSelector.KEY_PREVIEW, params.getImage());
+            eachMap.put(GalleryImageSelector.KEY_PRICE, params.getProductPrice());
+            eachMap.put(GalleryImageSelector.KEY_COLLID, params.getCollId());
+            eachMap.put(GalleryImageSelector.KEY_DESID, params.getDesgnId());
+            eachMap.put(GalleryImageSelector.KEY_PRODID, params.getProdId());
+            dataMap.add(eachMap);
+        }
+        return dataMap;
+    }
+
+    View rlimageholder2;
+    View rlimageholder3;
+    protected void setHolders(View rlPlaceHolder2, View rlPlaceHolder3){
+        rlimageholder2 = rlPlaceHolder2;
+        rlimageholder3 = rlPlaceHolder3;
     }
 }
 

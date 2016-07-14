@@ -17,11 +17,6 @@ import java.io.Serializable;
  */
 public class FilterProductListing extends BaseObservable implements Parcelable,IConfigurableObject {
 
-    private int prodId;
-    private int collId;
-    private int desgnId;
-    private String prodName;
-
     @Bindable
     public String getImage() {
         return image;
@@ -30,8 +25,6 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     public void setImage(String image) {
         this.image = image;
     }
-
-    private String image;
 
     @Bindable
     public String getLikeCount() {
@@ -43,9 +36,6 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         notifyPropertyChanged(BR.likeCount);
     }
 
-    private String likeCount;
-
-
     public String getPrice() {
         return price;
     }
@@ -54,11 +44,6 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         this.price = price;
 
     }
-
-    private String price;
-    private int productPrice;
-    private int aspectRatio;
-    private String productPriceUnits;
 
     public void config()
     {
@@ -124,6 +109,17 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     }
 
 
+    private String price;
+    private int productPrice;
+    private int aspectRatio;
+    private String productPriceUnits;
+    private int prodId;
+    private int collId;
+    private int desgnId;
+    private String prodName;
+    private String image;
+    private String likeCount;
+
     @Override
     public int describeContents() {
         return 0;
@@ -138,6 +134,9 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         dest.writeInt(this.productPrice);
         dest.writeInt(this.aspectRatio);
         dest.writeString(this.productPriceUnits);
+        dest.writeString(this.price);
+        dest.writeString(this.image);
+        dest.writeString(this.likeCount);
     }
 
     public FilterProductListing() {
@@ -151,6 +150,9 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         this.productPrice = in.readInt();
         this.aspectRatio = in.readInt();
         this.productPriceUnits = in.readString();
+        this.price = in.readString();
+        this.image = in.readString();
+        this.likeCount = in.readString();
     }
 
     public static final Parcelable.Creator<FilterProductListing> CREATOR = new Parcelable.Creator<FilterProductListing>() {

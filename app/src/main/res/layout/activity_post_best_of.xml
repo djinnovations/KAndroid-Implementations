@@ -118,8 +118,10 @@
                         android:layout_marginBottom="4dp"
                         android:layout_marginRight="4dp"
                         android:layout_weight="1"
+                        android:id="@+id/rlPlaceHolder2"
                         android:background="@drawable/image_palce_holder_background_dark_border"
-                        android:cropToPadding="true">
+                        android:cropToPadding="true"
+                        android:visibility="invisible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -171,8 +173,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
+                        android:id="@+id/rlPlaceHolder3"
                         android:background="@drawable/image_palce_holder_background_dark_border"
-                        android:cropToPadding="true">
+                        android:cropToPadding="true"
+                        android:visibility="invisible">
 
                         <TextView
                             android:layout_width="wrap_content"

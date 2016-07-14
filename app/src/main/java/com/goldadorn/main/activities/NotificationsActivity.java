@@ -102,6 +102,7 @@ public class NotificationsActivity extends BaseActivity {
     }
 
     private AppTourGuideHelper mTourHelper;
+
     private void tourThisScreen() {
         mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
         new Handler().postDelayed(new Runnable() {
@@ -125,6 +126,8 @@ public class NotificationsActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lastClicked = mAdapter.getItem(position);
                 int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
+                if (actionTypeInt == 5)
+                    return;
                 int idTouse = actionTypeInt == 5 ? getApp().getUser().id : Integer.parseInt(lastClicked.getPostId());
                 Map<String, Integer> params = new HashMap<>();
                 params.put("type", actionTypeInt);
@@ -214,9 +217,9 @@ public class NotificationsActivity extends BaseActivity {
                         firstTime = false;
                     } else if (offset > offsetMain) {
                         mAdapter.addNotifyData(notificationData);
-                    } else if (offset == offsetMain) {
+                    } /*else if (!canContinueToPaginate()) {
                         seenAllNotification = true;
-                    }
+                    }*/
                     offsetMain = offset;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -350,9 +353,14 @@ public class NotificationsActivity extends BaseActivity {
         @Override
         public void onLoadMore() {
             // Load next page of data (e.g. network or database)
-            loading = true;
             Log.d("djpg", "onLoadMore");
-            requestNotificationPaginate(offsetMain);
+            if (canContinueToPaginate()) {
+                loading = true;
+                requestNotificationPaginate(offsetMain);
+            } else {
+                loading = false;
+                paginate.setHasMoreDataToLoad(false);
+            }
         }
 
         @Override
@@ -365,7 +373,7 @@ public class NotificationsActivity extends BaseActivity {
         @Override
         public boolean hasLoadedAllItems() {
             // Indicate whether all data (pages) are loaded or not
-            Log.d("djpg", "hasLoadedAllItems: ");
+            Log.d("djpg", "hasLoadedAllItems: "+seenAllNotification);
             return seenAllNotification;
         }
     };
@@ -431,39 +439,39 @@ public class NotificationsActivity extends BaseActivity {
             String dateTime = dataObject.getDateTime();
             boolean botPost = dataObject.isBotPost();
 
-            if (!TextUtils.isEmpty(peopleImageUrl)) {
-                try {
+            /*if (peopleImageUrl!=null) {*/
+            try {
                     /*Picasso.with(context)
                             .load(URLHelper.parseImageURL(peopleImageUrl))
                             //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
                             .into(holder.person);*/
-                    Glide.with(NotificationsActivity.this)
-                            .load(URLHelper.parseImageURL(peopleImageUrl))
-                            //.centerCrop()
-                            .placeholder(R.drawable.vector_image_place_holder_profile_dark)
-                            .crossFade()
-                            .into(holder.person);
-                } catch (Exception ex) {
+                Glide.with(NotificationsActivity.this)
+                        .load(URLHelper.parseImageURL(peopleImageUrl))
+                        //.centerCrop()
+                        .placeholder(R.drawable.vector_image_place_holder_profile)
+                        .crossFade()
+                        .into(holder.person);
+            } catch (Exception ex) {
                     /*Picasso.with(context)
                             .load(R.drawable.vector_image_place_holder_profile_dark)
                             .into(holder.person);*/
-                    /*Glide.with(NotificationsActivity.this)
-                            .load(R.drawable.vector_image_place_holder_profile_dark)
-                            //.centerCrop()
-                            //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
-                            .crossFade()
-                            .into(holder.person);*/
-                    holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
-                }
-            } else {
-                holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
-                /*Glide.with(NotificationsActivity.this)
-                        .load(R.drawable.vector_image_place_holder_profile_dark)
+                Glide.with(NotificationsActivity.this)
+                        .load(R.drawable.vector_image_place_holder_profile)
                         //.centerCrop()
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
                         .crossFade()
-                        .into(holder.person);*/
+                        .into(holder.person);
+                // holder.person.setImageResource(R.drawable.vector_image_place_holder_profile_dark);
             }
+           /* } else {
+                //holder.person.setImageResource(R.drawable.vector_image_place_holder_profile);
+                Glide.with(NotificationsActivity.this)
+                        .load(R.drawable.vector_image_place_holder_profile)
+                        //.centerCrop()
+                        //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                        .crossFade()
+                        .into(holder.person);
+            }*/
 
             holder.ivPostImage3.setVisibility(View.GONE);
             holder.ivPostImage2.setVisibility(View.GONE);
@@ -509,6 +517,15 @@ public class NotificationsActivity extends BaseActivity {
         }
     }
 
+
+    private boolean canContinueToPaginate() {
+        if (offsetMain % 11 == 0)
+            return true;
+        else {
+            seenAllNotification = true;
+            return false;
+        }
+    }
 
     private String createString(JSONObject object) {
         //Log.d("djnotify", "notification list obj resonse - createString: "+object);

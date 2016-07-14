@@ -981,8 +981,10 @@ public class ProductActivity extends BaseDrawerActivity {
                         (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(
                                 "" + UISTATE_PRODUCT);
                 if (mProInfoFragment != null) mProInfoFragment.bindCollectionUI(mCollection);
-                mOverlayVH.mProductCollection.setText(mCollection.name.trim());
-                UiRandomUtils.underLineTv(mOverlayVH.mProductCollection, 0, mOverlayVH.mProductCollection.length());
+                if (!TextUtils.isEmpty(mCollection.name)) {
+                    mOverlayVH.mProductCollection.setText(mCollection.name.trim());
+                    UiRandomUtils.underLineTv(mOverlayVH.mProductCollection, 0, mOverlayVH.mProductCollection.length());
+                }
             } else {
                 mOverlayVH.mProductCollection.setText("");
             }

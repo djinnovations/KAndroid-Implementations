@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -142,8 +143,10 @@ public class ProductInfoFragment extends Fragment {
         });
 
         if (mUser != null) {
-            mProductOwnerName.setText(mUser.name.trim());
-            UiRandomUtils.underLineTv(mProductOwnerName, 0, mProductOwnerName.length());
+            if (!TextUtils.isEmpty(mUser.name)) {
+                mProductOwnerName.setText(mUser.name.trim());
+                UiRandomUtils.underLineTv(mProductOwnerName, 0, mProductOwnerName.length());
+            }
             followButton.setSelected(mUser.isFollowed);
             followButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -413,8 +416,10 @@ public class ProductInfoFragment extends Fragment {
 
     public void bindCollectionUI(Collection collection) {
         if (collection != null) {
-            mCollectionName.setText(collection.name.trim());
-            UiRandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
+            if (!TextUtils.isEmpty(collection.name)) {
+                mCollectionName.setText(collection.name.trim());
+                UiRandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
+            }
             mCollectionStyle.setText(collection.category);
         } else {
             mCollectionName.setVisibility(View.GONE);

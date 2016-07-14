@@ -11,12 +11,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
@@ -27,6 +32,8 @@ import com.nineoldandroids.animation.Animator;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -55,13 +62,19 @@ public class ServerProducts extends BaseActivity {
 
     @Bind(R.id.sortBestSelling)
     Button sortBestSelling;
+
     @OnClick(R.id.sortBestSelling)
-    void onSortBestSelling(){updateSort(sortBestSelling);}
+    void onSortBestSelling() {
+        updateSort(sortBestSelling);
+    }
 
     @Bind(R.id.sortPrice)
     Button sortPrice;
+
     @OnClick(R.id.sortPrice)
-    void onSortPrice(){updateSort(sortPrice);}
+    void onSortPrice() {
+        updateSort(sortPrice);
+    }
 
     @Bind(R.id.sortNew)
     Button sortNew;
@@ -70,13 +83,13 @@ public class ServerProducts extends BaseActivity {
     View filterPanel;
 
 
-
-
     @OnClick(R.id.sortNew)
-    void onSortNew(){updateSort(sortNew);}
+    void onSortNew() {
+        updateSort(sortNew);
+    }
 
     @OnClick(R.id.closeFilter)
-    void onCloseFilter(){
+    void onCloseFilter() {
         YoYo.with(Techniques.FadeOutDown).duration(300).withListener(new Animator.AnimatorListener() {
 
             @Override
@@ -102,36 +115,107 @@ public class ServerProducts extends BaseActivity {
 
 
     Button lastSorted;
+
     private void updateSort(Button btn) {
-        if(lastSorted!=btn) {
+        if (lastSorted != btn) {
             lastSorted.setSelected(false);
             lastSorted.setAlpha(Float.parseFloat(".3"));
             btn.setSelected(true);
             btn.setAlpha(Float.parseFloat("1"));
             lastSorted = btn;
-            if (btn ==sortBestSelling)
+            if (btn == sortBestSelling)
                 sort = SORT_SOLD_UNITS;
-            else if (btn ==sortNew)
+            else if (btn == sortNew)
                 sort = SORT_DATE_ADDED;
-            else if (btn ==sortPrice)
+            else if (btn == sortPrice)
                 sort = SORT_PROD_DEFAULT_PRICE;
-            refreshView(filters,sort);
+            refreshView(filters, sort);
         }
     }
 
+    private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
+    ArrayList<FilterProductListing> tosendbackList;
+
     @Subscribe
-    public void onEvent(FilterProductListing data)
-    {
-        processItem(data);
+    public void onEvent(FilterProductListing data) {
+        if (isCallerPTB) {
+            boolean status = previouslySelected.add(data);
+            if (!status) {
+                previouslySelected.remove(data);
+                tosendbackList.remove(data);
+            } else tosendbackList.add(data);
+            showTitle(previouslySelected.size());
+        } else{
+            ArrayList<FilterProductListing> dataList =  new ArrayList<FilterProductListing>();
+            dataList.add(0, data);
+            processItem(dataList);
+        }
     }
-    public void processItem(FilterProductListing data) {
+
+    protected void processItem(ArrayList<FilterProductListing> data) {
 
     }
 
-    public static final String SORT_PROD_DEFAULT_PRICE ="prodDefaultPrice";
-    public static final String SORT_DATE_ADDED="dateAdded";
-    public static final String SORT_SOLD_UNITS="soldUnits";
-    public String sort=SORT_SOLD_UNITS;
+    View.OnClickListener mSelectionDone = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (previouslySelected.size() < 2){
+                Toast.makeText(getApplicationContext(),"Select atleast two products to continue", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            processItem(tosendbackList);//// TODO: 13-07-2016  after done is clicked
+        }
+    };
+
+    public static final String SORT_PROD_DEFAULT_PRICE = "prodDefaultPrice";
+    public static final String SORT_DATE_ADDED = "dateAdded";
+    public static final String SORT_SOLD_UNITS = "soldUnits";
+    public String sort = SORT_SOLD_UNITS;
+
+    public static boolean isCallerPTB = false;
+
+    private void showTitle(int count) {
+        _layTitle.bringToFront();
+        ((TextView) _layTitle.findViewById(R.id.tvSelectedItems)).setText("Selected products: " + count);
+        if (_layTitle.getVisibility() == View.GONE) {
+            _layTitle.setVisibility(View.VISIBLE);
+            _layTitle.setAlpha(0.6f);
+            try {
+                startAnim(_layTitle, R.anim.anim_dialog_fall_down);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        /*new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    startAnim(_layTitle, R.anim.anim_dialog_go_up);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            _layTitle.setVisibility(View.GONE);
+                            _layTitle.setAlpha(0.3f);
+                        }
+                    }, 600);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 3000);*/
+
+    }
+
+    private void startAnim(View view, int animResID) throws Exception {
+
+        Animation anim = AnimationUtils.loadAnimation(getBaseContext(), animResID);
+        view.startAnimation(anim);
+    }
+
+    @Bind(R.id.layTitle)
+    View _layTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +223,7 @@ public class ServerProducts extends BaseActivity {
         setContentView(R.layout.activity_image_selector_holder2);
         ButterKnife.bind(this);
 
+        isCallerPTB = false;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("Our Products");
@@ -146,54 +231,58 @@ public class ServerProducts extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
 
+        if (getIntent() != null)
+            isCallerPTB = getIntent().getBooleanExtra(IntentKeys.CALLER_PTB, false);
+        _layTitle.setVisibility(View.GONE);
+        _layTitle.setAlpha(0.3f);
+        (_layTitle.findViewById(R.id.tvDone)).setOnClickListener(mSelectionDone);
+        tosendbackList = new ArrayList<>();
+
         sortBestSelling.setSelected(true);
         sortBestSelling.setAlpha(Float.parseFloat("1"));
         sortNew.setAlpha(Float.parseFloat(".3"));
         sortPrice.setAlpha(Float.parseFloat(".3"));
-        lastSorted=sortBestSelling;
-        refreshView(filters,sort);
+        lastSorted = sortBestSelling;
+        refreshView(filters, sort);
 
-        RecyclerView selectorRecyclerView= (RecyclerView) findViewById(R.id.recyclerView);
-        selectorHelper= new SelectorHelper(this,selectorRecyclerView);
+        RecyclerView selectorRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        selectorHelper = new SelectorHelper(this, selectorRecyclerView);
         selectorHelper.onRemoveListner(onRemoveListner);
         TypefaceHelper.setFont(applyFilters);
     }
 
 
-    SelectorHelper.OnRemoveListner onRemoveListner = new SelectorHelper.OnRemoveListner()
-    {
+    SelectorHelper.OnRemoveListner onRemoveListner = new SelectorHelper.OnRemoveListner() {
         @Override
         public void remove(Object o) {
             for (Parcelable filter : filters) {
-                if(o instanceof Parcelable && (Parcelable)o==filter)
-                {
-                    filters.remove((Parcelable)o);
+                if (o instanceof Parcelable && (Parcelable) o == filter) {
+                    filters.remove((Parcelable) o);
 
-                    refreshView(filters,sort);
+                    refreshView(filters, sort);
                     break;
                 }
             }
         }
     };
-    private void refreshView(ArrayList<Parcelable> filters,String sort) {
-        if(filters!=null)
-        {
-            this.filters=filters;
+
+    private void refreshView(ArrayList<Parcelable> filters, String sort) {
+        if (filters != null) {
+            this.filters = filters;
             selectorHelper.removeAll();
             selectorHelper.addAll(filters);
-            if(filters.size()==0)
+            if (filters.size() == 0)
                 setTitle("Our Products");
             else
                 setTitle("Your Selections");
-        }
-        else
+        } else
             setTitle("Our Products");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(),"",
+        NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(), "",
                 NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);
         mActivePage = (ProductsFragment) BaseFragment.newInstance(navigationObject);
-        mActivePage.setFilters(filters,sort);
+        mActivePage.setFilters(filters, sort);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
     }
 
@@ -202,29 +291,32 @@ public class ServerProducts extends BaseActivity {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
-    @OnClick(R.id.applyFilters)void applyFilters()
-    {
+
+    @OnClick(R.id.applyFilters)
+    void applyFilters() {
         Intent intent = new Intent(this, FilterSelector.class);
-        if(filters!=null)
-            intent.putParcelableArrayListExtra("filters",filters);
+        if (filters != null)
+            intent.putParcelableArrayListExtra("filters", filters);
         startActivityForResult(intent, FILTER_APPLY);
     }
+
     ArrayList<Parcelable> filters;
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==FILTER_APPLY && resultCode== Activity.RESULT_OK)
-        {
+        if (requestCode == FILTER_APPLY && resultCode == Activity.RESULT_OK) {
             final ArrayList<Parcelable> filters = data.getParcelableArrayListExtra("filters");
             Handler h = new Handler();
-            Runnable r= new Runnable() {
+            Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    refreshView(filters,sort);
+                    refreshView(filters, sort);
                 }
             };
-            h.postDelayed(r,200);
+            h.postDelayed(r, 200);
 
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

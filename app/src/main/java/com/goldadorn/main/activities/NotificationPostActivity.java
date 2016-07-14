@@ -942,7 +942,8 @@ public class NotificationPostActivity extends BaseActivity{
 
             @Bind(R.id.div)
             View recoDiv;
-
+            @Bind(R.id.ivDropdown)
+            ImageView ivDropdown;
 
             private View.OnClickListener itemClick = new View.OnClickListener() {
                 public void onClick(View v) {
@@ -1036,7 +1037,7 @@ public class NotificationPostActivity extends BaseActivity{
                 likePostButton.setOnClickListener(itemClick);
                 sharePostButton.setOnClickListener(itemClick);
                 commentPostButton.setOnClickListener(itemClick);
-
+                ivDropdown.setVisibility(View.INVISIBLE);
                 TypefaceHelper.setFont(userName, age, details, recomandationLabel);
 
                 TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), likesLabel, pollLabel, commentsLabel, shareLabel);

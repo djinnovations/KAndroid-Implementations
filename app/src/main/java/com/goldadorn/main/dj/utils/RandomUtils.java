@@ -137,7 +137,7 @@ public class RandomUtils {
         intent.putExtra(IntentKeys.DESIGNER_ID, userId);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         activity.startActivity(intent);
-        activity.finish();
+        //activity.finish();
     }
 
     public static void launchCollectionScreen(Activity activity, int desId, int collId) {
@@ -212,6 +212,6 @@ public class RandomUtils {
             ((ProductActivity) activity).dismissOverLay();
         }
         activity.startActivity(intent);
-        activity.finish();
+        //activity.finish();
     }
 }

@@ -134,6 +134,10 @@ public class PostBestOfActivity extends AbstractPostActivity {
         return null;
     }
 
+    @Bind(R.id.rlPlaceHolder2)
+    View rlPlaceHolder2;
+    @Bind(R.id.rlPlaceHolder3)
+    View rlPlaceHolder3;
     /*@Override
     protected List<Integer> getCollIds() {
 
@@ -245,6 +249,13 @@ public class PostBestOfActivity extends AbstractPostActivity {
         imageSelector2.setMaxSize(maxImageSize);
         imageSelector3 =  new GalleryImageSelector(this,this,previewIamge3,trigger3);
         imageSelector3.setMaxSize(maxImageSize);
+        imageSelector1.setIsPtbCall(true);
+        setGalleryImageObjects(imageSelector1, imageSelector2, imageSelector3);
+        rlPlaceHolder2.setVisibility(View.INVISIBLE);
+        rlPlaceHolder3.setVisibility(View.INVISIBLE);
+        setHolders(rlPlaceHolder2, rlPlaceHolder3);
+        /*imageSelector2.setIsPtbCall(true);
+        imageSelector3.setIsPtbCall(true);*/
     }
 
 

@@ -28,6 +28,7 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.activities.post.SelectServerImageActivity;
+import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.People;
 import com.squareup.picasso.Picasso;
 
@@ -36,6 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
+import java.util.HashMap;
 
 /**
  * Created by bhavinpadhiyar on 2/22/16.
@@ -79,6 +81,11 @@ public class GalleryImageSelector extends ImageSelector
                 new Item("Select from our collections", R.drawable.vector_icon_about)
         };
         return items;
+    }
+
+    private boolean isPtb = false;
+    public void setIsPtbCall(boolean isPtb){
+        this.isPtb = isPtb;
     }
 
     public void openStandardPopup()
@@ -143,6 +150,7 @@ public class GalleryImageSelector extends ImageSelector
         }else {
             Intent intent = new Intent(activity, PickServerProducts.class);
             intent.putExtra("backEnabled", true);
+            intent.putExtra(IntentKeys.CALLER_PTB, isPtb);
             activity.startActivityForResult(intent, PICK_SERVER_GALLERY);
         }
     }
@@ -157,6 +165,7 @@ public class GalleryImageSelector extends ImageSelector
     public GalleryImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack, ImageView holder, View triger)
     {
         super(activity,registerImageUploadCallBack,holder,triger);
+        isPtb = false;
     }
     public GalleryImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack, ImageView holder)
     {
@@ -166,20 +175,44 @@ public class GalleryImageSelector extends ImageSelector
      {
         if (requestCode==PICK_SERVER_GALLERY && resultCode == Activity.RESULT_OK)
         {
-            path=data.getStringExtra("PATH");
-            price=data.getIntExtra("PRICE", -1);
-            collId = data.getIntExtra("COLLID", -1);
-            desId = data.getIntExtra("DESID", -1);
-            productId = data.getIntExtra("PRODID", -1);
-            file=null;
-            selectedMethod = PICK_SERVER_GALLERY;
+            if (!isPtb) {
+                path = data.getStringExtra("PATH");
+                price = data.getIntExtra("PRICE", -1);
+                collId = data.getIntExtra("COLLID", -1);
+                desId = data.getIntExtra("DESID", -1);
+                productId = data.getIntExtra("PRODID", -1);
+                file = null;
+                selectedMethod = PICK_SERVER_GALLERY;
 
-            showPreview(data.getStringExtra("PREVIEW"));
-            registerImageUploadCallBack.unRegisterImageUploadCallBack(this);
+                showPreview(data.getStringExtra("PREVIEW"));
+                registerImageUploadCallBack.unRegisterImageUploadCallBack(this);
+            }
         }
         else
             super.onActivityResult(requestCode, resultCode,data);
     }
+
+    public static final String KEY_PATH = "PATH";
+    public static final String KEY_PRICE = "PRICE";
+    public static final String KEY_COLLID = "COLLID";
+    public static final String KEY_DESID = "DESID";
+    public static final String KEY_PRODID = "PRODID";
+    public static final String KEY_PREVIEW = "PREVIEW";
+
+    public void setDataFromOutside(HashMap<String, Object> dataMap, int requestCode){
+        if (requestCode==PICK_SERVER_GALLERY ) {
+            path= (String) dataMap.get(KEY_PATH);
+            price= (Integer) dataMap.get(KEY_PRICE);
+            collId = (Integer) dataMap.get(KEY_COLLID);
+            desId = (Integer) dataMap.get(KEY_DESID);
+            productId = (Integer) dataMap.get(KEY_PRODID);
+            file=null;
+            selectedMethod = PICK_SERVER_GALLERY;
+            showPreview((String) dataMap.get(KEY_PREVIEW));
+            registerImageUploadCallBack.unRegisterImageUploadCallBack(this);
+        }
+    }
+
     public void imageLoaded(Bitmap bitmap,File file,int method) {
         super.imageLoaded(bitmap,file,method);
         if(method!=PICK_SERVER_GALLERY)
@@ -189,7 +222,7 @@ public class GalleryImageSelector extends ImageSelector
             triger.setVisibility(View.VISIBLE);
     }
 
-    private void showPreview(String preview) {
+    public void showPreview(String preview) {
         if(holder!=null)
             Picasso.with(activity).load(preview).into(holder);
 

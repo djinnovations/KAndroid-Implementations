@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.goldadorn.main.BR;
@@ -39,112 +41,144 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by bhavinpadhiyar on 3/2/16.
  */
-public class ProductsFragment extends ResponsiveView implements DefaultProjectDataManager.IDataManagerDelegate
-{
+public class ProductsFragment extends ResponsiveView implements DefaultProjectDataManager.IDataManagerDelegate {
     protected RecyclerView.ItemDecoration createItemDecoration() {
         return new DividerDecoration(this.getActivity());
     }
+
+    private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
+
     public void onItemClick(Object baseObject) {
-        FilterProductListing file = (FilterProductListing)baseObject;
-        EventBus.getDefault().post(file);
+        FilterProductListing file = (FilterProductListing) baseObject;
+        if (ServerProducts.isCallerPTB) {
+            boolean status = previouslySelected.add(file);
+            if (!status)
+                previouslySelected.remove(file);
+            if (canProceed(file)) {
+                //// TODO: 13-07-2016  for selection made ui change;
+                EventBus.getDefault().post(file);
+            }
+        } else EventBus.getDefault().post(file);
+
     }
 
+
+    private boolean canCheckSelected = false;
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemClick(parent, view, position, id);
+        if (ServerProducts.isCallerPTB) {
+            if (canCheckSelected) {
+                View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
+                View ivSelectedSymbol = singleItemView.findViewById(R.id.ivSelectedSymbol);
+                ivSelectedSymbol.setVisibility(ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
+            }
+        }
+    }
+
+
     protected Application getApp() {
-        BaseActivity baseActivity =(BaseActivity)getActivity();
+        BaseActivity baseActivity = (BaseActivity) getActivity();
         return baseActivity.getApp();
     }
+
+    private boolean canProceed(FilterProductListing file) {
+        if (previouslySelected.size() == 4) {
+            canCheckSelected = false;
+            previouslySelected.remove(file);
+            Toast.makeText(getContext(), "You can only select a maximum of three products", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        canCheckSelected = true;
+        return true;
+    }
+
     public void onCallEnd(List<?> dataList, boolean isRefreshData) {
-        super.onCallEnd(dataList,isRefreshData);
+        super.onCallEnd(dataList, isRefreshData);
         loadLikes(dataList);
     }
 
 
-    private void getScissoredListBasedOnIsEnabledFlag(){
-     //// TODO: 22-06-2016
+    private void getScissoredListBasedOnIsEnabledFlag() {
+        //// TODO: 22-06-2016
     }
 
     private void loadLikes(final List<?> dataList) {
-        if(dataList!=null && dataList.size()!=0)
-        {
-            String list="";
+        if (dataList != null && dataList.size() != 0) {
+            String list = "";
             for (int i = 0; i < dataList.size(); i++) {
-                if(dataList.get(i) instanceof FilterProductListing)
-                {
-                    FilterProductListing item = (FilterProductListing)dataList.get(i);
-                    list +=item.getProdId()+"";
-                    if(i!=(dataList.size()-1))
-                    {
-                        list +=",";
+                if (dataList.get(i) instanceof FilterProductListing) {
+                    FilterProductListing item = (FilterProductListing) dataList.get(i);
+                    list += item.getProdId() + "";
+                    if (i != (dataList.size() - 1)) {
+                        list += ",";
                     }
                 }
             }
 
 
-
-
             try {
                 LoadDataAQuery data = new LoadDataAQuery(getActivity());
                 data.setCookies(getApp().getCookies());
-                LoadDataAQuery.Result result= new LoadDataAQuery.Result()
-                {
+                LoadDataAQuery.Result result = new LoadDataAQuery.Result() {
                     @Override
                     public void done(String url, Object json, Object status) {
                         String resp = (String) json;
-                        Log.d("djfilter","filter response: "+resp);
-                            if(json!=null && json instanceof String) {
-                                json = ResultFormating.formating((String) json);
-                                Gson gson = new Gson();
-                                ProductLikeData data= gson.fromJson((String) json,ProductLikeData.class);
-                                if(data.data!=null && data.data.size()!=0)
-                                {
-                                    FilterProductListing filterProductListing;
-                                    for (ProductLikeData.ProductLike productLike : data.data) {
-                                        for (int i = 0; i < dataList.size(); i++) {
-                                            if(dataList.get(i) !=null && dataList.get(i) instanceof FilterProductListing)
-                                            {
-                                                filterProductListing= (FilterProductListing)dataList.get(i);
-                                                if(filterProductListing.getProdId()==productLike.getProductId())
-                                                {
-                                                    filterProductListing.setLikeCount(productLike.getLikeCount()+"");
-                                                    break;
-                                                }
+                        Log.d("djfilter", "filter response: " + resp);
+                        if (json != null && json instanceof String) {
+                            json = ResultFormating.formating((String) json);
+                            Gson gson = new Gson();
+                            ProductLikeData data = gson.fromJson((String) json, ProductLikeData.class);
+                            if (data.data != null && data.data.size() != 0) {
+                                FilterProductListing filterProductListing;
+                                for (ProductLikeData.ProductLike productLike : data.data) {
+                                    for (int i = 0; i < dataList.size(); i++) {
+                                        if (dataList.get(i) != null && dataList.get(i) instanceof FilterProductListing) {
+                                            filterProductListing = (FilterProductListing) dataList.get(i);
+                                            if (filterProductListing.getProdId() == productLike.getProductId()) {
+                                                filterProductListing.setLikeCount(productLike.getLikeCount() + "");
+                                                break;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                    }
                 };
 
 
-                Map<String,Object> params= new HashMap<>();
+                Map<String, Object> params = new HashMap<>();
 
-                list = "{\"prodIds\":["+list+"]}";
-                params.put(AQuery.POST_ENTITY,new StringEntity(list));
+                list = "{\"prodIds\":[" + list + "]}";
+                params.put(AQuery.POST_ENTITY, new StringEntity(list));
                 String url = URLHelper.getInstance().getProductsLikes();
-                data.perform(url,result,params,"");
+                data.perform(url, result, params, "");
 
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
+
     ArrayList<Parcelable> filters;
     String sort;
+
     public void setFilters(ArrayList<Parcelable> filters, String sort) {
-        this.filters= filters;
-        this.sort =sort;
+        this.filters = filters;
+        this.sort = sort;
     }
 
-    public class ProductLikeData
-    {
+    public class ProductLikeData {
         public List<ProductLike> data;
-        public class ProductLike
-        {
+
+        public class ProductLike {
             private int productId;
             private int likeCount;
 
@@ -167,30 +201,30 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     }
 
 
-    protected DataManager createDataManager()
-    {
-        return new DataManager(getActivity(),this,getApp().getCookies());
+    protected DataManager createDataManager() {
+        return new DataManager(getActivity(), this, getApp().getCookies());
     }
+
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
         String param = getParam(offset);
 
         try {
-            params.put(AQuery.POST_ENTITY,new StringEntity(param));
-        }catch (Exception e){}
+            params.put(AQuery.POST_ENTITY, new StringEntity(param));
+        } catch (Exception e) {
+        }
 
         return params;
     }
 
-    private String getParam(int offset)
-    {
-        if(offset!=-1) {
+    private String getParam(int offset) {
+        if (offset != -1) {
             Log.d("dj", "getParams - ProductsFrag ---offset != -1");
             if (filters == null || filters.size() == 0) {
                 Log.d("dj", "getParams - ProductsFrag--filters null or size == 0");
                 String val = "{\"offset\" :" + offset;
                 val += ",\"sort\" : \"" + sort + "\"}";
-                Log.d("dj", "getParams - val: "+val);
+                Log.d("dj", "getParams - val: " + val);
                 return val;
             } else {
                 Log.d("dj", "getParams - ProductsFrag ---else filter not null");
@@ -222,7 +256,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             priceRanges += ",";
                     }
                     priceRanges += "]";
-                    Log.d("dj", "getParams - priceRanges: "+priceRanges);
+                    Log.d("dj", "getParams - priceRanges: " + priceRanges);
                 }
 
                 String prodTypes = null;
@@ -234,7 +268,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             prodTypes += ",";
                     }
                     prodTypes += "]";
-                    Log.d("dj", "getParams - prodTypes: "+prodTypes);
+                    Log.d("dj", "getParams - prodTypes: " + prodTypes);
                 }
 
                 String desgnIds = null;
@@ -246,7 +280,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             desgnIds += ",";
                     }
                     desgnIds += "]";
-                    Log.d("dj", "getParams - desgnIds: "+desgnIds);
+                    Log.d("dj", "getParams - desgnIds: " + desgnIds);
                 }
 
                 String collIds = null;
@@ -258,7 +292,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                             collIds += ",";
                     }
                     collIds += "]";
-                    Log.d("dj", "getParams - collIds: "+collIds);
+                    Log.d("dj", "getParams - collIds: " + collIds);
                 }
                 if (priceRanges != null)
                     val += priceRanges + ",";
@@ -270,7 +304,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                     val += collIds + ",";
                 val += "\"offset\" : " + offset;
                 val += ",\"sort\" : \"" + sort + "\"}";
-                Log.d("dj", "getParams - final built string param: "+val);
+                Log.d("dj", "getParams - final built string param: " + val);
                 /*
                 {
                     "priceRanges":
@@ -297,46 +331,40 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     private int offset = 0;
 
-    public class DataManager extends DefaultProjectDataManager
-    {
-        public DataManager(Context context, IDataManagerDelegate delegate,List<Cookie> cookies)
-        {
-            super(context,delegate,cookies);
+    public class DataManager extends DefaultProjectDataManager {
+        public DataManager(Context context, IDataManagerDelegate delegate, List<Cookie> cookies) {
+            super(context, delegate, cookies);
             setIsConfigurableObject(true);
         }
+
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
         }
+
         protected boolean isRefreshPage(PageData pageData, String url) {
             return false;
         }
-        protected void updatePagingData(BaseDataParser loadedDataVO)
-        {
-            if(loadedDataVO!=null && loadedDataVO instanceof Result)
-            {
+
+        protected void updatePagingData(BaseDataParser loadedDataVO) {
+            if (loadedDataVO != null && loadedDataVO instanceof Result) {
                 Result result = (Result) loadedDataVO;
-                if(result.offset!=-1 && offset != result.offset) {
+                if (result.offset != -1 && offset != result.offset) {
                     offset = result.offset;
                     pageData.curruntPage += 1;
                     pageData.totalPage += 1;
-                }
-                else
-                {
+                } else {
                     offset = result.offset;
-                    pageData.totalPage=pageData.curruntPage;
+                    pageData.totalPage = pageData.curruntPage;
                 }
-            }
-            else
-            {
-                pageData.totalPage=pageData.curruntPage;
+            } else {
+                pageData.totalPage = pageData.curruntPage;
             }
 
         }
     }
 
-    public String getNextDataURL(PageData pageData)
-    {
-        if(pageData.curruntPage!=pageData.totalPage)
+    public String getNextDataURL(PageData pageData) {
+        if (pageData.curruntPage != pageData.totalPage)
             return getApp().getUrlHelper().getApplyfilterServiceURL();
         return null;
     }
@@ -346,44 +374,51 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return null;
     }
 
-    public Class getLoadedDataParsingAwareClass()
-    {
+    public Class getLoadedDataParsingAwareClass() {
         return Result.class;
     }
 
 
     @Override
     public View getItemView(int i, LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        View view =layoutInflater.inflate(R.layout.product_pick_grid_item, viewGroup, false);
+        View view = layoutInflater.inflate(R.layout.product_pick_grid_item, viewGroup, false);
         ViewDataBinding binding = DataBindingUtil.bind(view);
         return binding.getRoot();
     }
+
     @Override
     public BaseItemHolder getItemHolder(int i, View view) {
         return new BindingItemHolder(view, BR.product);
     }
 
-    public static class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T>
-    {
-        public BindingItemHolder(View itemView,int variableID)
-        {
+
+    public class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T> {
+        public BindingItemHolder(View itemView, int variableID) {
             super(itemView, variableID);
         }
+
+        /*@Override
+        public void updateItemView(Object data, View view, int position) {
+            super.updateItemView(data, view, position);
+            //previouslySelected.contains((FilterProductListing) data);
+        }*/
     }
 
-    public static class Result extends CodeDataParser
-    {
+    public static class Result extends CodeDataParser {
         List<FilterProductListing> data;
-        private int offset=-1;
-        public List<?> getList()
-        {
+        private int offset = -1;
+
+        public List<?> getList() {
             return data;
         }
-        public List<FilterProductListing> getData()
-        {
+
+        public List<FilterProductListing> getData() {
             return data;
         }
-        public void setData(List<FilterProductListing> data){this.data=data;}
+
+        public void setData(List<FilterProductListing> data) {
+            this.data = data;
+        }
 
         public int getOffset() {
             return offset;
@@ -393,4 +428,6 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
             this.offset = offset;
         }
     }
+
+
 }

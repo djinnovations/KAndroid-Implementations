@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal">
@@ -15,7 +16,9 @@
         android:scaleType="centerInside"
         app:border="true"
         app:border_color="@color/colorPrimaryAlpha"
-        app:border_width="2dp" />
+        app:border_width="0.5dp"
+        app:shadow="false"
+        tools:background="#cccccc" />
 
 
     <LinearLayout
@@ -51,39 +54,45 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <org.github.images.CircularImageView
             android:id="@+id/contentImage3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="1dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/brown_square_border"
-            android:padding="1dp"
+            android:padding="2dp"
             android:scaleType="centerInside"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:border="true"
+            app:border_color="@color/colorAccentLighter"
+            app:border_width="0.8dp" />
 
-        <ImageView
+        <org.github.images.CircularImageView
             android:id="@+id/contentImage2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="1dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/brown_square_border"
-            android:padding="1dp"
+            android:padding="2dp"
             android:scaleType="centerInside"
-            android:visibility="gone" />
+            android:visibility="gone"
+            app:border="true"
+            app:border_color="@color/colorAccentLighter"
+            app:border_width="0.8dp" />
 
-        <ImageView
+        <org.github.images.CircularImageView
             android:id="@+id/contentImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/brown_square_border"
-            android:padding="1dp"
-            android:scaleType="centerInside" />
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            app:border="true"
+            app:border_color="@color/colorAccentLighter"
+            app:border_width="0.8dp" />
 
     </LinearLayout>
 </LinearLayout>
