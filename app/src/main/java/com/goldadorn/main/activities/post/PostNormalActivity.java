@@ -2,6 +2,7 @@ package com.goldadorn.main.activities.post;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
@@ -113,7 +114,7 @@ public class PostNormalActivity extends AbstractPostActivity {
     ImageView previewIamge;
 
     @Bind(R.id.trigger)
-    View trigger;
+    ImageButton trigger;
 
 
     protected void viewCreted(People people, int maxImageSize) {

@@ -23,16 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.androidquery.AQuery;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.LoginPageActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
@@ -46,21 +38,13 @@ import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.server.ParamsBuilder;
-import com.goldadorn.main.server.ServerRequest;
 import com.goldadorn.main.server.UIController;
-import com.goldadorn.main.server.UrlBuilder;
-import com.goldadorn.main.server.response.BasicResponse;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
-import com.goldadorn.main.utils.L;
-import com.goldadorn.main.utils.NetworkUtilities;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.mikepenz.iconics.view.IconicsButton;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
 import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
@@ -69,7 +53,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +109,7 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Log.i("iiii", "Click2");
-            goToProductPage(v.getContext(), mProduct);
+            goToProductPage(mProduct);
         }
     };
     private SwipeDeckAdapter mSwipeDeckAdapter;
@@ -146,6 +129,7 @@ public class ProductsFragment extends Fragment {
 
     private void showOverLay(String text, int colorResId, int gravity) {
         if (overLayDialog == null) {
+            //WindowUtils.justPlainOverLay = true;
             overLayDialog = WindowUtils.getInstance(getContext().getApplicationContext()).displayOverlay(getActivity(), text, colorResId,
                     gravity);
         }
@@ -155,6 +139,7 @@ public class ProductsFragment extends Fragment {
     private void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
+               // WindowUtils.justPlainOverLay = false;
                 overLayDialog.dismiss();
             }
         }
@@ -213,6 +198,7 @@ public class ProductsFragment extends Fragment {
     public static final int DES_COLL_ID_CALL = IDUtils.generateViewId();
 
     private void setNewTry() {
+        WindowUtils.marginForProgressViewInGrid = 25;
         showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         Activity activity = getActivity();
         ExtendedAjaxCallback ajaxCallback = null;
@@ -245,6 +231,8 @@ public class ProductsFragment extends Fragment {
     }
 
 
+    private boolean notBaaReq;
+
     public void continueTry(String response) {
         //Log.d("djprod", "url queried: " + ApiKeys.getProductsAPI());
         //Log.d("djprod", "response: " + response);
@@ -267,11 +255,21 @@ public class ProductsFragment extends Fragment {
                 Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
                 return;
             }
-            continueOnBAA(collectionid, desId);
+            if (notBaaReq)
+                continueToProdScreen(collectionid, desId);
+            else continueOnBAA(collectionid, desId);
         } catch (JSONException e) {
             e.printStackTrace();
             Toast.makeText(getContext(), "Loading...", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void continueToProdScreen(int colId, int desId) {
+        WindowUtils.marginForProgressViewInGrid = 5;
+        dismissOverLay();
+        clickedProduct.userId = desId;
+        clickedProduct.collectionId = colId;
+        goToProductPage(clickedProduct);
     }
 
     /*private void setUserIdAndCollectionId() {
@@ -432,12 +430,14 @@ public class ProductsFragment extends Fragment {
             Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (mMode == MODE_COLLECTION){
-            Log.d("djprod","desId: "+mCollection.userId);
-            Log.d("djprod","collId: "+mCollection.id);
+        if (mMode == MODE_COLLECTION) {
+            Log.d("djprod", "desId: " + mCollection.userId);
+            Log.d("djprod", "collId: " + mCollection.id);
             continueOnBAA(mCollection.id, mCollection.userId);
-        }else
-        setNewTry();
+        } else {
+            notBaaReq = false;
+            setNewTry();
+        }
     }
 
     private boolean canProceedToBAA() {
@@ -543,7 +543,8 @@ public class ProductsFragment extends Fragment {
                 //todo like click
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.buyNoBuyButton) {
-                startActivity(PostPollActivity.getLaunchIntent(context, mProduct));
+                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
+                //startActivity(PostPollActivity.getLaunchIntent(context, mProduct));
             } else if (id == R.id.wishlistButton) {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
@@ -553,7 +554,7 @@ public class ProductsFragment extends Fragment {
                 });
             } else {
                 Log.i("iiii", "Click1");
-                goToProductPage(v.getContext(), mProduct);
+                goToProductPage(mProduct);
             }
         }
 
@@ -838,11 +839,25 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onItemClicked(int i, Object o) {
-            Log.e("iiii", "Click4");
-            Product p = originalProducts.get(originalProducts.indexOf(o));
-            //goToProductPage(context, (Product) o);
-            Log.d("djprod", "product name onClickImage: " + p.name);
-            goToProductPage(context, p);
+            try {
+                Product p = clickedProduct = originalProducts.get(originalProducts.indexOf(o));
+                Log.d("djprod", "product name onClickImage: " + p.name);
+                if (mMode == MODE_USER) {
+                    notBaaReq = true;
+                    if (!canProceedToBAA()) {
+                        Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    setNewTry();
+                } else {
+                    notBaaReq = false;
+                    goToProductPage(p);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+            }
         }
 
         class ProductViewHolder {
@@ -875,6 +890,8 @@ public class ProductsFragment extends Fragment {
         }
     }
 
+    private Product clickedProduct;
+
     private int count = 0;
 
     private void isLikedHover(boolean value) {
@@ -898,8 +915,8 @@ public class ProductsFragment extends Fragment {
         }
     }
 
-    private void goToProductPage(Context context, Product product) {
-        startActivity(ProductActivity.getLaunchIntent(context, product));
+    private void goToProductPage(Product product) {
+        startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
     }
 
     /*private UserChangeListener mUserChangeListener = new UserChangeListener() {

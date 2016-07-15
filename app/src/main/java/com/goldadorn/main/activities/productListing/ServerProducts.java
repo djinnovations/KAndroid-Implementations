@@ -29,6 +29,7 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.nineoldandroids.animation.Animator;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -133,6 +134,10 @@ public class ServerProducts extends BaseActivity {
         }
     }
 
+    public boolean getIsPTB(){
+        return isCallerPTB;
+    }
+
     private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
     ArrayList<FilterProductListing> tosendbackList;
 
@@ -143,13 +148,34 @@ public class ServerProducts extends BaseActivity {
             if (!status) {
                 previouslySelected.remove(data);
                 tosendbackList.remove(data);
-            } else tosendbackList.add(data);
+            } /*else {*/
+                if (canProceed(data)) {
+                    //// TODO: 13-07-2016  for selection made ui change;
+                    tosendbackList.add(data);
+                }
+            //}
             showTitle(previouslySelected.size());
         } else{
             ArrayList<FilterProductListing> dataList =  new ArrayList<FilterProductListing>();
             dataList.add(0, data);
             processItem(dataList);
         }
+    }
+
+    public boolean getCanCheckSelected(){
+        return canCheckSelected;
+    }
+
+    private boolean canCheckSelected = false;
+    private boolean canProceed(FilterProductListing file) {
+        if (previouslySelected.size() == 4) {
+            canCheckSelected = false;
+            previouslySelected.remove(file);
+            Toast.makeText(getApplicationContext(), "You can only select a maximum of three products", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        canCheckSelected = true;
+        return true;
     }
 
     protected void processItem(ArrayList<FilterProductListing> data) {
@@ -160,7 +186,7 @@ public class ServerProducts extends BaseActivity {
         @Override
         public void onClick(View v) {
             if (previouslySelected.size() < 2){
-                Toast.makeText(getApplicationContext(),"Select atleast two products to continue", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Select at least two products to create the post", Toast.LENGTH_SHORT).show();
                 return;
             }
             processItem(tosendbackList);//// TODO: 13-07-2016  after done is clicked
@@ -172,7 +198,7 @@ public class ServerProducts extends BaseActivity {
     public static final String SORT_SOLD_UNITS = "soldUnits";
     public String sort = SORT_SOLD_UNITS;
 
-    public static boolean isCallerPTB = false;
+    private boolean isCallerPTB = false;
 
     private void showTitle(int count) {
         _layTitle.bringToFront();
@@ -206,6 +232,30 @@ public class ServerProducts extends BaseActivity {
             }
         }, 3000);*/
 
+    }
+
+
+    private void pullBackUpIsAlreadyShown(){
+        if (_layTitle.getVisibility() == View.VISIBLE) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        startAnim(_layTitle, R.anim.anim_dialog_go_up);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                _layTitle.setVisibility(View.GONE);
+                                _layTitle.setAlpha(0.6f);
+                            }
+                        }, 400);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 200);
+        }
     }
 
     private void startAnim(View view, int animResID) throws Exception {
@@ -278,12 +328,17 @@ public class ServerProducts extends BaseActivity {
         } else
             setTitle("Our Products");
 
+
+        pullBackUpIsAlreadyShown();
+        /*previouslySelected.clear();
+        tosendbackList.clear();*/
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavigationDataObject navigationObject = new NavigationDataObject(IDUtils.generateViewId(), "",
                 NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, ProductsFragment.class);
         mActivePage = (ProductsFragment) BaseFragment.newInstance(navigationObject);
         mActivePage.setFilters(filters, sort);
         fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
+        //_layTitle.bringToFront();
     }
 
     @Override

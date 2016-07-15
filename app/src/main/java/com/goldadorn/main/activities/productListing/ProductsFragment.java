@@ -53,29 +53,29 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return new DividerDecoration(this.getActivity());
     }
 
-    private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
+   // private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
 
     public void onItemClick(Object baseObject) {
         FilterProductListing file = (FilterProductListing) baseObject;
-        if (ServerProducts.isCallerPTB) {
-            boolean status = previouslySelected.add(file);
+        //if (ServerProducts.isCallerPTB) {
+            /*boolean status = previouslySelected.add(file);
             if (!status)
                 previouslySelected.remove(file);
-            if (canProceed(file)) {
+            if (canProceed(file)) {*/
                 //// TODO: 13-07-2016  for selection made ui change;
                 EventBus.getDefault().post(file);
-            }
-        } else EventBus.getDefault().post(file);
+            //}
+        //} else EventBus.getDefault().post(file);
 
     }
 
 
-    private boolean canCheckSelected = false;
+    //private boolean canCheckSelected = false;
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         super.onItemClick(parent, view, position, id);
-        if (ServerProducts.isCallerPTB) {
-            if (canCheckSelected) {
+        if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
+            if (((ServerProducts) getActivity()).getCanCheckSelected()) {
                 View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
                 View ivSelectedSymbol = singleItemView.findViewById(R.id.ivSelectedSymbol);
                 ivSelectedSymbol.setVisibility(ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
@@ -89,7 +89,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return baseActivity.getApp();
     }
 
-    private boolean canProceed(FilterProductListing file) {
+    /*private boolean canProceed(FilterProductListing file) {
         if (previouslySelected.size() == 4) {
             canCheckSelected = false;
             previouslySelected.remove(file);
@@ -98,7 +98,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         }
         canCheckSelected = true;
         return true;
-    }
+    }*/
 
     public void onCallEnd(List<?> dataList, boolean isRefreshData) {
         super.onCallEnd(dataList, isRefreshData);

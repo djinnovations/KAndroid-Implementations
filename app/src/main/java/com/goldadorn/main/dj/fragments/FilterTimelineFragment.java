@@ -48,6 +48,12 @@ public class FilterTimelineFragment extends SocialFeedFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        updateComments();
+    }
+
+    @Override
     protected boolean allowPostOptions() {
         //return super.allowPostOptions();
         return false;

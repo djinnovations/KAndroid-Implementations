@@ -163,11 +163,11 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             List<Integer> desIdList = getDesignerIds();
             intent.putExtra("desIdList", desIdList.toArray());*/
             List<String> prodColDesIdPrice = getProductAppendedColDesIdPrice();
-            if (prodColDesIdPrice != null){
-                if (prodColDesIdPrice.size() != 0){
+            if (prodColDesIdPrice != null) {
+                if (prodColDesIdPrice.size() != 0) {
                     String[] clubbedArr = new String[prodColDesIdPrice.size()];
                     int index = 0;
-                    for (String s : prodColDesIdPrice){
+                    for (String s : prodColDesIdPrice) {
                         clubbedArr[index] = s;
                         index++;
                     }
@@ -218,11 +218,14 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
     GalleryImageSelector ga1;
     GalleryImageSelector ga2;
     GalleryImageSelector ga3;
-    protected void setGalleryImageObjects(GalleryImageSelector ga1, GalleryImageSelector ga2, GalleryImageSelector ga3){
+
+    protected void setGalleryImageObjects(GalleryImageSelector ga1, GalleryImageSelector ga2, GalleryImageSelector ga3) {
         this.ga1 = ga1;
         this.ga2 = ga2;
         this.ga3 = ga3;
     }
+
+    private boolean isFirstTime = true;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -230,38 +233,48 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             imageSelector.onActivityResult(requestCode, resultCode, data);*/
 
         if (imageSelector != null) {
-            if (getPostType() == SocialPost.POST_TYPE_BEST_OF){
-                if (requestCode == GalleryImageSelector.PICK_SERVER_GALLERY && resultCode == RESULT_OK) {
-                    ArrayList<HashMap<String, Object>> listOfMapData = getListOfMapData(data);
-                    if (listOfMapData.size() == 3) {
-                        ga3.setDataFromOutside(listOfMapData.get(2), GalleryImageSelector.PICK_SERVER_GALLERY);
-                        ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
-                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
-                        rlimageholder2.setVisibility(View.VISIBLE);
-                        rlimageholder3.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                    if (listOfMapData.size() <= 2) {
-                        ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
-                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
-                        rlimageholder2.setVisibility(View.VISIBLE);
-                        return;
-                    }
-                    if (listOfMapData.size() == 1) {
-                        ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
-                    }
-                }else imageSelector.onActivityResult(requestCode, resultCode, data);
-            }
-            else imageSelector.onActivityResult(requestCode, resultCode, data);
+            if (getPostType() == SocialPost.POST_TYPE_BEST_OF) {
+                if (isFirstTime) {
+                    if (requestCode == GalleryImageSelector.PICK_SERVER_GALLERY && resultCode == RESULT_OK) {
+                        ArrayList<HashMap<String, Object>> listOfMapData = getListOfMapData(data);
+                        if (listOfMapData.size() == 3) {
+                            ga3.setDataFromOutside(listOfMapData.get(2), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga3.setIsPtbCall(false);
+                            ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga2.setIsPtbCall(false);
+                            ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga1.setIsPtbCall(false);
+
+                            rlimageholder2.setVisibility(View.VISIBLE);
+                            rlimageholder3.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                        if (listOfMapData.size() <= 2) {
+                            ga2.setDataFromOutside(listOfMapData.get(1), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga2.setIsPtbCall(false);
+                            ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga1.setIsPtbCall(false);
+                            ga3.setIsPtbCall(false);
+                            rlimageholder2.setVisibility(View.VISIBLE);
+                            return;
+                        }
+                        if (listOfMapData.size() == 1) {
+                            ga1.setDataFromOutside(listOfMapData.get(0), GalleryImageSelector.PICK_SERVER_GALLERY);
+                            ga1.setIsPtbCall(false);
+                        }
+                    } else imageSelector.onActivityResult(requestCode, resultCode, data);
+                } else imageSelector.onActivityResult(requestCode, resultCode, data);
+            } else imageSelector.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     private ArrayList<HashMap<String, Object>> getListOfMapData(Intent data) {
-        ArrayList<FilterProductListing> dataFromSelection =  data.getParcelableArrayListExtra(IntentKeys.FILTER_OBJ);
+        ArrayList<FilterProductListing> dataFromSelection = data.getParcelableArrayListExtra(IntentKeys.FILTER_OBJ);
         ArrayList<HashMap<String, Object>> dataMap = new ArrayList<>();
-        for (FilterProductListing params: dataFromSelection){
+        isFirstTime = false;
+        for (FilterProductListing params : dataFromSelection) {
             HashMap<String, Object> eachMap = new HashMap<>();
-            String path = ".."+params.getImage().substring(params.getImage().indexOf("/product"),params.getImage().length());
+            String path = ".." + params.getImage().substring(params.getImage().indexOf("/product"), params.getImage().length());
             eachMap.put(GalleryImageSelector.KEY_PATH, path);
             eachMap.put(GalleryImageSelector.KEY_PREVIEW, params.getImage());
             eachMap.put(GalleryImageSelector.KEY_PRICE, params.getProductPrice());
@@ -275,7 +288,8 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     View rlimageholder2;
     View rlimageholder3;
-    protected void setHolders(View rlPlaceHolder2, View rlPlaceHolder3){
+
+    protected void setHolders(View rlPlaceHolder2, View rlPlaceHolder3) {
         rlimageholder2 = rlPlaceHolder2;
         rlimageholder3 = rlPlaceHolder3;
     }

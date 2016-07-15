@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -46,7 +47,7 @@ public class ImageSelector {
 
     protected Activity activity;
     protected ImageView holder;
-    protected View triger;
+    protected ImageButton triger;
     protected File file;
     protected Uri imageUri;
     protected int maxSize = -1;
@@ -77,7 +78,7 @@ public class ImageSelector {
         this.registerImageUploadCallBack = registerImageUploadCallBack;
     }
 
-    public ImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack, ImageView holder, View triger) {
+    public ImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack, ImageView holder, ImageButton triger) {
         this.activity = activity;
         this.holder = holder;
         this.triger = triger;
@@ -97,12 +98,25 @@ public class ImageSelector {
             holder.setOnClickListener(tigerHandel);
     }
 
+
     View.OnClickListener tigerHandel = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            trigerUpload();
+            //trigerUpload();
+           /* if (v instanceof ImageView) {
+                Log.d("djgallery", "trigger by new");
+                isInEdit = false;
+                openStandardPopup(false);
+            }
+            else if (v instanceof ImageButton){
+                Log.d("djgallery", "trigger by edit");
+                isInEdit = true;
+                openStandardPopup(true);
+            }*/
+            openStandardPopup();
         }
     };
+
 
     public static class Item {
         public final String text;
@@ -121,10 +135,10 @@ public class ImageSelector {
 
 
     public void trigerUpload() {
-        openStandardPopup();
+        //openStandardPopup();
     }
 
-    public void openStandardPopup() {
+    protected void openStandardPopup() {
         final Item[] items = getOptions();
         String[] list = new String[items.length];
         for (int i = 0; i < items.length; i++) {

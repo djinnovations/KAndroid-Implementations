@@ -19,7 +19,7 @@ public class PickServerProducts  extends ServerProducts{
 
     @Override
     public void processItem(ArrayList<FilterProductListing> dataList) {
-        if (ServerProducts.isCallerPTB){
+        if (/*ServerProducts.isCallerPTB*/getIsPTB()){
             if (dataList != null){
                 Intent intent = new Intent();
                 intent.putParcelableArrayListExtra(IntentKeys.FILTER_OBJ, dataList);

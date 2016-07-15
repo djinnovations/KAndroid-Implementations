@@ -434,7 +434,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/white_square_border">
+                android:background="@drawable/brown_square_border">
 
                 <com.rey.material.widget.ProgressView
                     android:id="@+id/progressBar"

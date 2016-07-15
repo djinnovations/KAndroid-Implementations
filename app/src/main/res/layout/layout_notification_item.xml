@@ -56,43 +56,37 @@
 
         <org.github.images.CircularImageView
             android:id="@+id/contentImage3"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="1dp"
             android:layout_marginTop="8dp"
-            android:padding="2dp"
+            android:padding="1dp"
+            android:background="@drawable/accent_square_border"
             android:scaleType="centerInside"
-            android:visibility="gone"
-            app:border="true"
-            app:border_color="@color/colorAccentLighter"
-            app:border_width="0.8dp" />
+            android:visibility="gone" />
 
         <org.github.images.CircularImageView
             android:id="@+id/contentImage2"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:layout_marginRight="1dp"
             android:layout_marginTop="8dp"
-            android:padding="2dp"
+            android:padding="1dp"
+            android:background="@drawable/accent_square_border"
             android:scaleType="centerInside"
-            android:visibility="gone"
-            app:border="true"
-            app:border_color="@color/colorAccentLighter"
-            app:border_width="0.8dp" />
+            android:visibility="gone" />
 
         <org.github.images.CircularImageView
             android:id="@+id/contentImage"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:padding="2dp"
-            android:scaleType="centerInside"
-            app:border="true"
-            app:border_color="@color/colorAccentLighter"
-            app:border_width="0.8dp" />
+            android:background="@drawable/accent_square_border"
+            android:padding="1dp"
+            android:scaleType="centerInside" />
 
     </LinearLayout>
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -190,7 +191,7 @@ public class PostPollActivity extends AbstractPostActivity {
     ImageView previewIamge;
 
     @Bind(R.id.trigger)
-    View trigger;
+    ImageButton trigger;
 
 
     protected void viewCreted(People people, int maxImageSize) {

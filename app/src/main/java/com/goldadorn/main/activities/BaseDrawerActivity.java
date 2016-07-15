@@ -107,7 +107,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     protected void menuAction(int id) {
 
-        if (id == R.id.nav_rate_us_new){
+        if (id == R.id.nav_rate_us_new) {
             RandomUtils.performAppRateTask();
             return;
         }
@@ -165,49 +165,55 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-   private void setMenuCustom(Menu menu){
-       if (menu != null) {
-           menu.clear();
-       }
-       MenuInflater inflater = getMenuInflater();
-       inflater.inflate(R.menu.main, menu);
-       final MenuItem item = menu.findItem(R.id.nav_my_notifications);
 
-       if (item != null) {
-           MenuItemCompat.setActionView(item, R.layout.notification_badge);
+    private void setMenuCustom(Menu menu) {
+        if (menu != null) {
+            menu.clear();
+        }
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        final MenuItem item = menu.findItem(R.id.nav_my_notifications);
 
-           TextView textView = (TextView) item.getActionView()
-                   .findViewById(R.id.tvNotifyCount);
-           item.getActionView().setOnClickListener(new View.OnClickListener() {
+        if (item != null) {
+            MenuItemCompat.setActionView(item, R.layout.notification_badge);
 
-               @Override
-               public void onClick(View v) {
-                   onOptionsItemSelected(item);
-               }
-           });
+            TextView textView = (TextView) item.getActionView()
+                    .findViewById(R.id.tvNotifyCount);
+            item.getActionView().setOnClickListener(new View.OnClickListener() {
 
-           if (TextUtils.isEmpty(mCount)) {
-               if (textView != null) {
-                   textView.setVisibility(View.INVISIBLE);
-               }
-           }else if (mCount.equalsIgnoreCase("0")){
-               if (textView != null) {
-                   textView.setVisibility(View.INVISIBLE);
-               }
-           }
-           else {
-               if (textView != null) {
-                   textView.setVisibility(View.VISIBLE);
-                   textView.setText(mCount);
-               }
-           }
-       }
+                @Override
+                public void onClick(View v) {
+                    onOptionsItemSelected(item);
+                }
+            });
+
+            String unreadCount = String.valueOf(RandomUtils.getUnreadCount());
+            if (TextUtils.isEmpty(/*mCount*/unreadCount)) {
+                if (textView != null) {
+                    textView.setVisibility(View.INVISIBLE);
+                }
+            } else if (/*mCount*/unreadCount.equalsIgnoreCase("0")) {
+                if (textView != null) {
+                    textView.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                if (textView != null) {
+                    textView.setVisibility(View.VISIBLE);
+                    textView.setText(/*mCount*/unreadCount);
+                }
+            }
+        }
     }
 
 
-    private String mCount;
+    private String mCount = "";
+
     @Override
     public void onNotificationCountChanged(String count) {
+        boolean shouldDraw = mCount.equalsIgnoreCase(count);
+        Log.d("djdrawer", "onNotificationCountChanged.. should not draw?: " + shouldDraw);
+        if (shouldDraw)
+            return;
         mCount = count;
         this.supportInvalidateOptionsMenu();
     }
@@ -346,10 +352,17 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     }
 
+    boolean isFirstTime = true;
+
     @Override
     public void onStart() {
         super.onStart();
+        Log.d("djmain", "onstart-basedrawer");
         UserInfoCache.getInstance(this).start();
+        if (!isFirstTime) {
+            isFirstTime = false;
+            onNotificationCountChanged(String.valueOf(RandomUtils.getUnreadCount()));
+        } else isFirstTime = false;
     }
 
     @Override
@@ -374,7 +387,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_my_search){
+        if (id == R.id.nav_my_search) {
             Toast.makeText(getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
             return true;
         }

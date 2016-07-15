@@ -263,8 +263,8 @@ public class DjphyPreferenceManager {
     }
 
     public boolean getIsAppRatingDone() {
-        Log.d("dj", "getIsAppRatingDone- DjphyPreferenceManager: " + pref.getBoolean(KEY_IS_APP_RATING_DONE, false));
-        return pref.getBoolean(KEY_IS_APP_RATING_DONE, false);
+        Log.d("dj", "getIsAppRatingDone- DjphyPreferenceManager: " + /*pref.getBoolean(KEY_IS_APP_RATING_DONE, false)*/"true");
+        return /*pref.getBoolean(KEY_IS_APP_RATING_DONE, false)*/ true;
     }
 
 

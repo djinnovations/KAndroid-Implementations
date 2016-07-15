@@ -626,6 +626,7 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
     protected void onResume() {
+        Log.d("djmain", "onResume-MainActivity");
         super.onResume();
         if (activePage instanceof HomePage) {
             ((HomePage) activePage).updateComments();
@@ -635,7 +636,7 @@ public class MainActivity extends BaseDrawerActivity {
 
     /*@Override
     public void onStart() {
+        Log.d("djmain", "onstart-MainActivity");
         super.onStart();
-        updateHelper.onStartObserverForRateApp(this);
     }*/
 }

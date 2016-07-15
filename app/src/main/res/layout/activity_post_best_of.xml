@@ -121,7 +121,7 @@
                         android:id="@+id/rlPlaceHolder2"
                         android:background="@drawable/image_palce_holder_background_dark_border"
                         android:cropToPadding="true"
-                        android:visibility="invisible">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -176,7 +176,7 @@
                         android:id="@+id/rlPlaceHolder3"
                         android:background="@drawable/image_palce_holder_background_dark_border"
                         android:cropToPadding="true"
-                        android:visibility="invisible">
+                        android:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:paddingBottom="70dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="70dp">
 
 
     <LinearLayout
@@ -17,9 +17,9 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:paddingTop="56dp"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:layout_height="0dp">
+            android:paddingTop="56dp">
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
@@ -28,11 +28,10 @@
                 android:layout_gravity="center_horizontal"
                 android:clipToPadding="false"
                 android:elevation="0dp"
-                app:elevation="0dp"
-                />
+                app:elevation="0dp" />
 
 
-            <include layout="@layout/layout_product_actions"/>
+            <include layout="@layout/layout_product_actions" />
 
         </FrameLayout>
 
@@ -44,7 +43,7 @@
             android:layout_marginTop="@dimen/padding_default"
             app:fillColor="@android:color/black"
             app:pageColor="@android:color/darker_gray"
-            app:radius="4dp"/>
+            app:radius="4dp" />
 
         <TextView
             android:id="@+id/product_name"
@@ -56,9 +55,9 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:paddingTop="8dp"
-            tools:text="Large Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black"
+            tools:text="Large Text" />
 
         <LinearLayout
             android:id="@+id/layout_2"
@@ -76,18 +75,18 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:paddingRight="8dp"
-                tools:text="Small Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
-                android:textStyle="italic"/>
+                android:textStyle="italic"
+                tools:text="Small Text" />
 
             <ImageView
                 android:id="@+id/followButton"
                 style="@style/RoundButton"
                 android:layout_width="@dimen/shadow_height"
                 android:layout_height="@dimen/shadow_height"
-                android:src="@drawable/ic_b_follow"/>
+                android:src="@drawable/ic_b_follow" />
         </LinearLayout>
 
         <TextView
@@ -97,10 +96,10 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
-            tools:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
-            android:textSize="12sp"/>
+            android:textSize="12sp"
+            tools:text="Small Text" />
 
         <TextView
             android:id="@+id/product_cost"
@@ -109,10 +108,10 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
-            tools:text="Small Text"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/black"
-            android:textSize="19sp"/>
+            android:textSize="19sp"
+            tools:text="Small Text" />
 
 
     </LinearLayout>
@@ -140,19 +139,19 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:padding="8dp"
-                tools:text="64"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"/>
+                android:textSize="14sp"
+                tools:text="64" />
 
             <ImageView
                 android:id="@+id/likeButton"
                 style="@style/RoundButton"
-                android:textSize="5sp"
-                android:src="@drawable/ic_b_like"
                 android:layout_width="@dimen/shadow_height"
                 android:layout_height="@dimen/shadow_height"
-                android:text="@string/icon_heart_like"/>
+                android:src="@drawable/ic_b_like"
+                android:text="@string/icon_heart_like"
+                android:textSize="5sp" />
         </LinearLayout>
 
         <ImageButton
@@ -165,7 +164,7 @@
             android:gravity="center"
             android:src="@drawable/add"
             android:textAlignment="center"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -183,7 +182,7 @@
             style="@style/ShowcaseButton"
             android:layout_width="@dimen/circle_button_small_height"
             android:layout_height="@dimen/circle_button_small_height"
-            android:text="@string/icon_cart"/>
+            android:text="@string/icon_cart" />
 
         <TextView
             android:id="@+id/product_name_2"
@@ -193,10 +192,10 @@
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
             android:paddingTop="3dp"
-            tools:text="Collection Name"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:text="Collection Name" />
 
         <TextView
             android:id="@+id/product_cost_2"
@@ -205,10 +204,10 @@
             android:layout_gravity="right"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
-            tools:text="Rs. 000"
             android:textColor="@android:color/black"
             android:textSize="14sp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:text="Rs. 000" />
     </LinearLayout>
 
 </FrameLayout>

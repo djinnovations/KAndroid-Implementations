@@ -226,7 +226,7 @@ public class DbHelper {
                         usercv.put(Tables.Users.IMAGEURL, url);
                     }
                     usercv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT, 0));
-                    usercv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT, 0));
+                    //usercv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT, 0));
                     int updatecnt = context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
                     if (updatecnt == 0)
                         context.getContentResolver().insert(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv);

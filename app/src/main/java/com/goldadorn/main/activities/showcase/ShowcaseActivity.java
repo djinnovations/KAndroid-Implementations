@@ -334,10 +334,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         prodFrag.mCardStack, this);
                 if (success) {
-                    if (json == null)
-                        return;
+                    /*if (json == null)
+                        return;*/
                     prodFrag.continueTry((String) json);
-                } else {
+                } /*else {
                     String errMsg = "";
                     try {
                         errMsg = new JSONObject((String) json).getString("msg");
@@ -346,7 +346,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                         errMsg = Constants.ERR_MSG_1;
                     }
                     Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         } else super.serverCallEnds(id, url, json, status);
     }

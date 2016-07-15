@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.dataManagers.aQuery.DefaultJSONDataManager;
@@ -70,6 +71,7 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
             try {
                 JSONObject jsonObject = new JSONObject(stringValue);
                 notifyCount = jsonObject.isNull("noticount") ? null : jsonObject.getString("noticount");
+                RandomUtils.setUnreadCount(notifyCount);
                 Log.d(Constants.TAG, "notificationCount: "+notifyCount);
                 if (notifyCount != null){
                     new Handler().postDelayed(new Runnable() {

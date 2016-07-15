@@ -29,6 +29,7 @@ import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.dj.utils.SmartTimeAgo;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
@@ -231,6 +232,12 @@ public class NotificationsActivity extends BaseActivity {
             String txt = success ? "notification count updated" : "notification count updation failed";
             Log.d("djnotify", "notification click: " + txt);
             if (success) {
+                try {
+                    JSONObject jsonObject = new JSONObject(json.toString());
+                    RandomUtils.setUnreadCount(jsonObject.getString("count"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
                 intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
                 startActivity(intent);

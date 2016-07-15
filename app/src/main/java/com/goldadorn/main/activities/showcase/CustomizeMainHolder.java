@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
@@ -35,7 +36,7 @@ class CustomizeMainHolder extends ViewHolder {
     public final TextView name;
     public final TextView extra;
     public final ImageView image;
-    public ImageButton addRemoveButton;
+    public ImageView addRemoveButton;
     private View separator;
     private LinearLayout extraLayout;
 
@@ -48,18 +49,25 @@ class CustomizeMainHolder extends ViewHolder {
     private void changeDrawable(boolean isAdd) {
         ResourceReader rsrdr = ResourceReader.getInstance(extraLayout.getContext());
         Drawable drawable;
-        //Drawable addDrawable = rsrdr.getDrawableFromResId(R.drawable.add);;
         if (isAdd) {
             drawable = rsrdr.getDrawableFromResId(R.drawable.add);
+            addRemoveButton.setPadding(defaultRect.left, defaultRect.top, defaultRect.right, defaultRect.bottom);
         } else {
             drawable = rsrdr.getDrawableFromResId(R.drawable.minus);
-            //drawable.setBounds(addDrawable.copyBounds());
+            addRemoveButton.setPadding(rectForMinusSym.left, rectForMinusSym.top, rectForMinusSym.right, rectForMinusSym.bottom);
         }
         drawable.setColorFilter(rsrdr.getColorFromResource(R.color.White),
                 PorterDuff.Mode.SRC_ATOP);
         addRemoveButton.setImageDrawable(drawable);
     }
 
+    private Rect rectForMinusSym;
+
+    private void setPaddedRect() {
+        DisplayProperties displayProperties = DisplayProperties.getInstance(name.getContext(), DisplayProperties.ORIENTATION_PORTRAIT);
+        int paddInPx = (int) (1.5 * displayProperties.getXPixelsPerCell());
+        rectForMinusSym = new Rect(paddInPx, paddInPx, paddInPx, paddInPx);
+    }
 
     /*private Rect getBound(){
         DisplayProperties displayProperties = DisplayProperties.getInstance(Application.getInstance()
@@ -73,12 +81,17 @@ class CustomizeMainHolder extends ViewHolder {
         Rect rect = new Rect();
     }*/
 
+    private Rect defaultRect;
+
     public CustomizeMainHolder(View itemView) {
         super(itemView);
         name = (TextView) itemView.findViewById(R.id.name);
         extra = (TextView) itemView.findViewById(R.id.extra);
         image = (ImageView) itemView.findViewById(R.id.image);
-        addRemoveButton = (ImageButton) itemView.findViewById(R.id.addRemoveButton);
+        addRemoveButton = (ImageView) itemView.findViewById(R.id.addRemoveButton);
+        defaultRect = new Rect(addRemoveButton.getPaddingLeft(), addRemoveButton.getPaddingTop()
+                , addRemoveButton.getPaddingRight(), addRemoveButton.getPaddingBottom());
+        setPaddedRect();
         separator = itemView.findViewById(R.id.separator);
         extraLayout = (LinearLayout) itemView.findViewById(R.id.extra_layout);
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -130,11 +143,12 @@ class CustomizeMainHolder extends ViewHolder {
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
             image.setImageDrawable(imageView.getDrawable());
-            if (listener != null)
+            /*if (listener != null)//// TODO: 16-07-2016  uncomment this block
                 ///listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (OptionValue) v.getTag()));
-                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Swatches.MixedSwatch) v.getTag()));
+                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Swatches.MixedSwatch) v.getTag()));*/
         }
     };
 

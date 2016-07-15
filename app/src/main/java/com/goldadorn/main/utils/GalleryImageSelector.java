@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
@@ -29,6 +30,7 @@ import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.activities.post.SelectServerImageActivity;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.model.Image;
 import com.goldadorn.main.model.People;
 import com.squareup.picasso.Picasso;
 
@@ -87,8 +89,12 @@ public class GalleryImageSelector extends ImageSelector
     public void setIsPtbCall(boolean isPtb){
         this.isPtb = isPtb;
     }
+    public boolean getIsPtbCall(){
+        return isPtb;
+    }
 
-    public void openStandardPopup()
+    @Override
+    protected void openStandardPopup()
     {
         final Item[] items = getOptions();
         String[] list= new String[items.length];
@@ -162,7 +168,8 @@ public class GalleryImageSelector extends ImageSelector
     {
         super(activity,registerImageUploadCallBack);
     }
-    public GalleryImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack, ImageView holder, View triger)
+    public GalleryImageSelector(AbstractPostActivity activity, RegisterImageUploadCallBack registerImageUploadCallBack,
+                                ImageView holder, ImageButton triger)
     {
         super(activity,registerImageUploadCallBack,holder,triger);
         isPtb = false;

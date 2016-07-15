@@ -191,7 +191,7 @@ public class AppTourGuideHelper {
                                     mTourGuideHandler.next();
                                     count++;
                                     if (count == /*5*/3) {
-                                        mTourGuideHandler.cleanUp();
+                                        //mTourGuideHandler.cleanUp();
                                         count = 0;
                                         handleArrowDialog(homeActivity);
                                     }
@@ -222,6 +222,7 @@ public class AppTourGuideHelper {
         overLay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                WindowUtils.dialogDimAmount = 0.3f;
                 arrow.clearAnimation();
                 arrowDialog.dismiss();
             }

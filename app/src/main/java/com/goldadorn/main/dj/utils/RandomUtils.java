@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.widget.TextView;
@@ -109,7 +110,7 @@ public class RandomUtils {
         }
     }
 
-    public static int delayToStartApp = 1000;
+    public static int delayToStartApp = 500;
 
     public static void restartApp(Activity activity) {
         Intent intent = new Intent(activity, AppStartActivity.class);
@@ -186,6 +187,25 @@ public class RandomUtils {
         return null;
     }
 
+    private static String unreadCount = "0";
+    public static void setUnreadCount(String unreadCount){
+        if (!TextUtils.isEmpty(unreadCount)) {
+            if (unreadCount.length() > 1) {
+                RandomUtils.unreadCount = "9+";
+            } else RandomUtils.unreadCount = String.valueOf(unreadCount);
+        }
+    }
+
+    public static int getUnreadCount(){
+        Integer value = 0;
+        try {
+            value = Integer.parseInt(unreadCount);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            value = 0;
+        }
+        return value;
+    }
 
     private static Collection getCollectionObjFromDb(int collId) {
         String selection = Tables.Collections._ID + "=?";

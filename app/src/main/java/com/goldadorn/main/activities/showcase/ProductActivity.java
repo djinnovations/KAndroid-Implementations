@@ -364,7 +364,7 @@ public class ProductActivity extends BaseDrawerActivity {
         mOverlayVH.like.setSelected(mProduct.isLiked);
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
-        mOverlayVH.mProductName2.setText(mProduct.name);
+        mOverlayVH.mProductName2.setText(/*mProduct.name*/getEndEllipsizedName(mProduct.name));
         Log.d(Constants.TAG, "user ID: " + mProduct.userId);
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         Log.e("iiii--", mUser.id + "--" + mUser.isFollowed + "---" + mUser.followers_cnt);
@@ -537,6 +537,13 @@ public class ProductActivity extends BaseDrawerActivity {
                     }
                 });
         dialog.show();
+    }
+
+    public String getEndEllipsizedName(String text) {
+        String endEllipsizedName = "";
+        if (text.length() > 15)
+            endEllipsizedName = text.substring(0, 15) + "...";
+        return endEllipsizedName;
     }
 
    /* private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
@@ -812,7 +819,8 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo like click
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
-                startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
+                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
+                //startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
             } else if (v == wishlistButton) {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override

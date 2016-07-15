@@ -861,7 +861,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == buy) {
                     if (!isVoted(socialPost, true)) {
-                        ((MainActivity) getActivity()).displayDialogForIntimation();
+                        if (getActivity() instanceof MainActivity)
+                            ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(1);
                         buy.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(buy);
@@ -1042,6 +1043,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == option1Button) {
                     if (!isVoted(socialPost, true)) {
+                        if (getActivity() instanceof MainActivity)
                         ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(1);
                         option1Button.setText("{hea_heart_fill}");
@@ -1054,7 +1056,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option2Button) {
                     if (!isVoted(socialPost, true)) {
-                        ((MainActivity) getActivity()).displayDialogForIntimation();
+                        if (getActivity() instanceof MainActivity)
+                            ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(2);
                         option2Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option2Button);
@@ -1066,7 +1069,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option3Button) {
                     if (!isVoted(socialPost, true)) {
-                        ((MainActivity) getActivity()).displayDialogForIntimation();
+                        if (getActivity() instanceof MainActivity)
+                            ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(3);
                         option3Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option3Button);
@@ -1380,7 +1384,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         final Dialog dialog = displayOverlay(null, R.color.colorAccent);
         dialog.show();
 
-        JsonObjectRequest loginRequest = new JsonObjectRequest(Request.Method.GET, ApiKeys.ENDPOINT_PRODUCT_BASIC_INFO + productId,
+        JsonObjectRequest req = new JsonObjectRequest(Request.Method.GET, ApiKeys.ENDPOINT_PRODUCT_BASIC_INFO + productId,
                 null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -1423,12 +1427,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
         });
 
-        loginRequest.setRetryPolicy(new DefaultRetryPolicy(
+        req.setRetryPolicy(new DefaultRetryPolicy(
                 Constants.REQUEST_TIMEOUT_SOCIAL_LOGIN,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(loginRequest);
+        requestQueue.add(req);
 
     }
 
@@ -1670,8 +1674,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     if (isLiked == 0)
                         socialPost.setLikeCount(socialPost.getLikeCount() - 1);
                     else {
-                        if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST)
-                            ((MainActivity) getActivity()).displayDialogForIntimation();
+                        if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {
+                            if (getActivity() instanceof MainActivity)
+                                ((MainActivity) getActivity()).displayDialogForIntimation();
+                        }
                         socialPost.setLikeCount(socialPost.getLikeCount() + 1);
                     }
                     likesLabel.setText(socialPost.getLikeCount() + getActivity().getString(R.string.likesCountLabel));

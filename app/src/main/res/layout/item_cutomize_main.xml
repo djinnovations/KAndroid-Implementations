@@ -43,12 +43,13 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"/>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/addRemoveButton"
             style="@style/circleSmallButton"
             android:layout_width="@dimen/padding_default_4x"
             android:layout_height="@dimen/padding_default_4x"
             android:gravity="center"
+            android:padding="4dp"
             android:src="@drawable/add"/>
     </LinearLayout>
     <LinearLayout

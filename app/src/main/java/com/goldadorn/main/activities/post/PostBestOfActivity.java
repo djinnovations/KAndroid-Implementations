@@ -2,9 +2,11 @@ package com.goldadorn.main.activities.post;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.bindings.ImageBindings;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.utils.GalleryImageSelector;
@@ -231,13 +233,13 @@ public class PostBestOfActivity extends AbstractPostActivity {
     ImageView previewIamge3;
 
     @Bind(R.id.trigger1)
-    View trigger1;
+    ImageButton trigger1;
 
     @Bind(R.id.trigger2)
-    View trigger2;
+    ImageButton trigger2;
 
     @Bind(R.id.trigger3)
-    View trigger3;
+    ImageButton trigger3;
 
 
     protected void viewCreted(People people,int maxImageSize)
@@ -250,9 +252,12 @@ public class PostBestOfActivity extends AbstractPostActivity {
         imageSelector3 =  new GalleryImageSelector(this,this,previewIamge3,trigger3);
         imageSelector3.setMaxSize(maxImageSize);
         imageSelector1.setIsPtbCall(true);
+        imageSelector2.setIsPtbCall(true);
+        imageSelector3.setIsPtbCall(true);
+        rlPlaceHolder2.setVisibility(View.VISIBLE);
+        rlPlaceHolder3.setVisibility(View.VISIBLE);
+
         setGalleryImageObjects(imageSelector1, imageSelector2, imageSelector3);
-        rlPlaceHolder2.setVisibility(View.INVISIBLE);
-        rlPlaceHolder3.setVisibility(View.INVISIBLE);
         setHolders(rlPlaceHolder2, rlPlaceHolder3);
         /*imageSelector2.setIsPtbCall(true);
         imageSelector3.setIsPtbCall(true);*/
