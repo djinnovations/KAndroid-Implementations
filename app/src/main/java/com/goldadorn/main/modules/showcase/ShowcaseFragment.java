@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
 import com.squareup.picasso.Picasso;
 
@@ -39,7 +40,7 @@ public class ShowcaseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         try {
             if (!TextUtils.isEmpty(mImageUrl))
-                Picasso.with(getActivity()).load(mImageUrl).into(
+                Glide.with(getActivity()).load(mImageUrl).into(
                     ((ImageView) view.findViewById(R.id.image)));
         } catch (Exception e) {
             e.printStackTrace();
