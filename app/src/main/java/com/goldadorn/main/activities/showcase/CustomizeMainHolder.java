@@ -109,6 +109,11 @@ class CustomizeMainHolder extends ViewHolder {
         addRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (true) {
+                    Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //// TODO: 16-07-2016  
                 if (extraLayout.getVisibility() == View.VISIBLE) {
                     extraLayout.setVisibility(View.GONE);
                     separator.setVisibility(View.VISIBLE);
@@ -143,7 +148,6 @@ class CustomizeMainHolder extends ViewHolder {
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
             image.setImageDrawable(imageView.getDrawable());
             /*if (listener != null)//// TODO: 16-07-2016  uncomment this block

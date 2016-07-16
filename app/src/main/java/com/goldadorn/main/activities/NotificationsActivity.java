@@ -127,9 +127,9 @@ public class NotificationsActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lastClicked = mAdapter.getItem(position);
                 int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
-                if (actionTypeInt == 5)
-                    return;
-                int idTouse = actionTypeInt == 5 ? getApp().getUser().id : Integer.parseInt(lastClicked.getPostId());
+                /*if (actionTypeInt == 5)
+                    return;*/
+                int idTouse = /*actionTypeInt == 5 ? getApp().getUser().id : */Integer.parseInt(lastClicked.getPostId());
                 Map<String, Integer> params = new HashMap<>();
                 params.put("type", actionTypeInt);
                 params.put("id", idTouse);
@@ -221,6 +221,9 @@ public class NotificationsActivity extends BaseActivity {
                     } /*else if (!canContinueToPaginate()) {
                         seenAllNotification = true;
                     }*/
+                    if (offset == offsetMain) {
+                        stopPagination();
+                    }
                     offsetMain = offset;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -238,6 +241,8 @@ public class NotificationsActivity extends BaseActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                if (getIdFromActionType(lastClicked.getActionType()) == 5)
+                    return;
                 Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
                 intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
                 startActivity(intent);
@@ -355,18 +360,28 @@ public class NotificationsActivity extends BaseActivity {
     }
 
 
+    private void stopPagination() {
+        Log.d("djpg", "stopPagination requested");
+        seenAllNotification = true;
+        loading = false;
+        paginate.setHasMoreDataToLoad(false);
+    }
+
+
     private boolean loading;
     Paginate.Callbacks callbacks = new Paginate.Callbacks() {
         @Override
         public void onLoadMore() {
             // Load next page of data (e.g. network or database)
-            Log.d("djpg", "onLoadMore");
+            Log.d("djpg", "onLoadMore- offestMain val= " + offsetMain);
             if (canContinueToPaginate()) {
+                Log.d("djpg", "onLoadMore - canContinueToPaginate?: true");
                 loading = true;
                 requestNotificationPaginate(offsetMain);
             } else {
-                loading = false;
-                paginate.setHasMoreDataToLoad(false);
+                /*loading = false;
+                paginate.setHasMoreDataToLoad(false);*/
+                stopPagination();
             }
         }
 
@@ -380,7 +395,7 @@ public class NotificationsActivity extends BaseActivity {
         @Override
         public boolean hasLoadedAllItems() {
             // Indicate whether all data (pages) are loaded or not
-            Log.d("djpg", "hasLoadedAllItems: "+seenAllNotification);
+            Log.d("djpg", "hasLoadedAllItems: " + seenAllNotification);
             return seenAllNotification;
         }
     };
@@ -486,7 +501,7 @@ public class NotificationsActivity extends BaseActivity {
                 if (postImageUrl.size() != 0) {
                     try {
                         if (!dataObject.isBotPost())
-                            Picasso.with(context).load(postImageUrl.get(0)).into(holder.ivPostImage1);
+                            Glide.with(context).load(postImageUrl.get(0)).into(holder.ivPostImage1);
                         else setPostImages(postImageUrl, holder);
                         //Picasso.with(context).load(postImageUrl).into(holder.ivPostImage1);
                     } catch (Exception e) {
@@ -499,6 +514,8 @@ public class NotificationsActivity extends BaseActivity {
                 holder.time.setText(dateTime);
             if (notifyContent != null)
                 holder.data.setText(notifyContent);
+            if (getIdFromActionType(dataObject.getActionType()) == 5)
+                holder.ivPostImage1.setVisibility(View.GONE);
 
             return convertView;
         }
@@ -509,17 +526,17 @@ public class NotificationsActivity extends BaseActivity {
                     Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
                 else holder.ivPostImage1.setVisibility(View.GONE);}*/
             if (urlList.size() == 1)
-                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
             else if (urlList.size() == 2) {
-                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
                 holder.ivPostImage2.setVisibility(View.VISIBLE);
-                Picasso.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
+                Glide.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
             } else if (urlList.size() == 3) {
-                Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
                 holder.ivPostImage2.setVisibility(View.VISIBLE);
-                Picasso.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
+                Glide.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
                 holder.ivPostImage3.setVisibility(View.VISIBLE);
-                Picasso.with(context).load(urlList.get(2)).into(holder.ivPostImage3);
+                Glide.with(context).load(urlList.get(2)).into(holder.ivPostImage3);
             }
         }
     }

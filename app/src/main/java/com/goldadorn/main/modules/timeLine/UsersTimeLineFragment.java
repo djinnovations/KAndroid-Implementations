@@ -1,5 +1,6 @@
 package com.goldadorn.main.modules.timeLine;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.renderscript.Allocation;
@@ -75,6 +76,12 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
     @Override
     public void retry() {
         //super.retry();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateComments();
     }
 
     private People user;
@@ -364,7 +371,8 @@ public class UsersTimeLineFragment extends SocialFeedFragment {
         }
 
 
-        public Bitmap blurRenderScript(Context context,Bitmap smallBitmap, int radius) {
+        @SuppressLint("NewApi")
+        public Bitmap blurRenderScript(Context context, Bitmap smallBitmap, int radius) {
             try {
                 smallBitmap = RGB565toARGB888(smallBitmap);
             } catch (Exception e) {

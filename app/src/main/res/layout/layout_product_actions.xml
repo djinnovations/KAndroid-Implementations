@@ -49,7 +49,7 @@
             android:layout_margin="8dp"
             android:src="@drawable/ic_b_share" />
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/wishlistButton"
             style="@style/socialLoginButton"
             android:padding="10dp"
@@ -57,7 +57,15 @@
             android:layout_height="@dimen/circle_button_small_height"
             android:layout_margin="8dp"
             android:src="@drawable/vector_icon_wishlist"
-            android:tint="@android:color/white"/>
+            android:tint="@android:color/white"/>-->
+        <ImageView
+            android:id="@+id/wishlistButton"
+            style="@style/RoundButton"
+            android:layout_width="@dimen/circle_button_small_height"
+            android:layout_height="@dimen/circle_button_small_height"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_b_wishlist" />
+
     </LinearLayout>
 
 

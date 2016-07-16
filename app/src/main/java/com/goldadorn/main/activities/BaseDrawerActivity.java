@@ -187,7 +187,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                 }
             });
 
-            String unreadCount = String.valueOf(RandomUtils.getUnreadCount());
+            String unreadCount = RandomUtils.getUnreadCount();
             if (TextUtils.isEmpty(/*mCount*/unreadCount)) {
                 if (textView != null) {
                     textView.setVisibility(View.INVISIBLE);
@@ -361,7 +361,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         UserInfoCache.getInstance(this).start();
         if (!isFirstTime) {
             isFirstTime = false;
-            onNotificationCountChanged(String.valueOf(RandomUtils.getUnreadCount()));
+            onNotificationCountChanged(RandomUtils.getUnreadCount());
         } else isFirstTime = false;
     }
 

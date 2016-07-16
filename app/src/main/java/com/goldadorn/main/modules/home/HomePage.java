@@ -26,6 +26,7 @@ import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.ServerFolderObject;
+import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
@@ -60,11 +61,16 @@ public class HomePage extends BaseHorizontalFragmentViewPager {
     }
 
     public SocialFeedFragment socialFeedFragmentpage;
+    public FindPeopleFragment findPeopleFragment;
 
     public void onItemCreated(Fragment page) {
         if (page instanceof SocialFeedFragment) {
             socialFeedFragmentpage = ((SocialFeedFragment) page);
             ((SocialFeedFragment) page).addDisableColver(disableApp);
+        }
+        if (page instanceof FindPeopleFragment) {
+            Log.d("djhome", "onItemCreated - setting people fragment");
+            findPeopleFragment = (FindPeopleFragment) page;
         }
     }
 

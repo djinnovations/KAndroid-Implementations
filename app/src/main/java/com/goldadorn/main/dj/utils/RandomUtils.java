@@ -196,15 +196,9 @@ public class RandomUtils {
         }
     }
 
-    public static int getUnreadCount(){
-        Integer value = 0;
-        try {
-            value = Integer.parseInt(unreadCount);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            value = 0;
-        }
-        return value;
+    public static String getUnreadCount(){
+
+        return unreadCount;
     }
 
     private static Collection getCollectionObjFromDb(int collId) {

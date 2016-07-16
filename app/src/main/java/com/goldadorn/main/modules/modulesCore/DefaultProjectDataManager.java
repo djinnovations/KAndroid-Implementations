@@ -78,7 +78,6 @@ public class DefaultProjectDataManager extends DefaultJSONDataManager
                         @Override
                         public void run() {
                             if (notifyCount.length() > 1){
-                                //BaseDrawerActivity.displayUnreadData(context, "9+");
                                 if (context instanceof BaseDrawerActivity){
                                     ((BaseDrawerActivity) context).onNotificationCountChanged("9+");
                                     return;

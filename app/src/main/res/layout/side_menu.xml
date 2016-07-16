@@ -106,8 +106,8 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:textSize="28sp"
-                    android:text="@string/icon_showcase_spotlight" />
+                    android:text="@string/icon_showcase_spotlight"
+                    android:textSize="28sp" />
 
                 <TextView
                     android:id="@+id/labelShowcase"
@@ -146,8 +146,8 @@
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:textSize="22sp"
-                    android:text="@string/icon_cart_new" />
+                    android:text="@string/icon_cart_new"
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/labelCart"
@@ -200,15 +200,14 @@
                 android:layout_weight="1"
                 tools:background="#ddffcc">
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/nav_wishlist"
-                    style="@style/menuButton"
+                    style="@style/RoundButton"
                     android:layout_width="@dimen/circle_button_small1_height"
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_wishlist"
-                    android:tint="@android:color/white" />
+                    android:src="@drawable/ic_b_wishlist" />
 
                 <TextView
                     android:id="@+id/labelWishlist"

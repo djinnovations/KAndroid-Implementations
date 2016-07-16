@@ -139,7 +139,7 @@ public class ProductsFragment extends Fragment {
     private void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
-               // WindowUtils.justPlainOverLay = false;
+                // WindowUtils.justPlainOverLay = false;
                 overLayDialog.dismiss();
             }
         }
@@ -657,6 +657,11 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onLeftCardExit(Object o) {
+            if (!canProceedToBAA()) {
+                Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             Log.d("djlike", "onLeftCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
 
@@ -688,6 +693,10 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public void onRightCardExit(Object o) {
+            if (!canProceedToBAA()) {
+                Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Log.d("djlike", "onRightCardExit");
             final Product p = originalProducts.get(originalProducts.indexOf(o));
             manupilateLikeStat(p, true);
@@ -942,13 +951,13 @@ public class ProductsFragment extends Fragment {
         ProductResponse response = new ProductResponse();
         if (mMode == MODE_USER && mUser != null) {
             response.userId = mUser.id;
-            Log.e("iii-product-", mUser.id + "");
+            Log.d("djprod", mUser.id + "");
             UIController.getProducts(getContext(), response, null);
         } else if (mCollection != null) {
             response.collectionId = mCollection.id;
             response.userId = mCollection.userId;
             response.mPageCount = offset;
-            Log.e("iii-colection-", mCollection.id + "");
+            Log.d("djprod", mCollection.id + "");
             UIController.getProducts(getContext(), response, null);
         }
 

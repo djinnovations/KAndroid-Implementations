@@ -168,7 +168,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 int isFollowing = post.getIsFollowing();
                 isFollowing = isFollowing == 0 ? 1 : 0;
                 post.setIsFollowing(isFollowing);
-                getAdapter().notifyItemChanged(pos);
+                //getAdapter().notifyItemChanged(pos);
+                getAdapter().notifyDataSetChanged();
             }
 
         }
@@ -181,11 +182,39 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 getAdapter().notifyItemChanged(pos);
             else if (host instanceof SelectHelper)
                 getAdapter().notifyItemChanged(pos);
-            else if (host instanceof FollowHelper)
+            else if (host instanceof FollowHelper){
                 getAdapter().notifyItemChanged(pos);
+                updateFollowStatus(post);
+                frameApeopleObj(post);
+            }
         }
     };
 
+    private void frameApeopleObj(SocialPost post) {
+        People people = new People();
+        people.setUserId(post.getUserId());
+        people.setIsFollowing(post.getIsFollowing());
+        MainActivity mainActivity = getAppMainActivity();
+        if (mainActivity == null)
+            return;
+        mainActivity.getPeopleFragment().updatePeopleObjIfPresent(people);
+    }
+
+
+    protected void updateFollowStatus(SocialPost feedPost){
+        int userIdOfIncomingPost = feedPost.getUserId();
+        List<Integer> listOfPosition = new ArrayList<>();
+        for (Object obj: getDataManager()){
+            if (((SocialPost)obj).getUserId() == userIdOfIncomingPost) {
+                listOfPosition.add(getDataManager().indexOf(obj));
+                ((SocialPost)obj).setIsFollowing(feedPost.getIsFollowing());
+            }
+        }
+        if (listOfPosition.size() == 0)
+            return;
+        for (int position: listOfPosition)
+            getAdapter().notifyItemChanged(position);
+    }
 
     public void updatePostList(int pos) {
         //// TODO: 25-06-2016

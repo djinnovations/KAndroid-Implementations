@@ -27,19 +27,19 @@ android {
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://107.170.99.118/goldadorn_dev/"'
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://peopleimages.tuxer5qf9ekl44m.netdna-cdn.com/goldadorn_dev/"'
 
             //buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://107.170.48.64/goldadorn_prod/rest/"'
 
             //buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
-            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://107.170.48.64/products/"'
+            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/products/"'
 
             //buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
-            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://107.170.48.64/collections/"'
+            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/collections/"'
 
             //buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
-            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://107.170.48.64/producttypes/"'
+            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/producttypes/"'
 
             //buildConfigField 'String', 'HTML_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/html/"'
             buildConfigField 'String', 'HTML_END_POINT', '" http://107.170.99.118/goldadorn_dev/html/"'
@@ -65,12 +65,12 @@ android {
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
 
-            buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
+            buildConfigField 'String', 'IMAGE_END_POINT', '"http://peopleimages.tuxer5qf9ekl44m.netdna-cdn.com/goldadorn_dev/"'
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/"'//DJphy
 
-            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/products/"'
-            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/collections/"'
-            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://demo.eremotus-portal.com/producttypes/"'
+            buildConfigField 'String', 'PRODUCT_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/products/"'
+            buildConfigField 'String', 'COLLECTION_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/collections/"'
+            buildConfigField 'String', 'PRODUCT_TYPES_IMAGE_END_POINT', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/producttypes/"'
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
 

@@ -38,6 +38,7 @@ import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.modules.home.HomePage;
+import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
@@ -131,6 +132,11 @@ public class MainActivity extends BaseDrawerActivity {
         //return null;
         return disableApp;
     }
+
+    public FindPeopleFragment getPeopleFragment(){
+        return ((HomePage) activePage).findPeopleFragment;
+    }
+
 
     private MyGestureListener myGestureListener = new MyGestureListener() {
         @Override

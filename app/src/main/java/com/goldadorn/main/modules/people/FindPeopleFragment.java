@@ -57,33 +57,61 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         @Override
         public void onSuccess(PeopleUpdateHelper host, People post, int pos) {
             if (host instanceof FollowPeopleHelper) {
-                People mySelf = getApp().getPeople();
-                Log.d("djpeople", "myselfremoved?: " + getDataManager().remove(mySelf));
+                /*People mySelf = getApp().getPeople();
+                Log.d("djpeople", "myselfremoved?: " + getDataManager().remove(mySelf));*/
                 int followercount;
-                int followingcount = 0;
+                //int followingcount = 0;
                 Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
-                Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
+               // Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
                 int isFollowing = post.getIsFollowing();
                 if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
                     followercount = post.getFollowerCount() - 1;
-                    if (mySelf.getFollowingCount() == 0) {
+                   /* if (mySelf.getFollowingCount() == 0) {
                         followercount = 0;
-                    } else followingcount = mySelf.getFollowingCount() - 1;
+                    } else followingcount = mySelf.getFollowingCount() - 1;*/
                 } else {
                     followercount = post.getFollowerCount() + 1;
-                    followingcount = mySelf.getFollowingCount() + 1;
+                    //followingcount = mySelf.getFollowingCount() + 1;
                 }
-                mySelf.setFollowingCount(followingcount);
-                getDataManager().add((pos + 1), mySelf);
+                //mySelf.setFollowingCount(followingcount);
+               // getDataManager().add((pos + 1), mySelf);
                 //getDataManager().
                 post.setFollowerCount(followercount);
                 Log.d("djpeople", "onSuccess - post-followercount: " + post.getFollowerCount());
-                Log.d("djpeople", "onSuccess - post-followingcount: " + mySelf.getFollowingCount());
+                //Log.d("djpeople", "onSuccess - post-followingcount: " + mySelf.getFollowingCount());
                 getAdapter().notifyItemChanged(pos);
             }
 
         }
     };
+
+    public void updatePeopleObjIfPresent(People peopleObj){
+        People existingPeopleObj = getPeopleObjFromList(peopleObj);
+        Log.d("djpeople", "contains that people? - updatePeopleObjIfPresent: "+existingPeopleObj == null? "false" : "true");
+        if (existingPeopleObj != null){
+            int position = getDataManager().indexOf(existingPeopleObj);
+            //getting already available people data and filling up
+            if (peopleObj.getIsFollowing() == 0)
+                existingPeopleObj.setFollowerCount((existingPeopleObj.getFollowerCount() - 1));
+            else existingPeopleObj.setFollowerCount((existingPeopleObj.getFollowerCount() + 1));
+
+            existingPeopleObj.setIsFollowing(peopleObj.getIsFollowing());
+            getDataManager().set(position, existingPeopleObj);
+            getAdapter().notifyItemChanged(position);
+            Log.d("djpeople", "people obj updated - updatePeopleObjIfPresent - position: "+position);
+        }
+    }
+
+
+    private People getPeopleObjFromList(People newPeople){
+        for (Object obj: getDataManager()){
+            if (((People) obj).getUserId() == newPeople.getUserId())
+                return (People) obj;
+        }
+        return null;
+    }
+
+
     private FollowPeopleHelper followPeopleHelper;
 
     public int getColumnsPhone() {
