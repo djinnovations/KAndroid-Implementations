@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.goldadorn.main.BR;
@@ -41,7 +40,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -76,8 +74,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         super.onItemClick(parent, view, position, id);
         if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
             if (((ServerProducts) getActivity()).getCanCheckSelected()) {
-                View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
-                View ivSelectedSymbol = singleItemView.findViewById(R.id.ivSelectedSymbol);
+                //View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
+                View ivSelectedSymbol = view.findViewById(R.id.ivSelectedSymbol);
                 ivSelectedSymbol.setVisibility(ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
             }
         }
