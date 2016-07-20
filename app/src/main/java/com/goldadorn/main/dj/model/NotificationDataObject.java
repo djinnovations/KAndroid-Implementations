@@ -18,9 +18,11 @@ public class NotificationDataObject implements Parcelable {
     private boolean botPost;
     private String postId;
     private String actionType;
+    private int readStat;
 
     public NotificationDataObject(String peopleImageUrl, String notifyContent, String dateTime,
-                                  List<String> postImageUrl, boolean botPost, String postId, String actionType) {
+                                  List<String> postImageUrl, boolean botPost, String postId,
+                                  String actionType, int readStat) {
         this.peopleImageUrl = peopleImageUrl;
         this.notifyContent = notifyContent;
         this.dateTime = dateTime;
@@ -28,6 +30,30 @@ public class NotificationDataObject implements Parcelable {
         this.botPost = botPost;
         this.postId = postId;
         this.actionType = actionType;
+        this.readStat = readStat;
+    }
+
+    @Override
+    public String toString() {
+        return "NotificationDataObject{" +
+                "peopleImageUrl='" + peopleImageUrl + '\'' +
+                ", notifyContent='" + notifyContent + '\'' +
+                ", dateTime='" + dateTime + '\'' +
+                ", postImageUrl=" + postImageUrl +
+                ", botPost=" + botPost +
+                ", postId='" + postId + '\'' +
+                ", actionType='" + actionType + '\'' +
+                ", readStat='" + readStat + '\'' +
+                '}';
+    }
+
+    public boolean getIsRead(){
+        //boolean stat = readStat == 0 ? true : false;
+        return readStat == 0;
+    }
+
+    public void setReadStat(int stat){
+        readStat = stat;
     }
 
     public String getPostId() {
@@ -71,6 +97,7 @@ public class NotificationDataObject implements Parcelable {
         botPost = in.readByte() != 0x00;
         postId = in.readString();
         actionType = in.readString();
+        readStat = in.readInt();
     }
 
     @Override
@@ -92,6 +119,7 @@ public class NotificationDataObject implements Parcelable {
         dest.writeByte((byte) (botPost ? 0x01 : 0x00));
         dest.writeString(postId);
         dest.writeString(actionType);
+        dest.writeInt(readStat);
     }
 
     @SuppressWarnings("unused")

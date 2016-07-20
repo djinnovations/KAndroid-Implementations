@@ -1,6 +1,8 @@
 package com.goldadorn.main.activities;
 
+import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Build;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -111,6 +113,19 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             RandomUtils.performAppRateTask();
             return;
         }
+        if (id == R.id.nav_home) {
+            Intent intent = new Intent(this, MainActivity.class);
+            //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//not preferred - DJphy
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                startActivity(intent);
+                finishAffinity();//preferred - DJphy
+            } else {//ICS only
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//not preferred - DJphy
+                startActivity(intent);
+            }
+            return;
+        }
 
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
         if (navigationDataObject != null) {
@@ -163,7 +178,6 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
         return true;
     }
-
 
 
     private void setMenuCustom(Menu menu) {

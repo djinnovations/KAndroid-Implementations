@@ -8,6 +8,8 @@ import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,12 +31,10 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.fragments.BaseFragment;
 import com.nineoldandroids.animation.Animator;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -134,7 +134,7 @@ public class ServerProducts extends BaseActivity {
         }
     }
 
-    public boolean getIsPTB(){
+    public boolean getIsPTB() {
         return isCallerPTB;
     }
 
@@ -149,24 +149,36 @@ public class ServerProducts extends BaseActivity {
                 previouslySelected.remove(data);
                 tosendbackList.remove(data);
             } /*else {*/
-                if (canProceed(data)) {
-                    //// TODO: 13-07-2016  for selection made ui change;
+            if (canProceed(data)) {
+                //// TODO: 13-07-2016  for selection made ui change;
+                if (!alreadyExist(data)) {
                     tosendbackList.add(data);
+                    //visibleNum.put(tosendbackList.size(), data);
                 }
+            }
             //}
             showTitle(previouslySelected.size());
-        } else{
-            ArrayList<FilterProductListing> dataList =  new ArrayList<FilterProductListing>();
+        } else {
+            ArrayList<FilterProductListing> dataList = new ArrayList<FilterProductListing>();
             dataList.add(0, data);
             processItem(dataList);
         }
     }
 
-    public boolean getCanCheckSelected(){
+    private boolean alreadyExist(FilterProductListing incoming) {
+        for (FilterProductListing obj : tosendbackList) {
+            if (incoming.equals(obj))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean getCanCheckSelected() {
         return canCheckSelected;
     }
 
     private boolean canCheckSelected = false;
+
     private boolean canProceed(FilterProductListing file) {
         if (previouslySelected.size() == 4) {
             canCheckSelected = false;
@@ -185,10 +197,11 @@ public class ServerProducts extends BaseActivity {
     View.OnClickListener mSelectionDone = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (previouslySelected.size() < 2){
-                Toast.makeText(getApplicationContext(),"Select at least two products to create the post", Toast.LENGTH_SHORT).show();
+            if (previouslySelected.size() < 2) {
+                Toast.makeText(getApplicationContext(), "Select at least two products to create the post", Toast.LENGTH_SHORT).show();
                 return;
             }
+            Log.d("djpost", "tosendbackList.size = " + tosendbackList.size());
             processItem(tosendbackList);//// TODO: 13-07-2016  after done is clicked
         }
     };
@@ -206,6 +219,7 @@ public class ServerProducts extends BaseActivity {
         if (_layTitle.getVisibility() == View.GONE) {
             _layTitle.setVisibility(View.VISIBLE);
             _layTitle.setAlpha(0.6f);
+            (_layTitle.findViewById(R.id.lldonebtnholder)).setAlpha(1);
             try {
                 startAnim(_layTitle, R.anim.anim_dialog_fall_down);
             } catch (Exception e) {
@@ -235,7 +249,7 @@ public class ServerProducts extends BaseActivity {
     }
 
 
-    private void pullBackUpIsAlreadyShown(){
+    private void pullBackUpIsAlreadyShown() {
         if (_layTitle.getVisibility() == View.VISIBLE) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -248,6 +262,7 @@ public class ServerProducts extends BaseActivity {
                             public void run() {
                                 _layTitle.setVisibility(View.GONE);
                                 _layTitle.setAlpha(0.6f);
+                                (_layTitle.findViewById(R.id.lldonebtnholder)).setAlpha(1);
                             }
                         }, 400);
                     } catch (Exception e) {
@@ -263,6 +278,12 @@ public class ServerProducts extends BaseActivity {
         Animation anim = AnimationUtils.loadAnimation(getBaseContext(), animResID);
         view.startAnimation(anim);
     }
+
+    /*SparseArray<FilterProductListing> visibleNum;
+    public String getSelectedProdCount(FilterProductListing incoming) {
+        for (FilterProductListing obj: tosendbackList)
+        return String.valueOf(tosendbackList.size());
+    }*/
 
     @Bind(R.id.layTitle)
     View _layTitle;
@@ -281,26 +302,39 @@ public class ServerProducts extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vector_icon_cross_brown);
 
-        if (getIntent() != null)
+        /*if (getIntent() != null)
             isCallerPTB = getIntent().getBooleanExtra(IntentKeys.CALLER_PTB, false);
         _layTitle.setVisibility(View.GONE);
         _layTitle.setAlpha(0.3f);
         (_layTitle.findViewById(R.id.tvDone)).setOnClickListener(mSelectionDone);
-        tosendbackList = new ArrayList<>();
+        (_layTitle.findViewById(R.id.tvDone)).setAlpha(1);
+        tosendbackList = new ArrayList<>();*/
+        prepareSelectionIfNeeded(getIntent());
 
         sortBestSelling.setSelected(true);
-        sortBestSelling.setAlpha(Float.parseFloat("1"));
-        sortNew.setAlpha(Float.parseFloat(".3"));
-        sortPrice.setAlpha(Float.parseFloat(".3"));
+        sortBestSelling.setAlpha(/*Float.parseFloat("1")*/1);
+        sortNew.setAlpha(/*Float.parseFloat(".3")*/0.3f);
+        sortPrice.setAlpha(/*Float.parseFloat(".3")*/0.3f);
         lastSorted = sortBestSelling;
         refreshView(filters, sort);
 
         RecyclerView selectorRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         selectorHelper = new SelectorHelper(this, selectorRecyclerView);
         selectorHelper.onRemoveListner(onRemoveListner);
-        TypefaceHelper.setFont(applyFilters);
+        TypefaceHelper.setFont(applyFilters, (_layTitle.findViewById(R.id.tvDone)), (_layTitle.findViewById(R.id.tvSelectedItems)));
     }
 
+
+    private void prepareSelectionIfNeeded(Intent intent) {
+        if (intent != null)
+            isCallerPTB = intent.getBooleanExtra(IntentKeys.CALLER_PTB, false);
+        _layTitle.setVisibility(View.GONE);
+        _layTitle.setAlpha(0.6f);
+        (_layTitle.findViewById(R.id.tvDone)).setOnClickListener(mSelectionDone);
+        (_layTitle.findViewById(R.id.lldonebtnholder)).setAlpha(1);
+        tosendbackList = new ArrayList<>();
+        //visibleNum = new SparseArray<>();
+    }
 
     SelectorHelper.OnRemoveListner onRemoveListner = new SelectorHelper.OnRemoveListner() {
         @Override

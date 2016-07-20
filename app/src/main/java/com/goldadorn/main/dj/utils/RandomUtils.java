@@ -66,6 +66,11 @@ public class RandomUtils {
         }else return amtToReturn;*/
     }
 
+
+    public static void exitFromAPP(){
+        System.exit(0);
+    }
+
     public static String getIndianCurrencyFormat(String amount, boolean canStripTrailingZeros) {
 
         try {

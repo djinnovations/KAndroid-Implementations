@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,13 +26,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
-import com.goldadorn.main.activities.post.PostPollActivity;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.server.ApiKeys;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -45,7 +49,6 @@ import com.goldadorn.main.utils.IDUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.mikepenz.iconics.view.IconicsButton;
-import com.squareup.picasso.Picasso;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
@@ -154,27 +157,49 @@ public class ProductsFragment extends Fragment {
         //showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         Log.d(Constants.TAG, "prod frag");
         firstTime = true;
+        View view = inflater.inflate(R.layout.fragment_products, container, false);
+        ButterKnife.bind(this, view);
         Bundle b = getArguments();
         if (b != null) {
             mMode = b.getInt(EXTRA_MODE);
             if (mMode == MODE_COLLECTION) mCollection = (Collection) b.getSerializable(EXTRA_DATA);
             else mUser = (User) b.getSerializable(EXTRA_DATA);
         }
-        return inflater.inflate(R.layout.fragment_products, container, false);
+        recyclerDrawable = ResourceReader.getInstance(Application.getInstance()).getDrawableFromResId(R.drawable.ic_action_autorenew);
+        defaultBounds = tvEndView.getCompoundDrawables()[1].getBounds();
+        defaultPadding = tvEndView.getCompoundDrawablePadding();
+        return view;
     }
+
+
+    View.OnClickListener mRefreshClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            showEmptyView(false);
+            getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+            mSwipeDeckAdapter.refresh();
+        }
+    };
+
+    View.OnClickListener doNothingClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         //setUserIdAndCollectionId();
-        mEndView.setOnClickListener(new View.OnClickListener() {
+        mEndView.setOnClickListener(/*new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showEmptyView(false);
                 mSwipeDeckAdapter.refresh();
             }
-        });
+        }*/      doNothingClick);
 
         mSwipeDeckAdapter = new SwipeDeckAdapter(getActivity());
         mCardStack.setAdapter(mSwipeDeckAdapter);
@@ -188,9 +213,22 @@ public class ProductsFragment extends Fragment {
             ((CollectionsActivity) getActivity()).registerCollectionChangeListener(
                     mCollectionChangeListener);
         }*/
-        getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
-        refreshData(0);
+        canRequestServer = false;
+        ProductResponse response = new ProductResponse();
+        if (mMode == MODE_COLLECTION) {
+            response.collectionId = mCollection.id;
+            response.mPageCount = 0;
+            Log.d("djprod", "collectionid: " + mCollection.id + "");
 
+        } else {
+            response.userId = mUser.id;
+            response.mPageCount = 0;
+            Log.d("djprod", "userid: " + mUser.id + "");
+        }
+        UIController.getProducts(getContext(), response, resultCallBackListener);
+
+        getLoaderManager().initLoader(mProductCallback.hashCode(), null, mProductCallback);
+        //refreshData(0);
         mBuyButton.setOnClickListener(mBuyClick);
     }
 
@@ -421,8 +459,9 @@ public class ProductsFragment extends Fragment {
 
 
     private int initialTotalProductCount;
+    private boolean isPaginationFinishedMode;
     //private boolean isFirstTime = true;
-    private final int threshold = 2;
+    //private final int threshold = 2;
     private boolean firstTime;
 
     public void displayBookAppointment() {
@@ -506,7 +545,7 @@ public class ProductsFragment extends Fragment {
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
             holder.like.setTag(product);
             holder.like.setSelected(product.isLiked);
-            Picasso.with(context).load(product.getImageUrl()).into(holder.image);
+            Glide.with(context).load(product.getImageUrl()).into(holder.image);
             Log.d("djprod", "imageURL: " + product.getImageUrl());
             return convertView;
         }
@@ -575,13 +614,19 @@ public class ProductsFragment extends Fragment {
                 Log.d("djprod", "product id: " + product.id);
             } while (data.moveToNext());
             try {
-                if (isPaginateCall) {
+                /*if (isPaginateCall) {
                     products = getNewListToDisplay(products);
-                } else {
-                    products = products.subList(0, DbHelper.productCountPerCall);
-                    initialTotalProductCount = products.size();
-                    Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                }*/// else {
+                if (!isPaginationFinishedMode) {
+                    if (DbHelper.productCountPerCall == -1) {
+                        products = new ArrayList<>();
+                    } else {
+                        products = products.subList(0, DbHelper.productCountPerCall);
+                    }
                 }
+                initialTotalProductCount = products.size();
+                Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                // }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -591,6 +636,7 @@ public class ProductsFragment extends Fragment {
                 showEmptyView(false);
             }
             if (getCount() > 0) setData();
+            Log.d("djtime", "changeCursor - loading finished-: " + System.currentTimeMillis());
             notifyDataSetChanged();
         }
 
@@ -599,17 +645,19 @@ public class ProductsFragment extends Fragment {
             ConcurrentLinkedQueue<Product> tempProdQueue = new ConcurrentLinkedQueue<>();
             List<Product> subList = prodList.subList(0, DbHelper.productCountPerCall);
             //boolean contains = false;
-            Log.d("djprod", "lastSeenprodID: " + lastSeenProductId);
+            //Log.d("djprod", "lastSeenprodID: " + lastSeenProductId);
             try {
                 //tempProdList = prodList.subList(0, DbHelper.productCountPerCall);
                 //tempProdList = new ConcurrentLinkedQueue<>(prodList.subList(0, prodList.size()));
                 //ConcurrentLinkedQueue<Product> avoid = new ConcurrentLinkedQueue<>(pendingProductQueue.subList(0, pendingProductQueue.size()));
-                for (Product prod : pendingProductQueue) {
+
+                /*for (Product prod : pendingProductQueue) {
                     tempProdQueue.add(prod);
                 }
-                for (Product product : subList) {
+                for (Product product : subList) {//// TODO: 18-07-2016 need to uncomment
                     tempProdQueue.add(product);
-                }
+                }*/
+
                 // ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
                 /*ArrayList<Product> toComapareList = new ArrayList<>(prodList.subList((prodList.size() -1) - threshold, prodList.size()));
                 Iterator<Product> iterator = toComapareList.iterator();
@@ -636,22 +684,23 @@ public class ProductsFragment extends Fragment {
             }
         }
 
-        private int lastSeenProductId;
+        //private int lastSeenProductId;
         private boolean isPaginateCall = false;
-        private ConcurrentLinkedQueue<Product> pendingProductQueue;
+        private final int threshold = 0;
+        //private ConcurrentLinkedQueue<Product> pendingProductQueue;
 
         @Override
         public void removeFirstObjectInAdapter() {
-            lastSeenProductId = products.get(0).productId;
+            //lastSeenProductId = products.get(0).productId;
             products.remove(0);
             notifyDataSetChanged();
             initialTotalProductCount--;
-            pendingProductQueue = new ConcurrentLinkedQueue<>(products.subList(0, products.size()));
+            //pendingProductQueue = new ConcurrentLinkedQueue<>(products.subList(0, products.size()));
             Log.d("djprod", "initialTotalProductCount - removeFirstObjectInAdapter: " + initialTotalProductCount);
             if (initialTotalProductCount == threshold) {
                 Log.d("djprod", "new offset - threshold reached- paginate: " + (offsetMain));
                 isPaginateCall = true;
-                refreshData(offsetMain);
+                //refreshData(offsetMain);
             }
         }
 
@@ -822,7 +871,13 @@ public class ProductsFragment extends Fragment {
         public void onAdapterAboutToEmpty(int i) {
             Log.d("djprod", "swipedeck adapter position: " + i);
             if (!firstTime) {
-                showEmptyView(i == 0);
+                //showEmptyView(i == 0);
+                if (i == 0) {
+                    refreshData(offsetMain);
+                    showEmptyView(true);
+                }
+                count = -1;
+                //ref
             }
             if (count > 1)
                 firstTime = false;
@@ -842,21 +897,21 @@ public class ProductsFragment extends Fragment {
 
         public void refresh() {
             products.clear();
-            products.addAll(originalProducts);
-            notifyDataSetChanged();
+            //products.addAll(originalProducts);// TODO: 18-07-2016
+            //notifyDataSetChanged();
         }
 
         @Override
         public void onItemClicked(int i, Object o) {
             try {
                 Product p = clickedProduct = originalProducts.get(originalProducts.indexOf(o));
+                if (!canProceedToBAA() || p == null) {
+                    Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.d("djprod", "product name onClickImage: " + p.name);
                 if (mMode == MODE_USER) {
                     notBaaReq = true;
-                    if (!canProceedToBAA()) {
-                        Toast.makeText(getContext(), "This is screen is not loaded yet, please wait...", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
                     setNewTry();
                 } else {
                     notBaaReq = false;
@@ -918,7 +973,7 @@ public class ProductsFragment extends Fragment {
             mDataView.setVisibility(View.GONE);
             mTextDataView.setVisibility(View.GONE);
         } else {
-            mEndView.setVisibility(View.INVISIBLE);
+            mEndView.setVisibility(View./*INVISIBLE*/GONE);
             mDataView.setVisibility(View.VISIBLE);
             mTextDataView.setVisibility(View.VISIBLE);
         }
@@ -946,22 +1001,64 @@ public class ProductsFragment extends Fragment {
     };*/
 
     private int offsetMain;
+    @Bind(R.id.tvEndView)
+    TextView tvEndView;
+
+    Drawable recyclerDrawable;
+    Rect defaultBounds;
+    int defaultPadding;
+    private boolean canRequestServer;
 
     private void refreshData(int offset) {
         ProductResponse response = new ProductResponse();
-        if (mMode == MODE_USER && mUser != null) {
-            response.userId = mUser.id;
-            Log.d("djprod", mUser.id + "");
-            UIController.getProducts(getContext(), response, null);
-        } else if (mCollection != null) {
-            response.collectionId = mCollection.id;
-            response.userId = mCollection.userId;
-            response.mPageCount = offset;
-            Log.d("djprod", mCollection.id + "");
-            UIController.getProducts(getContext(), response, null);
+        int toCompareCount;
+        try {
+            toCompareCount = mMode == MODE_COLLECTION ? mCollection.productcount : mUser.products_cnt;
+        } catch (Exception e) {
+            e.printStackTrace();
+            toCompareCount = offset;
+        }
+        if (toCompareCount == offset) {
+            tvEndView.setCompoundDrawablePadding(defaultPadding);
+            recyclerDrawable.setBounds(defaultBounds);
+            tvEndView.setCompoundDrawables(null, recyclerDrawable, null, null);
+            tvEndView.setText("That's all folks!");
+            isPaginationFinishedMode = true;
+            mEndView.setOnClickListener(mRefreshClick);
+            showEmptyView(true);
+        } else {
+            if (canRequestServer)
+                tvEndView.setCompoundDrawables(null, null, null, null);
+            tvEndView.setText("Loading More...");
+            mEndView.setOnClickListener(doNothingClick);
+            isPaginationFinishedMode = false;
+            if (mMode == MODE_USER && mUser != null) {
+                response.userId = mUser.id;
+                response.mPageCount = offset;
+                Log.d("djprod", "userid: " + mUser.id + "");
+                UIController.getProducts(getContext(), response, null);
+            } else if (mCollection != null) {
+                response.collectionId = mCollection.id;
+                response.mPageCount = offset;
+                Log.d("djprod", "collectionid: " + mCollection.id + "");
+                UIController.getProducts(getContext(), response, null);
+            }
         }
 
     }
+
+
+    IResultListener<ProductResponse> resultCallBackListener = new IResultListener<ProductResponse>() {
+        @Override
+        public void onResult(ProductResponse result) {
+            if (isAdded()) {
+                Log.d("djprod","onResult: isAdded-true");
+                canRequestServer = true;
+                getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+            }
+        }
+    };
+
 
     private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;

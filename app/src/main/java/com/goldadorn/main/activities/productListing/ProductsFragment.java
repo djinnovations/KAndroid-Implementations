@@ -76,7 +76,11 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
             if (((ServerProducts) getActivity()).getCanCheckSelected()) {
                 //View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
                 View ivSelectedSymbol = view.findViewById(R.id.ivSelectedSymbol);
-                ivSelectedSymbol.setVisibility(ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE);
+                int visiblity = ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE;
+                ivSelectedSymbol.setVisibility(visiblity);
+               /* TextView tv = (TextView) view.findViewById(R.id.tvSelectedCount);
+                tv.setVisibility(visiblity);
+                tv.setText(((ServerProducts) getActivity()).getSelectedProdCount());*/
             }
         }
     }

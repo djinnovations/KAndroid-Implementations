@@ -676,10 +676,19 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
                         .putBoolean(AppSharedPreferences.LoginInfo.IS_SOCIAL_LOGIN, true)
                         .putInt(AppSharedPreferences.LoginInfo.USER_ID, Integer.valueOf(loginResult.getUserid())).commit();*/
 
-                dismissOverlayView();
                 /*mActivity.startActivity(new Intent(mActivity, TestPayment.class));
                 mActivity.finish();*/
+                //new Action(mActivity).launchActivity(MainActivity.class, true);
+                /*Intent intent = new Intent();
+                mActivity.startActivity(intent);*/
                 new Action(mActivity).launchActivity(MainActivity.class, true);
+                Application.getInstance().getUIHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissOverlayView();
+                        mActivity.finish();
+                    }
+                }, 500);
             }
         }.start();
     }

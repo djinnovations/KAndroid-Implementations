@@ -48,6 +48,9 @@ import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.repacked.apache.commons.lang3.StringUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.rey.material.widget.ProgressView;
 import com.seatgeek.placesautocomplete.DetailsCallback;
 import com.seatgeek.placesautocomplete.OnPlaceSelectedListener;
@@ -256,6 +259,42 @@ public class ProfileEditActivity extends BaseActivity {
     @Bind(R.id.progressBarScreen1)
     ProgressView progressBarScreen1;
 
+    @Bind(R.id.ivEmailHint)
+    ImageView ivEmailHint;
+    @Bind(R.id.ivDobHint)
+    ImageView ivDobHint;
+    @Bind(R.id.ivGenderHint)
+    ImageView ivGenderHint;
+    @Bind(R.id.ivNameHint)
+    ImageView ivNameHint;
+    @Bind(R.id.ivPhoneHint)
+    ImageView ivPhoneHint;
+
+
+    private void setUpHintIcons(){
+        int color =  rsRdr.getColorFromResource(R.color.colorPrimary);
+        ivEmailHint.setImageDrawable(new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_mail_outline)
+                .color(color)
+                .sizeDp(20));
+        ivDobHint.setImageDrawable(new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_cake_layered)
+                .color(color)
+                .sizeDp(20));
+        ivGenderHint.setImageDrawable(new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_gender_male_female)
+                .color(color)
+                .sizeDp(20));
+        ivNameHint.setImageDrawable(new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_person_outline)
+                .color(color)
+                .sizeDp(20));
+        ivPhoneHint.setImageDrawable(new IconicsDrawable(this)
+                .icon(CommunityMaterial.Icon.cmd_cellphone)
+                .color(color)
+                .sizeDp(20));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -315,6 +354,7 @@ public class ProfileEditActivity extends BaseActivity {
         });
 
         setDrawablesForPassword();
+        setUpHintIcons();
         setOnClickListeners();
         setupStyle();
         if (ConnectionDetector.getInstance(getApplicationContext()).isNetworkAvailable()) {

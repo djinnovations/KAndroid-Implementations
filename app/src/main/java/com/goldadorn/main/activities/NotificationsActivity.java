@@ -26,6 +26,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -126,6 +127,13 @@ public class NotificationsActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lastClicked = mAdapter.getItem(position);
+                if (!lastClicked.getIsRead()) {
+                    lastClicked.setReadStat(0);
+                    mAdapter.updateExistingData(lastClicked, position);
+                } else {
+                    launchNotificationLookUpScreen();
+                    return;
+                }
                 int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
                 /*if (actionTypeInt == 5)
                     return;*/
@@ -213,9 +221,9 @@ public class NotificationsActivity extends BaseActivity {
                     if (firstTime) {
                         mAdapter = new NotificationsAdapter(this, notificationData);
                         notificationsList.setAdapter(mAdapter);
-                        updateUi(notificationData);
                         setUpPaginate();
                         firstTime = false;
+                        updateUi(notificationData);
                     } else if (offset > offsetMain) {
                         mAdapter.addNotifyData(notificationData);
                     } /*else if (!canContinueToPaginate()) {
@@ -241,14 +249,24 @@ public class NotificationsActivity extends BaseActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (getIdFromActionType(lastClicked.getActionType()) == 5)
+                launchNotificationLookUpScreen();
+                /*if (getIdFromActionType(lastClicked.getActionType()) == 5)
                     return;
                 Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
                 intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
-                startActivity(intent);
+                startActivity(intent);*/
             } else Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
 
         } else super.serverCallEnds(id, url, json, status);
+    }
+
+
+    public void launchNotificationLookUpScreen() {
+        if (getIdFromActionType(lastClicked.getActionType()) == 5)
+            return;
+        Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
+        intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
+        startActivity(intent);
     }
 
     private int trigger = 1;
@@ -298,7 +316,9 @@ public class NotificationsActivity extends BaseActivity {
         String postContent = null;
         String postId = null;
         String actionType = "";
+        int readStat = 1;
 
+        //Log.d("djnoti", "each obj response: " + object);
         if (!object.isNull("postid")) {
             try {
                 postId = object.getString("postid");
@@ -334,6 +354,14 @@ public class NotificationsActivity extends BaseActivity {
             }
         }
 
+        if (!object.isNull("read")) {
+            try {
+                readStat = object.getInt("read");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         // todo nithin get timestamp
         long timestamp = object.optLong("timestamp", System.currentTimeMillis());
         dateTime = /*DateUtils.getRelativeDateTimeString(this,timestamp,DateUtils.
@@ -342,7 +370,7 @@ public class NotificationsActivity extends BaseActivity {
         //DateTimeUtils.getFormattedTimestamp("dd-MM-yyyy hh:mm a", timestamp);
 
         postContent = createString(object);
-        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId, actionType);
+        return new NotificationDataObject(peopleImageUrl, postContent, dateTime, postImageUrl, botPost, postId, actionType, readStat);
     }
 
 
@@ -431,6 +459,11 @@ public class NotificationsActivity extends BaseActivity {
             loading = false;
         }
 
+        public void updateExistingData(NotificationDataObject dataObject, int position) {
+            mList.set(position, dataObject);
+            notifyDataSetChanged();
+        }
+
         @Override
         public long getItemId(int position) {
             return position;
@@ -440,6 +473,7 @@ public class NotificationsActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             NotificationHolder holder;
+            //NotificationDataObject dataObject = getItem(position);
             if (convertView == null) {
                 convertView = View.inflate(context, R.layout.layout_notification_item, null);
                 holder = new NotificationHolder();
@@ -455,6 +489,9 @@ public class NotificationsActivity extends BaseActivity {
             }
 
             NotificationDataObject dataObject = getItem(position);
+            int colorResId = dataObject.getIsRead() ? R.color.White : R.color.colorAccentTransparent;
+            convertView.setBackgroundColor(ResourceReader.getInstance(getApplicationContext()).getColorFromResource(colorResId));
+
             String peopleImageUrl = dataObject.getPeopleImageUrl();
             List<String> postImageUrl = dataObject.getPostImageUrl();
             String notifyContent = dataObject.getNotifyContent();
@@ -497,41 +534,58 @@ public class NotificationsActivity extends BaseActivity {
 
             holder.ivPostImage3.setVisibility(View.GONE);
             holder.ivPostImage2.setVisibility(View.GONE);
+            //Log.d("djnoti", "visibility - holder.ivPostImage1 pt1: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
             if (postImageUrl != null) {
                 if (postImageUrl.size() != 0) {
                     try {
-                        if (!dataObject.isBotPost())
+                        if (!dataObject.isBotPost()) {
+                            holder.ivPostImage1.setVisibility(View.VISIBLE);
                             Glide.with(context).load(postImageUrl.get(0)).into(holder.ivPostImage1);
-                        else setPostImages(postImageUrl, holder);
+                        } else {// Log.d("djnoti", "visibility - holder.ivPostImage1 pt2: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
+                            setPostImages(postImageUrl, holder, dataObject);
+                        }
                         //Picasso.with(context).load(postImageUrl).into(holder.ivPostImage1);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-            }/* else Picasso.with(context).load(R.drawable.ic_poll_topic).into(holder.ivPostImage1);*/
+                }//else holder.ivPostImage1.setVisibility(View.GONE);
+            } //else holder.ivPostImage1.setVisibility(View.GONE);
 
+            //Log.d("djnoti", "visibility - holder.ivPostImage1 pt3: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
             if (dateTime != null)
                 holder.time.setText(dateTime);
             if (notifyContent != null)
                 holder.data.setText(notifyContent);
+            //Log.d("djnoti", "visibility - holder.ivPostImage1 pt4: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
             if (getIdFromActionType(dataObject.getActionType()) == 5)
                 holder.ivPostImage1.setVisibility(View.GONE);
+
+            /*Log.d("djnoti", "visibility - holder.ivPostImage1 pt5: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
+            Log.d("djnoti", "visibility - holder.ivPostImage2: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage2.getVisibility());
+            Log.d("djnoti", "visibility - holder.ivPostImage3: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage3.getVisibility());*/
 
             return convertView;
         }
 
-        private void setPostImages(List<String> urlList, NotificationHolder holder) {
+        private void setPostImages(List<String> urlList, NotificationHolder holder, NotificationDataObject dataObject) {
             /*if (urlList.size() == 1){
                 if (!TextUtils.isEmpty(urlList.get(0)))
-                    Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
+                    Picasso.with(context).load(urlList.get(0)).into(holder.ivPostImage1)
                 else holder.ivPostImage1.setVisibility(View.GONE);}*/
-            if (urlList.size() == 1)
+            if (urlList.size() == 1) {
+                holder.ivPostImage1.setVisibility(View.VISIBLE);
                 Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
-            else if (urlList.size() == 2) {
+            } else if (urlList.size() == 2) {
+                //Log.d("djnoti", "visibility - holder.ivPostImage1 pt6: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
+                //Log.d("djnoti", "setPostImages - inside size=2 : " + urlList.size());
+                holder.ivPostImage1.setVisibility(View.VISIBLE);
                 Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
                 holder.ivPostImage2.setVisibility(View.VISIBLE);
                 Glide.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
+                //Log.d("djnoti", "visibility - holder.ivPostImage1 pt7: "+"postid: "+dataObject.getPostId()+" "+holder.ivPostImage1.getVisibility());
             } else if (urlList.size() == 3) {
+                //Log.d("djnoti", "setPostImages - inside size=3 : " + urlList.size());
+                holder.ivPostImage1.setVisibility(View.VISIBLE);
                 Glide.with(context).load(urlList.get(0)).into(holder.ivPostImage1);
                 holder.ivPostImage2.setVisibility(View.VISIBLE);
                 Glide.with(context).load(urlList.get(1)).into(holder.ivPostImage2);
@@ -653,3 +707,22 @@ public class NotificationsActivity extends BaseActivity {
         ImageView ivPostImage1, ivPostImage2, ivPostImage3;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@ package com.goldadorn.main.server;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDiskIOException;
+import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.DbHelper;
@@ -126,6 +127,7 @@ public class Api {
         try {
             generateUserCredentials(context, response);
             ApiFactory.getProducts(context, response);
+            Log.d("djtime","getProducts - data arrangement started time-: "+System.currentTimeMillis());
             if (response.success && response.responseContent != null) {
                 DbHelper.writeProducts(context, response);
             }

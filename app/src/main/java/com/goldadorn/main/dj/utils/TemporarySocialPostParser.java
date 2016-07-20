@@ -81,7 +81,8 @@ public class TemporarySocialPostParser {
         socialPost.setUserId(user.id);
         socialPost.setPostId(String.valueOf(tempPostObj.getPostId()));
         socialPost.setUserName(user.getName());
-        socialPost.setUserPic(user.getImageUrl());
+        Log.d("djpost"," profile image url: "+user.getImageUrl());
+        socialPost.setUserPic(getUnalteredUrl(user.getImageUrl().trim()));
         socialPost.setIsFollowing(1);
         socialPost.setDescription(tempPostObj.getMsg());
         socialPost.setTimestamp(System.currentTimeMillis());
@@ -114,6 +115,17 @@ public class TemporarySocialPostParser {
         }
         socialPost.dataLoaded(null);
         return socialPost;
+    }
+
+    private static String getUnalteredUrl(String imageUrl) {
+        String url = "";
+        if (imageUrl.contains("profileimages")) {
+            int index = imageUrl.indexOf("profileimages");
+            url = imageUrl.substring(index);
+            url = "../" + url.trim();
+            return url;
+        }
+        return null;
     }
 
 

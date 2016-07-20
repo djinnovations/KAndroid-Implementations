@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
@@ -66,7 +67,7 @@ public class DbHelper {
 
     }
 
-    public static int productCountPerCall;
+    public static int productCountPerCall = -1;
     public static void writeProductsSocial(Context context, ProductResponse response) throws JSONException {
         if (response.responseContent != null) {
             JSONObject dataObj = new JSONObject(response.responseContent);
@@ -364,6 +365,27 @@ public class DbHelper {
                 cursor.close();
             context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Users._ID + " = ? ", new String[]{response.userId + ""});
         }
+    }
+
+
+    public static void writeBookingCount(final int collId){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                ContentValues cv = new ContentValues();
+                if (collId != -1) {
+                    //0 = no action; 1 = liked and -1 is disliked.
+                    Cursor cursor = Application.getInstance().getContentResolver().query(Tables.Collections.CONTENT_URI, null, Tables.Collections._ID + " = ? ", new String[]{collId + ""}, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        cv.put(Tables.Collections.COUNT_BOOKAPPOINT, (cursor.getInt(cursor.getColumnIndex(Tables.Collections.COUNT_BOOKAPPOINT)) + 1));
+                    }
+                    if (cursor != null)
+                        cursor.close();
+                    Application.getInstance().getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Collections._ID + " = ? ", new String[]{collId + ""});
+
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     public static void writeUnLike(Context context, LikeResponse response) {

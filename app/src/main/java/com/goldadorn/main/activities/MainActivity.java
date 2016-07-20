@@ -267,9 +267,10 @@ public class MainActivity extends BaseDrawerActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            finish();
+                            finish();//// TODO: 19-07-2016
+
                         }
-                    }, 1500);
+                    }, 1000);
                 }
             });
             ColoredSnackbar.alert(snackbar).show();

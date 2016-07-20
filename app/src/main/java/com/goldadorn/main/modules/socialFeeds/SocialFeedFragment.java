@@ -237,7 +237,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         } else {
             Log.d("djfeed", "postAdded- custom");
             getDataManager().add(0, socialPost);
-            getAdapter().notifyItemInserted(0);
+            //getAdapter().notifyItemInserted(0);
+            getAdapter().notifyDataSetChanged();
         }
     }
 

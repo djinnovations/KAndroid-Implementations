@@ -36,6 +36,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
@@ -664,6 +665,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         if (requestCode == REQUEST_CODE_BAA && resultCode == RESULT_OK) {
             mCollection.numAppts = mCollection.numAppts + 1;
             mOverlayViewHolder.appointment_count.setText(String.format(Locale.getDefault(), "%d", mCollection.numAppts));
+            DbHelper.writeBookingCount(mCollection.id);
         }
     }
 

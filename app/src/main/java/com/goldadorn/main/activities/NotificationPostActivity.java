@@ -72,7 +72,7 @@ public class NotificationPostActivity extends BaseActivity{
 
         mNotificationDataObj = getIntent().getParcelableExtra(IntentKeys.NOTIFICATION_OBJ);
         try {
-            Log.d("djfeed","postId - onCreate()NotificationPostActivity: "+mNotificationDataObj.getPostId());
+            Log.d("djnoti", "dataObject-NotificationPostActivity : " + mNotificationDataObj.toString());
             postId = Integer.parseInt(mNotificationDataObj.getPostId());
         } catch (NumberFormatException e) {
             e.printStackTrace();

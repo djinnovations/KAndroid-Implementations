@@ -189,12 +189,12 @@ public class AppTourGuideHelper {
                                 @Override
                                 public void onClick(View v) {
                                     mTourGuideHandler.next();
-                                    count++;
-                                    if (count == /*5*/3) {
+                                    /*count++;
+                                    if (count == *//*5*//*3) {
                                         //mTourGuideHandler.cleanUp();
-                                        count = 0;
-                                        handleArrowDialog(homeActivity);
-                                    }
+                                        *//*count = 0;
+                                        handleArrowDialog(homeActivity);*//*
+                                    }*/
                                 }
                             })
                     )

@@ -490,10 +490,11 @@ public class ApiFactory extends ExtractResponse {
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             L.d("getProducts post body content " + jsonObject.toString());
 
-
+            Log.d("djtime","getProducts - posted time-: "+System.currentTimeMillis());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
+            Log.d("djtime","getProducts - response received time-: "+System.currentTimeMillis());
             L.d("getProducts " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
@@ -517,9 +518,12 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mContext = context;
             paramsBuilder.mApiType = PRODUCTS_SOCIAL_TYPE;
 
+            Log.d("djtime","getProductsSocial - posted time-: "+System.currentTimeMillis());
             Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
+            Log.d("djtime","getProductsSocial - response received time-: "+System.currentTimeMillis());
+
             L.d("getProductsSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {

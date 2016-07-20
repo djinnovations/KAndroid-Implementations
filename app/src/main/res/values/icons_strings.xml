@@ -30,4 +30,10 @@
     <string name="icon_drop_down">{gmd-arrow_drop_down}</string>
     <string name="icon_showcase_spotlight">{cmd-spotlight}</string>
 
+    <string name="icon_email">{gmd-mail_outline}</string>
+    <string name="icon_name">{gmd-person_outline}</string>
+    <string name="icon_gender">{cmd-gender_male_female}</string>
+    <string name="icon_bod">{cmd-cake_layered}</string>
+    <string name="icon_phone">{cmd-cellphone}</string>
+
 </resources>
