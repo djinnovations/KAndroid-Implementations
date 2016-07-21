@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables;
@@ -114,7 +116,9 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             @Override
             public void onClick(View v) {
 
-
+/*
+                if (true)
+                    return;*/
                 startActivity(CollectionsActivity
                         .getLaunchIntent(v.getContext(), getCollection((Integer) v.getTag())));
 
@@ -163,25 +167,36 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                 @Override
                 public void onClick(final View v) {
                     try {
-                        v.setEnabled(false);
+                        final IconicsButton likeBtn = (IconicsButton) v;
+                        likeBtn.setEnabled(false);
                         final Collection collection = (Collection) v.getTag();
-                        final boolean isLiked = v.isSelected();
+                        final boolean isLiked = /*v.isSelected()*/likeBtn.isSelected();
                         UIController.like(v.getContext(), collection, !isLiked, new
                                 IResultListener<LikeResponse>() {
                                     @Override
                                     public void onResult(LikeResponse result) {
-                                        v.setEnabled(true);
-                                        v.setSelected(result.success != isLiked);
-                                        likeMap.put(collection.id, v.isSelected());
-                                        if(isLiked){
-                                            collection.likecount=collection.likecount-1;
-                                            rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
-                                        }else{
-                                            collection.likecount=collection.likecount+1;
-                                            rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                        likeBtn.setEnabled(true);
+                                        // v.setEnabled(true);
+                                        //v.setSelected(result.success != isLiked);
+                                        if (result.success) {
+                                            /*if (!isLiked) {
+                                                likeBtn.setText(getActivity().getResources().getString(R.string.icon_liked_post));
+                                                likeBtn.setSelected(true);
+                                            } else {
+                                                likeBtn.setText(getActivity().getResources().getString(R.string.icon_likes_post));
+                                                likeBtn.setSelected(false);
+                                            }*/
+                                            manupilateLikeBtnStatus(likeBtn, !isLiked);
+                                            YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
+                                            likeMap.put(collection.id, likeBtn.isSelected());
+                                            if (isLiked) {
+                                                collection.likecount = collection.likecount - 1;
+                                                rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                            } else {
+                                                collection.likecount = collection.likecount + 1;
+                                                rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
+                                            }
                                         }
-
-
 
                                     }
                                 });
@@ -204,10 +219,11 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.itemView.setTag(position);
 
             Boolean t = likeMap.get(collection.id);
-            holder.like.setSelected(t == null ? collection.isLiked : t);
+            //holder.like.setSelected(t == null ? collection.isLiked : t);
+            manupilateLikeBtnStatus(holder.like, t == null ? collection.isLiked : t);
             holder.like.setTag(collection);
             //holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
-            Log.e("iii",collection.getImageUrl());
+            Log.e("iii", collection.getImageUrl());
             Picasso.with(context).load(collection.getImageUrl()).into(holder.image);
 
         }
@@ -221,8 +237,8 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         public Collection getCollection(int position) {
             cursor.moveToPosition(position);
-            Collection mCollection=Collection.extractFromCursor(cursor);
-            mCollection.selectedPos=position;
+            Collection mCollection = Collection.extractFromCursor(cursor);
+            mCollection.selectedPos = position;
             return mCollection;
         }
 
@@ -231,6 +247,17 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             notifyDataSetChanged();
         }
 
+    }
+
+
+    private void manupilateLikeBtnStatus(IconicsButton likeBtn, boolean isLiked) {
+        if (isLiked) {
+            likeBtn.setText(getActivity().getResources().getString(R.string.icon_liked_post));
+            likeBtn.setSelected(true);
+        } else {
+            likeBtn.setText(getActivity().getResources().getString(R.string.icon_likes_post));
+            likeBtn.setSelected(false);
+        }
     }
 
     private static class CollectionHolder extends RecyclerView.ViewHolder {
@@ -268,7 +295,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
             if (cursor != null) cursor.close();
             this.cursor = data;
-            Log.e("iiii---",data.getCount()+"");
+            Log.e("iiii---", data.getCount() + "");
             mCollectionAdapter.changeCursor(data);
             updateLikes.updateCollectionCount(data.getCount());
         }

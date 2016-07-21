@@ -73,7 +73,8 @@ public class GcmIntentService extends IntentService {
             Log.i(TAG, "GCM Registration Token: " + token);
  
             // sending the registration id to our server
-            sendRefreshTokenToServer(token);
+            //sendRefreshTokenToServer(token);
+            MixPanelHelper.getInstance().setGCMRefreshToken(token);
             sharedPreferences.edit().putBoolean(Config.SENT_TOKEN_TO_SERVER, true).apply();
 
         } catch (Exception e) {

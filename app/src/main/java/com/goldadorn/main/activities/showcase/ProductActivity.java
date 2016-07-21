@@ -38,6 +38,8 @@ import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
@@ -307,7 +309,7 @@ public class ProductActivity extends BaseDrawerActivity {
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
         String defaultUrl = mProduct.getImageUrl();
-        int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/- 1;
+        int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {
             char[] toreplace = String.valueOf(i).toCharArray();
@@ -361,7 +363,10 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     private void bindOverlay() {
-        mOverlayVH.like.setSelected(mProduct.isLiked);
+
+        //mOverlayVH.like.setSelected(mProduct.isLiked);
+        manupilateLikeBtnStatus(mOverlayVH.like, mProduct.isLiked);
+
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(/*mProduct.name*/getEndEllipsizedName(mProduct.name));
@@ -455,7 +460,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-    private void manupilateToggle(){
+    private void manupilateToggle() {
         mAppBarLayout.setExpanded(false);
         //mOverlayVH.brandName.setVisibility(View.GONE);
         mOverlayVH.setVisisbility(View.GONE);
@@ -483,7 +488,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public void addToCartNew(final View cartBtn) {
 
-        if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()){
+        if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
             return;
         }
@@ -663,13 +668,24 @@ public class ProductActivity extends BaseDrawerActivity {
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
 
+    private void manupilateLikeBtnStatus(IconicsButton likeBtn, boolean isLiked) {
+        if (isLiked) {
+            likeBtn.setText(getApplicationContext().getResources().getString(R.string.icon_liked_post));
+            likeBtn.setSelected(true);
+        } else {
+            likeBtn.setText(getApplicationContext().getResources().getString(R.string.icon_likes_post));
+            likeBtn.setSelected(false);
+        }
+    }
+
+
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final AppBarLayout appBarLayout;
         @Bind(R.id.likes_count)
         TextView likesCount;
         @Bind(R.id.likeButton)
-        ImageView like;
+        IconicsButton like;
 
         @Bind(R.id.product_actions_open)
         ImageButton productActionsToggle;
@@ -754,6 +770,7 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         }
 
+
         @Override
         public void onClick(final View v) {
             if (v == productActionsToggle) {
@@ -792,26 +809,30 @@ public class ProductActivity extends BaseDrawerActivity {
             } else if (v.getId() == mProductCollection.getId()) {
                 launchCollectionScreen();
             } else if (v == like) {
-                v.setEnabled(false);
-                final boolean isLiked = v.isSelected();
+                final IconicsButton likeBtn = (IconicsButton) v;
+                likeBtn.setEnabled(false);
+                final boolean isLiked = likeBtn.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);
                 UIController.like(v.getContext(), mProduct, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
-                                v.setEnabled(true);
-                                Log.d("djprod", "isliked val: " + v.isSelected());
-                                v.setSelected(result.success != isLiked);
-                                if (isLiked) {
-                                    Log.d("djprod", "isliked - true");
-                                    mProduct.likecount = mProduct.likecount - 1;
-                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
-                                    // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.d("djprod", "isliked - false");
-                                    mProduct.likecount = mProduct.likecount + 1;
-                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
-                                    //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                likeBtn.setEnabled(true);
+                                //likeBtn.setSelected(result.success != isLiked);
+                                if (result.success) {
+                                    manupilateLikeBtnStatus(likeBtn, !isLiked);
+                                    YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
+                                    if (isLiked) {
+                                        Log.d("djprod", "disliked");
+                                        mProduct.likecount = mProduct.likecount - 1;
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                        // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d("djprod", "liked");
+                                        mProduct.likecount = mProduct.likecount + 1;
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                        //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         });

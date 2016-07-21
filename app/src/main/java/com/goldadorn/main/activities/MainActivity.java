@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.util.Log;
@@ -30,6 +29,7 @@ import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.support.gcm.MixPanelHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -51,7 +51,6 @@ import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -182,6 +181,7 @@ public class MainActivity extends BaseDrawerActivity {
 
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
         gd = new GestureDetector(this, myGestureListener);
+        MixPanelHelper.getInstance().sendRefreshTokenToMixPanel();
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_home);
         if (navigationDataObject != null)
             action(navigationDataObject);
@@ -262,6 +262,7 @@ public class MainActivity extends BaseDrawerActivity {
             snackbar.setAction("Yes", new View.OnClickListener() {
                 public void onClick(View v) {
                     snackbar.dismiss();
+                    MixPanelHelper.getInstance().flushDataToMixPanel();
                     SocialLoginUtil.getInstance(getBaseApplication()).performFbLogout();
                     SocialLoginUtil.getInstance(getBaseApplication()).performGoogleLogout();
                     new Handler().postDelayed(new Runnable() {

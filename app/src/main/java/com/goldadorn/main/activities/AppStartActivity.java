@@ -22,6 +22,7 @@ import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.gcm.Config;
 import com.goldadorn.main.dj.support.gcm.GcmIntentService;
+import com.goldadorn.main.dj.support.gcm.MixPanelHelper;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -94,7 +95,7 @@ public class AppStartActivity extends BaseActivity {
             String calledFrom = intent.getStringExtra(IntentKeys.PUSH_NOTIFICATION_CALL);
             if (!TextUtils.isEmpty(calledFrom)){
                 if (calledFrom.equals(Constants.GCM_CALL)){
-                    getApp().logEventMixPanel(GAAnalyticsEventNames.PUSH_NOTIFICATION_TAP, null);
+                    MixPanelHelper.getInstance().logEventMixPanel(GAAnalyticsEventNames.PUSH_NOTIFICATION_TAP, null);
                 }
             }
         }

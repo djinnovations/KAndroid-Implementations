@@ -75,12 +75,21 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"/>
 
-            <com.mikepenz.iconics.view.IconicsButton
+            <!--<com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
                 style="@style/circleSmallButton"
                 android:layout_width="@dimen/circle_button_tiny_height"
                 android:layout_height="@dimen/circle_button_tiny_height"
-                android:text="@string/icon_liked_post"/>
+                android:text="@string/icon_liked_post"/>-->
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
+                style="@style/postFotterButton"
+                android:layout_width="@dimen/circle_button_tiny_height"
+                android:layout_height="@dimen/circle_button_tiny_height"
+                android:layout_marginRight="@dimen/padding_default_half"
+                android:text="@string/icon_likes_post"
+                tools:background="#cccccc"
+                tools:text="L" />
 
         </LinearLayout>
 

@@ -144,14 +144,23 @@
                 android:textSize="14sp"
                 tools:text="64" />
 
-            <ImageView
+            <!--<ImageView
                 android:id="@+id/likeButton"
                 style="@style/RoundButton"
                 android:layout_width="@dimen/shadow_height"
                 android:layout_height="@dimen/shadow_height"
                 android:src="@drawable/ic_b_like"
                 android:text="@string/icon_heart_like"
-                android:textSize="5sp" />
+                android:textSize="5sp" />-->
+            <com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
+                style="@style/postFotterButton"
+                android:layout_width="@dimen/circle_button_tiny_height"
+                android:layout_height="@dimen/circle_button_tiny_height"
+                android:layout_marginRight="@dimen/padding_default_half"
+                android:text="@string/icon_likes_post"
+                tools:background="#cccccc"
+                tools:text="L" />
         </LinearLayout>
 
         <ImageButton

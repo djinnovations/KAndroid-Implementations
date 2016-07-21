@@ -129,6 +129,7 @@ public class ProductsFragment extends Fragment {
 
 
     private Dialog overLayDialog;
+    private Dialog overLayDialogLogo;
 
     private void showOverLay(String text, int colorResId, int gravity) {
         if (overLayDialog == null) {
@@ -142,8 +143,29 @@ public class ProductsFragment extends Fragment {
     private void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
+                WindowUtils.marginForProgressViewInGrid = 5;
                 // WindowUtils.justPlainOverLay = false;
                 overLayDialog.dismiss();
+            }
+        }
+    }
+
+    private void showLogoOverLay(String text, int colorResId, int gravity) {
+        if (overLayDialogLogo == null) {
+            Log.d("djprod", "showLogoOverLay");
+            //WindowUtils.justPlainOverLay = true;
+            overLayDialogLogo = WindowUtils.getInstance(getContext().getApplicationContext()).displayOverlayLogo(getActivity(), text, colorResId,
+                    gravity);
+        }
+        overLayDialogLogo.show();
+    }
+
+    private void dismissLogoOverLay() {
+        if (overLayDialogLogo != null) {
+            if (overLayDialogLogo.isShowing()) {
+                WindowUtils.marginForProgressViewInGrid = 5;
+                // WindowUtils.justPlainOverLay = false;
+                overLayDialogLogo.dismiss();
             }
         }
     }
@@ -155,6 +177,8 @@ public class ProductsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
+        WindowUtils.marginForProgressViewInGrid = 15;
+        showLogoOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         Log.d(Constants.TAG, "prod frag");
         firstTime = true;
         View view = inflater.inflate(R.layout.fragment_products, container, false);
@@ -217,6 +241,7 @@ public class ProductsFragment extends Fragment {
         ProductResponse response = new ProductResponse();
         if (mMode == MODE_COLLECTION) {
             response.collectionId = mCollection.id;
+            response.userId = mCollection.userId;
             response.mPageCount = 0;
             Log.d("djprod", "collectionid: " + mCollection.id + "");
 
@@ -303,7 +328,6 @@ public class ProductsFragment extends Fragment {
     }
 
     private void continueToProdScreen(int colId, int desId) {
-        WindowUtils.marginForProgressViewInGrid = 5;
         dismissOverLay();
         clickedProduct.userId = desId;
         clickedProduct.collectionId = colId;
@@ -599,45 +623,49 @@ public class ProductsFragment extends Fragment {
 
 
         public void changeCursor(Cursor data) {
-            Log.d("djprod", "data pulled - cursorCount: " + data.getCount());
+            if (canRequestServer) {
+                Log.d("djprod", "data pulled - cursorCount: " + data.getCount());
            /* if (isFirstTime){
                 isFirstTime = false;*/
-            //initialTotalProductCount = data.getCount();
-            offsetMain = data.getCount();
-            Log.d("djprod", "offsetMain: " + offsetMain);
-            // }
-            products.clear();
+                //initialTotalProductCount = data.getCount();
+                offsetMain = data.getCount();
+                Log.d("djprod", "offsetMain: " + offsetMain);
+                // }
+                products.clear();
 
-            if (data != null && data.moveToFirst()) do {
-                Product product = Product.extractFromCursor(data);
-                products.add(product);
-                Log.d("djprod", "product id: " + product.id);
-            } while (data.moveToNext());
-            try {
+                if (data != null && data.moveToFirst()) do {
+                    Product product = Product.extractFromCursor(data);
+                    products.add(product);
+                    Log.d("djprod", "product id: " + product.id);
+                    Log.d("djprod", "user id-changeCursor: " + product.userId);
+                } while (data.moveToNext());
+                try {
                 /*if (isPaginateCall) {
                     products = getNewListToDisplay(products);
                 }*/// else {
-                if (!isPaginationFinishedMode) {
-                    if (DbHelper.productCountPerCall == -1) {
-                        products = new ArrayList<>();
-                    } else {
-                        products = products.subList(0, DbHelper.productCountPerCall);
+                    if (!isPaginationFinishedMode) {
+                        if (DbHelper.productCountPerCall == -1) {
+                            products = new ArrayList<>();
+                        } else {
+                            products = products.subList(0, DbHelper.productCountPerCall);
+                        }
                     }
-                }
-                initialTotalProductCount = products.size();
-                Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
-                // }
+                    initialTotalProductCount = products.size();
+                    Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                    // }
 
-            } catch (Exception e) {
-                e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                originalProducts = new ArrayList<>(products);
+                if (products.size() > 0) {
+                    showEmptyView(false);
+                }
+                if (getCount() > 0) setData();
+                Log.d("djtime", "changeCursor - loading finished-: " + System.currentTimeMillis());
+                notifyDataSetChanged();
+                //dismissLogoOverLay();
             }
-            originalProducts = new ArrayList<>(products);
-            if (products.size() > 0) {
-                showEmptyView(false);
-            }
-            if (getCount() > 0) setData();
-            Log.d("djtime", "changeCursor - loading finished-: " + System.currentTimeMillis());
-            notifyDataSetChanged();
         }
 
 
@@ -1039,6 +1067,7 @@ public class ProductsFragment extends Fragment {
                 UIController.getProducts(getContext(), response, null);
             } else if (mCollection != null) {
                 response.collectionId = mCollection.id;
+                response.userId = mCollection.userId;
                 response.mPageCount = offset;
                 Log.d("djprod", "collectionid: " + mCollection.id + "");
                 UIController.getProducts(getContext(), response, null);
@@ -1051,8 +1080,9 @@ public class ProductsFragment extends Fragment {
     IResultListener<ProductResponse> resultCallBackListener = new IResultListener<ProductResponse>() {
         @Override
         public void onResult(ProductResponse result) {
+            dismissLogoOverLay();
             if (isAdded()) {
-                Log.d("djprod","onResult: isAdded-true");
+                Log.d("djprod", "onResult: isAdded-true");
                 canRequestServer = true;
                 getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
             }

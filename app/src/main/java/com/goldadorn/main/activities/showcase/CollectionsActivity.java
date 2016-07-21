@@ -440,6 +440,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             /*if (!isFirstTime) {*/
             isFirstTime = true;
             Log.d("djcoll", "onCollectionChange");
+            prodFrag = null;
+            filterTimelineFragment = null;
             configureUI(mUIState);
             //}
             for (CollectionChangeListener l : mCollectionChangeListeners)
@@ -486,6 +488,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     }
 
     ProductsFragment prodFrag;
+    FilterTimelineFragment filterTimelineFragment;
 
     private void configureUI(int uiState) {
         Log.d("djcoll", "uistate value: " + uiState);
@@ -498,20 +501,32 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             //f = new SocialFeedFragment();
             //Bundle args = new Bundle();
             manupilateToggle();
-            FilterPostParams fpp = new FilterPostParams(("C" + String.valueOf(mCollection.id)), "0", "0");
-            f = FilterTimelineFragment.newInstance(fpp);
+            if (filterTimelineFragment == null) {
+                FilterPostParams fpp = new FilterPostParams(("C" + String.valueOf(mCollection.id)), "0", "0");
+                f = filterTimelineFragment = FilterTimelineFragment.newInstance(fpp);
             /*args.putParcelable(IntentKeys.FILTER_POST_PARAMS, fpp);
             f.setArguments(args);*/
-            id = R.id.frame_no_scroll_dummy;
-            mFrame.setVisibility(View.INVISIBLE);
-            mFrameScrollDummy.setVisibility(View.INVISIBLE);
-            mFrameNoScrollDummy.setVisibility(View.VISIBLE);
+                id = R.id.frame_no_scroll_dummy;
+                mFrame.setVisibility(View.INVISIBLE);
+                mFrameScrollDummy.setVisibility(View.INVISIBLE);
+                mFrameNoScrollDummy.setVisibility(View.VISIBLE);
+            }else f = filterTimelineFragment;
 
         } else if (uiState == UISTATE_PRODUCT) {
             Log.d("djcoll", "uistate - product frag");
-            f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
+            if (prodFrag == null)
+                f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_COLLECTION, null, mCollection);
+            else f = prodFrag;
         }
         if (f != null) {
+            if (f instanceof FilterTimelineFragment) {
+                id = R.id.frame_no_scroll_dummy;
+                mFrame.setVisibility(View.INVISIBLE);
+                mFrameScrollDummy.setVisibility(View.INVISIBLE);
+                mFrameNoScrollDummy.setVisibility(View.VISIBLE);
+            }
+            else if (f instanceof ProductsFragment)
+                id = R.id.frame;
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, f);

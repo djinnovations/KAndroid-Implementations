@@ -935,8 +935,6 @@ public class ApiFactory extends ExtractResponse {
                 builder.add("designer", response.userId + "");
             }
 
-            L.d("LIKE JSON " + builder);
-
             Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
@@ -949,6 +947,11 @@ public class ApiFactory extends ExtractResponse {
     }
 
     protected static void unLike(Context context, LikeResponse response) throws IOException, JSONException {
+
+        if (response.productId == -1 && response.collectionId != -1){
+            like(context, response);
+            return;
+        }
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -975,11 +978,11 @@ public class ApiFactory extends ExtractResponse {
             } else if (response.userId != -1) {
                 builder.add("designer", response.userId + "");
             }
-            L.d("unLike JSON " + builder.toString());
+
             Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), builder.build());
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
-            L.d("unLike " + "Code :" + response.responseCode + " content", response.responseContent.toString());
+            L.d("dislike " + "dislike response for prod :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {
             response.success = false;

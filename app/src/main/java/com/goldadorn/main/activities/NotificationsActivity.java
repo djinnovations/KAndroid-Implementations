@@ -137,7 +137,7 @@ public class NotificationsActivity extends BaseActivity {
                 int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
                 /*if (actionTypeInt == 5)
                     return;*/
-                int idTouse = /*actionTypeInt == 5 ? getApp().getUser().id : */Integer.parseInt(lastClicked.getPostId());
+                int idTouse = actionTypeInt == 5 ? getApp().getUser().id : Integer.parseInt(lastClicked.getPostId());
                 Map<String, Integer> params = new HashMap<>();
                 params.put("type", actionTypeInt);
                 params.put("id", idTouse);
