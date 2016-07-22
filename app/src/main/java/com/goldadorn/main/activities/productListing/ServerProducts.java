@@ -165,6 +165,11 @@ public class ServerProducts extends BaseActivity {
         }
     }
 
+
+    /*private ArrayList<FilterProductListing> editSendBackList(){
+        for (FilterProductListing fil)
+    }*/
+
     private boolean alreadyExist(FilterProductListing incoming) {
         for (FilterProductListing obj : tosendbackList) {
             if (incoming.equals(obj))
@@ -202,7 +207,7 @@ public class ServerProducts extends BaseActivity {
                 return;
             }
             Log.d("djpost", "tosendbackList.size = " + tosendbackList.size());
-            processItem(tosendbackList);//// TODO: 13-07-2016  after done is clicked
+            processItem(/*tosendbackList*/new ArrayList<>(previouslySelected));//// TODO: 13-07-2016  after done is clicked
         }
     };
 

@@ -84,6 +84,7 @@
             android:layout_height="50dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginRight="2dp"
             android:background="@drawable/accent_square_border"
             android:padding="2dp"
             android:scaleType="centerInside" />

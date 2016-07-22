@@ -105,7 +105,14 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
     public void onUserChange(User user) {
         mUser = user;
         getLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+        //mCollectionAdapter.
     }
+
+
+   /* @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }*/
 
     class CollectionsAdapter extends RecyclerView.Adapter<CollectionHolder> {
         private Cursor cursor;
@@ -229,6 +236,8 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         }
 
 
+
+
         @Override
         public int getItemCount() {
 
@@ -320,4 +329,18 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         }
 
     }
+
+   /* private boolean isFirstTime = true;
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("djcoll", "onResume - CollectionsFragment");
+        if (isFirstTime)
+            return;
+        if (isAdded()){
+            Log.d("djprod", "onResult: isAdded-true");
+            getLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+        }
+        isFirstTime = false;
+    }*/
 }

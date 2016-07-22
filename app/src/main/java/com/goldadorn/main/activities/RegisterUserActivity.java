@@ -141,7 +141,8 @@ import butterknife.OnClick;
                 return;
             if(!validatePassword())
                 return;
-            register(firstName.getText().toString().trim(),lastName.getText().toString().trim(), userName.getText().toString().trim(), password.getText().toString().trim());
+            register(firstName.getText().toString().trim(),lastName.getText().toString().trim(),
+                    userName.getText().toString().trim(), password.getText().toString().trim());
         }
 
         @OnClick(R.id.loginAccount) void onClickLogin()

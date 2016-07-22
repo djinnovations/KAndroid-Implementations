@@ -12,7 +12,7 @@ import com.goldadorn.main.dj.uiutils.DisplayProperties;
  */
 public abstract class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
-    private static final int SWIPE_THRESHOLD = 100;
+    private static final int SWIPE_THRESHOLD = 150;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
     private final float spacingFromEdge = 10 * DisplayProperties.getInstance(Application.getInstance(), 1)

@@ -139,9 +139,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     public static boolean isCollectionLike = false;
 
 
-
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -499,10 +496,10 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                         if (data != null) {
                             int userId = data.getIntExtra(IntentKeys.DESIGNER_ID, -1);
                             if (userId != -1) {
-                                if (DbHelper.mapOfUserIds == null || DbHelper.mapOfUserIds.size() == 0){
+                                if (DbHelper.mapOfUserIds == null || DbHelper.mapOfUserIds.size() == 0) {
                                     int position = offlinemapOfUser.get(userId);
                                     if (position != -1) smoothScrollToPosition(position);
-                                }else {
+                                } else {
                                     int position = DbHelper.mapOfUserIds.get(userId);
                                     if (position != -1) smoothScrollToPosition(position);
                                 }
@@ -530,7 +527,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     }
 
 
-    private void manupilateToggle(){
+    private void manupilateToggle() {
         mAppBarLayout.setExpanded(false);
         //mOverlayVH.brandName.setVisibility(View.GONE);
         mOverlayVH.setVisisbility(View.GONE);
@@ -661,6 +658,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         if (user != null && !user.equals(mUser)) {
             mUser = user;
             bindOverlay(user);
+            prodFrag = null;
+            filterTimelineFragment = null;
             String social = getString(R.string.social).toLowerCase();
             if (!TextUtils.isEmpty(user.name)) {
                 social += "@";
@@ -688,6 +687,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     };
 
     ProductsFragment prodFrag;
+    FilterTimelineFragment filterTimelineFragment;
+    //CollectionsFragment collectionsFragment;
 
     private void configureUI(int uiState) {
         Fragment f = null;
@@ -698,15 +699,20 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         if (uiState == UISTATE_SOCIAL) {
             //f = new SocialFeedFragment();
             manupilateToggle();
-            FilterPostParams fpp = new FilterPostParams(String.valueOf(mUser.id), "0", "0");
-            f = FilterTimelineFragment.newInstance(fpp);
+            if (filterTimelineFragment == null) {
+                FilterPostParams fpp = new FilterPostParams(String.valueOf(mUser.id), "0", "0");
+                f = filterTimelineFragment = FilterTimelineFragment.newInstance(fpp);
+            } else f = filterTimelineFragment;
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
+
         } else if (uiState == UISTATE_PRODUCT) {
             startTourGuideForProduct();
-            f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
+            if (prodFrag == null)
+                f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
+            else f = prodFrag;
         } else {
             f = CollectionsFragment.newInstance(mUser);
             id = R.id.frame_no_scroll_dummy;
@@ -782,6 +788,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     }
 
     private SparseArray<Integer> offlinemapOfUser;
+
     private class ShowcasePagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final Context context;
         private int height;
@@ -797,13 +804,13 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
 
 
-        private void setResponseState(){
-            boolean temp1 = DbHelper.mapOfUserIds == null ? false: true;
+        private void setResponseState() {
+            boolean temp1 = DbHelper.mapOfUserIds == null ? false : true;
             boolean temp2 = false;
             if (temp1)
                 temp2 = DbHelper.mapOfUserIds.size() == 0 ? false : true;
 
-            isOrderedSetAvailable = temp1 && temp2 ? true: false;
+            isOrderedSetAvailable = temp1 && temp2 ? true : false;
         }
 
         public User getUser(int position) {
@@ -832,15 +839,15 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
         private void setOfflinedataMap(Cursor cursor) {
             offlinemapOfUser = new SparseArray<>();
-            if (cursor != null){
+            if (cursor != null) {
                 if (cursor.getCount() == 0)
                     return;
                 int i = 0;
-                if (cursor.moveToFirst()){
+                if (cursor.moveToFirst()) {
                     do {
                         offlinemapOfUser.put(User.getUserId(cursor), i);
                         i++;
-                    }while (cursor.moveToNext());
+                    } while (cursor.moveToNext());
 
                 }
             }
@@ -851,11 +858,11 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 if (randomOrderedUser.getCount() == 0)
                     return null;
                 List<User> userListTemp = new ArrayList<>();
-                for (int i =0 ; i< randomOrderedUser.getCount(); i++){
+                for (int i = 0; i < randomOrderedUser.getCount(); i++) {
                     userListTemp.add(null);
                 }
                 //userListTemp.clear();
-                Log.d("dj", "size of userListTemp: "+userListTemp.size());
+                Log.d("dj", "size of userListTemp: " + userListTemp.size());
                 if (randomOrderedUser.moveToFirst()) {
                     do {
                         //int desId = DbHelper.mapOfUserIds.keyAt(position);
@@ -884,7 +891,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             User user = getUser(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id./*image*/coverImage);
-            Log.d("dj","desImageUrl: "+user.imageUrl);
+            Log.d("dj", "desImageUrl: " + user.imageUrl);
             if (!TextUtils.isEmpty(user.imageUrl)) {
                 Picasso.with(mContext).load(user.imageUrl).into(image);
                 image.getLayoutParams().width = this.width;

@@ -614,24 +614,26 @@ public class NotificationsActivity extends BaseActivity {
         if (object.has("liked")) {
             type = "liked your post";
             typeLabel = object.optString("liked");
-            typeCount = object.optInt("likecount");
+            //typeCount = object.optInt("likecount");
         } else if (object.has("followers")) {
             type = "followed you";
             typeLabel = object.optString("followers");
-            typeCount = object.optInt("followerscount");
+            //typeCount = object.optInt("followerscount");
         } else if (object.has("commented")) {
             type = "commented on your post";
             typeLabel = object.optString("commented");
-            typeCount = object.optInt("commentcount");
+            //typeCount = object.optInt("commentcount");
         } else if (object.has("polled")) {
             type = "voted on your post";
             typeLabel = object.optString("polled");
-            typeCount = object.optInt("pollcount");
+            //typeCount = object.optInt("pollcount");
         } else if (object.has("bof3polled")) {
             type = "voted on your post";
             typeLabel = object.optString("bof3polled");
-            typeCount = object.optInt("bof3polledcount");
+            //typeCount = object.optInt("bof3polledcount");
         }
+
+        typeCount = object.optInt("more");
         if (!TextUtils.isEmpty(typeLabel)) {
             String[] names = typeLabel.split(",");
             for (int i = 0; i < names.length; i++) {
@@ -653,7 +655,11 @@ public class NotificationsActivity extends BaseActivity {
         } else {
             builder.append(typeCount).append(" ").append(typeCount == 1 ? "person" : "people");
         }
-        builder.append(" ").append(type).append(".");
+        //builder.append(" ").append(type).append(".");
+        builder.append(" ");
+        if (typeCount != 0)
+            builder.append("and").append(" ").append(String.valueOf(typeCount)).append(" ").append("others").append(" ");
+        builder.append(type).append(".");
         return builder.toString();
     }
 

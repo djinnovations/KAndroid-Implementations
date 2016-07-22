@@ -132,7 +132,7 @@ public class MainActivity extends BaseDrawerActivity {
         return disableApp;
     }
 
-    public FindPeopleFragment getPeopleFragment(){
+    public FindPeopleFragment getPeopleFragment() {
         return ((HomePage) activePage).findPeopleFragment;
     }
 
@@ -543,8 +543,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                     if (socialPostHost != null && socialPostHost.get() != null)
                         socialPostHost.get().postAdded(null);
-                }
-                else {
+                } else {
                     int postId = -1;
                     try {
                         postId = new JSONObject((String) json).getInt("postid");
@@ -562,7 +561,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
-                Toast.makeText(MainActivity.this, "Success fully posted on wall", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Successfully Posted on Wall", Toast.LENGTH_SHORT).show();
 
             } else {
                 stopUploadProgress(success);
