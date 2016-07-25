@@ -127,6 +127,13 @@ public class ProductsFragment extends Fragment {
         return f;
     }
 
+    private boolean isResumeCall;
+
+    public void forceFisrtCardRedraw(boolean isResumeCall) {
+        //mCardStack.getSelectedView().refreshDrawableState();
+        //mCardStack.getAdapter().getView(0, null, mCardStack);
+        this.isResumeCall = isResumeCall;
+    }
 
     private Dialog overLayDialog;
     private Dialog overLayDialogLogo;
@@ -171,6 +178,10 @@ public class ProductsFragment extends Fragment {
     }
 
 
+    public ProductCallback getProductCallBack() {
+        return mProductCallback;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,6 +211,7 @@ public class ProductsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             showEmptyView(false);
+            isResumeCall = false;
             getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
             mSwipeDeckAdapter.refresh();
         }
@@ -623,22 +635,15 @@ public class ProductsFragment extends Fragment {
 
 
         public void changeCursor(Cursor data) {
-            if (canRequestServer) {
-                Log.d("djprod", "data pulled - cursorCount: " + data.getCount());
-           /* if (isFirstTime){
-                isFirstTime = false;*/
-                //initialTotalProductCount = data.getCount();
-                offsetMain = data.getCount();
-                Log.d("djprod", "offsetMain: " + offsetMain);
-                // }
-                products.clear();
 
+            if (isResumeCall) {
+                products.clear();
                 if (data != null && data.moveToFirst()) do {
                     Product product = Product.extractFromCursor(data);
                     products.add(product);
                     Log.d("djprod", "product id: " + product.id);
-                    Log.d("djprod", "user id-changeCursor: " + product.userId);
                 } while (data.moveToNext());
+
                 try {
                 /*if (isPaginateCall) {
                     products = getNewListToDisplay(products);
@@ -657,6 +662,17 @@ public class ProductsFragment extends Fragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                if (pendingProductQueue.size() != 0) {
+                    int startIndex = products.size() - pendingProductQueue.size();
+                    products = products.subList(startIndex, products.size());
+                    //View view = mCardStack.getChildAt(0);
+                    //mCardStack.removeViewInLayout(view);
+                }
+                View view = mCardStack.getChildAt(0);
+                mCardStack.removeViewInLayout(view);
+                initialTotalProductCount = products.size();
+                Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
                 originalProducts = new ArrayList<>(products);
                 if (products.size() > 0) {
                     showEmptyView(false);
@@ -664,7 +680,49 @@ public class ProductsFragment extends Fragment {
                 if (getCount() > 0) setData();
                 Log.d("djtime", "changeCursor - loading finished-: " + System.currentTimeMillis());
                 notifyDataSetChanged();
-                //dismissLogoOverLay();
+
+            } else {
+                if (canRequestServer) {
+                    Log.d("djprod", "data pulled - cursorCount: " + data.getCount());
+           /* if (isFirstTime){
+                isFirstTime = false;*/
+                    //initialTotalProductCount = data.getCount();
+                    offsetMain = data.getCount();
+                    Log.d("djprod", "offsetMain: " + offsetMain);
+                    // }
+                    products.clear();
+
+                    if (data != null && data.moveToFirst()) do {
+                        Product product = Product.extractFromCursor(data);
+                        products.add(product);
+                        Log.d("djprod", "product id: " + product.id);
+                    } while (data.moveToNext());
+                    try {
+                /*if (isPaginateCall) {
+                    products = getNewListToDisplay(products);
+                }*/// else {
+                        if (!isPaginationFinishedMode) {
+                            if (DbHelper.productCountPerCall == -1) {
+                                products = new ArrayList<>();
+                            } else {
+                                products = products.subList(0, DbHelper.productCountPerCall);
+                            }
+                        }
+                        initialTotalProductCount = products.size();
+                        Log.d("djprod", "scissored initialTotalProductCount: " + initialTotalProductCount);
+                        // }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    originalProducts = new ArrayList<>(products);
+                    if (products.size() > 0) {
+                        showEmptyView(false);
+                    }
+                    if (getCount() > 0) setData();
+                    Log.d("djtime", "changeCursor - loading finished-: " + System.currentTimeMillis());
+                    notifyDataSetChanged();
+                }
             }
         }
 
@@ -715,7 +773,7 @@ public class ProductsFragment extends Fragment {
         //private int lastSeenProductId;
         private boolean isPaginateCall = false;
         private final int threshold = 0;
-        //private ConcurrentLinkedQueue<Product> pendingProductQueue;
+        private ConcurrentLinkedQueue<Product> pendingProductQueue = new ConcurrentLinkedQueue<>();
 
         @Override
         public void removeFirstObjectInAdapter() {
@@ -723,7 +781,7 @@ public class ProductsFragment extends Fragment {
             products.remove(0);
             notifyDataSetChanged();
             initialTotalProductCount--;
-            //pendingProductQueue = new ConcurrentLinkedQueue<>(products.subList(0, products.size()));
+            pendingProductQueue = new ConcurrentLinkedQueue<>(products.subList(0, products.size()));
             Log.d("djprod", "initialTotalProductCount - removeFirstObjectInAdapter: " + initialTotalProductCount);
             if (initialTotalProductCount == threshold) {
                 Log.d("djprod", "new offset - threshold reached- paginate: " + (offsetMain));
@@ -810,6 +868,7 @@ public class ProductsFragment extends Fragment {
                 Log.d("djlike", "product like stat=0");
                 if (isLikeAction) {
                     Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+                    mProduct.toWriteLikeCount = 1;
                     UIController.like(getActivity(), product, true,
                             new IResultListener<LikeResponse>() {
                                 @Override
@@ -827,6 +886,7 @@ public class ProductsFragment extends Fragment {
                             });
                 } else {
                     Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+                    mProduct.toWriteLikeCount = -1;
                     UIController.like(getActivity(), product, false, new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
@@ -852,13 +912,14 @@ public class ProductsFragment extends Fragment {
                     isLikedHover(false);
                 } else {
                     Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
+                    mProduct.toWriteLikeCount = -2;
                     UIController.like(getActivity(), product, false, new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
                             isDislikedHover(false);
                             if (result.success) {
                                 product.isLiked = false;
-                                product.likecount--;
+                                product.likecount = product.likecount - 2;
                             }
                             if (mToast != null) mToast.cancel();
                             mToast = Toast.makeText(getActivity(),
@@ -877,13 +938,14 @@ public class ProductsFragment extends Fragment {
                     isDislikedHover(false);
                 } else {
                     Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
+                    mProduct.toWriteLikeCount = 2;
                     UIController.like(getActivity(), product, true, new IResultListener<LikeResponse>() {
                         @Override
                         public void onResult(LikeResponse result) {
                             isLikedHover(false);
                             if (result.success) {
-                                product.isLiked = false;
-                                product.likecount--;
+                                product.isLiked = true;
+                                product.likecount = product.likecount + 2;
                             }
                             if (mToast != null) mToast.cancel();
                             mToast = Toast.makeText(getActivity(),
@@ -901,6 +963,7 @@ public class ProductsFragment extends Fragment {
             if (!firstTime) {
                 //showEmptyView(i == 0);
                 if (i == 0) {
+                    pendingProductQueue = new ConcurrentLinkedQueue<>();
                     refreshData(offsetMain);
                     showEmptyView(true);
                 }
@@ -1007,6 +1070,7 @@ public class ProductsFragment extends Fragment {
         }
     }
 
+
     private void goToProductPage(Product product) {
         startActivity(ProductActivity.getLaunchIntent(getActivity(), product));
     }
@@ -1038,6 +1102,7 @@ public class ProductsFragment extends Fragment {
     private boolean canRequestServer;
 
     private void refreshData(int offset) {
+        isResumeCall = false;
         ProductResponse response = new ProductResponse();
         int toCompareCount;
         try {
@@ -1084,13 +1149,14 @@ public class ProductsFragment extends Fragment {
             if (isAdded()) {
                 Log.d("djprod", "onResult: isAdded-true");
                 canRequestServer = true;
+                isResumeCall = false;
                 getLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
             }
         }
     };
 
 
-    private class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+    public class ProductCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
 
         @Override

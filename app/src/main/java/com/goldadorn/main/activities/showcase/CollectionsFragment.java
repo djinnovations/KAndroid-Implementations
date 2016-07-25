@@ -80,7 +80,6 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
         getShowcaseActivity().registerUserChangeListener(this);
 
         getLoaderManager().initLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
-
     }
 
     @Override
@@ -290,7 +289,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
     }
 
-    private class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
+    public class CollectionCallback implements LoaderManager.LoaderCallbacks<Cursor> {
         Cursor cursor;
 
         @Override
@@ -330,17 +329,21 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
     }
 
-   /* private boolean isFirstTime = true;
+    public CollectionCallback getCollectionCallBack(){
+        return mCollectionCallback;
+    }
+
+    /*private boolean isFirstTime = true;
     @Override
     public void onResume() {
         super.onResume();
         Log.d("djcoll", "onResume - CollectionsFragment");
         if (isFirstTime)
             return;
-        if (isAdded()){
+        //if (isAdded()){
             Log.d("djprod", "onResult: isAdded-true");
             getLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
-        }
+        //}
         isFirstTime = false;
     }*/
 }

@@ -340,7 +340,7 @@ public class DbHelper {
             cv.put(Tables.Products.IS_LIKED, 1); //0 = no action; 1 = liked and -1 is disliked.
             Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
             if (cursor != null && cursor.moveToFirst()) {
-                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) + 1));
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) + response.currentLikeCountToWrite));
             }
             if (cursor != null)
                 cursor.close();
@@ -394,7 +394,7 @@ public class DbHelper {
             cv.put(Tables.Products.IS_LIKED, -1);//here 0 = no action; 1 = liked and -1 is disliked.
             Cursor cursor = context.getContentResolver().query(Tables.Products.CONTENT_URI, null, Tables.Products._ID + " = ? ", new String[]{response.productId + ""}, null);
             if (cursor != null && cursor.moveToFirst()) {
-                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) - 1));
+                cv.put(Tables.Products.COUNT_LIKES, (cursor.getInt(cursor.getColumnIndex(Tables.Products.COUNT_LIKES)) - response.currentLikeCountToWrite));
             }
             if (cursor != null)
                 cursor.close();

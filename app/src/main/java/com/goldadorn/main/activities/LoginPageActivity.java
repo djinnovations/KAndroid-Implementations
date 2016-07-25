@@ -24,6 +24,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.utils.ConnectionDetector;
 import com.goldadorn.main.dj.utils.Constants;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.icons.IconsUtils;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
@@ -201,9 +202,11 @@ public class LoginPageActivity extends BaseActivity {
         params.put(URLHelper.LOGIN_PARAM.USER_NAME, userName);
         params.put(URLHelper.LOGIN_PARAM.PASSWORD, password);
         ajaxCallback.setClazz(String.class);
-
+        params = RandomUtils.addPlatformParams(params);
         ajaxCallback.setParams(params);
         ajaxCallback.setClazz(String.class);
+        params = RandomUtils.addPlatformParams(params);
+        Log.d("djlogin","login - req params: "+params);
         getAQuery().ajax(url, params, String.class, ajaxCallback);
     }
 

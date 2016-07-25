@@ -26,10 +26,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,12 +41,11 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
-import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
-import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.server.ApiKeys;
@@ -63,11 +60,11 @@ import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
+import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.model.User;
-import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
@@ -813,7 +810,8 @@ public class ProductActivity extends BaseDrawerActivity {
                 likeBtn.setEnabled(false);
                 final boolean isLiked = likeBtn.isSelected();
                 Log.d("djprod", "isliked val: " + isLiked);
-                UIController.like(v.getContext(), mProduct, !isLiked,
+                manupilateLikeStat(likeBtn, !isLiked);
+               /* UIController.like(v.getContext(), mProduct, !isLiked,
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
@@ -835,7 +833,7 @@ public class ProductActivity extends BaseDrawerActivity {
                                     }
                                 }
                             }
-                        });
+                        });*/
             } else if (v == shareButton) {
                 //todo like click
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
@@ -873,6 +871,158 @@ public class ProductActivity extends BaseDrawerActivity {
                                 if (mProInfoFragment != null) {
                                     mProInfoFragment.mFollower();
                                 }
+                            }
+                        });
+            }
+        }
+    }
+
+
+    private void manupilateLikeStat(final IconicsButton likeBtn/*, final Product product*/, final boolean isLikeAction) {
+
+        Log.d("djlike", "product like stat: startPoint: " + mProduct.likeStat);
+        Log.d("djlike", "product id: startPoint: " + mProduct.id);
+        Log.d("djlike", "product name: startPoint: " + mProduct.name);
+        if (mProduct.likeStat == 0) {
+            /*if (isLikeAction) {*/
+            Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+            if (isLikeAction)
+                mProduct.toWriteLikeCount = 1;
+            else mProduct.toWriteLikeCount = -1;
+            UIController.like(getApplicationContext(), mProduct, isLikeAction,
+                    new IResultListener<LikeResponse>() {
+                        @Override
+                        public void onResult(LikeResponse result) {
+                            //isLikedHover(false);
+                            likeBtn.setEnabled(true);
+                            //likeBtn.setSelected(result.success != isLiked);
+                            if (result.success) {
+                                manupilateLikeBtnStatus(likeBtn, isLikeAction);
+                                YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
+                                if (!isLikeAction) {
+                                    Log.d("djprod", "disliked");
+                                    mProduct.isLiked = false;
+                                    mProduct.likeStat = -1;
+                                    mProduct.likecount = mProduct.likecount - 1;
+                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                    // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.d("djprod", "liked");
+                                    mProduct.isLiked = true;
+                                    mProduct.likeStat = 1;
+                                    mProduct.likecount = mProduct.likecount + 1;
+                                    mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                    //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                                /*if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),
+                                        result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
+                                mToast.show();*/
+                        }
+                    });
+            /*} else {
+                Log.d("djlike", "product like stat=0; likedAction " + isLikeAction);
+                UIController.like(getApplicationContext(), product, false, new IResultListener<LikeResponse>() {
+                    @Override
+                    public void onResult(LikeResponse result) {
+                        isDislikedHover(false);
+                        if (result.success) {
+                            product.isLiked = false;
+                            product.likecount--;
+                        }
+                        if (mToast != null) mToast.cancel();
+                        mToast = Toast.makeText(getActivity(),
+                                result.success ? product.name + " dis-liked" : "failed to update", Toast.LENGTH_LONG);
+                        mToast.show();
+                    }
+                });
+            }*/
+        } else if (mProduct.likeStat == 1) {
+            Log.d("djlike", "product like stat=1");
+            if (isLikeAction) {
+                Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
+                Toast.makeText(getApplicationContext(), "You have already liked this product!", Toast.LENGTH_LONG).show();
+
+            } else {
+                Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
+                mProduct.toWriteLikeCount = -2;
+                UIController.like(getApplicationContext(), mProduct, isLikeAction,
+                        new IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                //isLikedHover(false);
+                                likeBtn.setEnabled(true);
+                                //likeBtn.setSelected(result.success != isLiked);
+                                if (result.success) {
+                                    manupilateLikeBtnStatus(likeBtn, isLikeAction);
+                                    YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
+                                    if (!isLikeAction) {
+                                        Log.d("djprod", "disliked");
+                                        Toast.makeText(getApplicationContext(), "You have disliked a previously liked product", Toast.LENGTH_LONG).show();
+                                        mProduct.isLiked = false;
+                                        mProduct.likeStat = -1;
+                                        mProduct.likecount = mProduct.likecount - 2;//double dip
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                        // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d("djprod", "liked");
+                                        //dont care code
+                                        /*product.isLiked = true;
+                                        mProduct.likecount = mProduct.likecount + 1;
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));*/
+                                        //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                /*if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),
+                                        result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
+                                mToast.show();*/
+                            }
+                        });
+            }
+        } else if (mProduct.likeStat == -1) {
+            Log.d("djlike", "product like stat=-1");
+            if (!isLikeAction) {
+                Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
+                Toast.makeText(getApplicationContext(), "You have already liked this product!", Toast.LENGTH_LONG).show();
+            } else {
+                Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
+                mProduct.toWriteLikeCount = 2;
+                UIController.like(getApplicationContext(), mProduct, true,
+                        new IResultListener<LikeResponse>() {
+                            @Override
+                            public void onResult(LikeResponse result) {
+                                //isLikedHover(false);
+                                likeBtn.setEnabled(true);
+                                //likeBtn.setSelected(result.success != isLiked);
+                                if (result.success) {
+                                    manupilateLikeBtnStatus(likeBtn, isLikeAction);
+                                    YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
+                                    if (!isLikeAction) {
+                                        Log.d("djprod", "disliked");
+                                        //dont care code, wobt happen use case
+                                       /* product.isLiked = false;
+                                        mProduct.likecount = mProduct.likecount - 2;//double dip
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));*/
+                                        // Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.d("djprod", "liked");
+                                        Toast.makeText(getApplicationContext(), "You have liked a previously disliked product", Toast.LENGTH_LONG).show();
+                                        mProduct.isLiked = true;
+                                        mProduct.likeStat = 1;
+                                        mProduct.likecount = mProduct.likecount + 2;//double dip
+                                        mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
+                                        //Toast.makeText(getApplicationContext(),((String.format(Locale.getDefault(), "%d", mProduct.likecount))),Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                /*if (mToast != null) mToast.cancel();
+                                mToast = Toast.makeText(getActivity(),
+                                        result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
+                                mToast.show();*/
                             }
                         });
             }

@@ -169,6 +169,13 @@ public class MainActivity extends BaseDrawerActivity {
         }
     };
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("djmain", "onPause-MainActivity");
+        setIsMainActivity(false);
+    }
+
 
     /*public View getCenterView(){
         return transView;
@@ -265,11 +272,11 @@ public class MainActivity extends BaseDrawerActivity {
                     MixPanelHelper.getInstance().flushDataToMixPanel();
                     SocialLoginUtil.getInstance(getBaseApplication()).performFbLogout();
                     SocialLoginUtil.getInstance(getBaseApplication()).performGoogleLogout();
+                    SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             finish();//// TODO: 19-07-2016
-
                         }
                     }, 1000);
                 }
@@ -283,7 +290,7 @@ public class MainActivity extends BaseDrawerActivity {
 
     @Override
     protected void onDestroy() {
-        SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
+        //SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
         super.onDestroy();
     }
 
@@ -526,7 +533,7 @@ public class MainActivity extends BaseDrawerActivity {
                     ((HomePage) activePage).socialFeedFragmentpage.postAdded();
                 }*/
 
-                // TODO: 08-07-2016  
+                // TODO: 08-07-2016
                 /*if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
                     if (socialPostHost != null && socialPostHost.get() != null)
                         socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
@@ -633,8 +640,9 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
     protected void onResume() {
-        Log.d("djmain", "onResume-MainActivity");
         super.onResume();
+        Log.d("djmain", "onResume-MainActivity");
+        setIsMainActivity(true);
         if (activePage instanceof HomePage) {
             ((HomePage) activePage).updateComments();
         }

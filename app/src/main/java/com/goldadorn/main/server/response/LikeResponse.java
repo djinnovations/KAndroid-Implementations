@@ -8,4 +8,6 @@ public class LikeResponse extends BasicResponse {
     public int userId = -1;
     public int collectionId = -1;
     public int productId = -1;
+
+    public int currentLikeCountToWrite = 0;
 }

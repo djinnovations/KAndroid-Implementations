@@ -114,6 +114,7 @@ public class ProductInfoFragment extends Fragment {
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
 
+        followButton.setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
                 "Payment Modes Available");
         ((TextView) view.findViewById(R.id.warrantyInfo).findViewById(R.id.title)).setText(

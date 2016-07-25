@@ -41,6 +41,7 @@ public class Constants {
 
 
     public static final int CURRENT_API_LEVEL = Build.VERSION.SDK_INT;
+    public static final String CURRENT_OS_VERSION = Build.VERSION.RELEASE;
     public static final int REQUEST_TIMEOUT_SOCIAL_LOGIN = 6000;
 
     public static final String ERR_MSG_1 = "Something went wrong";

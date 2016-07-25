@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
@@ -188,6 +189,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             }
         } else super.serverCallEnds(id, url, json, status);
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -407,6 +410,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         return value;
     }
 
+    boolean onResumeFirstTime = true;
     @Override
     protected void onResume() {
         /*if (mCollection != null) {
@@ -415,6 +419,45 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         } else {
         }*/
         super.onResume();
+        Log.d("djcoll", "onResume - CollectionAct");
+        if (!onResumeFirstTime) {
+            if (prodFrag != null /*&& prodFrag.getUserVisibleHint()*/) {
+                Log.d("djcoll", "onResume - restart-prodswipecard-loader: CollectionAct");
+                ProductsFragment.ProductCallback mProductCallback = prodFrag.getProductCallBack();
+                getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+                prodFrag.forceFisrtCardRedraw(true);
+            }
+
+            getSetFollow();
+        }
+        onResumeFirstTime= false;
+
+    }
+
+
+    private void getSetFollow() {
+        String selection = Tables.Users._ID + "=?";
+        String[] selArgs = new String[]{String.valueOf(mCollection.userId)};
+        Cursor userCursor = Application.getInstance().getContentResolver()
+                .query(Tables.Users.CONTENT_URI, null, selection, selArgs, null);
+        if (userCursor != null) {
+            if (userCursor.getCount() == 0)
+                return;
+            if (!userCursor.moveToFirst())
+                return;
+            String[] data = User.getFollowData(userCursor);
+            boolean isFollowing = Integer.parseInt(data[0]) == 1;
+            mOverlayViewHolder.followButton.setSelected(isFollowing);
+            //mOverlayViewHolder.followersCount.setText(data[1]);
+        }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (prodFrag!=null)
+            prodFrag.forceFisrtCardRedraw(false);
     }
 
     public void registerCollectionChangeListener(CollectionChangeListener listener) {
@@ -452,38 +495,43 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private void bindOverlay(Collection collection, boolean isOnResume) {
         if (isOnResume)
             return;
-        mOverlayViewHolder.name.setText(collection.name);
-        User user = UserInfoCache.getInstance(mContext).getUserInfoDB(collection.userId, true);
-        String desName = "";
-        if (user != null) {
-            mOverlayViewHolder.followButton.setSelected(user.isFollowed);
-            desName = "By " + user.getName();
-            desName = desName.trim();
-            mOverlayViewHolder.ownerName.setText(desName);
-            /*int vis = mOverlayViewHolder.ownerName.getVisibility();
-            float textsize = mOverlayViewHolder.ownerName.getTextSize();
-            int color = mOverlayViewHolder.ownerName.getCurrentTextColor();*/
-            UiRandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
-            mOverlayViewHolder.followButton.setTag(user);
+        try {
+            mOverlayViewHolder.name.setText(collection.name);
+            User user = UserInfoCache.getInstance(mContext).getUserInfoDB(collection.userId, true);
+            String desName = "";
+            if (user != null) {
+                mOverlayViewHolder.followButton.setSelected(user.isFollowed);
+                desName = "By " + user.getName();
+                desName = desName.trim();
+                mOverlayViewHolder.ownerName.setText(desName);
+                /*int vis = mOverlayViewHolder.ownerName.getVisibility();
+                float textsize = mOverlayViewHolder.ownerName.getTextSize();
+                int color = mOverlayViewHolder.ownerName.getCurrentTextColor();*/
+                UiRandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
+                mOverlayViewHolder.followButton.setTag(user);
+            }
+            mOverlayViewHolder.followButton.setVisibility(
+                    TextUtils.isEmpty(desName) ? View.GONE : View.VISIBLE);
+            mOverlayViewHolder.description.setText(collection.description.trim());
+            //RandomUtils.set3LineEllipsizedText(collection.description.trim(), mOverlayViewHolder.description);
+            mOverlayViewHolder.likesCount.setText(
+                    String.format(Locale.getDefault(), "%d", collection.likecount));
+            mOverlayViewHolder.appointment_count.setText(
+                    String.format(Locale.getDefault(), "%d", collection.numAppts));
+            mOverlayViewHolder.extra.setText("");
+            mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
+            mOverlayViewHolder.like.setTag(collection);
+            mOverlayViewHolder.like.setSelected(collection.isLiked);
+            mTabViewHolder.setCounts(collection.productcount, -1);
+            String social = getString(R.string.social).toLowerCase();
+            if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
+                social += "@";
+                social += mCollection.name.toLowerCase().replace(" ", "");
+            }
+            mTabViewHolder.tabName2.setText(social);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        mOverlayViewHolder.followButton.setVisibility(
-                TextUtils.isEmpty(desName) ? View.GONE : View.VISIBLE);
-        mOverlayViewHolder.description.setText(collection.description);
-        mOverlayViewHolder.likesCount.setText(
-                String.format(Locale.getDefault(), "%d", collection.likecount));
-        mOverlayViewHolder.appointment_count.setText(
-                String.format(Locale.getDefault(), "%d", collection.numAppts));
-        mOverlayViewHolder.extra.setText("");
-        mOverlayViewHolder.setBadges(collection.isFeatured, collection.isTrending);
-        mOverlayViewHolder.like.setTag(collection);
-        mOverlayViewHolder.like.setSelected(collection.isLiked);
-        mTabViewHolder.setCounts(collection.productcount, -1);
-        String social = getString(R.string.social).toLowerCase();
-        if (mCollection != null && !TextUtils.isEmpty(mCollection.name)) {
-            social += "@";
-            social += mCollection.name.toLowerCase().replace(" ", "");
-        }
-        mTabViewHolder.tabName2.setText(social);
 
     }
 

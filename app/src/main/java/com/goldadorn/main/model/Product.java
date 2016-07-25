@@ -32,6 +32,8 @@ public class Product implements Serializable {
     public int maxQuantity = 10;
     public int likecount;
 
+    public int toWriteLikeCount;
+
     @SerializedName("orderQty")
     public int orderQty;
 

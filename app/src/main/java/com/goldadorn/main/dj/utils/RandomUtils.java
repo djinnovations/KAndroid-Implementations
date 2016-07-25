@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by User on 13-06-2016.
@@ -67,7 +69,7 @@ public class RandomUtils {
     }
 
 
-    public static void exitFromAPP(){
+    public static void exitFromAPP() {
         System.exit(0);
     }
 
@@ -102,6 +104,45 @@ public class RandomUtils {
         return INDIAN_CURRENCY_SYMBOL + " " + indianFormat;
     }
 
+
+    public static void set3LineEllipsizedText(String originalText, TextView textView) {
+        /*int numOfLines = textView.getLineCount();
+        if (numOfLines > 3){
+            String text = textView.getText().toString().trim();
+            int numOfChars = text.length();
+
+        }*/
+        try {
+            String fullText = originalText.trim();
+            int i = 1;
+            textView.setText("");
+            while (fullText.length() > 0) {
+                int totalCharstoFit = textView.getPaint().breakText(fullText, 0, fullText.length(),
+                        true, textView.getWidth(), null);
+                if (textView.getWidth() == 0)
+                    return;
+
+                /*if (totalCharstoFit == 0)
+                    textView.setText("");*/
+                String subString = fullText.substring(0, totalCharstoFit);
+                textView.append(subString);
+                fullText = fullText.substring(subString.length(), fullText.length());
+                i++;
+                if (i > 3)
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static Map<String, String> addPlatformParams(Map<String, String> paramsMap) {
+        paramsMap.put("platform", "Android");
+        Log.d("djrand", "OS version: " + Constants.CURRENT_OS_VERSION);
+        paramsMap.put("version", Constants.CURRENT_OS_VERSION);
+        return paramsMap;
+    }
 
     public static JSONObject getJSONFromString(String mapOfValues) {
         StringBuilder sb = new StringBuilder(mapOfValues);
@@ -193,7 +234,8 @@ public class RandomUtils {
     }
 
     private static String unreadCount = "0";
-    public static void setUnreadCount(String unreadCount){
+
+    public static void setUnreadCount(String unreadCount) {
         if (!TextUtils.isEmpty(unreadCount)) {
             if (unreadCount.length() > 1) {
                 RandomUtils.unreadCount = "9+";
@@ -201,7 +243,7 @@ public class RandomUtils {
         }
     }
 
-    public static String getUnreadCount(){
+    public static String getUnreadCount() {
 
         return unreadCount;
     }

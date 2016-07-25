@@ -212,6 +212,7 @@ public class UIController {
             response.productId = p.id;
             response.collectionId = p.collectionId;
             response.userId = p.userId;
+            response.currentLikeCountToWrite = p.toWriteLikeCount;
         } else if (model instanceof Collection) {
             Collection p = (Collection) model;
             response.collectionId = p.id;

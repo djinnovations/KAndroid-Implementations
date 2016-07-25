@@ -34,6 +34,7 @@ import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.LoginResult;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.utils.IDUtils;
@@ -525,7 +526,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
         } else if (platform.equals(Constants.PLATFORM_TWITTER)) {
 
         }
-
+        paramsMap = RandomUtils.addPlatformParams(paramsMap);
         getAQuery().ajax(ApiKeys.ENDPOINT_SOCIAL_LOGIN, paramsMap, String.class, ajaxCallback);
     }
 

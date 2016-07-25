@@ -37,8 +37,10 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.db.DbHelper;
+import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.Tables.Users;
@@ -159,6 +161,59 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         return false;
     }
 
+
+    private boolean isFirstTime = true;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("djcoll", "onResume - ShowcaseAct");
+        if (!isFirstTime) {
+            //if (isAdded()){
+            if (collectionsFragment != null && collectionsFragment.getUserVisibleHint()) {
+                Log.d("djcoll", "onResume - restart-collbanner-loader - ShowcaseAct");
+                CollectionsFragment.CollectionCallback mCollectionCallback = collectionsFragment.getCollectionCallBack();
+                getSupportLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
+            }
+            if (prodFrag != null /*&& prodFrag.getUserVisibleHint()*/) {
+                Log.d("djcoll", "onResume - restart-prodswipecard-loader - ShowcaseAct");
+                ProductsFragment.ProductCallback mProductCallback = prodFrag.getProductCallBack();
+                getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
+                prodFrag.forceFisrtCardRedraw(true);
+            }
+
+            if (mOverlayVH != null) {
+                getSetFollow();
+            }
+        }
+        //}
+        isFirstTime = false;
+    }
+
+    private void getSetFollow() {
+        String selection = Tables.Users._ID + "=?";
+        String[] selArgs = new String[]{String.valueOf(mUser.id)};
+        Cursor userCursor = Application.getInstance().getContentResolver()
+                .query(Tables.Users.CONTENT_URI, null, selection, selArgs, null);
+        if (userCursor != null) {
+            if (userCursor.getCount() == 0)
+                return;
+            if (!userCursor.moveToFirst())
+                return;
+            String[] data = User.getFollowData(userCursor);
+            boolean isFollowing = Integer.parseInt(data[0]) == 1;
+            mOverlayVH.followButton.setSelected(isFollowing);
+            mOverlayVH.followersCount.setText(data[1]);
+        }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (prodFrag != null)
+            prodFrag.forceFisrtCardRedraw(false);
+    }
 
     private final int REQUEST_CODE_BAA = IDUtils.generateViewId();
 
@@ -611,9 +666,9 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     }
 
 
-    @Override
+   /* @Override
     protected void onResume() {
-        /*if (mUser != null) {
+        *//*if (mUser != null) {
             Log.e("iii--Notnull--", "" + mUser.id);
             mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mUser.id, true);
             bindOverlay(mUser);
@@ -630,11 +685,11 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             }
         } else {
             Log.e("iii--null--", "");
-        }*/
+        }*//*
         super.onResume();
 
 
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -688,7 +743,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
     ProductsFragment prodFrag;
     FilterTimelineFragment filterTimelineFragment;
-    //CollectionsFragment collectionsFragment;
+    CollectionsFragment collectionsFragment;
 
     private void configureUI(int uiState) {
         Fragment f = null;
@@ -714,7 +769,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 f = prodFrag = ProductsFragment.newInstance(ProductsFragment.MODE_USER, mUser, null);
             else f = prodFrag;
         } else {
-            f = CollectionsFragment.newInstance(mUser);
+            f = collectionsFragment = CollectionsFragment.newInstance(mUser);
             id = R.id.frame_no_scroll_dummy;
             mFrame.setVisibility(View.INVISIBLE);
             mFrameScrollDummy.setVisibility(View.INVISIBLE);

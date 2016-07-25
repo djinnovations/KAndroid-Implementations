@@ -2,6 +2,7 @@ package com.goldadorn.main.model;
 
 import android.database.Cursor;
 
+import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.db.Tables.Users;
 
 import java.io.Serializable;
@@ -76,5 +77,13 @@ public class User implements Serializable {
 
     public static int getUserId(Cursor cursor){
         return cursor.getInt(cursor.getColumnIndex(Users._ID));
+    }
+
+
+    public static String[] getFollowData(Cursor cursor){
+        String[] data = new String[2];
+        data[0] = String.valueOf(cursor.getInt(cursor.getColumnIndex(Users.IS_FOLLOWING)));
+        data[1] = String.valueOf(cursor.getInt(cursor.getColumnIndex(Users.COUNT_FOLLOWERS)));
+        return data;
     }
 }

@@ -109,11 +109,18 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     protected void menuAction(int id) {
 
+        if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);
+
         if (id == R.id.nav_rate_us_new) {
             RandomUtils.performAppRateTask();
+            /*if (drawerLayout.isDrawerOpen(GravityCompat.START))
+                drawerLayout.closeDrawer(GravityCompat.START);*/
             return;
         }
         if (id == R.id.nav_home) {
+            if (isMainActivity)
+                return;
             Intent intent = new Intent(this, MainActivity.class);
             //intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//not preferred - DJphy
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -124,6 +131,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);//not preferred - DJphy
                 startActivity(intent);
             }
+           /* if (drawerLayout.isDrawerOpen(GravityCompat.START))
+                drawerLayout.closeDrawer(GravityCompat.START);*/
             return;
         }
 
@@ -132,8 +141,13 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             action(navigationDataObject);
         }
 
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
-            drawerLayout.closeDrawer(GravityCompat.START);
+        /*if (drawerLayout.isDrawerOpen(GravityCompat.START))
+            drawerLayout.closeDrawer(GravityCompat.START);*/
+    }
+
+    private boolean isMainActivity;
+    protected void setIsMainActivity(boolean isMainActivity){
+        this.isMainActivity = isMainActivity;
     }
 
 
