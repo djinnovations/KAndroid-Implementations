@@ -199,6 +199,12 @@ public class ServerProducts extends BaseActivity {
 
     }
 
+
+    /*public boolean isSelected(FilterProductListing file){
+        return previouslySelected.contains(file);
+    }*/
+
+
     View.OnClickListener mSelectionDone = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -385,6 +391,7 @@ public class ServerProducts extends BaseActivity {
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
+
 
     @OnClick(R.id.applyFilters)
     void applyFilters() {

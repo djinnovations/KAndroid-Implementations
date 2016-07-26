@@ -362,7 +362,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private void bindOverlay() {
 
         //mOverlayVH.like.setSelected(mProduct.isLiked);
-        manupilateLikeBtnStatus(mOverlayVH.like, mProduct.isLiked);
+        //manupilateLikeBtnStatus(mOverlayVH.like, mProduct.isLiked);
 
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
@@ -744,8 +744,9 @@ public class ProductActivity extends BaseDrawerActivity {
             buyNoBuyButton.setOnClickListener(this);
             wishlistButton.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
-            like.setOnClickListener(this);
+            //like.setOnClickListener(this);//disabled
             cartButton.setOnClickListener(this);
+            like.setSelected(true);
             followButton.setOnClickListener(this);
 
             mProductOwner.setOnClickListener(this);

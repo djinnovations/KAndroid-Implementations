@@ -138,7 +138,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:padding="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
@@ -154,13 +156,21 @@
                 android:textSize="5sp" />-->
             <com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
-                style="@style/postFotterButton"
+                style="@style/LikeButtonBgTrans"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="@string/icon_liked_post"
+                android:textColor="@color/votedColor" />
+            <!--<com.mikepenz.iconics.view.IconicsButton
+                android:id="@+id/likeButton"
+                style="@style/iconSmallButton"
                 android:layout_width="@dimen/circle_button_tiny_height"
                 android:layout_height="@dimen/circle_button_tiny_height"
                 android:layout_marginRight="@dimen/padding_default_half"
-                android:text="@string/icon_likes_post"
-                tools:background="#cccccc"
-                tools:text="L" />
+                android:text="@string/icon_heart_like" />-->
+
         </LinearLayout>
 
         <ImageButton
