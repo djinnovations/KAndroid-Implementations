@@ -163,6 +163,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         }
     }
 
+    public void postABonb(Intent intent){
+        startActivityForResult(intent, POST_FEED);
+    }
+
 
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
@@ -421,12 +425,12 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         super.onResume();
         Log.d("djcoll", "onResume - CollectionAct");
         if (!onResumeFirstTime) {
-            if (prodFrag != null /*&& prodFrag.getUserVisibleHint()*/) {
+            /*if (prodFrag != null *//*&& prodFrag.getUserVisibleHint()*//*) {
                 Log.d("djcoll", "onResume - restart-prodswipecard-loader: CollectionAct");
                 ProductsFragment.ProductCallback mProductCallback = prodFrag.getProductCallBack();
                 getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
                 prodFrag.forceFisrtCardRedraw(true);
-            }
+            }*/
 
             getSetFollow();
         }
@@ -456,8 +460,8 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     @Override
     protected void onPause() {
         super.onPause();
-        if (prodFrag!=null)
-            prodFrag.forceFisrtCardRedraw(false);
+        /*if (prodFrag!=null)
+            prodFrag.forceFisrtCardRedraw(false);*/
     }
 
     public void registerCollectionChangeListener(CollectionChangeListener listener) {

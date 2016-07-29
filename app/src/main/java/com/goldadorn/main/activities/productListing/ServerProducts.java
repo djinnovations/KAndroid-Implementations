@@ -200,9 +200,9 @@ public class ServerProducts extends BaseActivity {
     }
 
 
-    /*public boolean isSelected(FilterProductListing file){
+    public boolean isSelected(FilterProductListing file){
         return previouslySelected.contains(file);
-    }*/
+    }
 
 
     View.OnClickListener mSelectionDone = new View.OnClickListener() {

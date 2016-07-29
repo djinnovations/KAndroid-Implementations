@@ -38,10 +38,11 @@ public class PostPollActivity extends AbstractPostActivity {
     private Product mProduct;
     private ProgressDialog mProgressDialog;
 
+    private final static String toPostKey = "productpollpost";
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent in = new Intent(context, PostPollActivity.class);
         if (product != null)
-            in.putExtra("pr", product);
+            in.putExtra(toPostKey, product);
         People people = ((Application) context.getApplicationContext()).getPeople();
         in.putExtra("NAME", people.getUserName());
         in.putExtra("FOLLOWER_COUNT", people.getFollowerCount());
@@ -65,7 +66,7 @@ public class PostPollActivity extends AbstractPostActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Bundle b = savedInstanceState == null ? getIntent().getExtras() : savedInstanceState;
         if (b != null)
-            mProduct = (Product) b.getSerializable("pr");
+            mProduct = (Product) b.getSerializable(toPostKey);
         super.onCreate(savedInstanceState);
     }
 
@@ -83,7 +84,7 @@ public class PostPollActivity extends AbstractPostActivity {
         return null;
     }
 
-    @Override
+    /*@Override
     protected void postNow() {
         if (mProduct == null)
             super.postNow();
@@ -112,12 +113,14 @@ public class PostPollActivity extends AbstractPostActivity {
                 ColoredSnackbar.alert(snackbar).show();
             }
         }
-    }
+    }*/
 
     protected List<String> getLinks() {
         if (mProduct != null) {
             List<String> t = new ArrayList<>();
-            t.add(mProduct.getImageUrl());
+            String url = mProduct.getImageUrl();
+            String path = ".." + url.substring(url.indexOf("/product"), url.length());
+            t.add(path);
             return t;
         }
         if (imageSelector1 != null && imageSelector1.isValid()) {
@@ -140,10 +143,13 @@ public class PostPollActivity extends AbstractPostActivity {
     }
 
     protected String isValid() {
-        if (imageSelector1 != null && imageSelector1.isValid() == false)
-            return "Please upload image";
-        else if (details.getText().toString().equals(""))
+        if (mProduct == null) {
+            if (imageSelector1 != null && imageSelector1.isValid() == false)
+                return "Please upload image";
+        }
+        if (details.getText().toString().equals(""))
             return "Please enter some details";
+
         return null;
     }
 
@@ -169,7 +175,13 @@ public class PostPollActivity extends AbstractPostActivity {
 
     @Override
     protected List<String> getProductAppendedColDesIdPrice() {
-        if (imageSelector1.isValid()) {
+
+        if (mProduct != null){
+            List<String> list = new ArrayList<>();
+            list.add(mProduct.id+":"+mProduct.collectionId+":"+mProduct.userId+":"+mProduct.getDisplayPrice());
+            return list;
+        }
+        else if (imageSelector1.isValid()) {
             if (imageSelector1.getProductId() == -1)
                 return null;
             List<String> list = new ArrayList<>();

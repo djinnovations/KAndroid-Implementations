@@ -156,8 +156,8 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             if (fileData != null && fileData.equals("") == false)
                 intent.putExtra("fileData", fileData);
 
-            List<Integer> price = getPrice();
-            intent.putExtra("price", price.toArray());
+            /*List<Integer> price = getPrice();
+            intent.putExtra("price", price.toArray());*/
             /*List<Integer> collIdList = getCollIds();
             intent.putExtra("collIdList", collIdList.toArray());
             List<Integer> desIdList = getDesignerIds();

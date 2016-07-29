@@ -117,9 +117,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
     private int offset=0;
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
-
         try {
-
             String param="{\"postid\":"+getPostID()+",\"offset\":"+offset+"}";
             params.put(AQuery.POST_ENTITY,new StringEntity(param));
             Log.d(Constants.TAG," LikesView getNextDataParams fetchlikeslist requestJson: "+param);
@@ -187,10 +185,12 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
     {
         super.onItemClick(baseObject);
     }
+
     public int getListItemViewType(int position,Object item)
     {
         return ViewTypes.VIEW_LIKE;
     }
+
     public View getItemView(int viewType,LayoutInflater inflater,ViewGroup container)
     {
         return inflater.inflate(R.layout.liked_list_item,null);
@@ -203,6 +203,7 @@ public class LikesView extends DefaultVerticalListView implements DefaultProject
     {
         return LikesResult.class;
     }
+
     public String getNextDataURL(PageData pageData)
     {
         if(pageData.curruntPage==1)

@@ -3,6 +3,7 @@ package com.goldadorn.main.model;
 import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.model.RecommendedProduct;
 import com.goldadorn.main.dj.utils.SmartTimeAgo;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
@@ -22,6 +23,7 @@ public class SocialPost extends ServerError implements IParseableObject {
     public static final Integer POST_TYPE_NORMAL_POST =1;
     public static final Integer POST_TYPE_POLL =2;
     public static final Integer POST_TYPE_BEST_OF =3;
+    public static final Integer POST_RECOMMENDED_PRODS = 4;
     private Integer isDesigner=1;
     private Integer bof3Percent1;
     private Integer bof3Percent2;
@@ -31,6 +33,9 @@ public class SocialPost extends ServerError implements IParseableObject {
     private String recommendation2;
     private String recommendation3;
     private String recommendation4;
+
+    //private List<>
+
     private String age;
     private Image img2=null;
     private Image img1=null;
@@ -56,6 +61,8 @@ public class SocialPost extends ServerError implements IParseableObject {
     private String price3;
     private String price1=null;
 
+    private List<RecommendedProduct> products;
+
     public String getPrice1() {
         return price1;
     }
@@ -80,6 +87,14 @@ public class SocialPost extends ServerError implements IParseableObject {
         this.price3 = price3;
     }
 
+
+    public void setRecoProducts(List<RecommendedProduct> products){
+        this.products = products;
+    }
+
+    public List<RecommendedProduct> getRecoProducts(){
+        return products;
+    }
 
 
     /**
@@ -206,41 +221,43 @@ public class SocialPost extends ServerError implements IParseableObject {
             setPostType(POST_TYPE_POLL);
         else if(getType().trim().equals("3"))
             setPostType(POST_TYPE_BEST_OF);
-        else
-            setPostType(POST_TYPE_NORMAL_POST);
+        else if (getType().trim().equals("7")){
+            setPostType(POST_RECOMMENDED_PRODS);
+        }
+        else setPostType(POST_TYPE_NORMAL_POST);
 
-        if(userId== Application.getLoginUser().id)
-            isSelf=true;
+        if (this.postType != POST_RECOMMENDED_PRODS) {
+            if (userId == Application.getLoginUser().id)
+                isSelf = true;
 
-        userPic = URLHelper.parseImageURL(userPic);
+            userPic = URLHelper.parseImageURL(userPic);
 
-        String oldData = image1;
-        Log.d("dj","image1: "+image1);
-        if(image1!=null && image1.trim().equals("")==false)
-            image1= URLHelper.parseImageURL(image1);
-        else
-            image1=null;
+            String oldData = image1;
+            Log.d("dj", "image1: " + image1);
+            if (image1 != null && image1.trim().equals("") == false)
+                image1 = URLHelper.parseImageURL(image1);
+            else
+                image1 = null;
 
-        Log.d("dj","image2: "+image2);
-        if(image2!=null && image2.trim().equals("")==false)
-            image2= URLHelper.parseImageURL(image2);
-        else
-            image2=null;
+            Log.d("dj", "image2: " + image2);
+            if (image2 != null && image2.trim().equals("") == false)
+                image2 = URLHelper.parseImageURL(image2);
+            else
+                image2 = null;
 
-        Log.d("dj","image3: "+image3);
-        if(image3!=null && image3.trim().equals("")==false)
-            image3= URLHelper.parseImageURL(image3);
-        else
-            image3=null;
+            Log.d("dj", "image3: " + image3);
+            if (image3 != null && image3.trim().equals("") == false)
+                image3 = URLHelper.parseImageURL(image3);
+            else
+                image3 = null;
 
 
-
-        if(image1!=null)
-            img1 = new Image(image1);
-        if(image2!=null)
-            img2 =new Image(image2);
-        if(image3!=null)
-            img3 =new Image(image3);
+            if (image1 != null)
+                img1 = new Image(image1);
+            if (image2 != null)
+                img2 = new Image(image2);
+            if (image3 != null)
+                img3 = new Image(image3);
 
 
 
@@ -249,38 +266,39 @@ public class SocialPost extends ServerError implements IParseableObject {
         age = sdf.format(date);
 
         age = age.replace(",",", at ");*/
-        String result = SmartTimeAgo.getSmartTime(/*null, */timestamp/*, true*/);
+            String result = SmartTimeAgo.getSmartTime(/*null, */timestamp/*, true*/);
         /*if (result.equals(SmartTimeAgo.SMART_TIME_EOF))
             setDateAsEarlier();
-        else */age = result;
+        else */
+            age = result;
 
-        //strElapsed(timestamp);
+            //strElapsed(timestamp);
 
 
+            //recommendation1=recommendation2=recommendation3=recommendation4=oldData;
 
+            recommendation = new ArrayList<>();
+            recommendation1 = URLHelper.parseImageURL(recommendation1);
+            recommendation2 = URLHelper.parseImageURL(recommendation2);
+            recommendation3 = URLHelper.parseImageURL(recommendation3);
+            recommendation4 = URLHelper.parseImageURL(recommendation4);
 
-        //recommendation1=recommendation2=recommendation3=recommendation4=oldData;
+            if (getRecommendation1() != null && getRecommendation1().equals("") == false)
+                recommendation.add(new Image(getRecommendation1()));
 
-        recommendation = new ArrayList<>();
-        recommendation1= URLHelper.parseImageURL(recommendation1);
-        recommendation2= URLHelper.parseImageURL(recommendation2);
-        recommendation3= URLHelper.parseImageURL(recommendation3);
-        recommendation4= URLHelper.parseImageURL(recommendation4);
+            if (getRecommendation2() != null && getRecommendation2().equals("") == false)
+                recommendation.add(new Image(getRecommendation3()));
 
-        if(getRecommendation1()!=null && getRecommendation1().equals("")==false)
-            recommendation.add(new Image(getRecommendation1()));
+            if (getRecommendation3() != null && getRecommendation3().equals("") == false)
+                recommendation.add(new Image(getRecommendation3()));
 
-        if(getRecommendation2()!=null && getRecommendation2().equals("")==false)
-            recommendation.add(new Image(getRecommendation3()));
+            if (getRecommendation4() != null && getRecommendation4().equals("") == false)
+                recommendation.add(new Image(getRecommendation4()));
 
-        if(getRecommendation3()!=null && getRecommendation3().equals("")==false)
-            recommendation.add(new Image(getRecommendation3()));
+            if (recommendation.size() == 0)
+                recommendation = null;
 
-        if(getRecommendation4()!=null && getRecommendation4().equals("")==false)
-            recommendation.add(new Image(getRecommendation4()));
-
-        if(recommendation.size()==0)
-            recommendation=null;
+        }
 
     }
 

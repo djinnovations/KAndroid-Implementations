@@ -172,9 +172,9 @@ public class WebActivity extends BaseActivity {
     }
 
 
-    private void showDialogInfo(String msg, boolean isPositive){
+   /* private void showDialogInfo(String msg, boolean isPositive){
         int color ;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
-    }
+    }*/
 }

@@ -1,6 +1,7 @@
 package com.goldadorn.main.dj.server;
 
 import com.goldadorn.main.BuildConfig;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.utils.URLHelper;
 
 /**
@@ -76,6 +77,11 @@ public class ApiKeys {
         return BuildConfig.END_POINT_COMERCIAL + VERB.GET_PRODUCTS;
     }
 
+    public static final String getFollowerListAPI(int offset){
+        return BuildConfig.END_POINT + VERB.GET_FOLLOWERS + "/"+ Application.getInstance().getUser().id
+                +"/"+String.valueOf(offset);
+    }
+
     private static final class VERB{
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
         private static final String SET_CART_ADDRESS_API = "setuseraddress";
@@ -90,5 +96,7 @@ public class ApiKeys {
         private static final String CHANGE_PASSWORD = "changepassword";
         private static final String PAYMENT_HASHES_API = "generatepaymenthash";
         private static final String GET_PRODUCTS = "getproducts";
+        private static final String GET_FOLLOWERS = "fetchfollowers";
+
     }
 }

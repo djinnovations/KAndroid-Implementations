@@ -50,6 +50,7 @@ import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
@@ -72,6 +73,9 @@ import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -682,7 +686,8 @@ public class ProductActivity extends BaseDrawerActivity {
         @Bind(R.id.likes_count)
         TextView likesCount;
         @Bind(R.id.likeButton)
-        IconicsButton like;
+        //IconicsButton like;
+        ImageView like;
 
         @Bind(R.id.product_actions_open)
         ImageButton productActionsToggle;
@@ -745,13 +750,21 @@ public class ProductActivity extends BaseDrawerActivity {
             wishlistButton.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
             //like.setOnClickListener(this);//disabled
+            setUpLikeBtn();
             cartButton.setOnClickListener(this);
-            like.setSelected(true);
             followButton.setOnClickListener(this);
 
             mProductOwner.setOnClickListener(this);
             mProductCollection.setOnClickListener(this);
             //RandomUtils.underLineTv(mProductOwner);
+        }
+
+        private void setUpLikeBtn() {
+            int color =  ResourceReader.getInstance(getApplicationContext()).getColorFromResource(R.color.votedColor);
+            like.setImageDrawable(new IconicsDrawable(ProductActivity.this)
+                    .icon(FontAwesome.Icon.faw_heart)
+                    .color(color)
+                    .sizeDp(20));
         }
 
         public void setVisisbility(int visibility) {

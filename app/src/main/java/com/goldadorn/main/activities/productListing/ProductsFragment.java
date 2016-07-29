@@ -51,7 +51,7 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return new DividerDecoration(this.getActivity());
     }
 
-   // private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
+    // private HashSet<FilterProductListing> previouslySelected = new HashSet<>();
 
     public void onItemClick(Object baseObject) {
         FilterProductListing file = (FilterProductListing) baseObject;
@@ -60,29 +60,45 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
             if (!status)
                 previouslySelected.remove(file);
             if (canProceed(file)) {*/
-                //// TODO: 13-07-2016  for selection made ui change;
-                EventBus.getDefault().post(file);
-            //}
+        //// TODO: 13-07-2016  for selection made ui change;
+        EventBus.getDefault().post(file);
+        //}
         //} else EventBus.getDefault().post(file);
 
     }
 
 
-    //private boolean canCheckSelected = false;
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        super.onItemClick(parent, view, position, id);
-        if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
-            if (((ServerProducts) getActivity()).getCanCheckSelected()) {
-                //View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
-                View ivSelectedSymbol = view.findViewById(R.id.ivSelectedSymbol);
-                int visiblity = ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE;
-                ivSelectedSymbol.setVisibility(visiblity);
+    public class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T> {
+        public BindingItemHolder(View itemView, int variableID) {
+            super(itemView, variableID);
+        }
+
+        public void updateItemView(Object data, View view, int position) {
+            Log.d("djpost", "updateItemView: ProductFragment");
+            if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
+                /*if (((ServerProducts) getActivity()).getCanCheckSelected()) {*/
+                    //View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
+                    View ivSelectedSymbol = view.findViewById(R.id.ivSelectedSymbol);
+                    int visiblity = ivSelectedSymbol.getVisibility() == View.INVISIBLE ? View.VISIBLE : View.INVISIBLE;
+                    boolean canCheck = ((ServerProducts) getActivity()).isSelected((FilterProductListing) getDataManager().get(position));
+                    if (canCheck)
+                        ivSelectedSymbol.setVisibility(visiblity);
+                    else ivSelectedSymbol.setVisibility(View.INVISIBLE);
                /* TextView tv = (TextView) view.findViewById(R.id.tvSelectedCount);
                 tv.setVisibility(visiblity);
                 tv.setText(((ServerProducts) getActivity()).getSelectedProdCount());*/
+                //}
             }
         }
+    }
+
+
+    //private boolean canCheckSelected = fals;
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemClick(parent, view, position, id);
+        if (((ServerProducts) getActivity()).getCanCheckSelected())
+            getAdapter().notifyItemChanged(position);
     }
 
 
@@ -393,18 +409,6 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
         return new BindingItemHolder(view, BR.product);
     }
 
-
-    public class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T> {
-        public BindingItemHolder(View itemView, int variableID) {
-            super(itemView, variableID);
-        }
-
-        /*@Override
-        public void updateItemView(Object data, View view, int position) {
-            super.updateItemView(data, view, position);
-            //previouslySelected.contains((FilterProductListing) data);
-        }*/
-    }
 
     public static class Result extends CodeDataParser {
         List<FilterProductListing> data;

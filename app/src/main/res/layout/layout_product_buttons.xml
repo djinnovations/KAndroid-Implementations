@@ -138,6 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
+                android:padding="8dp"
                 android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
@@ -154,7 +155,7 @@
                 android:src="@drawable/ic_b_like"
                 android:text="@string/icon_heart_like"
                 android:textSize="5sp" />-->
-            <com.mikepenz.iconics.view.IconicsButton
+            <!--<com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
                 style="@style/LikeButtonBgTrans"
                 android:layout_width="40dp"
@@ -162,7 +163,14 @@
                 android:gravity="center"
                 android:textSize="18sp"
                 android:text="@string/icon_liked_post"
-                android:textColor="@color/votedColor" />
+                android:textColor="@color/votedColor" />-->
+
+            <ImageView
+                android:id="@+id/likeButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                 />
+
             <!--<com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
                 style="@style/iconSmallButton"
@@ -176,14 +184,13 @@
         <ImageButton
             android:id="@+id/product_actions_open"
             style="@style/circleSmallButton"
-            android:layout_width="@dimen/shadow_height"
-            android:layout_height="@dimen/shadow_height"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="right"
             android:layout_marginRight="12dp"
             android:gravity="center"
             android:src="@drawable/add"
-            android:textAlignment="center"
-            android:textStyle="bold" />
+            />
 
     </LinearLayout>
 

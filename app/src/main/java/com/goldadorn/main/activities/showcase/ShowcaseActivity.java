@@ -150,6 +150,13 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         }
     }
 
+
+    public void postABonb(Intent intent){
+        startActivityForResult(intent, POST_FEED);
+    }
+
+
+
     private boolean canProceedToBAA() {
         if (mUser != null) {
             if (!TextUtils.isEmpty(mUser.name) && !TextUtils.isEmpty(mUser.getImageUrl())
@@ -175,12 +182,12 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 CollectionsFragment.CollectionCallback mCollectionCallback = collectionsFragment.getCollectionCallBack();
                 getSupportLoaderManager().restartLoader(mCollectionCallback.hashCode(), null, mCollectionCallback);
             }
-            if (prodFrag != null /*&& prodFrag.getUserVisibleHint()*/) {
+            /*if (prodFrag != null *//*&& prodFrag.getUserVisibleHint()*//*) {
                 Log.d("djcoll", "onResume - restart-prodswipecard-loader - ShowcaseAct");
                 ProductsFragment.ProductCallback mProductCallback = prodFrag.getProductCallBack();
                 getSupportLoaderManager().restartLoader(mProductCallback.hashCode(), null, mProductCallback);
                 prodFrag.forceFisrtCardRedraw(true);
-            }
+            }*/
 
             if (mOverlayVH != null) {
                 getSetFollow();
@@ -211,8 +218,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     @Override
     protected void onPause() {
         super.onPause();
-        if (prodFrag != null)
-            prodFrag.forceFisrtCardRedraw(false);
+       /* if (prodFrag != null)
+            prodFrag.forceFisrtCardRedraw(false);*/
     }
 
     private final int REQUEST_CODE_BAA = IDUtils.generateViewId();

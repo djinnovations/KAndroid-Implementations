@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -49,7 +51,9 @@ import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.adapter.RecommendedProductsAdapter;
 import com.goldadorn.main.dj.model.ProductTemp;
+import com.goldadorn.main.dj.model.RecommendedProduct;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.support.EmojisHelper;
@@ -80,6 +84,7 @@ import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.ImageFilePath;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
@@ -128,6 +133,15 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         if (isVisibleToUser) { }
         else {  }
     }*/
+
+    public DataManager getDataManagerCustom() {
+        return this.getDataManager();
+    }
+
+    public void refreshSelf() {
+        getAdapter().notifyDataSetChanged();
+    }
+
 
     @Override
     public boolean getUserVisibleHint() {
@@ -182,7 +196,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 getAdapter().notifyItemChanged(pos);
             else if (host instanceof SelectHelper)
                 getAdapter().notifyItemChanged(pos);
-            else if (host instanceof FollowHelper){
+            else if (host instanceof FollowHelper) {
                 getAdapter().notifyItemChanged(pos);
                 updateFollowStatus(post);
                 frameApeopleObj(post);
@@ -201,18 +215,18 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
-    protected void updateFollowStatus(SocialPost feedPost){
+    protected void updateFollowStatus(SocialPost feedPost) {
         int userIdOfIncomingPost = feedPost.getUserId();
         List<Integer> listOfPosition = new ArrayList<>();
-        for (Object obj: getDataManager()){
-            if (((SocialPost)obj).getUserId() == userIdOfIncomingPost) {
+        for (Object obj : getDataManager()) {
+            if (((SocialPost) obj).getUserId() == userIdOfIncomingPost) {
                 listOfPosition.add(getDataManager().indexOf(obj));
-                ((SocialPost)obj).setIsFollowing(feedPost.getIsFollowing());
+                ((SocialPost) obj).setIsFollowing(feedPost.getIsFollowing());
             }
         }
         if (listOfPosition.size() == 0)
             return;
-        for (int position: listOfPosition)
+        for (int position : listOfPosition)
             getAdapter().notifyItemChanged(position);
     }
 
@@ -283,6 +297,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         Map<String, Object> params = new HashMap<>();
         params.put(URLHelper.LIKE_A_POST.OFFSET, offset);
         params.put(URLHelper.LIKE_A_POST.POST_ID, 0);
+        params.put("reco", 1);
         return params;
     }
 
@@ -457,6 +472,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                         Log.d("djfeed", "userInfoCache updation: " + result.success);
                     }
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getAppMainActivity() != null)
+            getAppMainActivity().setSocialFeedFragment(this);
     }
 
     public void onViewCreated(View view) {
@@ -773,6 +795,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public static final int VIEW_POLL = 10;
         public static final int VIEW_BEST_OF = 15;
         public static final int VIEW_RATE_US = 20;
+        public static final int VIEW_RECO_PROD = 25;
     }
 
     public static boolean reateItemAdded = false;
@@ -800,12 +823,15 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     public int getListItemViewType(int position, Object item) {
         if (item instanceof RateApp) {
             return ViewTypes.VIEW_RATE_US;
-        } else {
+        }/*else if (item instanceof )*/// TODO: 30-07-2016
+        else {
             SocialPost post = (SocialPost) item;
             if (post.getPostType() == SocialPost.POST_TYPE_BEST_OF)
                 return ViewTypes.VIEW_BEST_OF;
             else if (post.getPostType() == SocialPost.POST_TYPE_POLL)
                 return ViewTypes.VIEW_POLL;
+            else if (post.getPostType() == SocialPost.POST_RECOMMENDED_PRODS)
+                return ViewTypes.VIEW_RECO_PROD;
             else
                 return ViewTypes.VIEW_NORMAL;
         }
@@ -816,7 +842,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         Log.d("dj", "viewType: " + viewType);
         if (viewType == ViewTypes.VIEW_RATE_US)
             return inflater.inflate(R.layout.rate_app_card, null);
-
         else if (viewType == ViewTypes.VIEW_POLL)
             return inflater.inflate(R.layout.social_post_poll_item, null);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
@@ -831,6 +856,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return new PollPostItemHolder(view);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
             return new BestOfPostItemHolder(view);
+        else if ((viewType == ViewTypes.VIEW_RECO_PROD))
+            return new RecommendedProductsItemHolder(view);
         return new NormalPostItemHolder(view);
     }
 
@@ -1074,7 +1101,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 if (v == option1Button) {
                     if (!isVoted(socialPost, true)) {
                         if (getActivity() instanceof MainActivity)
-                        ((MainActivity) getActivity()).displayDialogForIntimation();
+                            ((MainActivity) getActivity()).displayDialogForIntimation();
                         socialPost.setIsVoted(1);
                         option1Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option1Button);
@@ -1373,6 +1400,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
 
     private void proceedToProductActivity(Product product) {
+        if (getActivity() instanceof ProductActivity) {
+            Toast.makeText(getContext(), "Please visit The " + product.name + " Product In Our Showcase", Toast.LENGTH_LONG).show();
+            return;
+        }
         Intent intent = ProductActivity.getLaunchIntent(getActivity(), product);
         intent.putExtra(IntentKeys.CALLER_SOCIAL_FEED, true);
         startActivity(intent);
@@ -1562,6 +1593,59 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         return true;
     }
 
+
+    public class RecommendedProductsItemHolder extends BaseItemHolder {
+
+        @Bind(R.id.headerHolder)
+        View headerHolder;
+        @Bind(R.id.socialElementsHolder)
+        View socialElementsHolder;
+        @Bind(R.id.detailsHolder)
+        View detailsHolder;
+        @Bind(R.id.recoItemHolder)
+        View recoItemHolder;
+        @Bind(R.id.recomandationLabel)
+        TextView recomandationLabel;
+        @Bind(R.id.recyclerView)
+        RecyclerView mRecyclerView;
+
+        SocialPost socialPost;
+        RecommendedProductsAdapter mRecoProdAdapter;
+
+        @Override
+        public void updateItemView(Object item, View view, int i) {
+            socialPost = (SocialPost) item;
+            mRecoProdAdapter.addList(getUrlList(socialPost.getRecoProducts()));
+        }
+
+        private List<String> getUrlList(List<RecommendedProduct> products) {
+            List<String> urlList = new ArrayList<>();
+            for (RecommendedProduct reco : products)
+                urlList.add(ImageFilePath.getImageUrlForProduct(reco.getProductId()));
+            return urlList;
+        }
+
+        public RecommendedProductsItemHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            initRecomendProdRecyclerView();
+            headerHolder.setVisibility(View.GONE);
+            socialElementsHolder.setVisibility(View.GONE);
+            detailsHolder.setVisibility(View.GONE);
+            recoItemHolder.setVisibility(View.VISIBLE);
+            TypefaceHelper.setFont(recomandationLabel);
+        }
+
+        private void initRecomendProdRecyclerView() {
+            mRecyclerView.setHasFixedSize(false);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecoProdAdapter = new RecommendedProductsAdapter(new ArrayList<String>());
+            mRecyclerView.setAdapter(mRecoProdAdapter);
+        }
+    }
+
     abstract public class PostItemHolder extends BaseItemHolder {
 
         @Bind(R.id.userImage)
@@ -1608,7 +1692,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         @Bind(R.id.recomandationLabel)
         TextView recomandationLabel;
 
-        @Bind(R.id.reco1)
+       /* @Bind(R.id.reco1)
         ImageView reco1;
 
         @Bind(R.id.reco2)
@@ -1618,7 +1702,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         ImageView reco3;
 
         @Bind(R.id.reco4)
-        ImageView reco4;
+        ImageView reco4;*/
 
         @Bind(R.id.div)
         View recoDiv;
@@ -1656,6 +1740,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == userImage || v == userName) {
+                    /*if (socialPost.getIsDesigner() == 1){
+                        RandomUtils.launchDesignerScreen(getActivity(), socialPost.getUserId());
+                        return;
+                    }*/
                     People people = new People();
                     people.setUserName(socialPost.getUserName());
                     if (socialPost.getUserPic() != null)
@@ -1848,15 +1936,15 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
 
 
-            List<com.goldadorn.main.model.Image> recommendation = socialPost.getRecommendation();
+            /*List<com.goldadorn.main.model.Image> recommendation = socialPost.getRecommendation();
             List<ImageView> imageView = new ArrayList<>();
             imageView.add(reco1);
             imageView.add(reco2);
             imageView.add(reco3);
-            imageView.add(reco4);
+            imageView.add(reco4);*/
 
 
-            updateRecommendation(recommendation, imageView);
+            //updateRecommendation(recommendation, imageView);
         }
 
         protected void updateRecommendation(List<com.goldadorn.main.model.Image> recommendation, List<ImageView> imageView) {

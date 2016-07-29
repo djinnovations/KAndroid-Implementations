@@ -748,6 +748,8 @@ public class ProfileEditActivity extends BaseActivity {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {
                 oldData = getData();
+                String fullName = mProfileData.firstName + mProfileData.lastName;
+                getApp().getUser().setName(fullName);
                 Toast.makeText(ProfileEditActivity.this, "Profile has been updated", Toast.LENGTH_SHORT).show();
             } else {
 

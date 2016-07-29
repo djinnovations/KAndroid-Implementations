@@ -1,63 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     android:foreground="?android:attr/selectableItemBackground"
     -->
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
-    android:layout_margin="@dimen/padding_default"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
-    app:cardCornerRadius="@dimen/feedCardCornerRadius"
+    android:layout_margin="@dimen/padding_default"
     android:elevation="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    app:cardCornerRadius="@dimen/feedCardCornerRadius">
 
 
-<LinearLayout
-    android:background="@color/feedCardBGColor"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <include layout="@layout/social_post_header"/>
-
-
-    <RelativeLayout
-        android:id="@+id/detailsHolder"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <org.github.images.ScaleImageView
-        android:layout_width="match_parent"
-        android:background="@drawable/default_thumb"
-        android:id="@+id/image"
-        android:scaleType="centerCrop"
-        android:minHeight="100dp"
-        android:layout_height="wrap_content" />
-        <View
-            android:id="@+id/buyNow"
-            android:visibility="gone"
-            android:background="@drawable/vector_icons_buy_now"
-            android:layout_width="25dp"
-            android:layout_height="25dp"/>
+        android:layout_height="match_parent"
+        android:background="@color/feedCardBGColor"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/productPrice"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/productCollectionLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-
-    <include layout="@layout/social_post_footer"/>
+        <include layout="@layout/social_post_header" />
 
 
-</LinearLayout>
+        <RelativeLayout
+            android:id="@+id/detailsHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <org.github.images.ScaleImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/default_thumb"
+                android:minHeight="100dp"
+                android:scaleType="centerCrop" />
+
+            <View
+                android:id="@+id/buyNow"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/vector_icons_buy_now"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/productPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/productCollectionLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <include layout="@layout/social_post_footer" />
+
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

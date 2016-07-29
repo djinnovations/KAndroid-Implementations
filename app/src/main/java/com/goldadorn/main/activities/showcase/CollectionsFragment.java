@@ -208,7 +208,7 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                                 });
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(v.getContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Something went wrong!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -294,13 +294,17 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new CursorLoader(getContext(), Tables.Collections.CONTENT_URI, null,
+            if (getActivity() == null)
+                return null;
+            return new CursorLoader(getActivity().getApplicationContext(), Tables.Collections.CONTENT_URI, null,
                     Tables.Collections.USER_ID + " = ?",
                     new String[]{String.valueOf(mUser == null ? -1 : mUser.id)}, null);
         }
 
         @Override
         public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            if (getActivity() == null)
+                return;
             if (cursor != null) cursor.close();
             this.cursor = data;
             Log.e("iiii---", data.getCount() + "");

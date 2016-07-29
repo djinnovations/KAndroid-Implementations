@@ -25,6 +25,7 @@ import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
 import com.goldadorn.main.dj.model.TemporaryCreatePostObj;
+import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
@@ -37,6 +38,7 @@ import com.goldadorn.main.dj.utils.TemporarySocialPostParser;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -174,6 +176,7 @@ public class MainActivity extends BaseDrawerActivity {
         super.onPause();
         Log.d("djmain", "onPause-MainActivity");
         setIsMainActivity(false);
+        setIsMainActivityBase(false);
     }
 
 
@@ -294,7 +297,7 @@ public class MainActivity extends BaseDrawerActivity {
         super.onDestroy();
     }
 
-    final public static int POST_FEED = 1;
+    //final public static int POST_FEED = 1;
 
     @Subscribe
     public void onEvent(SocialPost data) {
@@ -329,14 +332,15 @@ public class MainActivity extends BaseDrawerActivity {
 
     }
 
-    final private int postCallToken = IDUtils.generateViewId();
+    /*final private int postCallToken = IDUtils.generateViewId();
     private int recentlyPostedPost = -1;
-    TemporaryCreatePostObj tempPostObj;
+    TemporaryCreatePostObj tempPostObj;*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        setProgressBar(progressBar);
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("djpost", "onActResult");
+       /* Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
             try {
                 //String fileData=data.getStringExtra("fileData");
@@ -350,9 +354,9 @@ public class MainActivity extends BaseDrawerActivity {
 
                     //// TODO: 28-06-2016
                     //change string[] to list or json array.
-                    /*if (data.getExtras().get("price") != null) {
+                    if (data.getExtras().get("price") != null) {
                         String[] price = (String[])data.getExtras().get("price");
-                    }*/
+                    }
                     try {
 
                         if (data.getExtras().get("files") != null) {
@@ -399,9 +403,9 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                     }
 
-                    /*if (data.getExtras().get("collIdList") != null){
+                    if (data.getExtras().get("collIdList") != null){
                         int[] collIdArr = (int[]) data.getExtras().get("collIdList");
-                        *//*JSONArray jsonArray = new JSONArray();
+                        JSONArray jsonArray = new JSONArray();
                         try {
                             for (int colId : collIdArr){
                                 jsonArray.put(colId);
@@ -411,7 +415,7 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                         if (jsonArray.length() != 0){
                             reqEntity.addPart("createpost_collids", new );
-                        }*//*
+                        }
                         int collId;
                         int count = 1;
                         for (int i = 0; i < collIdArr.length; i++){
@@ -425,7 +429,7 @@ public class MainActivity extends BaseDrawerActivity {
 
                     if (data.getExtras().get("desIdList") != null){
                         int[] desIdArr = (int[]) data.getExtras().get("desIdList");
-                        *//*JSONArray jsonArray = new JSONArray();
+                        JSONArray jsonArray = new JSONArray();
                         try {
                             for (int colId : collIdArr){
                                 jsonArray.put(colId);
@@ -435,7 +439,7 @@ public class MainActivity extends BaseDrawerActivity {
                         }
                         if (jsonArray.length() != 0){
                             reqEntity.addPart("createpost_collids", new );
-                        }*//*
+                        }
                         int desId;
                         int count = 1;
                         for (int i = 0; i < desIdArr.length; i++){
@@ -445,7 +449,7 @@ public class MainActivity extends BaseDrawerActivity {
                                 count++;
                             }
                         }
-                    }*/
+                    }
 
 
                     if (data.getExtras().get("clubbed") != null) {
@@ -486,18 +490,19 @@ public class MainActivity extends BaseDrawerActivity {
                 e.printStackTrace();
                 System.out.println(e);
             }
-        }
+        }*/
     }
 
 
-    public final int POST_DELETE_CALL = IDUtils.generateViewId();
+    /*public final int POST_DELETE_CALL = IDUtils.generateViewId();
     public final int POST_HIDE_CALL = IDUtils.generateViewId();
     public final int POST_REPORT_CALL = IDUtils.generateViewId();
 
-    private int position = -1;
+    private int position = -1;*/
 
     public void updatePostForThisUser(int what, String postId, int position) {
-        ExtendedAjaxCallback ajaxCallback = null;
+        super.updatePostForThisUser(what, postId, position);
+        /*ExtendedAjaxCallback ajaxCallback = null;
         this.position = position;
         Map<String, String> params = new HashMap<>();
         params.put("postid", postId);
@@ -514,27 +519,27 @@ public class MainActivity extends BaseDrawerActivity {
             ajaxCallback = getAjaxCallback(POST_REPORT_CALL);
             getAQuery().ajax(ApiKeys.getHidePostAPI(), params, String.class, ajaxCallback);
         }
-        Log.d("djmain", "req params - updatePostForThisUser: " + params);
+        Log.d("djmain", "req params - updatePostForThisUser: " + params);*/
         //ajaxCallback.method(AQuery.METHOD_POST);
     }
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
-        Log.d("djmain", "url queried- MainActivity: " + url);
+       /* Log.d("djmain", "url queried- MainActivity: " + url);
         Log.d("djmain", "response- MainActivity: " + json);
         if (id == postCallToken) {
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {
-                /*if (socialPostHost != null && socialPostHost.get() != null)
+                *//*if (socialPostHost != null && socialPostHost.get() != null)
                     socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
 
-                socialPostHost = null;*/
-                /*if (activePage instanceof HomePage) {
+                socialPostHost = null;*//*
+                *//*if (activePage instanceof HomePage) {
                     ((HomePage) activePage).socialFeedFragmentpage.postAdded();
-                }*/
+                }*//*
 
                 // TODO: 08-07-2016
-                /*if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
+                *//*if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
                     if (socialPostHost != null && socialPostHost.get() != null)
                         socialPostHost.get().postAdded(new com.goldadorn.main.model.SocialPost());
                     socialPostHost = null;
@@ -545,7 +550,7 @@ public class MainActivity extends BaseDrawerActivity {
                     ft.detach(frg);
                     ft.attach(frg);
                     ft.commit();
-                }*/
+                }*//*
                 if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
 
                     if (socialPostHost != null && socialPostHost.get() != null)
@@ -590,8 +595,8 @@ public class MainActivity extends BaseDrawerActivity {
                 }
             }
             position = -1;
-        } else
-            super.serverCallEnds(id, url, json, status);
+        } else*/
+        super.serverCallEnds(id, url, json, status);
     }
 
     public void showDialogInfo(String msg, boolean isPositive) {
@@ -600,13 +605,13 @@ public class MainActivity extends BaseDrawerActivity {
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
 
-    private void startUploadProgress() {
+    /*private void startUploadProgress() {
         progressBar.setVisibility(View.VISIBLE);
     }
 
     private void stopUploadProgress(boolean success) {
         progressBar.setVisibility(View.GONE);
-    }
+    }*/
 
     private final String TAG_FOR_HOME_FRAGMENT = "goldadorn.homefragment";
 
@@ -643,9 +648,25 @@ public class MainActivity extends BaseDrawerActivity {
         super.onResume();
         Log.d("djmain", "onResume-MainActivity");
         setIsMainActivity(true);
+        setIsMainActivityBase(true);
+
         if (activePage instanceof HomePage) {
-            ((HomePage) activePage).updateComments();
+            SocialFeedFragment tempFeed = ((HomePage) activePage).socialFeedFragmentpage;
+            /*((HomePage) activePage)*/
+            if (tempFeed != null) {
+                tempFeed.updateComments();
+                 boolean flag = UserSession.getInstance().getIsBonbRefreshPending();
+                if (flag) {
+                    tempFeed.refreshSelf();
+                    UserSession.getInstance().setIsBonbRefreshPending(false);
+                }
+            }
         }
+    }
+
+
+    public void setSocialFeedFragment(SocialFeedFragment tempFeed){
+        UserSession.getInstance().setSocialFeedFragment(tempFeed);
     }
 
 

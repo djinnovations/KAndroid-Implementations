@@ -23,6 +23,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.showcase.FollowerListActivity;
 import com.goldadorn.main.dj.model.NotificationDataObject;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
@@ -32,6 +33,9 @@ import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.dj.utils.SmartTimeAgo;
+import com.goldadorn.main.eventBusEvents.AppActions;
+import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.URLHelper;
@@ -40,6 +44,7 @@ import com.paginate.Paginate;
 import com.squareup.picasso.Picasso;
 
 import org.github.images.CircularImageView;
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -135,8 +140,6 @@ public class NotificationsActivity extends BaseActivity {
                     return;
                 }
                 int actionTypeInt = getIdFromActionType(lastClicked.getActionType());
-                /*if (actionTypeInt == 5)
-                    return;*/
                 int idTouse = actionTypeInt == 5 ? getApp().getUser().id : Integer.parseInt(lastClicked.getPostId());
                 Map<String, Integer> params = new HashMap<>();
                 params.put("type", actionTypeInt);
@@ -167,6 +170,17 @@ public class NotificationsActivity extends BaseActivity {
                 return -1;
         }
     }
+
+
+    private void gotoFollowerList(int userId) {
+        NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(),
+                "Your Followers", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, FollowerListActivity.class);
+        Map<String, Object> data = new HashMap<>();
+        data.put("USER_ID", String.valueOf(userId));
+        navigationDataObject.setParam(data);
+        EventBus.getDefault().post(new AppActions(navigationDataObject));
+    }
+
 
     private final int NOTIFICATION_CLICK_CALL = IDUtils.generateViewId();
 
@@ -250,20 +264,17 @@ public class NotificationsActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 launchNotificationLookUpScreen();
-                /*if (getIdFromActionType(lastClicked.getActionType()) == 5)
-                    return;
-                Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
-                intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
-                startActivity(intent);*/
-            } else Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();
+            } /*else Toast.makeText(getApplicationContext(), "failed", Toast.LENGTH_SHORT).show();*/
 
         } else super.serverCallEnds(id, url, json, status);
     }
 
 
     public void launchNotificationLookUpScreen() {
-        if (getIdFromActionType(lastClicked.getActionType()) == 5)
+        if (getIdFromActionType(lastClicked.getActionType()) == 5){
+            gotoFollowerList(getApp().getUser().id);
             return;
+        }
         Intent intent = new Intent(NotificationsActivity.this, NotificationPostActivity.class);
         intent.putExtra(IntentKeys.NOTIFICATION_OBJ, lastClicked);
         startActivity(intent);
