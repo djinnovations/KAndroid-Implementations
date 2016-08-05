@@ -32,10 +32,12 @@ public class Swatches {
         private String stoneSizeUnits;
         private int WHICH_TYPE;
         private String nameForResId;
-
+        private int selectedSwatchIconResId;
+        private int defStat;
+        private String cutStone;
 
         private MixedSwatch(String type, String color, String purity, String purityUnits,
-                            String weight, String weightUnits, String costPerUnit, String costUnits, int WHICH_TYPE) {
+                            String weight, String weightUnits, String costPerUnit, String costUnits, String defStat, int WHICH_TYPE) {
             this.type = type;
             this.color = color;
             this.purity = purity;
@@ -44,6 +46,8 @@ public class Swatches {
             this.weightUnits = weightUnits;
             this.costPerUnit = costPerUnit;
             this.costUnits = costUnits;
+            if (WHICH_TYPE == TYPE_METAL)
+                setDefStat(defStat);
             this.WHICH_TYPE = WHICH_TYPE;
         }
 
@@ -71,6 +75,27 @@ public class Swatches {
             }*/
         }
 
+
+        public int getDefStat() {
+            return defStat;
+        }
+
+        public void setDefStat(String defStat) {
+            try {
+                this.defStat = Integer.parseInt(defStat);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                this.defStat = 0;
+            }
+        }
+
+        public void setCutStone(String cutStone){
+            this.cutStone = cutStone;
+        }
+
+        public String getCutStone(){
+            return cutStone;
+        }
 
         public void setFactor(String factor) {
             this.factor = factor;
@@ -165,6 +190,18 @@ public class Swatches {
                     return R.drawable.gold_yellow_18k;
                 case "gold_yellow_22k":
                     return R.drawable.gold_yellow_22k;
+                case "gold_rose_9k":
+                    return R.drawable.gold_rose_9k;
+                case "gold_rose_10k":
+                    return R.drawable.gold_rose_10k;
+                case "gold_white_9k":
+                    return R.drawable.gold_white_9k;
+                case "gold_white_10k":
+                    return R.drawable.gold_rose_10k;
+                case "gold_yellow_9k":
+                    return R.drawable.gold_yellow_9k;
+                case "gold_yellow_10k":
+                    return R.drawable.gold_yellow_10k;
                 default:
                     return R.drawable.vector_icon_cross_brown;
             }
@@ -180,7 +217,7 @@ public class Swatches {
 
     public static MixedSwatch getMixedSwatch(String dataFromServer, int WHICH_TYPE) {
         String[] arr = dataFromServer.split(":");
-        MixedSwatch mixedSwatch = new MixedSwatch(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], WHICH_TYPE);
+        MixedSwatch mixedSwatch = new MixedSwatch(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], WHICH_TYPE);
         if (WHICH_TYPE == TYPE_METAL)
             return mixedSwatch;
         else if (WHICH_TYPE == TYPE_GEMSTONE) {
@@ -189,6 +226,8 @@ public class Swatches {
             mixedSwatch.setStoneSize(arr[10]);
             mixedSwatch.setSettingStone(arr[11]);
             mixedSwatch.setStoneSizeUnits(arr[12]);
+            mixedSwatch.setCutStone(arr[13]);
+            mixedSwatch.setDefStat(arr[14]);
             return mixedSwatch;
         }
         return null;
@@ -196,6 +235,7 @@ public class Swatches {
 
 
    /* "Diamond:GH:VS: clarityunits : 0.69:Carat:33000:INR/carat:GemStone1:Round:1.3 mm:Prong:mm:"
+       "Diamond:GH:VS:0.41:Carat:33000:INR\/carat:GemStone1:Round:2.0 mm:Prong:mm:-1:1"
     "type (inthiscase: stoneName): " +
             "color: " +
             "purity(inthiscase:clarity):" +

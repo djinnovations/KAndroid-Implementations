@@ -4,11 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +40,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.CommentsActivity;
 import com.goldadorn.main.activities.ImageZoomActivity;
 import com.goldadorn.main.activities.LikesActivity;
@@ -49,7 +49,6 @@ import com.goldadorn.main.activities.VotersActivity;
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
-import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.adapter.RecommendedProductsAdapter;
 import com.goldadorn.main.dj.model.ProductTemp;
@@ -58,6 +57,7 @@ import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -80,7 +80,6 @@ import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.SelectHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.VoteHelper;
-import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.IDUtils;
@@ -95,6 +94,8 @@ import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.nineoldandroids.animation.Animator;
 import com.squareup.picasso.Picasso;
 
@@ -957,7 +958,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
             image.setOnClickListener(itemClick);
-            TypefaceHelper.setFont(notBuyLabel, buyLabel, voteToView);
+            Typeface temp = TypefaceHelper.getTypeFace(Application.getInstance(),
+                    ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+            voteToView.setTypeface(temp, Typeface.BOLD);
+            TypefaceHelper.setFont(notBuyLabel, buyLabel);
         }
 
         public void updatePostView(SocialPost item, View view, int position) {
@@ -1161,8 +1165,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             option3Image.setOnClickListener(itemClick);
             pollLabel.setOnClickListener(itemClick);
             votePostButton.setOnClickListener(itemClick);
-
-            TypefaceHelper.setFont(option1Label, option2Label, option3Label, voteToView);
+            Typeface temp = TypefaceHelper.getTypeFace(Application.getInstance(),
+                    ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+            voteToView.setTypeface(temp, Typeface.BOLD);
+            TypefaceHelper.setFont(option1Label, option2Label, option3Label);
 
         }
 
@@ -1399,6 +1405,62 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
+    private void gotoRecomendedProd(SocialPost socialPost, String imageURL) {
+
+        //DJphy
+        if (imageURL != null && isProductLink(imageURL) != null) {
+            Log.d(Constants.TAG, "Image URL - gotoRecomendedProd: " + imageURL);
+            String id = imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());
+            id = id.substring(0, id.indexOf("/"));
+            Log.d(Constants.TAG, "ID - gotoRecomendedProd: " + id);
+
+            if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: Normal post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_NORMAL);
+            } else if (socialPost.getPostType() == SocialPost.POST_TYPE_POLL) {
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: BONB post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_BONB);
+            } else if (socialPost.getPostType() == SocialPost.POST_TYPE_BEST_OF) {
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: BOT post");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_BOT);
+            } else if (socialPost.getPostType() == SocialPost.POST_RECOMMENDED_PRODS) {
+                Log.d(Constants.TAG_APP_EVENT, "AppEvent: RECOMMENDED Post click");
+                logEventsAnalytics(GAAnalyticsEventNames.POST_RECO);
+            }
+            String selection = Tables.Products._ID + "=?";
+            String[] selArgs = new String[]{id.trim()};
+
+            Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
+            if (prodCursor != null) {
+                prodCursor.moveToFirst();
+                Log.d(Constants.TAG, "cursor count- gotoRecomendedProd: " + prodCursor.getCount());
+                if (prodCursor.getCount() != 0) {
+                    Product product = Product.extractFromCursor(prodCursor);
+                    proceedToProductActivity(product);
+                    return;
+                }
+            }
+            productInfoFromServer(socialPost, id.trim());
+
+            /*
+            String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
+            NavigationDataObject navigationDataObject =new NavigationDataObject(IDUtils.generateViewId(),"Our Collection",NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_CHROME,profuctLink,WebActivity.class);
+            EventBus.getDefault().post(new AppActions(navigationDataObject));
+            */
+        } else {
+            /*NavigationDataObject navigationDataObject = new NavigationDataObject(IDUtils.generateViewId(), "Best of", NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ImageZoomActivity.class);
+            Map<String, Object> data = new HashMap<>();
+            data.put("IMAGES", socialPost.getImages());
+            data.put("POST_ID", socialPost.getPostId());
+            data.put("DETAILS", socialPost.getDescription());
+            data.put("TYPE", socialPost.getPostType());
+            data.put("INDEX", index);
+            navigationDataObject.setParam(data);
+            EventBus.getDefault().post(new AppActions(navigationDataObject));*/
+        }
+    }
+
+
     private void proceedToProductActivity(Product product) {
         if (getActivity() instanceof ProductActivity) {
             Toast.makeText(getContext(), "Please visit The " + product.name + " Product In Our Showcase", Toast.LENGTH_LONG).show();
@@ -1608,14 +1670,43 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         TextView recomandationLabel;
         @Bind(R.id.recyclerView)
         RecyclerView mRecyclerView;
+        /*@Bind(R.id.fabNext)
+        android.support.design.widget.FloatingActionButton ivNextSetScroll;*/
 
         SocialPost socialPost;
         RecommendedProductsAdapter mRecoProdAdapter;
 
+        RecommendedProductsAdapter.RecommendedPostClick itemClick = new RecommendedProductsAdapter.RecommendedPostClick() {
+            @Override
+            public void onRecommendedPostClick(String url, int isLiked, int likeCounts) {
+                socialPost.setIsLiked(isLiked);
+                socialPost.setLikeCount(likeCounts);
+                gotoRecomendedProd(socialPost, url);
+            }
+        };
+
+        /*int mCurrentPosition = 3;
+
+        View.OnClickListener mClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               *//* if (v.getId() == ivNextSetScroll.getId()) {
+                    *//**//*if (mCurrentPosition == 9){
+                        UiRandomUtils.collapse(ivNextSetScroll);
+                    }else*//**//*
+                    mRecyclerView.scrollToPosition(mCurrentPosition);
+                    mCurrentPosition = mCurrentPosition + 3;
+                    if (mCurrentPosition == 9){
+                        mCurrentPosition = 3;
+                    }
+                }*//*
+            }
+        };*/
+
         @Override
         public void updateItemView(Object item, View view, int i) {
             socialPost = (SocialPost) item;
-            mRecoProdAdapter.addList(getUrlList(socialPost.getRecoProducts()));
+            mRecoProdAdapter.addList(/*getUrlList(*/socialPost.getRecoProducts()/*)*/);
         }
 
         private List<String> getUrlList(List<RecommendedProduct> products) {
@@ -1633,17 +1724,46 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             socialElementsHolder.setVisibility(View.GONE);
             detailsHolder.setVisibility(View.GONE);
             recoItemHolder.setVisibility(View.VISIBLE);
+            //ivNextSetScroll.setOnClickListener(mClick);
             TypefaceHelper.setFont(recomandationLabel);
         }
 
+        LinearLayoutManager mLayoutManager;
+
         private void initRecomendProdRecyclerView() {
             mRecyclerView.setHasFixedSize(false);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecoProdAdapter = new RecommendedProductsAdapter(new ArrayList<String>());
+            mRecoProdAdapter = new RecommendedProductsAdapter(new ArrayList<RecommendedProduct>(), itemClick);
             mRecyclerView.setAdapter(mRecoProdAdapter);
+            /*int color = ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorBlackDimText);
+            ivNextSetScroll.setImageDrawable(new IconicsDrawable(Application.getInstance())
+                    .icon(GoogleMaterial.Icon.gmd_keyboard_arrow_right)
+                    .color(color)
+                    .sizeDp(20));*/
+            //setScrollUpdates();
         }
+
+        /*private void setScrollUpdates() {
+            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    boolean shouldRefresh = (mLayoutManager.findFirstCompletelyVisibleItemPosition() >= 5);
+                    Log.d("djanim", "onScrolled- firstVisibleView Pos: "+mLayoutManager.findFirstCompletelyVisibleItemPosition());
+                    if (shouldRefresh) {
+                        Log.d("djanim", "collapse button");
+                        UiRandomUtils.collapse(ivNextSetScroll);
+                    }
+                }
+            });
+        }*/
     }
 
     abstract public class PostItemHolder extends BaseItemHolder {

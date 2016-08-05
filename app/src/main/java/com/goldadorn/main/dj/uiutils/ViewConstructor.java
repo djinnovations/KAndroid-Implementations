@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -160,15 +161,16 @@ public class ViewConstructor {
 
                         mInfoListener.onPositiveSelection(dialog);
                     }
-                }).setCancelable(false).setTitle(title);
+                }).setCancelable(false);
 
+        if (title != null){
+            builder.setTitle(title);
+        }
         if (showTwoOptions) {
-
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
                     dialog.dismiss();
                 }
             });
@@ -184,7 +186,6 @@ public class ViewConstructor {
         btnPositive.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
 
         if (showTwoOptions) {
-
             Button btnNegative = (alert.getButton(DialogInterface.BUTTON_NEGATIVE));
             btnNegative.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixels_per_Xcell * 2);
             btnNegative.setTextColor(ResourceReader.getInstance(appContext).getColorFromResource(R.color.colorPrimaryDark));
@@ -205,13 +206,14 @@ public class ViewConstructor {
     }
 
 
-    public Dialog displayDialog(Activity activity, int layoutResId, String title, String bodyMsg, String positiveBtnText,
-                                String negativeBtnText, final DialogButtonClickListener listener) {
+    public Dialog displayDialog(Activity activity, View bodyView, @Nullable String title,
+                                @Nullable String bodyMsg, @Nullable String positiveBtnText,
+                                @Nullable String negativeBtnText, final DialogButtonClickListener listener) {
 
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        View tempView = LayoutInflater.from(appContext).inflate(R.layout.dialog_cart_new, null);
+        //View tempView = LayoutInflater.from(appContext).inflate(R.layout.dialog_cart_new, null);
         WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
         tempParams.copyFrom(dialog.getWindow().getAttributes());
 
@@ -223,10 +225,12 @@ public class ViewConstructor {
         tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
         tempParams.dimAmount = 0; // Dim level. 0.0 - no dim, 1.0 - completely opaque
 
-        dialog.setContentView(layoutResId);
-        //dialog.setCancelable(false);
+        dialog.setContentView(bodyView);
+        if (title != null)
         ((TextView) dialog.findViewById(R.id.tvTitle)).setText(title);
+        if (bodyMsg != null)
         ((TextView) dialog.findViewById(R.id.tvInfoMsg)).setText(bodyMsg);
+        if (positiveBtnText != null)
         ((TextView) dialog.findViewById(R.id.tvPositive)).setText(positiveBtnText);
         ((TextView) dialog.findViewById(R.id.tvPositive)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,6 +238,7 @@ public class ViewConstructor {
                 listener.onPositiveBtnClicked(dialog, v);
             }
         });
+        if (negativeBtnText != null)
         ((TextView) dialog.findViewById(R.id.tvNegative)).setText(negativeBtnText);
         ((TextView) dialog.findViewById(R.id.tvNegative)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,6 +246,35 @@ public class ViewConstructor {
                 listener.onNegativeBtnClicked(dialog, v);
             }
         });
+        dialog.setCancelable(false);
+        dialog.getWindow().setAttributes(tempParams);
+        //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        //dialog.getWindow().setBackgroundDrawableResource(android.R.drawable.editbox_dropdown_dark_frame);
+/*		if(keyPadOnTop)
+			dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);*/
+
+        return dialog;
+    }
+
+
+    public Dialog displayDialog(Activity activity, View bodyView) {
+
+        final Dialog dialog = new Dialog(activity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        //View tempView = LayoutInflater.from(appContext).inflate(R.layout.dialog_cart_new, null);
+        WindowManager.LayoutParams tempParams = new WindowManager.LayoutParams();
+        tempParams.copyFrom(dialog.getWindow().getAttributes());
+
+		/*tempParams.width = dialogWidthInPx;
+        tempParams.height = dialogHeightInPx;*/
+        tempParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        tempParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+        tempParams.flags = WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        tempParams.dimAmount = 0; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+
+        dialog.setContentView(bodyView);
         dialog.setCancelable(false);
         dialog.getWindow().setAttributes(tempParams);
         //dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));

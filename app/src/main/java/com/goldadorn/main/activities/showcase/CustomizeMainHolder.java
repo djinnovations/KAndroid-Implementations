@@ -18,9 +18,11 @@ import com.goldadorn.main.assist.ViewHolder;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.utils.URLHelper;
+import com.google.repacked.apache.commons.lang3.ArrayUtils;
 import com.rey.material.widget.CircleCheckedTextView;
 import com.squareup.picasso.Picasso;
 
@@ -109,10 +111,10 @@ class CustomizeMainHolder extends ViewHolder {
         addRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (true) {
+                /*if (true) {
                     Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
                     return;
-                }
+                }*/
                 //// TODO: 16-07-2016  
                 if (extraLayout.getVisibility() == View.VISIBLE) {
                     extraLayout.setVisibility(View.GONE);
@@ -150,18 +152,21 @@ class CustomizeMainHolder extends ViewHolder {
         public void onClick(View v) {
             CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
             image.setImageDrawable(imageView.getDrawable());
-            /*if (listener != null)//// TODO: 16-07-2016  uncomment this block
+            if (listener != null)//// TODO: 16-07-2016  uncomment this block
                 ///listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (OptionValue) v.getTag()));
-                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Swatches.MixedSwatch) v.getTag()));*/
+                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Swatches.MixedSwatch) v.getTag()));
         }
     };
+
+
+    //public void disable
 
 
     private void populateExtraLayout() {
         //List<OptionValue> list = data.getValue();
         List<Swatches.MixedSwatch> list = data.getValue();
         for (int i = 0; i < list.size(); i++) {
-            //OptionValue s = list.get(i);
+            //OptionValue s = productInfoList.get(i);
             Swatches.MixedSwatch swatch = list.get(i);
             View child = extraLayout.getChildAt(i);
             View v = LayoutInflater.from(extraLayout.getContext()).inflate(R.layout.item_customize_type, extraLayout, false);
@@ -177,7 +182,7 @@ class CustomizeMainHolder extends ViewHolder {
             else {
                 Glide.with(v.getContext())
                         //.load("http://buisnessofjewelry.com/images/passionfire-round_small.png")
-                        .load("http://www.pngall.com/wp-content/uploads/2016/04/Diamond-PNG-Picture.png")
+                        .load(UiRandomUtils.DIAMOND_URL)
                         .centerCrop()
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
                         .crossFade()
@@ -198,7 +203,33 @@ class CustomizeMainHolder extends ViewHolder {
                 extraLayout.getChildAt(i).setVisibility(View.GONE);
             }
         }
+
+        int j = 0;
+        if (disableList != null){
+            for (int i = 0; i< list.size(); i++){
+                if (disableList[j] == i){
+                    extraLayout.getChildAt(i).setVisibility(View.GONE);
+                    j++;
+                }
+            }
+        }
     }
 
+
+
+    private int[] disableList;
+
+    public void setDisableList(List<Integer> disableList){
+        this.disableList = buildIntArray(disableList);
+    }
+
+    private int[] buildIntArray(List<Integer> integers) {
+        int[] ints = new int[integers.size()];
+        int i = 0;
+        for (Integer n : integers) {
+            ints[i++] = n;
+        }
+        return ints;
+    }
 
 }

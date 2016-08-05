@@ -203,4 +203,10 @@ public class WindowUtils {
         anim.setDuration(1200);
         view.startAnimation(anim);
     }
+
+
+    public Dialog displayCustomizationDialog(Activity activity, View cutomizationView){
+
+        return mViewConstructor.displayDialog(activity, cutomizationView);
+    }
 }

@@ -11,5 +11,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:text="Add to cart"/>
+        android:text="Customize"/>
 </LinearLayout>

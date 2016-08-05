@@ -121,7 +121,7 @@ public class MainActivity extends BaseDrawerActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        gd.onTouchEvent(ev);
+        //gd.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
         /*if (gd.onTouchEvent(ev))
             return true;

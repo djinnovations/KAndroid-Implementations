@@ -130,7 +130,6 @@
             android:id="@+id/pollLabel"
             style="@style/linkButton"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/likesLabel"
             android:layout_alignBottom="@+id/likesLabel"
@@ -155,31 +154,77 @@
         android:background="@color/feedFotterDivColor"
         tools:layout_height="5dp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/recoItemHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/div"
-        android:visibility="gone"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="16dp"
+
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/recomandationLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_default_half"
             android:layout_marginLeft="@dimen/padding_default"
-            android:text="@string/labelRecomandation" />
+            android:text="Recommended Products for you"
+            android:textSize="16sp"
+            android:textColor="@color/Black"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/divTopNew"
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_below="@+id/recomandationLabel"
+            android:layout_marginLeft="@dimen/padding_default_half"
+            android:layout_marginRight="@dimen/padding_default_half"
+            android:layout_marginBottom="@dimen/padding_default_half"
+            android:layout_marginTop="5dp"
+            android:background="@color/feedFotterDivColor" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="wrap_content"
-            android:layout_height="160dp"
-            android:layout_below="@+id/recomandationLabel"
-            android:layout_marginTop="@dimen/padding_default"
+            android:paddingRight="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/divTopNew"
             android:visibility="visible" />
 
-    </LinearLayout>
+        <!--<include layout="@layout/next_set_arrow_symbol" />-->
+        <!--<org.github.images.CircularImageView
+            android:id="@+id/image"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:padding="3dp"
+            android:rotation="45"
+            android:scaleType="centerInside"
+            app:border="false"
+            app:border_width="0dp"
+            app:shadow="false"
+            tools:background="@color/avtarBorderColor" />-->
+        <!--        <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fabNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="3dp"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    android:src="@drawable/vector_icon_bell"
+                    app:backgroundTint="@color/avtarBorderColor"
+                    app:borderWidth="0dp"
+                    app:elevation="8dp"
+                    app:fabSize="mini" />-->
+
+    </RelativeLayout>
 
     <!--<org.github.images.CircularImageView
         android:layout_marginLeft="@dimen/padding_default"

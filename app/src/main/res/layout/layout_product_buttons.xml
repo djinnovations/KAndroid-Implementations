@@ -138,10 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
-                android:padding="8dp"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingRight="8dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"
@@ -167,9 +164,9 @@
 
             <ImageView
                 android:id="@+id/likeButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                 />
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="2dp" />
 
             <!--<com.mikepenz.iconics.view.IconicsButton
                 android:id="@+id/likeButton"
@@ -184,13 +181,12 @@
         <ImageButton
             android:id="@+id/product_actions_open"
             style="@style/circleSmallButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="right"
             android:layout_marginRight="12dp"
             android:gravity="center"
-            android:src="@drawable/add"
-            />
+            android:src="@drawable/add" />
 
     </LinearLayout>
 

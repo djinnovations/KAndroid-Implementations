@@ -56,8 +56,55 @@
         android:id="@+id/extra_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/ivDecrease"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/grey_circle_border_trans_filling"
+            android:padding="5dp"
+            android:src="@drawable/vector_icon_cross_brown" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+            <TextView
+                android:id="@+id/tvAdapter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="size1"
+                android:textColor="@color/Black"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivIncrease"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/grey_circle_border_trans_filling"
+            android:padding="5dp"
+            android:src="@drawable/vector_icon_cross_brown" />
+    </LinearLayout>
 
     <View
         android:id="@+id/separator"

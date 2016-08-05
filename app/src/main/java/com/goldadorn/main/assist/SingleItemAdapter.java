@@ -2,6 +2,9 @@ package com.goldadorn.main.assist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
+
+import com.goldadorn.main.R;
 
 public class SingleItemAdapter extends RecyclerAdapter<ViewHolder> {
     private final int mViewType, mId;
@@ -30,6 +33,7 @@ public class SingleItemAdapter extends RecyclerAdapter<ViewHolder> {
             mBinder.onBindView(mId, holder);
         }
     }
+
 
     @Override
     public int getItemViewType(int position) {

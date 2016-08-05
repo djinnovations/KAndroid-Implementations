@@ -26,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -47,7 +48,10 @@ import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
+import com.goldadorn.main.dj.model.CustomizationDisableList;
+import com.goldadorn.main.dj.model.CustomizationStepResponse;
 import com.goldadorn.main.dj.model.FilterPostParams;
+import com.goldadorn.main.dj.model.ShipmentBillingAddress;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
@@ -72,9 +76,9 @@ import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -84,7 +88,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -163,6 +171,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     boolean isSocialFeed;
+    ProductCustomiseFragment mProdCustFrag;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -281,9 +290,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 if (result.success) {
                     mProductOptions = result.options;
                     mProduct.addDefaultCustomisation(mProductOptions);
-                    ProductCustomiseFragment f = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
-                    if (f != null)
-                        f.bindProductOptions(mProductOptions);
+                    mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
+                    if (mProdCustFrag != null)
+                        mProdCustFrag.bindProductOptions(mProductOptions);
                 }
                 dismissOverLay();
             }
@@ -321,6 +330,7 @@ public class ProductActivity extends BaseDrawerActivity {
         return imageUrlList;
     }
 
+
     private void setAdapterForProdImages(int lookcount) {
         mOverlayVH.pager.setAdapter(
                 mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), getVariousProductLooks(lookcount)));
@@ -329,7 +339,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
     public ArrayList<String> getDescriptions() {
-        return list;
+        return productInfoList;
     }
 
     @Bind(R.id.transViewProducts)
@@ -526,7 +536,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 });*/
 
         Dialog dialog = ViewConstructor.getInstance(getApplicationContext()).displayDialog(ProductActivity.this,
-                R.layout.dialog_cart_new, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
+                LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_cart_new, null), "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\n& Checkout", "Continue\nShopping", new ViewConstructor.DialogButtonClickListener() {
                     @Override
                     public void onPositiveBtnClicked(Dialog dialog, View btn) {
@@ -687,7 +697,7 @@ public class ProductActivity extends BaseDrawerActivity {
         TextView likesCount;
         @Bind(R.id.likeButton)
         //IconicsButton like;
-        ImageView like;
+                ImageView like;
 
         @Bind(R.id.product_actions_open)
         ImageButton productActionsToggle;
@@ -760,7 +770,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
 
         private void setUpLikeBtn() {
-            int color =  ResourceReader.getInstance(getApplicationContext()).getColorFromResource(R.color.votedColor);
+            int color = ResourceReader.getInstance(getApplicationContext()).getColorFromResource(R.color.votedColor);
             like.setImageDrawable(new IconicsDrawable(ProductActivity.this)
                     .icon(FontAwesome.Icon.faw_heart)
                     .color(color)
@@ -1060,8 +1070,30 @@ public class ProductActivity extends BaseDrawerActivity {
         getAQueryCustom().ajax((ApiKeys.getDesc5NewAPI() + mProduct.id), String.class, ajaxCallback);
     }
 
+    public static final String METAL = "metal";
+    public static final String STONE = "stone";
+    public static final String SIZE = "size";
 
-    ArrayList<String> list;
+    public static final int CUSTOMIZATION_STEP_WISE_CALL = IDUtils.generateViewId();
+
+    public void sendCustomizationToServer(Map<String, List<String>> selectedParams) {
+        Map<String, Object> paramsMap = new HashMap<>();
+        Set<String> keys = selectedParams.keySet();
+        for (String str : keys) {
+            if (str.equals(STONE)) {
+                JSONArray jsonArray = new JSONArray();
+                for (String stoneval : selectedParams.get(str))
+                    jsonArray.put(stoneval);
+                paramsMap.put(str, jsonArray);
+            } else paramsMap.put(str, selectedParams.get(str).get(0));
+        }
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(CUSTOMIZATION_STEP_WISE_CALL);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        getAQuery().ajax(ApiKeys.getPriceForCustomizedProdAPI(), paramsMap, String.class, ajaxCallback);
+    }
+
+
+    private ArrayList<String> productInfoList;
 
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
@@ -1074,39 +1106,39 @@ public class ProductActivity extends BaseDrawerActivity {
             if (json == null)
                 return;
             if (success) {
-                list = new ArrayList<>();
+                productInfoList = new ArrayList<>();
                 try {
                     JSONObject jsonObj = new JSONObject(json.toString());
                     if (!jsonObj.isNull("productWarranty")) {
                         try {
-                            list.add(jsonObj.getString("productWarranty"));
+                            productInfoList.add(jsonObj.getString("productWarranty"));
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            list.add(null);
+                            productInfoList.add(null);
                         }
                     }
                     if (!jsonObj.isNull("productMBP")) {
                         try {
-                            list.add(jsonObj.getString("productMBP"));
+                            productInfoList.add(jsonObj.getString("productMBP"));
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            list.add(null);
+                            productInfoList.add(null);
                         }
                     }
                     if (!jsonObj.isNull("productCert")) {
                         try {
-                            list.add(jsonObj.getString("productCert"));
+                            productInfoList.add(jsonObj.getString("productCert"));
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            list.add(null);
+                            productInfoList.add(null);
                         }
                     }
                     if (!jsonObj.isNull("productEDTInDays")) {
                         try {
-                            list.add(jsonObj.getString("productEDTInDays"));
+                            productInfoList.add(jsonObj.getString("productEDTInDays"));
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            list.add(null);
+                            productInfoList.add(null);
                         }
                     }
                     if (!jsonObj.isNull("productPayModes")) {
@@ -1116,18 +1148,39 @@ public class ProductActivity extends BaseDrawerActivity {
                             for (int i = 0; i < jsonArr.length(); i++) {
                                 sb = sb.append(jsonArr.getString(i) + "\n");
                             }
-                            list.add(sb.toString());
+                            productInfoList.add(sb.toString());
                             Log.d("djprod", "payment modes - serverCallEnds: " + sb.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            list.add(null);
+                            productInfoList.add(null);
                         }
                     }
                     /*ProductInfoFragment pif = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
-                    pif.setAllDescription(list);*/
+                    pif.setAllDescription(productInfoList);*/
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        } else if (id == CUSTOMIZATION_STEP_WISE_CALL) {
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mTabLayout, this);
+            if (success) {
+                Gson gson = new Gson();
+                CustomizationStepResponse csr = gson.fromJson((String) json, CustomizationStepResponse.class);
+                List<Integer> metalDisableList = null;
+                List<String> sizeList = null;
+                List<Integer> stoneDisableList = null;
+                if (csr.getMetal() != null) {
+                    metalDisableList = mProductOptions.getDisableList(csr.getMetal(), METAL);
+                }
+                if (csr.getStone() != null) {
+                    stoneDisableList = mProductOptions.getDisableList(csr.getStone(), METAL);
+                }
+                if (csr.getSize() != null) {
+                    sizeList = mProductOptions.getParsedSize(csr.getSize());
+                }
+                CustomizationDisableList data = new CustomizationDisableList(metalDisableList, stoneDisableList, sizeList);
+                mProdCustFrag.updateCustomizationData(data);
             }
         } else super.serverCallEnds(id, url, json, status);
     }

@@ -82,6 +82,10 @@ public class ApiKeys {
                 +"/"+String.valueOf(offset);
     }
 
+    public static final String getPriceForCustomizedProdAPI(){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.CUSTOMIZE_PRICE_API;
+    }
+
     private static final class VERB{
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
         private static final String SET_CART_ADDRESS_API = "setuseraddress";
@@ -97,6 +101,6 @@ public class ApiKeys {
         private static final String PAYMENT_HASHES_API = "generatepaymenthash";
         private static final String GET_PRODUCTS = "getproducts";
         private static final String GET_FOLLOWERS = "fetchfollowers";
-
+        private static final String CUSTOMIZE_PRICE_API = "getpriceforcustomizedproduct";
     }
 }

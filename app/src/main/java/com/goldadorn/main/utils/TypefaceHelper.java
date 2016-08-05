@@ -120,7 +120,7 @@ public class TypefaceHelper {
     }
 
 
-    private static Typeface getTypeFace(Context context,String fontName) {
+    public static Typeface getTypeFace(Context context,String fontName) {
         Typeface typeface = map.get(fontName);
         if(typeface==null) {
             typeface = Typeface.createFromAsset(context.getAssets(), "fonts/" + fontName);
