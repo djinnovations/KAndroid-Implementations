@@ -1071,10 +1071,12 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                         v.setEnabled(true);
                         v.setSelected(result.success != isFollowing);
                         if (isFollowing) {
+                            user.isFollowed = false;
                             user.followers_cnt = user.followers_cnt - 1;
                             mOverlayVH.followersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
                             //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
                         } else {
+                            user.isFollowed = true;
                             user.followers_cnt = user.followers_cnt + 1;
                             mOverlayVH.followersCount.setText(String.format(Locale.getDefault(), "%d", user.followers_cnt));
                             //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();

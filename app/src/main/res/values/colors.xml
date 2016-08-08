@@ -136,4 +136,6 @@
 
     <item name="creamWhite" type="color">#F1F2EF</item>
 
+    <color name="GhostWhite">#F8F8FF</color>
+
 </resources>

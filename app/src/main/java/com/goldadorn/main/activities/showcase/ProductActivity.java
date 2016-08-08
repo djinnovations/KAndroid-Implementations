@@ -28,7 +28,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -42,6 +44,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
@@ -78,9 +81,12 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsButton;
+import com.venmo.view.TooltipView;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import org.json.JSONArray;
@@ -134,7 +140,7 @@ public class ProductActivity extends BaseDrawerActivity {
     private OverlayViewHolder mOverlayVH;
     private int mStartHeight;
     private int mCollapsedHeight;
-    private ProductPagerAdapter mProductAdapter;
+    public ProductPagerAdapter mProductAdapter;
     private int mVerticalOffset = 0;
     Product mProduct;
     private Handler mHandler = new Handler();
@@ -380,6 +386,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         mOverlayVH.likesCount.setText(String.format(Locale.getDefault(), "%d", mProduct.likecount));
         mOverlayVH.mProductName.setText(mProduct.name);
+        mOverlayVH.toastProdName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(/*mProduct.name*/getEndEllipsizedName(mProduct.name));
         Log.d(Constants.TAG, "user ID: " + mProduct.userId);
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
@@ -568,9 +575,11 @@ public class ProductActivity extends BaseDrawerActivity {
         return registeredFragments.get(fragmentPosition);
     }*/
 
-    private class ProductPagerAdapter extends FragmentStatePagerAdapter {
+    public class ProductPagerAdapter extends FragmentStatePagerAdapter {
 
         private ArrayList<String> images;
+
+        public ArrayList<String> getImagesUrlList(){return images;}
 
        /* @Override
         public Object instantiateItem(ViewGroup container, int position) {
@@ -588,11 +597,16 @@ public class ProductActivity extends BaseDrawerActivity {
         }*/
 
 
+        /*@Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.setOnClickListener(itemClick);
+            return super.instantiateItem(container, position);
+        }*/
+
         public ProductPagerAdapter(FragmentManager fm, ArrayList<String> data) {
             super(fm);
             images = data;
         }
-
 
         @Override
         public int getCount() {
@@ -690,6 +704,11 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    public String getProductName(){
+        return mProduct.name;
+    }
+
+
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final AppBarLayout appBarLayout;
@@ -743,6 +762,10 @@ public class ProductActivity extends BaseDrawerActivity {
 
         @Bind(R.id.cartButton)
         IconicsButton cartButton;
+        @Bind(R.id.ivGlass)
+        ImageView ivGlass;
+        @Bind(R.id.toastProdName)
+        TooltipView toastProdName;
 
         public void setProductActions(boolean productActions) {
             isProductActions = productActions;
@@ -750,10 +773,28 @@ public class ProductActivity extends BaseDrawerActivity {
 
         boolean isProductActions = false;
 
+        View.OnTouchListener prodNameTouchListener = new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                    toastProdName.setVisibility(View.VISIBLE);
+                    return true;
+                }
+                else if (event.getAction() == MotionEvent.ACTION_UP){
+                    toastProdName.setVisibility(View.GONE);
+                    return true;
+                }
+                return false;
+            }
+        };
+
         public OverlayViewHolder(View itemView, AppBarLayout appBarLayout) {
             super(itemView);
             this.appBarLayout = appBarLayout;
             ButterKnife.bind(this, itemView);
+            setDrawableForMagGlass();
+            ivGlass.setOnClickListener(this);
+            mProductName.setOnTouchListener(prodNameTouchListener);
             productActionsToggle.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             buyNoBuyButton.setOnClickListener(this);
@@ -767,6 +808,14 @@ public class ProductActivity extends BaseDrawerActivity {
             mProductOwner.setOnClickListener(this);
             mProductCollection.setOnClickListener(this);
             //RandomUtils.underLineTv(mProductOwner);
+        }
+
+        private void setDrawableForMagGlass(){
+            int color =  ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorPrimary);
+            ivGlass.setImageDrawable(new IconicsDrawable(Application.getInstance())
+                    .icon(CommunityMaterial.Icon.cmd_magnify)
+                    .color(color)
+                    .sizeDp(20));
         }
 
         private void setUpLikeBtn() {
@@ -788,6 +837,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 pager.setVisibility(visibility);
                 indicator.setVisibility(visibility);
                 productActionsToggle.setVisibility(visibility);
+                ivGlass.setVisibility(visibility);
             }
         }
 
@@ -803,6 +853,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductName2.setVisibility(View.GONE);
                     mProductCost2.setVisibility(View.GONE);
                     mProductName.setVisibility(View.VISIBLE);
+                    ivGlass.setVisibility(View.VISIBLE);
                     layout1.setVisibility(View.VISIBLE);
                     layout2.setVisibility(View.VISIBLE);
                     mProductCollection.setVisibility(View.VISIBLE);
@@ -817,19 +868,24 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductName2.setVisibility(View.VISIBLE);
                     mProductCost2.setVisibility(View.VISIBLE);
                     mProductName.setVisibility(View.GONE);
+                    ivGlass.setVisibility(View.GONE);
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.GONE);
                     mProductCollection.setVisibility(View.GONE);
                     mProductCost.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
-            } else if (v.getId() == R.id.btnBookApoint) {
+            }
+            else if (v.getId() == R.id.btnBookApoint) {
                 displayBookAppointment();
             } else if (v.getId() == mProductOwner.getId()) {
                 launchDesignerScreen();
             } else if (v.getId() == mProductCollection.getId()) {
                 launchCollectionScreen();
-            } else if (v == like) {
+            }else if (v.getId() == ivGlass.getId()){
+                Toast.makeText(getApplicationContext(),"Click on the Product Image for Magnified view", Toast.LENGTH_SHORT).show();
+            }
+            else if (v == like) {
                 final IconicsButton likeBtn = (IconicsButton) v;
                 likeBtn.setEnabled(false);
                 final boolean isLiked = likeBtn.isSelected();
@@ -862,8 +918,10 @@ public class ProductActivity extends BaseDrawerActivity {
                 //todo like click
                 Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
             } else if (v == buyNoBuyButton) {
-                Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
                 //startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
+                Intent intent = PostPollActivity.getLaunchIntent(ProductActivity.this, mProduct);
+                postABonb(intent);
             } else if (v == wishlistButton) {
                 UIController.addToWhishlist(v.getContext(), mProduct, new IResultListener<ProductResponse>() {
                     @Override
@@ -899,6 +957,17 @@ public class ProductActivity extends BaseDrawerActivity {
                         });
             }
         }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public void postABonb(Intent intent){
+        startActivityForResult(intent, POST_FEED);
     }
 
 

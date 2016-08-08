@@ -14,12 +14,15 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.model.Image;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.CreatePostForBuyResponse;
 import com.goldadorn.main.utils.GalleryImageSelector;
+import com.goldadorn.main.utils.ImageFilePath;
+import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.squareup.picasso.Picasso;
 
@@ -214,7 +217,9 @@ public class PostPollActivity extends AbstractPostActivity {
         } else {
             imageSelector1 = null;
             trigger.setVisibility(View.GONE);
-            Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
+            //Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
+            ImageLoaderUtils.loadImage(Application.getInstance()
+                    , new Image(mProduct.getImageUrl()), previewIamge, R.drawable.vector_image_logo_square_100dp);
         }
     }
 

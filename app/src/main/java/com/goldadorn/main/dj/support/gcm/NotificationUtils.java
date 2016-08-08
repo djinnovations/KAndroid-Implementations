@@ -20,6 +20,7 @@ import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.widget.RemoteViews;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
@@ -34,6 +35,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -155,17 +157,32 @@ public class NotificationUtils {
                 .setContentIntent(resultPendingIntent)
                 .setSound(alarmSound)
                 .setLights(Color.WHITE, 1500, 2000)
-                .setStyle(bigPictureStyle)
+                //.setStyle(bigPictureStyle)
                 .setWhen(getTimeMilliSec(timeStamp))
                 .setSmallIcon(iconToUse())
                 .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
                 .setContentText(message)
                 .build();
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notification.bigContentView = assignRemote(bitmap, title, message);
+        }
+
         NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(Config.NOTIFICATION_ID_BIG_IMAGE, notification);
     }
 
+    private RemoteViews assignRemote(Bitmap bitmap, String title, String message){
+        RemoteViews expandedView = new RemoteViews(Application.getInstance().getPackageName(),
+                R.layout.notification_custom_view_new);
+        Log.d("djgcm","title, msg, big_pic, time: "+title+" "+message+" "+bitmap+" "+getOnlyHrsMin());
+        expandedView.setTextViewText(R.id.title, title);
+        expandedView.setTextViewText(R.id.message, message);
+        expandedView.setImageViewBitmap(R.id.big_picture, bitmap);
+        expandedView.setImageViewResource(R.id.big_icon, R.mipmap.ic_launcher);
+        expandedView.setTextViewText(R.id.time, getOnlyHrsMin());
+        return expandedView;
+    }
 
     private int iconToUse(){
         if (Constants.CURRENT_API_LEVEL >= Build.VERSION_CODES.LOLLIPOP){
@@ -252,5 +269,14 @@ public class NotificationUtils {
             e.printStackTrace();
         }
         return 0;
+    }
+
+
+    public static String getOnlyHrsMin(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+        return hour+":"+min;
     }
 }

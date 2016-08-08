@@ -1,13 +1,13 @@
 package com.goldadorn.main.dj.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.model.RecommendedProduct;
@@ -15,6 +15,7 @@ import com.goldadorn.main.model.Image;
 import com.goldadorn.main.utils.ImageFilePath;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
 
     public void addList(List<RecommendedProduct> listOfUrl){
         this.listOfRecoProds = listOfUrl;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -53,9 +55,18 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
     public void onBindViewHolder(ImageViewHolder holder, int position) {
         /*Glide.with(holder.itemView.getContext()).load(listOfUrl.get(position))
                 .into(holder.ivProd);*/
-        ImageLoaderUtils.loadImage(Application.getInstance()
-                , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getProductId())),
-                holder.ivProd, R.drawable.vector_image_logo_square_100dp);
+        try {
+            /*Glide.with(holder.itemView.getContext())
+                    .load(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getProductId()))
+                    .placeholder(R.drawable.vector_image_logo_square_100dp)
+                    .into(holder.ivProd);*/
+            ImageLoaderUtils.loadImage(Application.getInstance()
+                    , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getProductId())),
+                    holder.ivProd, R.drawable.vector_image_logo_square_100dp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         holder.tvName.setText("Product Name");
     }
 

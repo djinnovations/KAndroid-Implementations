@@ -25,6 +25,7 @@ public class Swatches {
         private String weightUnits;
         private String costPerUnit;
         private String costUnits;
+        private String skuFactor;
         private String factor;
         private String stoneShape;
         private String stoneSize;
@@ -37,7 +38,8 @@ public class Swatches {
         private String cutStone;
 
         private MixedSwatch(String type, String color, String purity, String purityUnits,
-                            String weight, String weightUnits, String costPerUnit, String costUnits, String defStat, int WHICH_TYPE) {
+                            String weight, String weightUnits, String costPerUnit, String costUnits,
+                            String defStat, String skuFactor, int WHICH_TYPE) {
             this.type = type;
             this.color = color;
             this.purity = purity;
@@ -46,6 +48,7 @@ public class Swatches {
             this.weightUnits = weightUnits;
             this.costPerUnit = costPerUnit;
             this.costUnits = costUnits;
+            this.skuFactor = skuFactor;
             if (WHICH_TYPE == TYPE_METAL)
                 setDefStat(defStat);
             this.WHICH_TYPE = WHICH_TYPE;
@@ -87,6 +90,15 @@ public class Swatches {
                 e.printStackTrace();
                 this.defStat = 0;
             }
+        }
+
+        public void setSkuFactor(String skuFactor){
+            this.skuFactor = skuFactor;
+        }
+
+
+        public String getSkuFactor(){
+            return skuFactor;
         }
 
         public void setCutStone(String cutStone){
@@ -217,7 +229,8 @@ public class Swatches {
 
     public static MixedSwatch getMixedSwatch(String dataFromServer, int WHICH_TYPE) {
         String[] arr = dataFromServer.split(":");
-        MixedSwatch mixedSwatch = new MixedSwatch(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6], arr[7], arr[8], WHICH_TYPE);
+        MixedSwatch mixedSwatch = new MixedSwatch(arr[0], arr[1], arr[2], arr[3], arr[4], arr[5], arr[6],
+                arr[7], arr[8], arr[9], WHICH_TYPE);
         if (WHICH_TYPE == TYPE_METAL)
             return mixedSwatch;
         else if (WHICH_TYPE == TYPE_GEMSTONE) {
@@ -228,6 +241,7 @@ public class Swatches {
             mixedSwatch.setStoneSizeUnits(arr[12]);
             mixedSwatch.setCutStone(arr[13]);
             mixedSwatch.setDefStat(arr[14]);
+            mixedSwatch.setSkuFactor(arr[15]);
             return mixedSwatch;
         }
         return null;

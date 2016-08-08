@@ -48,6 +48,7 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.mikepenz.iconics.view.IconicsButton;
@@ -669,8 +670,11 @@ public class ProductsFragment extends Fragment {
             holder.likesCount.setText(String.format(Locale.getDefault(), "%d", product.likecount));
             holder.like.setTag(product);
             holder.like.setSelected(product.isLiked);
-            Glide.with(context).load(product.getImageUrl()).into(holder.image);
-            Log.d("djprod", "imageURL: " + product.getImageUrl());
+            //Glide.with(context).load(product.getImageUrl()).into(holder.image);
+            ImageLoaderUtils.loadImageNew(Application.getInstance()
+                    , product.getImageUrl(), holder.image
+                    , R.drawable.img_404_place_holder, -1);
+            //Log.d("djprod", "imageURL: " + product.getImageUrl());
             return convertView;
         }
 
