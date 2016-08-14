@@ -121,7 +121,7 @@ public class PostPollActivity extends AbstractPostActivity {
     protected List<String> getLinks() {
         if (mProduct != null) {
             List<String> t = new ArrayList<>();
-            String url = mProduct.getImageUrl();
+            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false);
             String path = ".." + url.substring(url.indexOf("/product"), url.length());
             t.add(path);
             return t;
@@ -219,7 +219,7 @@ public class PostPollActivity extends AbstractPostActivity {
             trigger.setVisibility(View.GONE);
             //Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
             ImageLoaderUtils.loadImage(Application.getInstance()
-                    , new Image(mProduct.getImageUrl()), previewIamge, R.drawable.vector_image_logo_square_100dp);
+                    , new Image(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false)), previewIamge, R.drawable.vector_image_logo_square_100dp);
         }
     }
 

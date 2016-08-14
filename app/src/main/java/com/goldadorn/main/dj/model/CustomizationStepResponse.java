@@ -8,7 +8,7 @@ import java.util.List;
 public class CustomizationStepResponse {
     List<String> stone;
     List<String> metal;
-    List<String> size;
+    List<Double> size;
     String price;
 
     public List<String> getStone() {
@@ -27,11 +27,11 @@ public class CustomizationStepResponse {
         this.metal = metal;
     }
 
-    public List<String> getSize() {
+    public List<Double> getSize() {
         return size;
     }
 
-    public void setSize(List<String> size) {
+    public void setSize(List<Double> size) {
         this.size = size;
     }
 

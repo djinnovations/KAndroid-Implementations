@@ -34,6 +34,7 @@ public class Tables {
         public static final String _ID = "_id";
         public static final String COLLECTION_ID = "collectionids";
         public static final String USER_ID = "userid";
+        public static final String DEF_METAl = "default_metal";
         public static final String NAME = "name";
         public static final String IMAGE_ASPECT_RATIO = "imgratio";
         public static final String PRICE = "price";
@@ -213,6 +214,7 @@ public class Tables {
                 Products.IS_LIKED + " INTEGER DEFAULT 0," +
                 Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
                 Products.CART_ADDED_TSP + " INTEGER DEFAULT 0," +
+                //Products.DEF_METAl + " TEXT," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
 
         static final String COLLECTIONS = "CREATE TABLE IF NOT EXISTS " + Collections.TABLENAME + " (" +

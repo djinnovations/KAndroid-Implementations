@@ -105,6 +105,19 @@ public class RandomUtils {
     }
 
 
+    public static double getVat(String totalCost){
+        double vat;
+        try {
+            double displayPrice = Double.parseDouble(totalCost);
+            vat = (displayPrice - (displayPrice / 1.01));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            vat = 0.0;
+        }
+        return vat;
+    }
+
+
     public static void set3LineEllipsizedText(String originalText, TextView textView) {
         /*int numOfLines = textView.getLineCount();
         if (numOfLines > 3){

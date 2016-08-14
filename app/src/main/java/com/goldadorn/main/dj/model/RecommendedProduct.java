@@ -9,14 +9,24 @@ public class RecommendedProduct {
     private int likeCount;
     private int isLiked;
     private int apptmtCnt;
+    private int desgnId;
 
-    public RecommendedProduct(int productId, int likeCount, int isLiked, int apptmtCnt) {
+    public RecommendedProduct(int productId, int likeCount, int isLiked, int apptmtCnt, int desgnId) {
         this.productId = productId;
         this.likeCount = likeCount;
         this.isLiked = isLiked;
         this.apptmtCnt = apptmtCnt;
+        this.desgnId = desgnId;
     }
 
+
+    public int getDesgnId() {
+        return desgnId;
+    }
+
+    public void setDesgnId(int desgnId) {
+        this.desgnId = desgnId;
+    }
 
     public int getProductId() {
         return productId;

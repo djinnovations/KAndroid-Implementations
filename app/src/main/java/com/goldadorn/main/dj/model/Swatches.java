@@ -55,8 +55,11 @@ public class Swatches {
         }
 
         public String getSwatchDisplayTxt() {
-            if (WHICH_TYPE == TYPE_METAL)
+            if (WHICH_TYPE == TYPE_METAL) {
+                if (color.equals("Multi-Tone"))
+                    return purity + purityUnits + " " + type;
                 return purity + purityUnits + " " + color + " " + type;
+            }
             else if (WHICH_TYPE == TYPE_GEMSTONE)
                 return color + " - " + purity;
             return "";
@@ -78,6 +81,10 @@ public class Swatches {
             }*/
         }
 
+
+        public int getWHICH_TYPE(){
+            return  WHICH_TYPE;
+        }
 
         public int getDefStat() {
             return defStat;
@@ -214,6 +221,16 @@ public class Swatches {
                     return R.drawable.gold_yellow_9k;
                 case "gold_yellow_10k":
                     return R.drawable.gold_yellow_10k;
+                case "gold_multi_9k":
+                    return R.drawable.gold_multi_9k;
+                case "gold_multi_10k":
+                    return R.drawable.gold_multi_10k;
+                case "gold_multi_14k":
+                    return R.drawable.gold_multi_14k;
+                case "gold_multi_18k":
+                    return R.drawable.gold_multi_18k;
+                case "gold_multi_22k":
+                    return R.drawable.gold_multi_22k;
                 default:
                     return R.drawable.vector_icon_cross_brown;
             }
@@ -222,6 +239,8 @@ public class Swatches {
         private final char UNDERSCORE = '_';
 
         public String getNameForResId() {
+            if (color.equals("Multi-Tone"))
+                return (type + UNDERSCORE + "multi" + UNDERSCORE + purity + purityUnits).toLowerCase();
             return (type + UNDERSCORE + color + UNDERSCORE + purity + purityUnits).toLowerCase();
         }
     }

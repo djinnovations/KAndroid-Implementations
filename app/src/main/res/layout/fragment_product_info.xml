@@ -32,10 +32,11 @@
             android:textStyle="italic"/>
 
         <ImageView
+            android:layout_marginLeft="10dp"
             android:id="@+id/followButton"
             style="@style/RoundButton"
-            android:layout_width="@dimen/circle_button_tiny_height"
-            android:layout_height="@dimen/circle_button_tiny_height"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_b_follow"/>
     </LinearLayout>
 

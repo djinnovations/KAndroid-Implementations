@@ -25,9 +25,9 @@ import butterknife.ButterKnife;
 /**
  * Created by User on 29-07-2016.
  */
-public class RecommendedProductsAdapter extends RecyclerView.Adapter<RecommendedProductsAdapter.ImageViewHolder>{
+public class RecommendedProductsAdapter extends RecyclerView.Adapter<RecommendedProductsAdapter.ImageViewHolder> {
 
-    public interface RecommendedPostClick{
+    public interface RecommendedPostClick {
         void onRecommendedPostClick(String url, int isLiked, int likeCounts);
     }
 
@@ -39,7 +39,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
         this.itemClick = itemClick;
     }
 
-    public void addList(List<RecommendedProduct> listOfUrl){
+    public void addList(List<RecommendedProduct> listOfUrl) {
         this.listOfRecoProds = listOfUrl;
         notifyDataSetChanged();
     }
@@ -57,11 +57,13 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
                 .into(holder.ivProd);*/
         try {
             /*Glide.with(holder.itemView.getContext())
-                    .load(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getProductId()))
+                    .load(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
+                            listOfRecoProds.get(position).getProductId(), null, false))
                     .placeholder(R.drawable.vector_image_logo_square_100dp)
                     .into(holder.ivProd);*/
             ImageLoaderUtils.loadImage(Application.getInstance()
-                    , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getProductId())),
+                    , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
+                            listOfRecoProds.get(position).getProductId(), null, false)),
                     holder.ivProd, R.drawable.vector_image_logo_square_100dp);
 
         } catch (Exception e) {
@@ -75,7 +77,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
         return listOfRecoProds.size();
     }
 
-    class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @Bind(R.id.image)
         ImageView ivProd;
@@ -92,10 +94,10 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.image) {
-                itemClick.onRecommendedPostClick(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(getAdapterPosition())
-                        .getProductId()), listOfRecoProds.get(getAdapterPosition())
-                        .getIsLiked(), listOfRecoProds.get(getAdapterPosition())
-                        .getLikeCount());
+                itemClick.onRecommendedPostClick(
+                        ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(getAdapterPosition()).getDesgnId(), listOfRecoProds.get(getAdapterPosition()).getProductId(), null, false),
+                        listOfRecoProds.get(getAdapterPosition()).getIsLiked(),
+                        listOfRecoProds.get(getAdapterPosition()).getLikeCount());
             }
         }
     }

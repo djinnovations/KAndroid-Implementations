@@ -70,6 +70,8 @@
             android:visibility="gone"
             app:arrowAlignment="center"
             app:arrowHeight="6dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
             app:arrowLocation="bottom"
             app:arrowWidth="10dp"
             app:cornerRadius="2dp"
@@ -85,7 +87,6 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:paddingBottom="8dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:textColor="@android:color/black"
@@ -105,6 +106,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
             android:gravity="center"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:paddingBottom="12dp">
 
@@ -138,6 +140,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="12sp"
+            android:visibility="gone"
             tools:text="Small Text" />
 
         <TextView
@@ -147,9 +150,8 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="sans-serif-light"
             android:paddingRight="8dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/black"
-            android:textSize="19sp"
+            android:textSize="18sp"
             tools:text="Small Text" />
 
 

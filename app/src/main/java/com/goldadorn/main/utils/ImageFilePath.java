@@ -1,4 +1,5 @@
 package com.goldadorn.main.utils;
+
 import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
@@ -8,14 +9,14 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.goldadorn.main.server.ApiFactory;
 
 /**
  * Created by bhavinpadhiyar on 2/23/16.
  */
-public class ImageFilePath
-{
+public class ImageFilePath {
     /**
      * Method for return file path of Gallery image
      *
@@ -24,8 +25,7 @@ public class ImageFilePath
      * @return path of the selected image file from gallery
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public static String getPath(final Context context, final Uri uri)
-    {
+    public static String getPath(final Context context, final Uri uri) {
 
         //check here to KITKAT or new version
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
@@ -67,7 +67,7 @@ public class ImageFilePath
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
@@ -95,9 +95,9 @@ public class ImageFilePath
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -156,10 +156,42 @@ public class ImageFilePath
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    public static String getImageUrlForCollection(int collid){
-        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"collections/"+collid+"/"+collid+".jpg";
+    public static String getImageUrlForCollection(int collid) {
+        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST + "collections/" + collid + "/" + collid + ".jpg";
     }
-    public static String getImageUrlForProduct(int productid){
-        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
+
+
+    public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isDefault) {
+        return getNewConvention(desId, productid, defMetal, isDefault);
+        //return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }
+
+
+    static String getNewConvention(int desId, int productid, String defMetal, boolean isNotDefault) {
+        StringBuilder baseUrl = new StringBuilder(ApiFactory.IMAGE_URL_COLLECTIONS_HOST);
+        if (!isNotDefault){
+            baseUrl.append("defaults/");
+        }
+        baseUrl.append("products/");
+
+        //char[] digitsDesId = String.valueOf(desId).toCharArray();
+        /*for (char digit : digitsDesId) {*/
+            baseUrl.append(desId).append("/");
+        //}
+        char[] digitsProdId = String.valueOf(productid).toCharArray();
+        for (char digit : digitsProdId) {
+            baseUrl.append(digit).append("/");
+        }
+
+        baseUrl.append(productid);
+        if (isNotDefault)
+            baseUrl.append("-"+defMetal);
+        baseUrl.append("-1.jpg");
+        Log.d("djimage", "new image url" + baseUrl.toString());
+        return baseUrl.toString();
+    }
+
+    //products/2/1/1010-G18Y-1.jpg
+    //S3url/products/defaults/2/1/3/3/4/1334-1.jpg
+
 }

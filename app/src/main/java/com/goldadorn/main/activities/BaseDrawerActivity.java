@@ -78,7 +78,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_privacy_policy,
             R.id.nav_terms_conditions,
             R.id.nav_settings,
-            R.id.nav_logout
+            R.id.nav_logout,
+            R.id.nav_size_guide, R.id.nav_buy_back_policy
     })
     public void menuButtonClick(View view) {
         int id = view.getId();
@@ -165,7 +166,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_shipping_and_return,
             R.id.nav_privacy_policy,
             R.id.nav_terms_conditions,
-            R.id.nav_settings,
+            R.id.nav_settings,R.id.nav_size_guide,
+            R.id.nav_buy_back_policy,
             R.id.nav_logout})
     List<View> views;
 

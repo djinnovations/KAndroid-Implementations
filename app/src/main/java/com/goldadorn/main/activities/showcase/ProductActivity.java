@@ -30,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -54,7 +53,9 @@ import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.CustomizationStepResponse;
 import com.goldadorn.main.dj.model.FilterPostParams;
-import com.goldadorn.main.dj.model.ShipmentBillingAddress;
+import com.goldadorn.main.dj.model.ProductCustomizationTabUpdationDataObj;
+import com.goldadorn.main.dj.model.ProductInfoTabUpdationDataObj;
+import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
@@ -83,7 +84,6 @@ import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.venmo.view.TooltipView;
@@ -150,7 +150,6 @@ public class ProductActivity extends BaseDrawerActivity {
     Collection mCollection;
     public ProductInfo mProductInfo;
     public ProductOptions mProductOptions;
-    private ProductInfoFragment mProInfoFragment = null;
 
     public static Intent getLaunchIntent(Context context, Product product) {
         Intent intent = new Intent(context, ProductActivity.class);
@@ -168,16 +167,25 @@ public class ProductActivity extends BaseDrawerActivity {
         overLayDialog.show();
     }
 
+    private void showOverLay(String text, int colorResId, int gravity) {
+        if (overLayDialog == null) {
+            //WindowUtils.justPlainOverLay = true;
+            overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
+                    gravity);
+        }
+        overLayDialog.show();
+    }
+
     public void dismissOverLay() {
         if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
+                WindowUtils.marginForProgressViewInGrid = 5;
                 overLayDialog.dismiss();
             }
         }
     }
 
     boolean isSocialFeed;
-    ProductCustomiseFragment mProdCustFrag;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -283,9 +291,9 @@ public class ProductActivity extends BaseDrawerActivity {
                             mProductInfo = result.info;
                             //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
                             setAdapterForProdImages(mProductInfo.imageCount);
-                            mProInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
-                            if (mProInfoFragment != null)
-                                mProInfoFragment.bindProductInfo(mProductInfo);
+                            //mProdInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
+                            if (mProdInfoFragment != null)
+                                mProdInfoFragment.bindProductInfo(mProductInfo);
 
                         }
                     }
@@ -296,7 +304,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 if (result.success) {
                     mProductOptions = result.options;
                     mProduct.addDefaultCustomisation(mProductOptions);
-                    mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
+                    //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
                     if (mProdCustFrag != null)
                         mProdCustFrag.bindProductOptions(mProductOptions);
                 }
@@ -319,12 +327,31 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    /*private void updateProductInfoTab(ProductInfoTabUpdationDataObj dataObj){
+        mProductInfo.metalPurity = dataObj.getMetalPurity();
+        mProductInfo.metalrate = dataObj.getMetalRate();
+        if (mProdInfoFragment != null)
+            mProdInfoFragment.bindProductInfo(mProductInfo);
+    }*/
+
+
+    private void updateCustomizationTab(ProductCustomizationTabUpdationDataObj dataObj) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(ProductCustomiseFragment.PBD_metal, dataObj.getMetalCost());
+        map.put(ProductCustomiseFragment.PBD_stone, String.valueOf(dataObj.getStonesTotalCost()));
+        map.put(ProductCustomiseFragment.PBD_making, dataObj.getMakingCharges());
+        map.put(ProductCustomiseFragment.PBD_VAT, dataObj.getVAT());
+        map.put(ProductCustomiseFragment.PBD_total, String.valueOf(dataObj.getTotalCost()));
+        mProdCustFrag.setPriceBreakDown(map);
+    }
+
+
     //http://demo.eremotus-portal.com/products/3045/3045-1.jpg
-    private ArrayList<String> getVariousProductLooks(int lookcount) {
+    private ArrayList<String> getVariousProductLooks(int lookcount, boolean isNotDefault) {
         if (lookcount == 0)
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
-        String defaultUrl = mProduct.getImageUrl();
+        String defaultUrl = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, isNotDefault);
         int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {
@@ -337,9 +364,14 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    /*private String getNewUrlS3(){
+        String baseUrl =
+    }*/
+
+
     private void setAdapterForProdImages(int lookcount) {
         mOverlayVH.pager.setAdapter(
-                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), getVariousProductLooks(lookcount)));
+                mProductAdapter = new ProductPagerAdapter(getSupportFragmentManager(), getVariousProductLooks(lookcount, false)));
         mOverlayVH.pager.setOffscreenPageLimit(lookcount);
         mOverlayVH.indicator.setViewPager(mOverlayVH.pager);
     }
@@ -443,38 +475,91 @@ public class ProductActivity extends BaseDrawerActivity {
         getSupportLoaderManager().destroyLoader(mCollectionCallBack.hashCode());
     }
 
+    private ProductCustomiseFragment mProdCustFrag;
+    private ProductInfoFragment mProdInfoFragment;
+    private FilterTimelineFragment mFilterFrag;
+
+    @Bind(R.id.frame_no_scroll_dummy_cust)
+    FrameLayout frame_no_scroll_dummy_cust;
+
     private void configureUI(int uiState) {
-        Fragment f = null;
+        Fragment fragment = null;
         int id = R.id.frame_content;
-        mFrame.setVisibility(View.VISIBLE);
-        mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
+        mFrame.setVisibility(View.GONE);
+        mFrameNoScrollDummy.setVisibility(View.GONE);
+        frame_no_scroll_dummy_cust.setVisibility(View.GONE);
         if (uiState == UISTATE_SOCIAL) {
             id = R.id.frame_no_scroll_dummy;
             //f = new SocialFeedFragment();
             manupilateToggle();
-            FilterPostParams fpp = new FilterPostParams(("P" + String.valueOf(mProduct.id)), "0", "0");
-            f = FilterTimelineFragment.newInstance(fpp);
-            mFrame.setVisibility(View.INVISIBLE);
+            //mFrame.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
-        } else if (uiState == UISTATE_PRODUCT) {
-            mProInfoFragment = new ProductInfoFragment();
-        } else {
-            id = R.id.frame_no_scroll_dummy;
-            f = new ProductCustomiseFragment();
-            mFrame.setVisibility(View.INVISIBLE);
-            mFrameNoScrollDummy.setVisibility(View.VISIBLE);
-        }
-        if (f != null) {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(id, f, "" + uiState);
+            if (mProdCustFrag != null)
+                fragmentTransaction.hide(mProdCustFrag);
+            if (mProdInfoFragment != null)
+                fragmentTransaction.hide(mProdInfoFragment);
             fragmentTransaction.commit();
+
+            FilterPostParams fpp = new FilterPostParams(("P" + String.valueOf(mProduct.id)), "0", "0");
+            if (mFilterFrag == null) {
+                fragment = mFilterFrag = FilterTimelineFragment.newInstance(fpp);
+            } else {
+                updateFragmentStates(mFilterFrag, true);
+                return;
+            }
+        } else if (uiState == UISTATE_PRODUCT) {
+            mFrame.setVisibility(View.VISIBLE);
+            if (mProdCustFrag != null)
+                updateFragmentStates(mProdCustFrag, false);
+            if (mFilterFrag != null)
+                updateFragmentStates(mFilterFrag, false);
+
+            if (mProdInfoFragment == null) {
+                fragment = mProdInfoFragment = new ProductInfoFragment();
+            } else {
+                updateFragmentStates(mProdInfoFragment, true);
+                return;
+            }
         } else {
+            id = R.id.frame_no_scroll_dummy_cust;
+            //mFrame.setVisibility(View.INVISIBLE);
+            //mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
+            frame_no_scroll_dummy_cust.setVisibility(View.VISIBLE);
+            if (mProdInfoFragment != null)
+                updateFragmentStates(mProdInfoFragment, false);
+            if (mFilterFrag != null)
+                updateFragmentStates(mFilterFrag, false);
+
+            if (mProdCustFrag == null) {
+                fragment = mProdCustFrag = new ProductCustomiseFragment();
+            } else {
+                updateFragmentStates(mProdCustFrag, true);
+                return;
+            }
+        }
+        //if (f != null) {
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(id, fragment, "" + uiState);
+        fragmentTransaction.commit();
+        /*} else {
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, mProInfoFragment, "" + uiState);
             fragmentTransaction.commit();
-        }
+        }*/
+    }
+
+
+    private void updateFragmentStates(Fragment fragment, boolean tobeShown) {
+        FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        if (tobeShown)
+            fragmentTransaction.show(fragment);
+        else fragmentTransaction.hide(fragment);
+        fragmentTransaction.commit();
     }
 
 
@@ -505,7 +590,6 @@ public class ProductActivity extends BaseDrawerActivity {
     }*/
 
     public void addToCartNew(final View cartBtn) {
-
         if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
             return;
@@ -579,7 +663,9 @@ public class ProductActivity extends BaseDrawerActivity {
 
         private ArrayList<String> images;
 
-        public ArrayList<String> getImagesUrlList(){return images;}
+        public ArrayList<String> getImagesUrlList() {
+            return images;
+        }
 
        /* @Override
         public Object instantiateItem(ViewGroup container, int position) {
@@ -631,6 +717,14 @@ public class ProductActivity extends BaseDrawerActivity {
 
     }
 
+
+    public void launchProjectorView() {
+        Intent intent = new Intent(this, ProjectorViewActivity.class);
+        intent.putStringArrayListExtra(IntentKeys.PROJECTOR_VIEW_IMAGES_LIST, mProductAdapter.getImagesUrlList());
+        intent.putExtra(IntentKeys.PRODUCT_NAME, getProductName());
+        startActivity(intent);
+    }
+
     public void displayBookAppointment() {
 
         try {
@@ -652,7 +746,7 @@ public class ProductActivity extends BaseDrawerActivity {
             baaDataObj.setCollectionId(String.valueOf(mProduct.collectionId))
                     .setDesignerId(String.valueOf(mProduct.userId))
                     .setProductId(String.valueOf(mProduct.id))
-                    .setItemImageUrl(mProduct.getImageUrl())
+                    .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
                     .setItemName(mProduct.name);
             intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             startActivity(intent);
@@ -664,7 +758,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private boolean canProceedToBAA() {
         if (mProduct != null) {
-            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl())
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
                     && mProduct.id != -1 && mProduct.collectionId != -1 && mProduct.userId != -1) {
                 return true;
             }
@@ -704,7 +798,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-    public String getProductName(){
+    public String getProductName() {
         return mProduct.name;
     }
 
@@ -776,11 +870,10 @@ public class ProductActivity extends BaseDrawerActivity {
         View.OnTouchListener prodNameTouchListener = new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     toastProdName.setVisibility(View.VISIBLE);
                     return true;
-                }
-                else if (event.getAction() == MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     toastProdName.setVisibility(View.GONE);
                     return true;
                 }
@@ -807,11 +900,15 @@ public class ProductActivity extends BaseDrawerActivity {
 
             mProductOwner.setOnClickListener(this);
             mProductCollection.setOnClickListener(this);
+
+            mProductOwner.setVisibility(View.GONE);
+            mProductCollection.setVisibility(View.GONE);
+            followButton.setVisibility(View.GONE);
             //RandomUtils.underLineTv(mProductOwner);
         }
 
-        private void setDrawableForMagGlass(){
-            int color =  ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorPrimary);
+        private void setDrawableForMagGlass() {
+            int color = ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorPrimary);
             ivGlass.setImageDrawable(new IconicsDrawable(Application.getInstance())
                     .icon(CommunityMaterial.Icon.cmd_magnify)
                     .color(color)
@@ -838,6 +935,8 @@ public class ProductActivity extends BaseDrawerActivity {
                 indicator.setVisibility(visibility);
                 productActionsToggle.setVisibility(visibility);
                 ivGlass.setVisibility(visibility);
+                mProductOwner.setVisibility(View.GONE);
+                mProductCollection.setVisibility(View.GONE);
             }
         }
 
@@ -858,6 +957,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     layout2.setVisibility(View.VISIBLE);
                     mProductCollection.setVisibility(View.VISIBLE);
                     mProductCost.setVisibility(View.VISIBLE);
+                    mProductOwner.setVisibility(View.GONE);
+                    mProductCollection.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(1f).scaleX(1f);
 
                 } else {
@@ -875,17 +976,16 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductCost.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
-            }
-            else if (v.getId() == R.id.btnBookApoint) {
+            } else if (v.getId() == R.id.btnBookApoint) {
                 displayBookAppointment();
             } else if (v.getId() == mProductOwner.getId()) {
                 launchDesignerScreen();
             } else if (v.getId() == mProductCollection.getId()) {
                 launchCollectionScreen();
-            }else if (v.getId() == ivGlass.getId()){
-                Toast.makeText(getApplicationContext(),"Click on the Product Image for Magnified view", Toast.LENGTH_SHORT).show();
-            }
-            else if (v == like) {
+            } else if (v.getId() == ivGlass.getId()) {
+                //Toast.makeText(getApplicationContext(), "Click on the Product Image for Magnified view", Toast.LENGTH_SHORT).show();
+                launchProjectorView();
+            } else if (v == like) {
                 final IconicsButton likeBtn = (IconicsButton) v;
                 likeBtn.setEnabled(false);
                 final boolean isLiked = likeBtn.isSelected();
@@ -950,8 +1050,8 @@ public class ProductActivity extends BaseDrawerActivity {
                                     mUser.isFollowed = true;
                                     //Toast.makeText(getApplicationContext(), ((String.format(Locale.getDefault(), "%d", user.followers_cnt))), Toast.LENGTH_SHORT).show();
                                 }
-                                if (mProInfoFragment != null) {
-                                    mProInfoFragment.mFollower();
+                                if (mProdInfoFragment != null) {
+                                    mProdInfoFragment.mFollower();
                                 }
                             }
                         });
@@ -966,7 +1066,7 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
-    public void postABonb(Intent intent){
+    public void postABonb(Intent intent) {
         startActivityForResult(intent, POST_FEED);
     }
 
@@ -1145,17 +1245,29 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public static final int CUSTOMIZATION_STEP_WISE_CALL = IDUtils.generateViewId();
 
-    public void sendCustomizationToServer(Map<String, List<String>> selectedParams) {
+    Map<String, List<String>> selectedParams;
+
+    public void sendCustomizationToServer(Map<String, List<String>> selectedParams, boolean isDoneBtnCall) {
+        //WindowUtils.marginForProgressViewInGrid = 25;
+        showOverLay(null, 0);
+        if (isDoneBtnCall && dontCallNextTime) {
+            dismissOverLay();
+            return;
+        }
+        this.selectedParams = selectedParams;
         Map<String, Object> paramsMap = new HashMap<>();
         Set<String> keys = selectedParams.keySet();
         for (String str : keys) {
-            if (str.equals(STONE)) {
+            /*if (str.equals(STONE)) {
                 JSONArray jsonArray = new JSONArray();
                 for (String stoneval : selectedParams.get(str))
                     jsonArray.put(stoneval);
                 paramsMap.put(str, jsonArray);
-            } else paramsMap.put(str, selectedParams.get(str).get(0));
+            } else*/
+            paramsMap.put(str, selectedParams.get(str).get(0));
         }
+        paramsMap.put("prodId", mProduct.id);
+        Log.d("djprod", "req Params- sendCustomizationToServer-ProductActivity: " + paramsMap);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(CUSTOMIZATION_STEP_WISE_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         getAQuery().ajax(ApiKeys.getPriceForCustomizedProdAPI(), paramsMap, String.class, ajaxCallback);
@@ -1169,6 +1281,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
         Log.d("djprod", "url queried- ProductActivity: " + url);
         Log.d("djprod", "response- ProductActivity: " + json);
+        dismissOverLay();
         if (id == DESC_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
@@ -1243,16 +1356,76 @@ public class ProductActivity extends BaseDrawerActivity {
                     metalDisableList = mProductOptions.getDisableList(csr.getMetal(), METAL);
                 }
                 if (csr.getStone() != null) {
-                    stoneDisableList = mProductOptions.getDisableList(csr.getStone(), METAL);
+                    stoneDisableList = mProductOptions.getDisableList(csr.getStone(), STONE);
                 }
                 if (csr.getSize() != null) {
                     sizeList = mProductOptions.getParsedSize(csr.getSize());
+                }
+                if (csr.getPrice() != null) {
+                    int tocompare;
+                    try {
+                        tocompare = Integer.parseInt(csr.getPrice());
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        tocompare = -1;
+                    }
+                    if (tocompare > 0) {
+                        //mProduct.unitPrice = tocompare;
+                        mOverlayVH.mProductCost.setText(getFormattedPrice(csr.getPrice()));
+                        mOverlayVH.mProductCost2.setText(getFormattedPrice(csr.getPrice()));
+                        //mProdCustFrag.setNewTotalPrice(getFormattedPrice(csr.getPrice()));
+                        updateTabs(tocompare);
+                        dontCallNextTime = true;
+                    }
+
                 }
                 CustomizationDisableList data = new CustomizationDisableList(metalDisableList, stoneDisableList, sizeList);
                 mProdCustFrag.updateCustomizationData(data);
             }
         } else super.serverCallEnds(id, url, json, status);
     }
+
+    private void updateImages(Swatches.MixedSwatch swatch) {
+        String factor = new StringBuilder().append(swatch.getType().charAt(0))
+                .append(swatch.getPurity()).append(swatch.getColor().charAt(0)).toString();
+        mProduct.defMetal = factor;
+        mProductAdapter.changeData(getVariousProductLooks(mProductAdapter.getImagesUrlList().size(), true));
+    }
+
+    private void updateTabs(int totalPrice) {
+        mProduct.unitPrice = totalPrice;
+        Swatches.MixedSwatch metalSwatch = null;
+        if (selectedParams.containsKey(METAL)) {
+            metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
+            updateImages(metalSwatch);
+            mProductInfo.metalrate = Float.parseFloat(metalSwatch.getCostPerUnit());
+            mProductInfo.metalPurity = Integer.parseInt(metalSwatch.getPurity());
+        }
+        if (selectedParams.containsKey(STONE)) {
+            Swatches.MixedSwatch stoneSwatch = mProdCustFrag.getSelectedStoneSwatch();
+            //mProductInfo.stonesDetails // TODO: 12-08-2016
+        }
+        if (mProdInfoFragment != null)
+            mProdInfoFragment.bindProductInfo(mProductInfo);
+
+        ProductCustomizationTabUpdationDataObj dataObj = new ProductCustomizationTabUpdationDataObj();
+        if (metalSwatch != null) {
+            dataObj.setMetalCostPerUnit(Float.parseFloat(metalSwatch.getCostPerUnit()))
+                    .setMetalWeight(Float.parseFloat(metalSwatch.getWeight()))
+                    .setStonesTotalCost((int) ProductOptions.stonePrice)
+                    .setTotalCost(totalPrice);
+        }
+        updateCustomizationTab(dataObj);
+    }
+
+
+    boolean dontCallNextTime = false;
+    //boolean isDoneBtnCall = false;
+
+    private String getFormattedPrice(String unformatedPrice) {
+        return RandomUtils.getIndianCurrencyFormat(unformatedPrice, true);
+    }
+
 
     private class CollectionCallBack implements
             LoaderManager.LoaderCallbacks<ObjectAsyncLoader.Result> {
@@ -1292,10 +1465,10 @@ public class ProductActivity extends BaseDrawerActivity {
                                    ObjectAsyncLoader.Result data) {
             mCollection = (Collection) data.object;
             if (mCollection != null) {
-                mProInfoFragment =
+                mProdInfoFragment =
                         (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(
                                 "" + UISTATE_PRODUCT);
-                if (mProInfoFragment != null) mProInfoFragment.bindCollectionUI(mCollection);
+                if (mProdInfoFragment != null) mProdInfoFragment.bindCollectionUI(mCollection);
                 if (!TextUtils.isEmpty(mCollection.name)) {
                     mOverlayVH.mProductCollection.setText(mCollection.name.trim());
                     UiRandomUtils.underLineTv(mOverlayVH.mProductCollection, 0, mOverlayVH.mProductCollection.length());
@@ -1312,7 +1485,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
-    public void mFollower() {
+    /*public void mFollower() {
         mUser = UserInfoCache.getInstance(mContext).getUserInfoDB(mProduct.userId, true);
         if (mUser != null) {
             mOverlayVH.followButton.setTag(mUser);
@@ -1321,5 +1494,5 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
-    }
+    }*/
 }

@@ -58,6 +58,13 @@
             android:elevation="5dp"
             app:elevation="5dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        <FrameLayout
+            android:id="@+id/frame_no_scroll_dummy_cust"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="5dp"
+            app:elevation="5dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"

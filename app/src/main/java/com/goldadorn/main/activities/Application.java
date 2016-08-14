@@ -174,10 +174,15 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_rate_us, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_EXTERNAL, appPlayStoreURL);
 
         String htmlEndPoint = getUrlHelper().getHTMLEndPoint();
+        //String urlForSizeGuide = "http://www.amazon.in/Ring-Size-Guides/b?ie=UTF8&node=5274290031";
+        String urlForBuyBack = "file:///android_asset/web/buybackpolicy.html";
+        String urlForSizeGuide =  "https://www.candere.com/shipping-delivery-and-return-policy.html/";
 
         addItem(menu, R.id.nav_contact_us, R.string.contactUs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.contactUsURL), WebActivity.class);
         addItem(menu, R.id.nav_about_us, R.string.aboutUS, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.aboutUsURL), WebActivity.class);
         addItem(menu, R.id.nav_faqs, R.string.faqs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.faqsURL), WebActivity.class);
+        addItem(menu, R.id.nav_size_guide, R.string.sizeGuide, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForSizeGuide, WebActivity.class);
+        addItem(menu, R.id.nav_buy_back_policy, R.string.buyBackPolicy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForBuyBack, WebActivity.class);
 
         addItem(menu, R.id.nav_shipping_and_return, R.string.shippingAndReturnPolicy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.shippingAndReturnPolicyURL), WebActivity.class);
         addItem(menu, R.id.nav_privacy_policy, R.string.privacyPolicy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.privacyPolicyUTRL), WebActivity.class);

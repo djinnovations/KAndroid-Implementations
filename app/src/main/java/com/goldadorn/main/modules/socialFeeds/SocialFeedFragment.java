@@ -1709,12 +1709,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             mRecoProdAdapter.addList(/*getUrlList(*/socialPost.getRecoProducts()/*)*/);
         }
 
-        private List<String> getUrlList(List<RecommendedProduct> products) {
+        /*private List<String> getUrlList(List<RecommendedProduct> products) {
             List<String> urlList = new ArrayList<>();
             for (RecommendedProduct reco : products)
                 urlList.add(ImageFilePath.getImageUrlForProduct(reco.getProductId()));
             return urlList;
-        }
+        }*/
 
         public RecommendedProductsItemHolder(View itemView) {
             super(itemView);

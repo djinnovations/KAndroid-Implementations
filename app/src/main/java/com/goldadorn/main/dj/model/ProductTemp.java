@@ -15,6 +15,7 @@ public class ProductTemp {
     private String costUnits;
     //private int isLiked;
     private float aspectRatio;
+    private String defMetal;
 
     public ProductTemp(int productId, int userId, int collectionId, String productName,
                        String productDescription, int productDefaultPrice, String costUnits, float aspectRatio) {

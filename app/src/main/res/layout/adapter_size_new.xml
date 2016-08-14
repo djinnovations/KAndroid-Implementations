@@ -59,7 +59,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="8dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/ivDecrease"

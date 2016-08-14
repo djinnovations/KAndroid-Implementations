@@ -24,6 +24,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by Vijith Menon on 6/3/16.
  */
@@ -49,6 +51,7 @@ public class ShowcaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
         try {
             if (!TextUtils.isEmpty(mImageUrl))
                 /*Glide.with(getActivity()).load(mImageUrl).into(
@@ -66,10 +69,11 @@ public class ShowcaseFragment extends Fragment {
     View.OnClickListener itemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), ProjectorViewActivity.class);
+            /*Intent intent = new Intent(getActivity(), ProjectorViewActivity.class);
             intent.putStringArrayListExtra(IntentKeys.PROJECTOR_VIEW_IMAGES_LIST, getUrlList());
             intent.putExtra(IntentKeys.PRODUCT_NAME, ((ProductActivity) getActivity()).getProductName());
-            startActivity(intent);
+            startActivity(intent);*/
+            ((ProductActivity) getActivity()).launchProjectorView();
         }
     };
 

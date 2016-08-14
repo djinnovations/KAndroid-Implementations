@@ -44,6 +44,7 @@ public class DbHelper {
 
                         cv.put(Tables.Products.PRICE, productObj.optString(Constants.JsonConstants.PRODUCTPRICE));
                         cv.put(Tables.Products.PRICEUNIT, productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS));
+                        //cv.put(Tables.Products.DEF_METAl, productObj.optString("defaultMetal"));
                         context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optInt(Constants.JsonConstants.PRODUCTID) + ""});
                     }
                     if (response.productArray != null) {
@@ -56,8 +57,8 @@ public class DbHelper {
                             p.image_a_r = (float) productObj.optDouble(Constants.JsonConstants.ASPECTRATIO);
                             p.unitPrice = productObj.optLong(Constants.JsonConstants.PRODUCTPRICE);
                             p.priceUnit = productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
+                            //p.defMetal = productObj.optString("defaultMetal");
                         }
-
                     }
                 }
                 if (response.writeToDb)

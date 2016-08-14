@@ -114,7 +114,7 @@ public class ProductInfoFragment extends Fragment {
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
 
-        followButton.setVisibility(View.GONE);
+        //followButton.setVisibility(View.GONE);
         ((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
                 "Payment Modes Available");
         ((TextView) view.findViewById(R.id.warrantyInfo).findViewById(R.id.title)).setText(
@@ -158,14 +158,16 @@ public class ProductInfoFragment extends Fragment {
                             new IResultListener<LikeResponse>() {
                                 @Override
                                 public void onResult(LikeResponse result) {
-                                    v.setEnabled(false);
+                                    v.setEnabled(true);
                                     v.setSelected(result.success != isFollowing);
                                     if (isFollowing) {
+                                        mUser.isFollowed = false;
                                         mUser.followers_cnt = mUser.followers_cnt - 1;
                                     } else {
+                                        mUser.isFollowed = true;
                                         mUser.followers_cnt = mUser.followers_cnt + 1;
                                     }
-                                    mProductActivity.mFollower();
+                                   // mProductActivity.mFollower();
                                 }
                             });
                 }

@@ -27,6 +27,7 @@ public class Product implements Serializable {
     public long unitPrice;
     public String priceUnit = " RS";
     public float image_a_r = 1;
+    public String defMetal = "";
 
     public int quantity;
     public int maxQuantity = 10;
@@ -82,13 +83,12 @@ public class Product implements Serializable {
         else return false;
     }
 
-    public String getImageUrl() {
-        return ImageFilePath.getImageUrlForProduct(id);
+    public String getImageUrl(int desId, String defMetal, boolean isNotDefault) {
+        return ImageFilePath.getImageUrlForProduct(desId, id, defMetal, isNotDefault);
     }
 
 
     public static Product extractFromProductTemp(ProductTemp productTemp, boolean isLiked, int likecount) {
-
         Product thisProduct = new Product(productTemp.getProductId());
         thisProduct.userId = productTemp.getUserId();
         thisProduct.productId = productTemp.getProductId();
@@ -100,6 +100,7 @@ public class Product implements Serializable {
         thisProduct.priceUnit = productTemp.getCostUnits();
         thisProduct.isLiked = isLiked;
         thisProduct.image_a_r = productTemp.getAspectRatio();
+        //thisProduct.defMetal = // TODO: 14-08-2016
         if (thisProduct.image_a_r == 0)
             thisProduct.image_a_r = 1;
         return thisProduct;
@@ -118,6 +119,7 @@ public class Product implements Serializable {
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
         t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED)) == 1;
         t.likeStat = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED));
+        //t.defMetal = cursor.getString(cursor.getColumnIndex(Tables.Products.DEF_METAl));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)
             t.image_a_r = 1;

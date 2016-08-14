@@ -151,10 +151,16 @@ class CustomizeMainHolder extends ViewHolder {
         @Override
         public void onClick(View v) {
             CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
+            Swatches.MixedSwatch swatch = ((Swatches.MixedSwatch) v.getTag());
+            extra.setVisibility(View.GONE);
+            if (swatch.getWHICH_TYPE() == Swatches.TYPE_GEMSTONE) {
+                extra.setVisibility(View.VISIBLE);
+                extra.setText(swatch.getSwatchDisplayTxt());
+            }
             image.setImageDrawable(imageView.getDrawable());
             if (listener != null)//// TODO: 16-07-2016  uncomment this block
                 ///listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (OptionValue) v.getTag()));
-                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), (Swatches.MixedSwatch) v.getTag()));
+                listener.onResult(new AbstractMap.SimpleEntry<>(data.getKey(), swatch));
         }
     };
 
@@ -180,12 +186,12 @@ class CustomizeMainHolder extends ViewHolder {
             if (data.getKey().keyID.equalsIgnoreCase("metal"))
                 imageView.setImageResource(swatch.getSwatchDisplayIconResId());
             else {
-                Glide.with(v.getContext())
+                Picasso.with(v.getContext())
                         //.load("http://buisnessofjewelry.com/images/passionfire-round_small.png")
                         .load(UiRandomUtils.DIAMOND_URL)
                         .centerCrop()
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
-                        .crossFade()
+                        .resize(150, 150)
                         .into(imageView);
             }
             /*if(data.getKey().keyID.equalsIgnoreCase("Metal Purity List"))
@@ -204,13 +210,13 @@ class CustomizeMainHolder extends ViewHolder {
             }
         }
 
-        int j = 0;
+        //int j = 0;
         if (disableList != null){
-            for (int i = 0; i< list.size(); i++){
-                if (disableList[j] == i){
-                    extraLayout.getChildAt(i).setVisibility(View.GONE);
-                    j++;
-                }
+            for (int i = 0; i< disableList.length; i++){
+                /*if (disableList[j] == i){*/
+                    extraLayout.getChildAt(disableList[i]).setVisibility(View.GONE);
+                    //j++;
+                //}
             }
         }
     }
@@ -227,7 +233,8 @@ class CustomizeMainHolder extends ViewHolder {
         int[] ints = new int[integers.size()];
         int i = 0;
         for (Integer n : integers) {
-            ints[i++] = n;
+            ints[i] = n;
+            i++;
         }
         return ints;
     }

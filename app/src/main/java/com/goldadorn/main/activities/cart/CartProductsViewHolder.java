@@ -107,7 +107,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText.setText(product.orderQty + "");
             quantityText.addTextChangedListener(this);
 
-            Picasso.with(image.getContext()).load(product.getImageUrl()).placeholder(R.mipmap.ic_launcher).fit().into(image);
+            Picasso.with(image.getContext()).load(product.getImageUrl(product.userId, product.defMetal, false)).placeholder(R.mipmap.ic_launcher).fit().into(image);
 
             //remove 0 at end the end
             DecimalFormat format = new DecimalFormat("0.#");

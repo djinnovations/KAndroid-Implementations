@@ -2,16 +2,17 @@ package com.goldadorn.main.activities.showcase;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
@@ -30,13 +32,14 @@ import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
-import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.ProductOptions;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -73,13 +76,14 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
     PriceBreakDownAdapter pbda;
-    SizeListSpinnerAdapter sizeAdapterDialog;
+    SizeListAdapter sizeAdapterDialog;
     SingleItemAdapter sizeTitleDialog;
     SingleItemAdapter customizeTitleDialog;
     private TitleIconAdapter sizeTitleIconAdapter;
     private TitleIconAdapter metalAdapter;
     private TitleIconAdapter stoneAdapter;
     private ResourceReader rsRdr;
+    private PositiveNegativeButtonAdapter pnbtn;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -105,19 +109,19 @@ public class ProductCustomiseFragment extends Fragment {
         mAdapter.addAdapter(getTitleAdapter("Customize"));
         mAdapter.addAdapter(sizeTitleIconAdapter = new TitleIconAdapter("Size", true));
         mAdapter.addAdapter(metalAdapter = new TitleIconAdapter("Metal", true));
-        mAdapter.addAdapter(stoneAdapter = new TitleIconAdapter("Stone", true));
+        mAdapter.addAdapter(stoneAdapter = new TitleIconAdapter("Diamond Quality", true));
         mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         /***************************************************************************/
 
 
         /***************************************************************************/
-        adapterForCustomizeDialog.addAdapter(getTitleAdapter("Customization", true, TITLE_CUSTOMIZE_DIALOG));
+        adapterForCustomizeDialog.addAdapter(getTitleAdapter("Customize", true, TITLE_CUSTOMIZE_DIALOG));
         /*adapterForCustomizeDialog.addAdapter(sizeTitleAdapter = (SingleItemAdapter)
                 getTitleAdapter("Size", true, TITLE_SIZE_DIALOG));*/
-        adapterForCustomizeDialog.addAdapter(sizeAdapterDialog = new SizeListSpinnerAdapter(getContext(), true));
+        adapterForCustomizeDialog.addAdapter(sizeAdapterDialog = new SizeListAdapter(getContext(), true));
         adapterForCustomizeDialog.addAdapter(mCustomizeAdapter = new CustomizeMainAdapter(getActivity()));
-        adapterForCustomizeDialog.addAdapter(new PositiveNegativeButtonAdapter(true));
+        adapterForCustomizeDialog.addAdapter(pnbtn = new PositiveNegativeButtonAdapter(true));
         recyclerViewForCustomizeDialog.setAdapter(adapterForCustomizeDialog);
         /***************************************************************************/
 
@@ -125,6 +129,7 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
 
+    //boolean isHolderWasNull = false;
     private class TitleIconAdapter extends RecyclerAdapter<ViewHolder> {
 
         ViewHolder holder;
@@ -144,9 +149,17 @@ public class ProductCustomiseFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             this.holder = holder;
             ((TextView) holder.itemView.findViewById(R.id.tvTitle)).setText(title);
+            /*if (isHolderWasNull) {
+                bindProductOptions(mProductOption);
+            }*/
         }
 
+
         public void setIconDrawable(Drawable drawable, boolean hideTxtVisiblity) {
+            /*if (holder == null) {
+                isHolderWasNull = true;
+                return;
+            }*/
             holder.itemView.findViewById(R.id.tvItem).setVisibility(View.INVISIBLE);
             holder.itemView.findViewById(R.id.image).setVisibility(View.VISIBLE);
             if (!hideTxtVisiblity) {
@@ -155,18 +168,41 @@ public class ProductCustomiseFragment extends Fragment {
             }
             if (drawable != null)
                 ((ImageView) holder.itemView.findViewById(R.id.image)).setImageDrawable(drawable);
-            else /*((ImageView) holder.itemView.findViewById(R.id.image))
-                    .setImageDrawable*/
-                UiRandomUtils.drawableFromUrl(((ImageView) holder.itemView.findViewById(R.id.image))
-                        , mProductOption.mCustDefVals.getUrlStoneImg());
+            else {
+                /*UiRandomUtils.drawableFromUrl(((ImageView) holder.itemView.findViewById(R.id.image))
+                        , mProductOption.mCustDefVals.getUrlStoneImg());*/
+                Target target = new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        ImageView imageView = (ImageView) holder.itemView.findViewById(R.id.image);
+                        imageView.setImageBitmap(bitmap);
+                        //Drawable image = imageView.getDrawable();
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {}
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {}
+                };
+
+                if (!TextUtils.isEmpty(mProductOption.mCustDefVals.getUrlStoneImg()))
+                Picasso.with(getContext().getApplicationContext()).load(mProductOption.mCustDefVals.getUrlStoneImg()).into(target);
+            }
+            //isHolderWasNull = false;
 
         }
 
 
         public void setExtraText(String text) {
+           /* if (holder == null){
+                isHolderWasNull = true;
+                return;
+            }*/
             holder.itemView.findViewById(R.id.image).setVisibility(View.INVISIBLE);
             holder.itemView.findViewById(R.id.tvItem).setVisibility(View.VISIBLE);
             ((TextView) holder.itemView.findViewById(R.id.tvItem)).setText(text);
+            //isHolderWasNull = false;
         }
 
         @Override
@@ -233,8 +269,10 @@ public class ProductCustomiseFragment extends Fragment {
             if (options.priceBreakDown.size() > 0) {
                 //mPriceAdapter.setEnabled(true);
                 //mPriceAdapter.notifyDataSetChanged();
+                /*if (!isHolderWasNull) {*/
                 pbda.setEnabled(true);
                 pbda.setList(getDataForPriceBreakDown(options));
+                //}
                 //pbda.notifyDataSetChanged();
             } else {
                 //mPriceAdapter.setEnabled(false);
@@ -246,14 +284,13 @@ public class ProductCustomiseFragment extends Fragment {
                 sizeTitleIconAdapter.setEnabled(true);
                 sizeTitleIconAdapter.setExtraText(options.mCustDefVals.getSizeText());
                 sizeAdapterDialog.setEnabled(true);
-                sizeAdapterDialog.setData(/*getDataForSizeSpinner()*/options.sizeList);//// TODO: 10-07-2016 very important to change
+                sizeAdapterDialog.setData(/*getDataForSizeSpinner()*/options.parsedSizeList);//// TODO: 10-07-2016 very important to change
             } else {
                 sizeTitleIconAdapter.setExtraText("NA");
                 List<String> naList = new ArrayList<>();
                 naList.add("NA");
                 sizeAdapterDialog.setData(naList);
             }
-
         }
     }
 
@@ -263,9 +300,33 @@ public class ProductCustomiseFragment extends Fragment {
         List<Integer> stoneDisableList = mCustomizeData.getStoneDisableList();
         List<String> sizeDataList = mCustomizeData.getSizeDataList();
         if (metalDisableList != null) {
-            CustomizeMainHolder metal = (CustomizeMainHolder) recyclerViewForCustomizeDialog.findViewHolderForAdapterPosition(1);
-            metal.setDisableList(metalDisableList);
+            //CustomizeMainHolder metal = (CustomizeMainHolder) recyclerViewForCustomizeDialog.findViewHolderForAdapterPosition(2);
+            if (metalCustHolder != null)
+                metalCustHolder.setDisableList(metalDisableList);
         }
+
+        if (stoneDisableList != null) {
+            //CustomizeMainHolder stone = (CustomizeMainHolder) recyclerViewForCustomizeDialog.findViewHolderForAdapterPosition(3);
+            if (stoneCustHolder != null)
+                stoneCustHolder.setDisableList(stoneDisableList);
+        }
+
+        if (sizeDataList != null) {
+            //CustomizeMainHolder size = (CustomizeMainHolder) recyclerViewForCustomizeDialog.findViewHolderForAdapterPosition(1);
+            if (sizeAdapterDialog != null)
+                sizeAdapterDialog.setData(sizeDataList);
+        }
+    }
+
+    private Swatches.MixedSwatch selectedMetalSwatch;
+    private Swatches.MixedSwatch selectedStoneSwatch;
+
+    public Swatches.MixedSwatch getSelectedMetalSwatch() {
+        return selectedMetalSwatch;
+    }
+
+    public Swatches.MixedSwatch getSelectedStoneSwatch() {
+        return selectedStoneSwatch;
     }
 
 
@@ -429,6 +490,12 @@ public class ProductCustomiseFragment extends Fragment {
         }
     };
 
+    public static final String PBD_total = "Total";
+    public static final String PBD_making = "Making Charges";
+    public static final String PBD_metal = "Metal";
+    public static final String PBD_stone = "Stone";
+    public static final String PBD_VAT = "VAT";
+
     public ArrayList<PriceValueModel> getDataForPriceBreakDown(ProductOptions mProductOptions) {
 
         ArrayList<Map.Entry<String, Float>> p = /*mProductOption.priceBreakDown*/mProductOptions.priceBreakDown;
@@ -460,7 +527,7 @@ public class ProductCustomiseFragment extends Fragment {
                 }
                 name=name+spaces;*/
 
-            if (name.contains("Metal")) {
+            if (name.contains(PBD_metal)) {
 
                 //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 12
@@ -468,36 +535,42 @@ public class ProductCustomiseFragment extends Fragment {
                                 RandomUtils.getIndianCurrencyFormat(Math.round(price), true)
                             *//*String.valueOf(price)*//*);*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
-                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
-                priceBreakDownList.add(pvm);
+                if (!(price < 0)) {
+                    PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
+                            RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                    priceBreakDownList.add(pvm);
+                }
 
                /* float tempVat = price < 0 ? 0 : price;
                 vatTotal=vatTotal+tempVat;*/
                 //name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";
-            } else if (name.contains("Stone")) {
+            } else if (name.contains(PBD_stone)) {
                 //tb = tb.addLine(name+ "\t", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 12
                 /*tblr.addRow(name+ "\t\t\t\t\t\t\t\t\t\t\t\t",  price < 0 ? NO_DETAILS: *//*priceUnit+" "+dcmf.format(price)*//*
                             *//*String.valueOf(Math.round(price))*//* RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
-                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
-                priceBreakDownList.add(pvm);
+                if (!(price < 0)) {
+                    PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
+                            RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                    priceBreakDownList.add(pvm);
+                }
 
                /* float tempVat = price < 0 ? 0 : price;
                 vatTotal=vatTotal+tempVat;*/
                    /* vatTotal=vatTotal+*//*price*//*price == -1 ? 0 : price;
                     name=name+"\t\t\t\t\t\t\t\t\t\t\t\t\t";*/
-            } else if (name.contains("Making Charges")) {
+            } else if (name.contains(PBD_making)) {
                 //tb = tb.addLine(name+ "   ", price == -1 ? NO_DETAILS: priceUnit+String.valueOf(price));
                 // total of tab spaces added = 3
                /* tblr.addRow(name+ "\t\t\t", price < 0 ? NO_DETAILS: *//*priceUnit+" "+ dcmf.format(price)*//*
                             *//*String.valueOf(Math.round(price))*//*RandomUtils.getIndianCurrencyFormat(Math.round(price), true));*/
 
-                PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
-                        RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
-                priceBreakDownList.add(pvm);
+                if (!(price < 0)) {
+                    PriceValueModel pvm = new PriceValueModel(name, price < 0 ? NO_DETAILS :
+                            RandomUtils.getIndianCurrencyFormat(Math.round(price), true));
+                    priceBreakDownList.add(pvm);
+                }
 
                 /*float tempVat =  price < 0 ? 0 : price;
                 vatTotal=vatTotal+tempVat;*/
@@ -529,7 +602,7 @@ public class ProductCustomiseFragment extends Fragment {
                /* tblr.addRow(name+ "\t\t\t\t\t\t\t\t", *//**priceUnit+" "+ dcmf.format(vat)*//*
                             *//*String.valueOf(Math.round(vat))*//*RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));*/
                 Log.d("djprod", "VAT - calc from formula: " + vat);
-                PriceValueModel pvm = new PriceValueModel(name, RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
+                PriceValueModel pvm = new PriceValueModel(PBD_VAT, RandomUtils.getIndianCurrencyFormat(Math.round(vat), true));
                 priceBreakDownList.add(pvm);
 
                 //total = total + vat;
@@ -575,7 +648,7 @@ public class ProductCustomiseFragment extends Fragment {
                     *//*String.valueOf(Math.round(total)*//*RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true);*/
 
         Log.d("djprod", "totalRow: " + RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
-        PriceValueModel pvm = new PriceValueModel("Total", RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
+        PriceValueModel pvm = new PriceValueModel(PBD_total, RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true));
         priceBreakDownList.add(pvm);
 
        /* tblr.addRow(*//*"Total"+"\t\t\t\t\t\t\t\t\t\t\t\t"*//*totalRowTxt,
@@ -609,6 +682,10 @@ public class ProductCustomiseFragment extends Fragment {
         return list;
     }
 
+    CustomizeMainHolder metalCustHolder;
+    CustomizeMainHolder stoneCustHolder;
+    boolean canCheckForMetal;
+    boolean canCheckForStone;
 
     private class CustomizeMainAdapter extends RecyclerAdapter<CustomizeMainHolder>
             implements CustomizeMainHolder.IResultListener<Map.Entry<OptionKey, /*OptionValue*/Swatches.MixedSwatch>> {
@@ -632,10 +709,14 @@ public class ProductCustomiseFragment extends Fragment {
         public void onBindViewHolder(CustomizeMainHolder holder, int position) {
             //Map.Entry<OptionKey, ArrayList<OptionValue>> option = options.get(position);
             Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>> option = options.get(position);
-            if (position == 0)
+            if (position == 0) {
+                canCheckForMetal = true;
                 metalOptions = option.getValue();
-            else if (position == 1){
+                metalCustHolder = holder;
+            } else if (position == 1) {
+                canCheckForStone = true;
                 stoneOptions = option.getValue();
+                stoneCustHolder = holder;
             }
             holder.setOptionSelectedListener(this);
             holder.bindUI(option);
@@ -660,19 +741,33 @@ public class ProductCustomiseFragment extends Fragment {
 
             }*/
             if (result.getKey().keyID.equals("Metal")) {
+                isMetalSelectionDone = true;
+                selectedMetalSwatch = result.getValue();
                 List<String> tempList = new ArrayList<>();
                 tempList.add(ProductOptions.metalListForParam.get(metalOptions.indexOf(result.getValue())));
                 paramsMap.put(ProductActivity.METAL, tempList);
             }
-            if (result.getKey().keyID.equals("Diamond Quality")){
+            if (result.getKey().keyID.equals("Diamond Quality")) {
+                isStoneSelectionDone = true;
+                selectedStoneSwatch = result.getValue();
                 List<String> tempList = new ArrayList<>();
                 tempList.add(ProductOptions.stoneListForParam.get(stoneOptions.indexOf(result.getValue())));
                 paramsMap.put(ProductActivity.STONE, tempList);
             }
-            ((ProductActivity) getActivity()).sendCustomizationToServer(paramsMap);
+            enableDoneIfNeeded();
+            ((ProductActivity) getActivity()).sendCustomizationToServer(paramsMap, false);
         }
     }
 
+    boolean isMetalSelectionDone;
+    boolean isStoneSelectionDone;
+
+    private void clearAllChecksForDone() {
+        isMetalSelectionDone = false;
+        isStoneSelectionDone = false;
+        canCheckForMetal = false;
+        canCheckForStone = false;
+    }
 
     class CustomizeSpinnerAdapter extends RecyclerAdapter<ViewHolder> {
 
@@ -750,6 +845,21 @@ public class ProductCustomiseFragment extends Fragment {
         customizationDialog.show();
     }
 
+    private void enableDoneIfNeeded() {
+        if (canCheckForStone && canCheckForMetal) {
+            if (isMetalSelectionDone && isStoneSelectionDone)
+                pnbtn.setPositiveBtnEnabled(true);
+            else pnbtn.setPositiveBtnEnabled(false);
+        } else if (canCheckForMetal) {
+            if (isMetalSelectionDone)
+                pnbtn.setPositiveBtnEnabled(true);
+            else pnbtn.setPositiveBtnEnabled(false);
+        } else if (canCheckForStone) {
+            if (isStoneSelectionDone)
+                pnbtn.setPositiveBtnEnabled(true);
+            else pnbtn.setPositiveBtnEnabled(false);
+        }
+    }
 
     /*ViewConstructor.DialogButtonClickListener customizationDialogBtnClick = new ViewConstructor.DialogButtonClickListener() {
         @Override
@@ -766,6 +876,8 @@ public class ProductCustomiseFragment extends Fragment {
 
     private class PositiveNegativeButtonAdapter extends RecyclerAdapter<ViewHolder> {
 
+        TextView tvPositive;
+
         public PositiveNegativeButtonAdapter(boolean enabled) {
             super(getActivity(), enabled);
         }
@@ -778,7 +890,16 @@ public class ProductCustomiseFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.itemView.findViewById(R.id.tvNegative).setOnClickListener(negativeClick);
-            holder.itemView.findViewById(R.id.tvPositive).setOnClickListener(positiveClick);
+            tvPositive = (TextView) holder.itemView.findViewById(R.id.tvPositive);
+            tvPositive.setOnClickListener(positiveClick);
+            setPositiveBtnEnabled(false);
+        }
+
+        public void setPositiveBtnEnabled(boolean isEnabled) {
+            if (!isEnabled)
+            tvPositive.setAlpha(0.3f);
+            else tvPositive.setAlpha(1f);
+            tvPositive.setEnabled(isEnabled);
         }
 
         @Override
@@ -799,30 +920,39 @@ public class ProductCustomiseFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //// TODO: 01-08-2016
-                List<String> tempList = new ArrayList<>();
-                tempList.add(sizeAdapterDialog.sizeList.get(sizeAdapterDialog.mSelectedIndex));
-                mCustomizeAdapter.paramsMap.put(ProductActivity.SIZE, tempList);
-                ((ProductActivity) getActivity()).sendCustomizationToServer(mCustomizeAdapter.paramsMap);
-                customizationDialog = null;
+                if (ProductOptions.rawSizeListVals.size() > 0) {
+                    List<String> tempList = new ArrayList<>();
+                    tempList.add(sizeAdapterDialog.sizeList.get(sizeAdapterDialog.mSelectedIndex));
+                    mCustomizeAdapter.paramsMap.put(ProductActivity.SIZE, tempList);
+                }
+                clearAllChecksForDone();
+                ((ProductActivity) getActivity()).sendCustomizationToServer(mCustomizeAdapter.paramsMap, true);
+                if (customizationDialog.isShowing())
+                    customizationDialog.dismiss();
+                //customizationDialog = null;
             }
         };
     }
 
 
-    public class SizeListSpinnerAdapter extends RecyclerAdapter<SizeViewHolder> implements View.OnClickListener {
+    public class SizeListAdapter extends RecyclerAdapter<SizeViewHolder> implements View.OnClickListener {
 
         private List<String> sizeList = new ArrayList<>();
         SizeViewHolder holder;
         //SimpleAdapterForTv adapterForTv;
         private int mSelectedIndex;
 
-        public SizeListSpinnerAdapter(Context context, boolean enabled) {
+        public SizeListAdapter(Context context, boolean enabled) {
             super(context, enabled);
         }
 
         public void setData(List<String> sizeList) {
-            this.sizeList = sizeList;
-            notifyDataSetChanged();
+            try {
+                this.sizeList = sizeList;
+                notifyDataSetChanged();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -854,7 +984,7 @@ public class ProductCustomiseFragment extends Fragment {
             //Spinner spinner = ((Spinner) holder.itemView.findViewById(R.id.spinnerSize));
             //spinner.setOnItemSelectedListener(this);
             /*spinner.setAdapter(adapterForTv = new SimpleAdapterForTv(getContext(), R.layout.adapter_spinner_size_prod_customization,
-                    R.id.tvAdapter, sizeList));*/
+                    R.id.tvAdapter, parsedSizeList));*/
         }
 
         private void initExtraLayout() {
@@ -913,6 +1043,10 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
+            if (sizeList.size() == 1) {
+                Toast.makeText(getContext(), "Size is fixed for this Product", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (v.getId() == R.id.ivDecrease) {
                 if (mSelectedIndex == 0)
                     return;
@@ -937,6 +1071,33 @@ public class ProductCustomiseFragment extends Fragment {
         public void onNothingSelected(AdapterView<?> parent) {
 
         }*/
+    }
+
+    public void setNewTotalPrice(String price) {
+        ArrayList<PriceValueModel> tempList = pbda.getOurList();
+        //int j = tempList.size() - 1;
+        int j = 0;
+        for (j = tempList.size() - 1; j >= 0; j--) {
+            PriceValueModel pvm = tempList.get(j);
+            if (pvm.getTvTitle().equals("Total")) {
+                pvm.setTvValue(price);
+                tempList.set(j, pvm);
+                break;
+            }
+        }
+        pbda.setList(tempList);
+    }
+
+
+    public void setPriceBreakDown(HashMap<String, String> mapVals) {
+        ArrayList<PriceValueModel> tempList = pbda.getOurList();
+        int j = 0;
+        for (PriceValueModel pvm : tempList) {
+            pvm.setTvValue(RandomUtils.getIndianCurrencyFormat(mapVals.get(pvm.getTvTitle()), true));
+            tempList.set(j, pvm);
+            j++;
+        }
+        pbda.setList(tempList);
     }
 
 
@@ -965,6 +1126,10 @@ public class ProductCustomiseFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+
+        public ArrayList<PriceValueModel> getOurList() {
+            return ourList;
+        }
        /* @Override
         public MyViewHolderNew onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_price_breakdown, parent, false);
@@ -1010,6 +1175,10 @@ public class ProductCustomiseFragment extends Fragment {
 
         public String getTvValue() {
             return tvValue;
+        }
+
+        public void setTvValue(String tvValue) {
+            this.tvValue = tvValue;
         }
     }
 

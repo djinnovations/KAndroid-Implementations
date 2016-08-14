@@ -1,7 +1,6 @@
 package com.goldadorn.main.model;
 
 import android.util.Log;
-import android.util.SparseArray;
 
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.constants.Constants;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by nithinjohn on 22/03/16.
@@ -31,14 +29,14 @@ public class ProductOptions {
     public String primaryMetal = "";
     public String primaryMetalColor = "";
     public String priceUnits = "";
-    public Double stonePrice = 0.0;
+    //public Double stonePrice = 0.0;
     public double size = -1;
     public String prodType;
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
     //public final ArrayList<Map.Entry<OptionKey, ArrayList<OptionValue>>> customisationOptions = new ArrayList<>();
     public final ArrayList<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> customisationOptions = new ArrayList<>();
 
-    public static List<String> sizeList = new ArrayList<>();
+    public static List<String> parsedSizeList = new ArrayList<>();
     public static CustomizationDefaultValues mCustDefVals;
 
     public ProductOptions(int id) {
@@ -57,12 +55,14 @@ public class ProductOptions {
         }
     }
 
+
+    public static float stonePrice;
+
     public static ProductOptions extractCustomization(JSONObject productInfo) throws JSONException {
         ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
 
         Log.d("djcustom", "response Obj - ProductOptions: " + productInfo.toString());
         float primaryMetalPrice;
-        float stonePrice;
         float makingcharges;
         try {
             primaryMetalPrice = (float) productInfo.getDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
@@ -93,7 +93,7 @@ public class ProductOptions {
             e.printStackTrace();
         }
         mCustDefVals.setSizeText(parseSize(p.size, p.prodType));
-        p.stonePrice = productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
+        //p.stonePrice = productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
         //DJphy
         ArrayList<Swatches.MixedSwatch> metalSwatch = extractSwatch(productInfo, Swatches.TYPE_METAL);
         if (metalSwatch.size() != 0)
@@ -124,7 +124,7 @@ public class ProductOptions {
     public static Map<String, Integer> mapOfMetalCust = new HashMap<>();
     public static Map<String, Integer> mapOfStoneCust = new HashMap<>();
     //public static Map<String, Integer> mapOfSize = new HashMap<>();
-    public static List<String> rawListVals = new ArrayList<>();
+    public static List<Double> rawSizeListVals = new ArrayList<>();
     public static ArrayList<String> metalListForParam = new ArrayList<>();
     public static ArrayList<String> stoneListForParam = new ArrayList<>();
 
@@ -207,9 +207,9 @@ public class ProductOptions {
             try {
                 JSONArray jsonArray = productInfo.getJSONArray("SizeCust");
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    rawListVals.add(i, jsonArray.getString(i));
-                    double sizeval = Double.parseDouble(jsonArray.getString(i));
-                    sizeList.add(parseSize(sizeval, prodType));
+                    rawSizeListVals.add(i, jsonArray.getDouble(i));
+                    double sizeval = jsonArray.getDouble(i);
+                    parsedSizeList.add(parseSize(sizeval, prodType));
                     //// TODO: 02-08-2016  default value for size
                 }
             } catch (JSONException e) {
@@ -219,7 +219,7 @@ public class ProductOptions {
     }
 
     /*public static List<String> getSizeList(){
-        return sizeList;
+        return parsedSizeList;
     }*/
 
     private static ArrayList<Swatches.MixedSwatch> extractSwatch(JSONObject productInfo, int type) {
@@ -284,19 +284,20 @@ public class ProductOptions {
 
     public List<Integer> getDisableList(List<String> enableList, String key){
         if (key == ProductActivity.METAL){
-            return listMakeUP(mapOfMetalCust, enableList);
+            Map<String, Integer> tempMetalCust = mapOfMetalCust;
+            return listMakeUP(tempMetalCust, enableList);
         }
         else if (key == ProductActivity.STONE){
-            return listMakeUP(mapOfStoneCust, enableList);
+            Map<String, Integer> tempStoneCust = mapOfStoneCust;
+            return listMakeUP(tempStoneCust, enableList);
         }
         return null;
     }
 
 
-    public List<String> getParsedSize(List<String> listOfSizeFromServer){
+    public List<String> getParsedSize(List<Double> listOfSizeFromServer){
         List<String > modifiedlist = new ArrayList<>();
-        for (String val: listOfSizeFromServer) {
-            double sizeval = Double.parseDouble(val);
+        for (Double sizeval: listOfSizeFromServer) {
             modifiedlist.add(parseSize(sizeval, this.prodType));
         }
         return modifiedlist;
