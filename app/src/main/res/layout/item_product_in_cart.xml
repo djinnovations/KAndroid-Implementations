@@ -65,24 +65,49 @@
 
     <View
         android:layout_width="0dp"
-        android:layout_weight="0.2"
-        android:layout_height="0.5dp"/>
-    <TextView
-        android:id="@+id/product_price"
+        android:layout_height="0.5dp"
+        android:layout_weight="0.2" />
+
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.8"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="16sp"
-        tools:text="Rs. 2500" />
+        android:layout_weight="0.8">
+
+        <TextView
+            android:id="@+id/product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_centerVertical="true"
+            android:textSize="16sp"
+            tools:text="Rs. 2500" />
+
+        <View
+            android:id="@+id/tempView"
+            android:layout_width="2dp"
+            android:layout_height="5dp"
+            android:layout_alignRight="@+id/product_price" />
+
+        <include
+            layout="@layout/discount_badge_mini"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/tempView"
+            android:layout_marginLeft="0dp"
+            android:layout_marginBottom="30dp" />
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/ivRemoveFromCart"
         android:layout_width="15dp"
         android:layout_height="15dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/vector_icon_cross_white"
+        android:layout_marginLeft="5dp"
         android:background="@drawable/circle_bg"
-        android:layout_marginLeft="5dp"/>
+        android:src="@drawable/vector_icon_cross_white" />
 </LinearLayout>

@@ -53,6 +53,8 @@ public class RandomUtils {
         //Format format = com.ibm.icu.text.NumberFormat.getCurrencyInstance(new Locale("en", "in"));
         //String amountScissored = StringUtils.stripStart(String.valueOf(amount), "0");
         //String amtToReturn = format.format(new BigDecimal(/*amountScissored*/String.valueOf(amount)));
+        if (amount < 0)
+            return "NA";
         try {
             String amtToReturn = rupeeFormat(String.valueOf(Math.round(amount)));
             return amtToReturn;
@@ -118,6 +120,13 @@ public class RandomUtils {
     }
 
 
+    public static int getIdFromImageUrl(String url){
+        String modified = url.substring( (url.lastIndexOf('/') + 1), url.indexOf("-1.jpg"));
+        Log.d("djrand", "prodid -getIdFromImageUrl: "+modified);
+        return Integer.parseInt(modified);
+    }
+
+
     public static void set3LineEllipsizedText(String originalText, TextView textView) {
         /*int numOfLines = textView.getLineCount();
         if (numOfLines > 3){
@@ -180,6 +189,17 @@ public class RandomUtils {
         AlarmManager mgr = (AlarmManager) activity.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, (System.currentTimeMillis() + delayToStartApp), mPendingIntent);
         System.exit(0);
+    }
+
+    public static double getOfferPrice(int discountPercent, String totalPrice){
+
+        try {
+            double off = Double.parseDouble(totalPrice) * (discountPercent/100.0);
+            return (Double.parseDouble(totalPrice) - off);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
 

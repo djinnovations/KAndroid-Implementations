@@ -362,42 +362,44 @@ public class ProductInfoFragment extends Fragment {
             holder.component.setText("Making \nCharges");
             holder.rate.setText("");
             holder.weight.setText(" ");
-            float makingChanges = Math.round(mProductActivity.mProductInfo.productmaking_charges * mProductActivity.mProductInfo.weight);
-            holder.price.setText(/*" "+(int)makingChanges*/ RandomUtils.getIndianCurrencyFormat(makingChanges, true));
-            holder.offer_price.setText(" " + (int) makingChanges);
+            //float makingChanges = Math.round(mProductActivity.mProductInfo.productmaking_charges * mProductActivity.mProductInfo.weight);
+            String makingChanges = ((ProductActivity) getActivity()).getMakingCharges();
+            holder.price.setText(/*" "+(int)makingChanges*//* RandomUtils.getIndianCurrencyFormat(makingChanges, true)*/makingChanges);
+            //holder.offer_price.setText(" " + (int) makingChanges);
         } else if (mType.equalsIgnoreCase(VAT)) {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             //holder.component.setTextSize(getResources().getDimension(R.dimen.ts_secondary));
             holder.component.setTypeface(null, Typeface.BOLD);
             Log.e("iii--", mTotalPrice + "");
-            double mVat;
+            /*double mVat;
             try {
                 double displayPrice = Double.parseDouble(((ProductActivity) getActivity()).getProductDisplayPrice());
                 mVat = displayPrice - (displayPrice / 1.01);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 mVat = 0.0;
-            }
+            }*/
+            String mVat = ((ProductActivity) getActivity()).getVAT();
             //double mVat=/*(mTotalPrice)*0.01*/ RandomUtils.getIndianCurrencyFormat();
             //mTotalPrice=mTotalPrice+((float)(mTotalPrice*0.01));
             holder.component.setText(VAT);
             holder.rate.setText("");
             holder.weight.setText(" ");
-            holder.price.setText(/*" "+String.valueOf(((int)mVat))*/ RandomUtils.getIndianCurrencyFormat(mVat, true));
+            holder.price.setText(/*" "+String.valueOf(((int)mVat))*//* RandomUtils.getIndianCurrencyFormat(mVat, true)*/mVat);
             holder.offer_price.setVisibility(View.GONE);
-            holder.offer_price.setText(" " + String.valueOf(((int) mVat)));
+            //holder.offer_price.setText(" " + String.valueOf(((int) mVat)));
         } else if (mType.equalsIgnoreCase(DISCOUNT)) {
             holder.component.setTextColor(getResources().getColor(R.color.red));
             holder.component.setTypeface(null, Typeface.BOLD);
             holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
             holder.offer_price.setTypeface(null, Typeface.BOLD);
 
-            holder.component.setText(DISCOUNT + " \n0%");
+            holder.component.setText(DISCOUNT + /*" \n0%"*/"\n"+String.valueOf(mProduct.discount)+"%");
             holder.rate.setText("");
             holder.weight.setText(" ");
             holder.price.setText(" ");
             holder.offer_price.setVisibility(View.VISIBLE);
-            holder.offer_price.setText(" 0");
+            holder.offer_price.setText(((ProductActivity) getActivity()).getDiscount());
         } else {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));
             holder.component.setTypeface(null, Typeface.BOLD);
@@ -410,8 +412,8 @@ public class ProductInfoFragment extends Fragment {
             holder.price.setText(" ");
             holder.price.setVisibility(View.GONE);
             holder.offer_price.setVisibility(View.VISIBLE);
-            String displayPrice = ((ProductActivity) getActivity()).getProductDisplayPrice();
-            holder.offer_price.setText(" " + RandomUtils.getIndianCurrencyFormat(displayPrice, true) + "/-");
+            String displayPrice = ((ProductActivity) getActivity()).getGrandTotalForProdInfoFrag();
+            holder.offer_price.setText(" " + /*RandomUtils.getIndianCurrencyFormat(displayPrice, true)*/displayPrice + "/-");
         }
 
         return holder.itemView;

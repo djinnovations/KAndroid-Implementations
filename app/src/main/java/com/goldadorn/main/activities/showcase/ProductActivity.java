@@ -27,7 +27,6 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -54,7 +53,6 @@ import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.CustomizationStepResponse;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.model.ProductCustomizationTabUpdationDataObj;
-import com.goldadorn.main.dj.model.ProductInfoTabUpdationDataObj;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
@@ -73,6 +71,7 @@ import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
+import com.goldadorn.main.model.StoneDetail;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
 import com.goldadorn.main.server.UIController;
@@ -94,6 +93,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -137,7 +137,7 @@ public class ProductActivity extends BaseDrawerActivity {
     View mProgressFrame;
 
     private Context mContext;
-    private OverlayViewHolder mOverlayVH;
+    OverlayViewHolder mOverlayVH;
     private int mStartHeight;
     private int mCollapsedHeight;
     public ProductPagerAdapter mProductAdapter;
@@ -303,6 +303,7 @@ public class ProductActivity extends BaseDrawerActivity {
             public void onResult(ProductResponse result) {
                 if (result.success) {
                     mProductOptions = result.options;
+                    mProductOptions.discount = mProduct.discount;
                     mProduct.addDefaultCustomisation(mProductOptions);
                     //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
                     if (mProdCustFrag != null)
@@ -336,13 +337,44 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     private void updateCustomizationTab(ProductCustomizationTabUpdationDataObj dataObj) {
+        mProdCustFrag.updateTitleIconDefValues();
         HashMap<String, String> map = new HashMap<>();
         map.put(ProductCustomiseFragment.PBD_metal, dataObj.getMetalCost());
         map.put(ProductCustomiseFragment.PBD_stone, String.valueOf(dataObj.getStonesTotalCost()));
         map.put(ProductCustomiseFragment.PBD_making, dataObj.getMakingCharges());
         map.put(ProductCustomiseFragment.PBD_VAT, dataObj.getVAT());
+        map.put(ProductCustomiseFragment.PBD_Discount, dataObj.getOffAmount());
+        map.put(ProductCustomiseFragment.PBD_FinalPrice, dataObj.getFinalPrice());
         map.put(ProductCustomiseFragment.PBD_total, String.valueOf(dataObj.getTotalCost()));
         mProdCustFrag.setPriceBreakDown(map);
+    }
+
+
+    public String getMakingCharges() {
+        String temp = mProdCustFrag.getPriceBreakDownParam(ProductCustomiseFragment.PBD_making);
+        return temp == null ? "NA" : temp;
+    }
+
+    public String getVAT() {
+        String temp = mProdCustFrag.getPriceBreakDownParam(ProductCustomiseFragment.PBD_VAT);
+        return temp == null ? "NA" : temp;
+    }
+
+    public String getTotalPrice() {
+        String temp = mProdCustFrag.getPriceBreakDownParam(ProductCustomiseFragment.PBD_total);
+        return temp == null ? "NA" : temp;
+    }
+
+
+    public String getDiscount() {
+        String temp = mProdCustFrag.getPriceBreakDownParam(ProductCustomiseFragment.PBD_Discount);
+        return temp == null ? "NA" : temp;
+    }
+
+
+    public String getGrandTotalForProdInfoFrag(){
+        /*if (mProduct.discount > 0)*/
+            return mOverlayVH.mProductCost.getText().toString();
     }
 
 
@@ -434,19 +466,25 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.mProductOwner.setText("");
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
-        mOverlayVH.mProductCost.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
-        mOverlayVH.mProductCost2.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+        /*if (mProduct.discount != 0) {*/
+           /* mOverlayVH.mProductCost.setText(RandomUtils
+                    .getIndianCurrencyFormat(RandomUtils.getOfferPrice(mProduct.discount, mProduct.getDisplayPrice()), true));
+            mOverlayVH.product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+            mOverlayVH.mProductCost2.setText(RandomUtils
+                    .getIndianCurrencyFormat(RandomUtils.getOfferPrice(mProduct.discount, mProduct.getDisplayPrice()), true));*/
+        updateDiscountUi(mProduct.discount);
+        //}
         mTabViewHolder.setCounts(-1, -1);
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean value = super.onCreateOptionsMenu(menu);
         //menu.findItem(R.id.nav_my_overflow).setVisible(false);
         menu.findItem(R.id.nav_my_notifications).setIcon(R.drawable.vector_icon_bell_dark);
         menu.findItem(R.id.nav_my_search).setIcon(R.drawable.vector_icon_search_dark);
         return value;
-    }
+    }*/
 
     private void initTabs() {
         mTabViewHolder = new TabViewHolder(mContext, mTabLayout);
@@ -485,14 +523,15 @@ public class ProductActivity extends BaseDrawerActivity {
     private void configureUI(int uiState) {
         Fragment fragment = null;
         int id = R.id.frame_content;
-        mFrame.setVisibility(View.GONE);
-        mFrameNoScrollDummy.setVisibility(View.GONE);
+        //mFrame.setVisibility(View.GONE);
+        mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
         frame_no_scroll_dummy_cust.setVisibility(View.GONE);
         if (uiState == UISTATE_SOCIAL) {
             id = R.id.frame_no_scroll_dummy;
             //f = new SocialFeedFragment();
             manupilateToggle();
             //mFrame.setVisibility(View.INVISIBLE);
+            mFrame.setVisibility(View.INVISIBLE);
             mFrameNoScrollDummy.setVisibility(View.VISIBLE);
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
@@ -524,6 +563,7 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         } else {
             id = R.id.frame_no_scroll_dummy_cust;
+            mFrame.setVisibility(View.INVISIBLE);
             //mFrame.setVisibility(View.INVISIBLE);
             //mFrameNoScrollDummy.setVisibility(View.INVISIBLE);
             frame_no_scroll_dummy_cust.setVisibility(View.VISIBLE);
@@ -652,6 +692,8 @@ public class ProductActivity extends BaseDrawerActivity {
             endEllipsizedName = text.substring(0, 15) + "...";
         return endEllipsizedName;
     }
+
+
 
    /* private SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
     public Fragment getRegisteredFragment(int fragmentPosition) {
@@ -803,6 +845,29 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    private void updateDiscountUi(int discount) {
+        if (discount == 0) {
+            mOverlayVH.discountHolder.setVisibility(View.GONE);
+            mOverlayVH.product_price_slash.setVisibility(View.GONE);
+            mOverlayVH.product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+            //mOverlayVH.tvDiscountOnRed.setVisibility(View.GONE);
+            mOverlayVH.mProductCost2.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+            mOverlayVH.mProductCost.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+            return;
+        }
+
+        mOverlayVH.discountHolder.setVisibility(View.VISIBLE);
+        mOverlayVH.product_price_slash.setVisibility(View.VISIBLE);
+        //mOverlayVH.tvDiscountOnRed.setVisibility(View.VISIBLE);
+        mOverlayVH.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(discount)).append("%").append("\n").append("off"));
+        mOverlayVH.mProductCost.setText(RandomUtils
+                .getIndianCurrencyFormat(RandomUtils.getOfferPrice(discount, mProduct.getDisplayPrice()), true));
+        mOverlayVH.product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+        mOverlayVH.mProductCost2.setText(RandomUtils
+                .getIndianCurrencyFormat(RandomUtils.getOfferPrice(discount, mProduct.getDisplayPrice()), true));
+    }
+
+
     class OverlayViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final AppBarLayout appBarLayout;
@@ -842,6 +907,8 @@ public class ProductActivity extends BaseDrawerActivity {
         TextView mProductCollection;
         @Bind(R.id.product_cost)
         TextView mProductCost;
+        @Bind(R.id.product_price_slash)
+        TextView product_price_slash;
         @Bind(R.id.product_name_2)
         TextView mProductName2;
         @Bind(R.id.product_cost_2)
@@ -860,6 +927,10 @@ public class ProductActivity extends BaseDrawerActivity {
         ImageView ivGlass;
         @Bind(R.id.toastProdName)
         TooltipView toastProdName;
+        @Bind(R.id.discountHolder)
+        View discountHolder;
+        @Bind(R.id.tvDiscountOnRed)
+        TextView tvDiscountOnRed;
 
         public void setProductActions(boolean productActions) {
             isProductActions = productActions;
@@ -893,6 +964,8 @@ public class ProductActivity extends BaseDrawerActivity {
             buyNoBuyButton.setOnClickListener(this);
             wishlistButton.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
+            product_price_slash.setVisibility(View.VISIBLE);
+            UiRandomUtils.strikeThroughText(product_price_slash);
             //like.setOnClickListener(this);//disabled
             setUpLikeBtn();
             cartButton.setOnClickListener(this);
@@ -935,6 +1008,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 indicator.setVisibility(visibility);
                 productActionsToggle.setVisibility(visibility);
                 ivGlass.setVisibility(visibility);
+                discountHolder.setVisibility(visibility);
                 mProductOwner.setVisibility(View.GONE);
                 mProductCollection.setVisibility(View.GONE);
             }
@@ -953,10 +1027,12 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductCost2.setVisibility(View.GONE);
                     mProductName.setVisibility(View.VISIBLE);
                     ivGlass.setVisibility(View.VISIBLE);
+                    discountHolder.setVisibility(View.VISIBLE);
                     layout1.setVisibility(View.VISIBLE);
                     layout2.setVisibility(View.VISIBLE);
                     mProductCollection.setVisibility(View.VISIBLE);
                     mProductCost.setVisibility(View.VISIBLE);
+                    product_price_slash.setVisibility(View.VISIBLE);
                     mProductOwner.setVisibility(View.GONE);
                     mProductCollection.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(1f).scaleX(1f);
@@ -970,10 +1046,12 @@ public class ProductActivity extends BaseDrawerActivity {
                     mProductCost2.setVisibility(View.VISIBLE);
                     mProductName.setVisibility(View.GONE);
                     ivGlass.setVisibility(View.GONE);
+                    discountHolder.setVisibility(View.GONE);
                     layout1.setVisibility(View.GONE);
                     layout2.setVisibility(View.GONE);
                     mProductCollection.setVisibility(View.GONE);
                     mProductCost.setVisibility(View.GONE);
+                    product_price_slash.setVisibility(View.GONE);
                     pager.animate().setDuration(0).scaleY(0.8f).scaleX(.8f);
                 }
             } else if (v.getId() == R.id.btnBookApoint) {
@@ -1246,12 +1324,15 @@ public class ProductActivity extends BaseDrawerActivity {
     public static final int CUSTOMIZATION_STEP_WISE_CALL = IDUtils.generateViewId();
 
     Map<String, List<String>> selectedParams;
+    //boolean isDoneBtnCall;
 
     public void sendCustomizationToServer(Map<String, List<String>> selectedParams, boolean isDoneBtnCall) {
         //WindowUtils.marginForProgressViewInGrid = 25;
+        //this.isDoneBtnCall = isDoneBtnCall;
         showOverLay(null, 0);
         if (isDoneBtnCall && dontCallNextTime) {
             dismissOverLay();
+            mProdCustFrag.clearSelection(true);
             return;
         }
         this.selectedParams = selectedParams;
@@ -1264,9 +1345,16 @@ public class ProductActivity extends BaseDrawerActivity {
                     jsonArray.put(stoneval);
                 paramsMap.put(str, jsonArray);
             } else*/
+            if (str.equals(SIZE)) {
+                if (keys.contains(METAL))
+                    paramsMap.put("met", getFactor(mProdCustFrag.getSelectedMetalSwatch()));
+                else
+                    paramsMap.put("met", getFactor(ProductOptions.mCustDefVals.getDefMetalSwatch()));
+            }
             paramsMap.put(str, selectedParams.get(str).get(0));
         }
         paramsMap.put("prodId", mProduct.id);
+        paramsMap.put("version", "0.02");
         Log.d("djprod", "req Params- sendCustomizationToServer-ProductActivity: " + paramsMap);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(CUSTOMIZATION_STEP_WISE_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
@@ -1359,22 +1447,30 @@ public class ProductActivity extends BaseDrawerActivity {
                     stoneDisableList = mProductOptions.getDisableList(csr.getStone(), STONE);
                 }
                 if (csr.getSize() != null) {
-                    sizeList = mProductOptions.getParsedSize(csr.getSize());
+                    List<Double> tempList = csr.getSize();
+                    Collections.sort(tempList);
+                    ProductOptions.rawSizeListVals = tempList;
+                    sizeList = mProductOptions.getParsedSize(tempList);
                 }
                 if (csr.getPrice() != null) {
                     int tocompare;
                     try {
-                        tocompare = Integer.parseInt(csr.getPrice());
+                        tocompare = (int) Double.parseDouble(csr.getPrice());
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         tocompare = -1;
                     }
                     if (tocompare > 0) {
                         //mProduct.unitPrice = tocompare;
-                        mOverlayVH.mProductCost.setText(getFormattedPrice(csr.getPrice()));
-                        mOverlayVH.mProductCost2.setText(getFormattedPrice(csr.getPrice()));
+                        //mProduct.name = csr.getProdName() == null ? mProduct.name : csr.getProdName();
+                        //mProductInfo.description = csr.getProdDesc() == null ? mProductInfo.description : csr.getProdDesc();
+
+                        // mOverlayVH.mProductCost.setText(getFormattedPrice(csr.getPrice()));
+                        //mOverlayVH.mProductCost2.setText(getFormattedPrice(csr.getPrice()));
                         //mProdCustFrag.setNewTotalPrice(getFormattedPrice(csr.getPrice()));
-                        updateTabs(tocompare);
+                        updateTabs(tocompare, csr);
+                        updateNameDescSKU(csr.getSellerSku());
+                        updateDiscountUi(csr.getDiscount());
                         dontCallNextTime = true;
                     }
 
@@ -1385,37 +1481,90 @@ public class ProductActivity extends BaseDrawerActivity {
         } else super.serverCallEnds(id, url, json, status);
     }
 
+    private void updateNameDescSKU(String SKU) {
+        mProduct.name = getNewProdName(SKU);
+        mOverlayVH.mProductName.setText(mProduct.name);
+        mOverlayVH.mProductName2.setText(mProduct.name);
+        mOverlayVH.toastProdName.setText(mProduct.name);
+        mProductInfo.code = SKU;
+        mProductInfo.description = getProdNewDesc();
+    }
+
     private void updateImages(Swatches.MixedSwatch swatch) {
-        String factor = new StringBuilder().append(swatch.getType().charAt(0))
+        /*String factor = new StringBuilder().append(swatch.getType().charAt(0))
                 .append(swatch.getPurity()).append(swatch.getColor().charAt(0)).toString();
-        mProduct.defMetal = factor;
+        mProduct.defMetal = factor;*/
+        getFactor(swatch);
         mProductAdapter.changeData(getVariousProductLooks(mProductAdapter.getImagesUrlList().size(), true));
     }
 
-    private void updateTabs(int totalPrice) {
+
+    private String getFactor(Swatches.MixedSwatch swatch) {
+        String factor = new StringBuilder().append(swatch.getType().charAt(0))
+                .append(swatch.getPurity()).append(swatch.getColor().charAt(0)).toString();
+        mProduct.defMetal = factor;
+        return factor;
+    }
+
+    private void updateTabs(int totalPrice, CustomizationStepResponse csr) {
         mProduct.unitPrice = totalPrice;
         Swatches.MixedSwatch metalSwatch = null;
-        if (selectedParams.containsKey(METAL)) {
-            metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
+        if (selectedParams.containsKey(METAL) || selectedParams.containsKey(SIZE)) {
+
+            if (selectedParams.containsKey(METAL))
+                metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
+            else
+                metalSwatch = Swatches.getMixedSwatch(csr.getMetalSwatch(), Swatches.TYPE_METAL);
+            updateMetalInProdInfoTab(metalSwatch, csr.getWeight());
+           /* metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             updateImages(metalSwatch);
             mProductInfo.metalrate = Float.parseFloat(metalSwatch.getCostPerUnit());
             mProductInfo.metalPurity = Integer.parseInt(metalSwatch.getPurity());
+
+            float tempMetalWeight = mProductInfo.metalWeight;
+            mProductInfo.metalWeight = Float.parseFloat(metalSwatch.getWeight());
+            mProductInfo.weight = mProductInfo.weight - tempMetalWeight + mProductInfo.metalWeight;*/
         }
         if (selectedParams.containsKey(STONE)) {
             Swatches.MixedSwatch stoneSwatch = mProdCustFrag.getSelectedStoneSwatch();
+            ProductOptions.mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
+            StoneDetail stoneDetail = mProductInfo.stonesDetails.get(0);
+            String[] array = stoneSwatch.getSwatchDisplayTxt().split("-");
+            stoneDetail.color = array[0];
+            stoneDetail.clarity = array[1];
+            mProductInfo.stonesDetails.set(0, stoneDetail);
             //mProductInfo.stonesDetails // TODO: 12-08-2016
         }
-        if (mProdInfoFragment != null)
-            mProdInfoFragment.bindProductInfo(mProductInfo);
+        if (mProdInfoFragment != null) {
+            //mProdInfoFragment.bindProductInfo(mProductInfo);
+            mProdInfoFragment = null;
+        }
 
         ProductCustomizationTabUpdationDataObj dataObj = new ProductCustomizationTabUpdationDataObj();
-        if (metalSwatch != null) {
-            dataObj.setMetalCostPerUnit(Float.parseFloat(metalSwatch.getCostPerUnit()))
-                    .setMetalWeight(Float.parseFloat(metalSwatch.getWeight()))
-                    .setStonesTotalCost((int) ProductOptions.stonePrice)
-                    .setTotalCost(totalPrice);
-        }
+        /*if (metalSwatch != null) {*/
+        if (metalSwatch == null)
+            metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
+
+        ProductOptions.mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
+        dataObj.setMetalCostPerUnit(Float.parseFloat(metalSwatch.getCostPerUnit()))
+                .setMetalWeight(Float.parseFloat(metalSwatch.getWeight()))
+                .setStonesTotalCost((int) ProductOptions.stonePrice)
+                .setDiscount(/*mProductOptions.discount*/csr.getDiscount())
+                .setTotalCost(totalPrice);
+        //}
         updateCustomizationTab(dataObj);
+    }
+
+
+    private void updateMetalInProdInfoTab(Swatches.MixedSwatch metalSwatch, float weight) {
+        updateImages(metalSwatch);
+        mProductInfo.metalrate = Float.parseFloat(metalSwatch.getCostPerUnit());
+        mProductInfo.metalPurity = (int) Float.parseFloat(metalSwatch.getPurity());
+        mProductInfo.metalColor = metalSwatch.getColor();
+
+        float tempMetalWeight = mProductInfo.metalWeight;
+        mProductInfo.metalWeight = weight == -1 ? Float.parseFloat(metalSwatch.getWeight()) : weight;
+        mProductInfo.weight = mProductInfo.weight - tempMetalWeight + mProductInfo.metalWeight;
     }
 
 
@@ -1495,4 +1644,101 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.followButton.setVisibility(View.GONE);
         }
     }*/
+
+
+    private String getNewProdName(String SKU) {
+        /*Product Name - <Brand Name e.g Gili> <Metal/GS Combo eg. Gold & Diamond>
+        <Product Type eg. Earring (will need to remove the s from Earrings in our data) >
+        <Seller SKU Code eg. ABCD1234>*/
+        StringBuilder sb = new StringBuilder(mUser.name).
+                append(" ").append(mProductOptions.primaryMetal);
+        if (doesContainsDiamond()) {
+            sb.append(" & Diamond");
+        }
+        sb.append(" ").append(mProductOptions.prodType)
+                .append("-").append(SKU);
+
+        Log.d("djprod", "getNewProdName - val: " + sb.toString());
+        return sb.toString();
+    }
+
+    private boolean doesContainsDiamond() {
+        if (mProductInfo.stonesDetails.size() <= 0)
+            return false;
+        for (StoneDetail std : mProductInfo.stonesDetails) {
+            if (std.type.equalsIgnoreCase("diamond"))
+                return true;
+        }
+        return false;
+    }
+
+
+    private String getProdNewDesc() {
+        /*<Product Type eg. Earring (will need to remove the s from Earrings in our data)> by <Brand Name e.g Gili>
+           Metal Part (will always be present): with hallmarked <Metal Weight> <Metal Purity> <Metal Color> <Metal Type>
+            Diamond Part (will be present only when a product has diamond): and fully certified real
+            <Sum of all diamond weights from GS_1 to GS_11, if GS = "Diamond"> cts. <Diamond color clarity, GS_1 eg. GH-VS> diamonds
+            Other Gemstone Part (will be present only when a product has GS other than diamond):
+        and <GS Names, comma separated names from GS_1 to GS_11 eg - Ruby, Emerald and Pearl>,
+
+        NEW: Earrings by GoldAdorn Design WITH 1.13 <space> gms 14K White GOLD, AND 0.23 CTS GHI-SI diamonds
+        */
+        StringBuilder sb = new StringBuilder(mProductOptions.prodType)
+                .append(" by ").append(mUser.name).append(" ")
+                .append("with ").append(mProductInfo.metalWeight).append(" gms").append(" ")
+                .append(mProductInfo.metalPurity).append(mProductInfo.metalPurityInUnits).append(" ")
+                .append(mProductInfo.metalColor).append(" ").append(mProductInfo.metalType);
+        sb.append(getDiamondDesc());
+        sb.append(getOtherGSDesc());
+
+        Log.d("djprod", "getProdNewDesc - val: " + sb.toString());
+        return sb.toString();
+    }
+
+
+    private String getDiamondDesc() {
+        if (mProductInfo.stonesDetails.size() <= 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        for (StoneDetail stds : mProductInfo.stonesDetails) {
+            if (stds.type.equalsIgnoreCase("diamond")) {
+                sb.append(", and ").append(getWeights(mProductInfo.stonesDetails)).append(" cts ")
+                        .append(stds.color).append("-").append(stds.clarity).append(" ").append("diamonds");
+                break;
+            }
+        }
+        Log.d("djprod", "getDiamondDesc - val: " + sb.toString());
+        return sb.toString();
+    }
+
+    private String getWeights(ArrayList<StoneDetail> list) {
+        float sum = 0;
+        for (StoneDetail std : list) {
+            /*if (std.type.equalsIgnoreCase("diamond"))*/
+            sum = sum + std.weight;
+        }
+        return String.valueOf(sum);
+    }
+
+
+    private String getOtherGSDesc(/*StringBuilder sb*/) {
+        if (mProductInfo.stonesDetails.size() <= 0)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        boolean isSendEmpty = true;
+        sb.append(" and ");
+        for (StoneDetail std : mProductInfo.stonesDetails) {
+            if (!std.type.equalsIgnoreCase("diamond")) {
+                isSendEmpty = false;
+                sb.append(std.type).append(", ");
+            }
+        }
+        if (isSendEmpty)
+            return "";
+        else {
+            String toSend = sb.substring(0, sb.toString().lastIndexOf(','));
+            Log.d("djprod", "getOtherGSDesc - val: " + toSend);
+            return toSend;
+        }
+    }
 }

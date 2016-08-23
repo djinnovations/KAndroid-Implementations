@@ -28,6 +28,8 @@ public class Product implements Serializable {
     public String priceUnit = " RS";
     public float image_a_r = 1;
     public String defMetal = "";
+    public String SKU;
+    public int discount;
 
     public int quantity;
     public int maxQuantity = 10;
@@ -100,6 +102,7 @@ public class Product implements Serializable {
         thisProduct.priceUnit = productTemp.getCostUnits();
         thisProduct.isLiked = isLiked;
         thisProduct.image_a_r = productTemp.getAspectRatio();
+        thisProduct.discount = productTemp.getDiscount();
         //thisProduct.defMetal = // TODO: 14-08-2016
         if (thisProduct.image_a_r == 0)
             thisProduct.image_a_r = 1;
@@ -119,6 +122,7 @@ public class Product implements Serializable {
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
         t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED)) == 1;
         t.likeStat = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED));
+        t.discount = cursor.getInt(cursor.getColumnIndex(Tables.Products.DISCOUNT));
         //t.defMetal = cursor.getString(cursor.getColumnIndex(Tables.Products.DEF_METAl));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)

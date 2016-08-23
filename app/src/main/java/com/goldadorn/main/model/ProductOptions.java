@@ -2,6 +2,7 @@ package com.goldadorn.main.model;
 
 import android.util.Log;
 
+import com.goldadorn.main.R;
 import com.goldadorn.main.activities.showcase.ProductActivity;
 import com.goldadorn.main.constants.Constants;
 import com.goldadorn.main.dj.model.Swatches;
@@ -13,6 +14,7 @@ import org.json.JSONObject;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +34,10 @@ public class ProductOptions {
     //public Double stonePrice = 0.0;
     public double size = -1;
     public String prodType;
+    public int discount;
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
     //public final ArrayList<Map.Entry<OptionKey, ArrayList<OptionValue>>> customisationOptions = new ArrayList<>();
-    public final ArrayList<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> customisationOptions = new ArrayList<>();
+    public ArrayList<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> customisationOptions;
 
     public static List<String> parsedSizeList = new ArrayList<>();
     public static CustomizationDefaultValues mCustDefVals;
@@ -53,6 +56,11 @@ public class ProductOptions {
             }
             map.add(new AbstractMap.SimpleEntry<>(key, options));
         }
+    }
+
+
+    public boolean isCustomizationAvail(){
+        return (rawSizeListVals.size() > 0) || (mapOfStoneCust.size() > 0) || (mapOfMetalCust.size() > 0);
     }
 
 
@@ -93,8 +101,14 @@ public class ProductOptions {
             e.printStackTrace();
         }
         mCustDefVals.setSizeText(parseSize(p.size, p.prodType));
+        mapOfMetalCust = new HashMap<>();
+        mapOfStoneCust = new HashMap<>();
+        metalListForParam = new ArrayList<>();
+        stoneListForParam = new ArrayList<>();
         //p.stonePrice = productInfo.optDouble(Constants.JsonConstants.STONEPRICE);
         //DJphy
+
+        p.customisationOptions = new ArrayList<>();
         ArrayList<Swatches.MixedSwatch> metalSwatch = extractSwatch(productInfo, Swatches.TYPE_METAL);
         if (metalSwatch.size() != 0)
             p.customisationOptions.add(new AbstractMap.SimpleEntry<>(new OptionKey("Metal", false)
@@ -103,7 +117,13 @@ public class ProductOptions {
         if (gemStoneSwatch.size() != 0)
             p.customisationOptions.add(new AbstractMap.SimpleEntry<>(new OptionKey("Diamond Quality", false)
                     , gemStoneSwatch));
+        parseDefStone(productInfo);
+        parseDefMetal(productInfo);
+        rawSizeListVals = new ArrayList<>();
+        parsedSizeList = new ArrayList<>();
         extractSizeCust(productInfo, p.prodType);
+        /*if (!productInfo.isNull("discount"))
+            p.discount = productInfo.getInt("discount");*/
         // p.allSwatches = new AllSwatches(extractMetalSwatch(productInfo), extractGemStoneSwatch(productInfo));
        /* extract(productInfo, new OptionKey(Constants.JsonConstants.METALLIST, false), p.customisationOptions);
         extract(productInfo, new OptionKey(Constants.JsonConstants.METALPURITYLIST, true), p.customisationOptions);
@@ -121,15 +141,47 @@ public class ProductOptions {
         return p;
     }
 
-    public static Map<String, Integer> mapOfMetalCust = new HashMap<>();
-    public static Map<String, Integer> mapOfStoneCust = new HashMap<>();
+    public static Map<String, Integer> mapOfMetalCust;
+    public static Map<String, Integer> mapOfStoneCust ;
     //public static Map<String, Integer> mapOfSize = new HashMap<>();
-    public static List<Double> rawSizeListVals = new ArrayList<>();
-    public static ArrayList<String> metalListForParam = new ArrayList<>();
-    public static ArrayList<String> stoneListForParam = new ArrayList<>();
+    public static List<Double> rawSizeListVals ;
+    public static ArrayList<String> metalListForParam ;
+    public static ArrayList<String> stoneListForParam ;
 
-    private void addToSwatchMap() {
+    private static void parseDefStone(JSONObject jsonObject) {
+        if (jsonObject.isNull("defaultStone")){
+            mCustDefVals.setStoneDescTxt("NA");
+            mCustDefVals.setUrlStoneImg(UiRandomUtils.DIAMOND_URL);
+            return;
+        }
+        try {
+            Swatches.MixedSwatch stoneSwatch = Swatches.getMixedSwatch(addDummyVarToGemStoneCust(jsonObject.getString("defaultStone")),
+                    Swatches.TYPE_GEMSTONE);
+            mCustDefVals.setDefStoneSwatch(stoneSwatch);
+            mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
+            mCustDefVals.setUrlStoneImg(UiRandomUtils.DIAMOND_URL);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mCustDefVals.setStoneDescTxt("NA");
+            mCustDefVals.setUrlStoneImg(UiRandomUtils.DIAMOND_URL);
+        }
+    }
 
+
+    private static void parseDefMetal(JSONObject jsonObject){
+        if (jsonObject.isNull("defaultMetal")){
+            mCustDefVals.setResIdMetal(R.drawable.vector_icon_cross_brown);
+            return;
+        }
+        try {
+            Swatches.MixedSwatch metalSwatch = Swatches.getMixedSwatch(jsonObject.getString("defaultMetal"),
+                    Swatches.TYPE_METAL);
+            mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
+            mCustDefVals.setDefMetalSwatch(metalSwatch);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            mCustDefVals.setResIdMetal(R.drawable.vector_icon_cross_brown);
+        }
     }
 
 
@@ -146,7 +198,7 @@ public class ProductOptions {
         }
         else {
             String temp = String.valueOf(size);
-            String[] tempArr = temp.split(".");
+            String[] tempArr = temp.split("\\.");
             String from = tempArr[0];
             String to  = tempArr[1].replace("0","");
             //mCustDefVals.setSizeText(from+"-"+to+"\"");
@@ -160,6 +212,24 @@ public class ProductOptions {
         private String sizeText;
         private String urlStoneImg;
         private String stoneDescTxt;
+        private Swatches.MixedSwatch defStoneSwatch;
+        private Swatches.MixedSwatch defMetalSwatch;
+
+        public Swatches.MixedSwatch getDefMetalSwatch() {
+            return defMetalSwatch;
+        }
+
+        public void setDefMetalSwatch(Swatches.MixedSwatch defMetalSwatch) {
+            this.defMetalSwatch = defMetalSwatch;
+        }
+
+        public Swatches.MixedSwatch getDefStoneSwatch() {
+            return defStoneSwatch;
+        }
+
+        public void setDefStoneSwatch(Swatches.MixedSwatch defStoneSwatch) {
+            this.defStoneSwatch = defStoneSwatch;
+        }
 
         public String getStoneDescTxt() {
             return stoneDescTxt;
@@ -222,6 +292,13 @@ public class ProductOptions {
         return parsedSizeList;
     }*/
 
+    /*public void clearOptions(){
+        mapOfMetalCust = new HashMap<>();
+        mapOfStoneCust = new HashMap<>();
+        metalListForParam = new ArrayList<>();
+        stoneListForParam = new ArrayList<>();
+    }*/
+
     private static ArrayList<Swatches.MixedSwatch> extractSwatch(JSONObject productInfo, int type) {
         JSONArray jsonArrayCust = new JSONArray();
         ArrayList<Swatches.MixedSwatch> swatchList = new ArrayList<>();
@@ -237,26 +314,26 @@ public class ProductOptions {
             e.printStackTrace();
         }
         for (int i = 0; i < jsonArrayCust.length(); i++) {
-            Swatches.MixedSwatch metalSwatch = null;
+            Swatches.MixedSwatch mixSwatch = null;
             try {
                 if (type == Swatches.TYPE_METAL) {
                     mapOfMetalCust.put(jsonArrayCust.getString(i), i);
                     metalListForParam.add(i, jsonArrayCust.getString(i));
-                    metalSwatch = Swatches.getMixedSwatch(jsonArrayCust.getString(i), type);
-                    if (metalSwatch.getDefStat() == 1)
-                        mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
+                    mixSwatch = Swatches.getMixedSwatch(jsonArrayCust.getString(i), type);
+                    if (mixSwatch.getDefStat() == 1)
+                        mCustDefVals.setResIdMetal(mixSwatch.getSwatchDisplayIconResId());
                 }
                 else if (type == Swatches.TYPE_GEMSTONE) {
                     mapOfStoneCust.put(jsonArrayCust.getString(i), i);
                     stoneListForParam.add(i, jsonArrayCust.getString(i));
-                    metalSwatch = Swatches.getMixedSwatch(addDummyVarToGemStoneCust(jsonArrayCust.getString(i)), type);
-                    if (metalSwatch.getDefStat() == 1){
-                        mCustDefVals.setStoneDescTxt(metalSwatch.getSwatchDisplayTxt());
+                    mixSwatch = Swatches.getMixedSwatch(addDummyVarToGemStoneCust(jsonArrayCust.getString(i)), type);
+                    /*if (mixSwatch.getDefStat() == 1){
+                        mCustDefVals.setStoneDescTxt(mixSwatch.getSwatchDisplayTxt());
                         mCustDefVals.setUrlStoneImg(UiRandomUtils.DIAMOND_URL);
-                    }
+                    }*/
                     //// TODO: 02-08-2016  default resId for stone
                 }
-                swatchList.add(metalSwatch);
+                swatchList.add(mixSwatch);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -284,11 +361,11 @@ public class ProductOptions {
 
     public List<Integer> getDisableList(List<String> enableList, String key){
         if (key == ProductActivity.METAL){
-            Map<String, Integer> tempMetalCust = mapOfMetalCust;
+            Map<String, Integer> tempMetalCust = new HashMap(mapOfMetalCust);
             return listMakeUP(tempMetalCust, enableList);
         }
         else if (key == ProductActivity.STONE){
-            Map<String, Integer> tempStoneCust = mapOfStoneCust;
+            Map<String, Integer> tempStoneCust = new HashMap(mapOfStoneCust);
             return listMakeUP(tempStoneCust, enableList);
         }
         return null;

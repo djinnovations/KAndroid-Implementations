@@ -37,6 +37,7 @@ import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.IntentKeys;
@@ -87,6 +88,8 @@ public class ProductsFragment extends Fragment {
     SwipeFlingAdapterView mCardStack;
     @Bind(R.id.product_price)
     TextView mPriceText;
+    @Bind(R.id.product_price_slash)
+    TextView product_price_slash;
     @Bind(R.id.product_name)
     TextView mNameText;
     @Bind(R.id.cards_data)
@@ -109,6 +112,7 @@ public class ProductsFragment extends Fragment {
     private User mUser;
     private Collection mCollection;
     private int mMode = MODE_COLLECTION;
+
     private ProductCallback mProductCallback = new ProductCallback();
     private View.OnClickListener mBuyClick = new View.OnClickListener() {
         @Override
@@ -220,6 +224,7 @@ public class ProductsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         //setUserIdAndCollectionId();
+        UiRandomUtils.strikeThroughText(product_price_slash);
         mEndView.setOnClickListener(/*new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -558,7 +563,9 @@ public class ProductsFragment extends Fragment {
         Log.d("djprod", "setData");
         mProduct = mSwipeDeckAdapter.getItem(0);
         mNameText.setText(mProduct.name);
-        mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+/*        mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+        product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));*/
+        updateDiscountUi(mProduct.discount);
         Log.d("djprod", "setData - price val: " + mProduct.getDisplayPrice().trim().length());
         /*if (mProduct.getDisplayPrice().trim().length() > 0)
             dismissOverLay();*/
@@ -619,12 +626,36 @@ public class ProductsFragment extends Fragment {
     }
 
 
+    private void updateDiscountUi(int discount) {
+        if (discount == 0) {
+            if (mSwipeDeckAdapter.holder != null) {
+                mSwipeDeckAdapter.holder.discountHolder.setVisibility(View.GONE);
+                product_price_slash.setVisibility(View.GONE);
+                //mSwipeDeckAdapter.holder.tvDiscountOnRed.setVisibility(View.GONE);
+                mPriceText.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+                return;
+            }
+        }
+
+        if (mSwipeDeckAdapter.holder != null) {
+            mSwipeDeckAdapter.holder.discountHolder.setVisibility(View.VISIBLE);
+            product_price_slash.setVisibility(View.VISIBLE);
+            //mSwipeDeckAdapter.holder.tvDiscountOnRed.setVisibility(View.VISIBLE);
+            mSwipeDeckAdapter.holder.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(discount)).append("%").append("\n").append("off"));
+            mPriceText.setText(RandomUtils
+                    .getIndianCurrencyFormat(RandomUtils.getOfferPrice(discount, mProduct.getDisplayPrice()), true));
+            product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
+        }
+    }
+
+
     public class SwipeDeckAdapter extends BaseAdapter implements View.OnClickListener,
             SwipeFlingAdapterView.onFlingListener, SwipeFlingAdapterView.OnItemClickListener {
 
         private Context context;
         private List<Product> products = new ArrayList<>();
         private ArrayList<Product> originalProducts;
+        ProductViewHolder holder;
 
         public SwipeDeckAdapter(Context context) {
             this.context = context;
@@ -648,7 +679,6 @@ public class ProductsFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ProductViewHolder holder;
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
                         .inflate(R.layout.layout_product_card,
@@ -664,6 +694,7 @@ public class ProductsFragment extends Fragment {
                 holder.btnBookApoint.setOnClickListener(this);
             } else holder = (ProductViewHolder) convertView.getTag();
 
+            updateDiscountUi(mProduct.discount);
             Product product = getItem(position);
             convertView.setTag(PRODUCT, product);
             holder.productActionsToggle.setTag(holder);
@@ -727,11 +758,11 @@ public class ProductsFragment extends Fragment {
             }
         }
 
-        private void reqForPostngBonb(){
+        private void reqForPostngBonb() {
             Intent intent = PostPollActivity.getLaunchIntent(context, mProduct);
-            if (getActivity() instanceof ShowcaseActivity){
+            if (getActivity() instanceof ShowcaseActivity) {
                 ((ShowcaseActivity) getActivity()).postABonb(intent);
-            }else if (getActivity() instanceof CollectionsActivity){
+            } else if (getActivity() instanceof CollectionsActivity) {
                 ((CollectionsActivity) getActivity()).postABonb(intent);
             }
         }
@@ -1167,6 +1198,10 @@ public class ProductsFragment extends Fragment {
             ImageView wishlistButton;
             @Bind(R.id.btnBookApoint)
             IconicsButton btnBookApoint;
+            @Bind(R.id.discountHolder)
+            View discountHolder;
+            @Bind(R.id.tvDiscountOnRed)
+            TextView tvDiscountOnRed;
 
             public ProductViewHolder(View itemview) {
                 this.itemview = itemview;

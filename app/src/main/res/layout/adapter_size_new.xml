@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingRight="24dp"
             android:textSize="13sp"
             tools:text="New Text" />
 

@@ -252,8 +252,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         } else {
             Log.d("djfeed", "postAdded- custom");
             getDataManager().add(0, socialPost);
-            //getAdapter().notifyItemInserted(0);
-            getAdapter().notifyDataSetChanged();
+            getAdapter().notifyItemInserted(0);
+            //getAdapter().notifyDataSetChanged();
         }
     }
 
@@ -299,6 +299,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         params.put(URLHelper.LIKE_A_POST.OFFSET, offset);
         params.put(URLHelper.LIKE_A_POST.POST_ID, 0);
         params.put("reco", 1);
+        Log.d("djfeed","socialfeed- req params: "+params);
         return params;
     }
 
@@ -1357,8 +1358,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         //DJphy
         if (imageURL != null && isProductLink(imageURL) != null) {
             Log.d(Constants.TAG, "Image URL - zoomImages: " + imageURL);
-            String id = imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());
-            id = id.substring(0, id.indexOf("/"));
+            String id = /*imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());*/
+                    String.valueOf(RandomUtils.getIdFromImageUrl(imageURL));
+            //id = id.substring(0, id.indexOf("/"));
             Log.d(Constants.TAG, "ID - zoomImages: " + id);
 
             if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {

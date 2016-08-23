@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.Image;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -36,10 +37,11 @@ public class ImageLoaderUtils {
             if(img.get().isLoaded)
                 placeholder =defaultImageRes;
             Picasso.with(context)
-                    .load(imageData.url)
+                    .load(imageData.url).memoryPolicy(MemoryPolicy.NO_STORE)
                     .tag(context)
                     .placeholder(placeholder)
                     .error(defaultImageRes)
+                    .fit()
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -96,7 +98,7 @@ public class ImageLoaderUtils {
                     .tag(context);
             if (placeholder != -1)
                 reqCreator.placeholder(placeholder);
-            reqCreator.error(errorImageRes)
+            reqCreator.error(errorImageRes).memoryPolicy(MemoryPolicy.NO_STORE).fit()
                     .into(image/*, new Callback() {
                         @Override
                         public void onSuccess() {

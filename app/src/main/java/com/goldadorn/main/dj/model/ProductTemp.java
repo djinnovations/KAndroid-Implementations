@@ -15,10 +15,12 @@ public class ProductTemp {
     private String costUnits;
     //private int isLiked;
     private float aspectRatio;
-    private String defMetal;
+    private int discount;
+    //private String defMetal;
 
     public ProductTemp(int productId, int userId, int collectionId, String productName,
-                       String productDescription, int productDefaultPrice, String costUnits, float aspectRatio) {
+                       String productDescription, int productDefaultPrice, String costUnits,
+                       float aspectRatio, int discount) {
         this.productId = productId;
         this.userId = userId;
         this.collectionId = collectionId;
@@ -27,6 +29,7 @@ public class ProductTemp {
         this.productDefaultPrice = productDefaultPrice;
         this.costUnits = costUnits;
         this.aspectRatio = aspectRatio;
+        this.discount =discount;
     }
 
 
@@ -62,6 +65,13 @@ public class ProductTemp {
         return aspectRatio;
     }
 
+    public int getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
 
     @Override
     public String toString() {
@@ -73,6 +83,7 @@ public class ProductTemp {
                 ", productDescription='" + productDescription + '\'' +
                 ", productDefaultPrice=" + productDefaultPrice +
                 ", costUnits='" + costUnits + '\'' +
+                ", discount='" + discount + '\'' +
                 ", aspectRatio=" + aspectRatio +
                 '}';
     }

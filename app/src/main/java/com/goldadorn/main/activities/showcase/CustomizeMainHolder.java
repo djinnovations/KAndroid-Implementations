@@ -24,6 +24,7 @@ import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.utils.URLHelper;
 import com.google.repacked.apache.commons.lang3.ArrayUtils;
 import com.rey.material.widget.CircleCheckedTextView;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.github.images.CircularImageView;
@@ -150,7 +151,7 @@ class CustomizeMainHolder extends ViewHolder {
     private View.OnClickListener mItemClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
+            /*Circular*/ImageView imageView = (/*Circular*/ImageView) v.findViewById(R.id.image);
             Swatches.MixedSwatch swatch = ((Swatches.MixedSwatch) v.getTag());
             extra.setVisibility(View.GONE);
             if (swatch.getWHICH_TYPE() == Swatches.TYPE_GEMSTONE) {
@@ -182,16 +183,17 @@ class CustomizeMainHolder extends ViewHolder {
             TextView tv = (TextView) v.findViewById(R.id.name);
             /*CircleCheckedTextView image = (CircleCheckedTextView) v.findViewById(R.id.image);
             image.setText(s.getDisplayString());*/
-            CircularImageView imageView = (CircularImageView) v.findViewById(R.id.image);
+            /*Circular*/ImageView imageView = (/*Circular*/ImageView) v.findViewById(R.id.image);
             if (data.getKey().keyID.equalsIgnoreCase("metal"))
                 imageView.setImageResource(swatch.getSwatchDisplayIconResId());
             else {
                 Picasso.with(v.getContext())
                         //.load("http://buisnessofjewelry.com/images/passionfire-round_small.png")
-                        .load(UiRandomUtils.DIAMOND_URL)
+                        //.load(UiRandomUtils.DIAMOND_URL)
+                        .load(R.drawable.ic_diamond_small)
                         .centerCrop()
+                        .fit().memoryPolicy(MemoryPolicy.NO_STORE)
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
-                        .resize(150, 150)
                         .into(imageView);
             }
             /*if(data.getKey().keyID.equalsIgnoreCase("Metal Purity List"))
@@ -221,7 +223,12 @@ class CustomizeMainHolder extends ViewHolder {
         }
     }
 
-
+    public void clearCurrentSelection(){
+        image.setImageDrawable(null);
+        image.setVisibility(View.GONE);
+        extra.setText("");
+        extra.setVisibility(View.GONE);
+    }
 
     private int[] disableList;
 

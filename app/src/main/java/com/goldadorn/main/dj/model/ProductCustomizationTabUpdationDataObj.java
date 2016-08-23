@@ -13,6 +13,34 @@ public class ProductCustomizationTabUpdationDataObj {
     //private int diamondNos;
     private int totalCost;
     private int stonesTotalCost;
+    private int discount;
+    private double offAmount;
+    //private double finalPrice;
+
+    public String getOffAmount() {
+        return String.valueOf(offAmount = (totalCost - RandomUtils.getOfferPrice(discount, String.valueOf(totalCost)) ));
+    }
+
+    public void setOffAmount(double offAmount) {
+        this.offAmount = offAmount;
+    }
+
+    public String getFinalPrice() {
+        return String.valueOf((totalCost - offAmount));
+    }
+
+    /*public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }*/
+
+    public String getDiscount() {
+        return String.valueOf(discount);
+    }
+
+    public ProductCustomizationTabUpdationDataObj setDiscount(int discount) {
+        this.discount = discount;
+        return this;
+    }
 
     public int getStonesTotalCost() {
         return stonesTotalCost;
@@ -24,7 +52,7 @@ public class ProductCustomizationTabUpdationDataObj {
     }
 
     public String getMetalCost(){
-        return String.valueOf( (int) (metalCostPerUnit * metalWeight));
+        return String.valueOf( (metalCostPerUnit * metalWeight));
     }
 
    /* public String getStoneCost(){
@@ -68,6 +96,6 @@ public class ProductCustomizationTabUpdationDataObj {
     }*/
 
     public String getMakingCharges(){
-        return String.valueOf(totalCost - (stonesTotalCost + ((int) (metalCostPerUnit * metalWeight)) + Integer.parseInt(getVAT())));
+        return String.valueOf(totalCost - (stonesTotalCost + (metalCostPerUnit * metalWeight) + Integer.parseInt(getVAT())));
     }
 }
