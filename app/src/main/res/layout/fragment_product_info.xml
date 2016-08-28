@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:clipToPadding="false"
     android:orientation="vertical"
     android:paddingBottom="@dimen/padding_default"
-    android:paddingTop="@dimen/padding_default"
-    >
+    android:paddingTop="@dimen/padding_default">
 
     <LinearLayout
         android:id="@+id/owner_layout"
@@ -25,19 +23,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            tools:text="Designer Name"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            tools:text="Designer Name" />
 
         <ImageView
-            android:layout_marginLeft="10dp"
             android:id="@+id/followButton"
             style="@style/RoundButton"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:src="@drawable/ic_b_follow"/>
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/ic_b_follow" />
     </LinearLayout>
 
     <TextView
@@ -49,14 +47,14 @@
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
         android:paddingRight="@dimen/padding_default"
-        tools:text="Eternity Rings Collection"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Eternity Rings Collection" />
 
-    <include
+    <!--<include
         android:id="@+id/collection_style"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/collection_style_desc"
@@ -66,14 +64,14 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Everyday wear, lightweight"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Everyday wear, lightweight" />-->
 
     <include
         android:id="@+id/description"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/description_desc"
@@ -83,14 +81,14 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />
 
-    <include
+    <!--<include
         android:id="@+id/paymentModesAvail"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/paymentModesAvail_desc"
@@ -100,16 +98,15 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
-
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />
 
 
     <include
         android:id="@+id/warrantyInfo"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/warrantyInfo_desc"
@@ -119,15 +116,15 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />
 
 
     <include
         android:id="@+id/moneyBackPolicy"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/moneyBackPolicy_desc"
@@ -137,15 +134,15 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />
 
 
     <include
         android:id="@+id/certificateType"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/certificateType_desc"
@@ -155,15 +152,15 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />
 
 
     <include
         android:id="@+id/estimatedDelTime"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/estimatedDelTime_desc"
@@ -173,15 +170,15 @@
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
-        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="Ornate gold scrollwork surrounded by sparkles decorate these delightful dangle earrings with a classic post top." />-->
 
 
     <include
         android:id="@+id/product_detail_style"
-        layout="@layout/layout_cutomize_title"/>
+        layout="@layout/layout_cutomize_title" />
 
     <TextView
         android:id="@+id/product_detail_desc"
@@ -192,10 +189,10 @@
         android:layout_marginRight="@dimen/padding_default"
         android:fontFamily="sans-serif-light"
         android:lineSpacingMultiplier="1.2"
-        tools:text="@string/product_desc"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        tools:text="@string/product_desc" />
 
     <LinearLayout
         android:id="@+id/container_table"
@@ -208,8 +205,21 @@
 
         <include
             android:id="@+id/heading"
-            layout="@layout/table_row"/>
+            layout="@layout/table_row" />
 
     </LinearLayout>
+
+
+    <LinearLayout
+        android:paddingTop="16dp"
+        android:id="@+id/moreOptionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--<include layout="@layout/title_text_image" />-->
+
+    </LinearLayout>
+
 
 </LinearLayout>

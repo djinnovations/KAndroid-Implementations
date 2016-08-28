@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.model.TitleDescImageDataObj;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
@@ -28,6 +30,7 @@ import com.goldadorn.main.model.StoneDetail;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +55,13 @@ public class ProductInfoFragment extends Fragment {
     ImageView followButton;
     @Bind(R.id.collection_name)
     TextView mCollectionName;
-    @Bind(R.id.collection_style_desc)
-    TextView mCollectionStyle;
+    /*@Bind(R.id.collection_style_desc)
+    TextView mCollectionStyle;*/
     @Bind(R.id.description_desc)
     TextView mdescription;
     @Bind(R.id.product_detail_desc)
     TextView mProductDetail;
-    @Bind(R.id.paymentModesAvail_desc)
+    /*@Bind(R.id.paymentModesAvail_desc)
     TextView paymentModesAvail_desc;
     @Bind(R.id.warrantyInfo_desc)
     TextView warrantyInfo_desc;
@@ -67,7 +70,7 @@ public class ProductInfoFragment extends Fragment {
     @Bind(R.id.certificateType_desc)
     TextView certificateType_desc;
     @Bind(R.id.estimatedDelTime_desc)
-    TextView estimatedDelTime_desc;
+    TextView estimatedDelTime_desc;*/
 
     @Bind(R.id.container_table)
     LinearLayout mTableContainer;
@@ -92,7 +95,7 @@ public class ProductInfoFragment extends Fragment {
     }
 
 
-    public void setAllDescription(ArrayList<String> listOfDescription) {
+    /*public void setAllDescription(ArrayList<String> listOfDescription) {
         if (listOfDescription == null)
             return;
         if (listOfDescription.size() < 5)
@@ -100,8 +103,46 @@ public class ProductInfoFragment extends Fragment {
         warrantyInfo_desc.setText(listOfDescription.get(0) == null ? "" : listOfDescription.get(0));
         moneyBackPolicy_desc.setText(listOfDescription.get(1) == null ? "" : listOfDescription.get(1));
         certificateType_desc.setText(listOfDescription.get(2) == null ? "" : listOfDescription.get(2));
-        estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3)/* + " days"*/);
+        estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3)*//* + " days"*//*);
         paymentModesAvail_desc.setText(listOfDescription.get(4) == null ? "" : listOfDescription.get(4));
+    }*/
+
+
+    private View getTitleMessageView(View child, ViewGroup parent , TitleDescImageDataObj dataObj) {
+        TitleTextImageHolder holder;
+        if (child == null){
+            child = LayoutInflater.from(getContext()).inflate(R.layout.title_text_image, parent, false);
+            holder = new TitleTextImageHolder(child);
+            child.setTag(holder);
+        }
+        else holder = (TitleTextImageHolder) child.getTag();
+        holder.bindView(dataObj);
+        return child;
+    }
+
+
+    class TitleTextImageHolder extends RecyclerView.ViewHolder{
+
+        @Bind(R.id.title)
+        TextView title;
+        @Bind(R.id.desc)
+        TextView desc;
+        @Bind(R.id.ivImage)
+        ImageView ivImage;
+
+        public TitleTextImageHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void bindView(TitleDescImageDataObj dataObj){
+            title.setText(dataObj.getTitle());
+            desc.setText(dataObj.getDescription());
+            if (!TextUtils.isEmpty(dataObj.getUrl())) {
+                Picasso.with(getContext()).load(dataObj.getUrl()).into(ivImage);
+            }
+            else ivImage.setVisibility(View.GONE);
+        }
     }
 
 
@@ -109,13 +150,13 @@ public class ProductInfoFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        ((TextView) view.findViewById(R.id.collection_style).findViewById(R.id.title)).setText(
-                "Collection Style");
+        /*((TextView) view.findViewById(R.id.collection_style).findViewById(R.id.title)).setText(
+                "Collection Style");*/
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
 
         //followButton.setVisibility(View.GONE);
-        ((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
+        /*((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
                 "Payment Modes Available");
         ((TextView) view.findViewById(R.id.warrantyInfo).findViewById(R.id.title)).setText(
                 "Warranty Information");
@@ -124,7 +165,7 @@ public class ProductInfoFragment extends Fragment {
         ((TextView) view.findViewById(R.id.certificateType).findViewById(R.id.title)).setText(
                 "Certificate Type");
         ((TextView) view.findViewById(R.id.estimatedDelTime).findViewById(R.id.title)).setText(
-                "Estimated Delivery Time");
+                "Estimated Delivery Time");*/
 
         ((TextView) view.findViewById(R.id.product_detail_style).findViewById(R.id.title)).setText(
                 "Product Detail");
@@ -167,7 +208,7 @@ public class ProductInfoFragment extends Fragment {
                                         mUser.isFollowed = true;
                                         mUser.followers_cnt = mUser.followers_cnt + 1;
                                     }
-                                   // mProductActivity.mFollower();
+                                    // mProductActivity.mFollower();
                                 }
                             });
                 }
@@ -189,7 +230,7 @@ public class ProductInfoFragment extends Fragment {
     @SuppressLint("StringFormatInvalid")
     public void bindProductInfo(ProductInfo summary) {
         if (summary != null) {
-            setAllDescription(summary.new5details);
+            //setAllDescription(summary.new5details);
             //int height = summary.getDisplayHeight() == -1 ? "NA" : ;
             mProductDetail.setText(getString(R.string.product_desc, summary.code,
                     summary.getDisplayHeight(), summary.getDisplayWidth(),
@@ -282,8 +323,39 @@ public class ProductInfoFragment extends Fragment {
                     }
                 }
             }
+            int moreOptChildCount = 0;
+            ArrayList<String> titles = new ArrayList<>();
+            if (summary.semiPreciousString != null)
+                titles.add("Semi-Precious Stones");
+            titles.add("Collection Style");
+            titles.add("Payment Modes Available");
+            titles.add("Buyback & Warranty Policy");
+            titles.add("Money Back Policy");
+            titles.add("Certificate Type");
+            if (summary.chainDetail != null)
+                titles.add("Chain Details");
+            titles.add("Estimated Delivery Time");
+            if (titles.contains("Semi-Precious Stones")) {
+                summary.new5details.put("Semi-Precious Stones", summary.semiPreciousString);
+                summary.new5details.put("Collection Style", mProductActivity.mCollection.category);
+            } else summary.new5details.put("Collection Style", mProductActivity.mCollection.category);
+            if (titles.contains("Chain Details")){
+                summary.new5details.put("Chain Details", summary.chainDetail);
+            }
+            for (String txt: titles){
+                String url;
+                if (moreOptChildCount == titles.indexOf("Certificate Type"))
+                    url = "http://jeweladmin.com/images/gallery/67/userfiles/images/certificates/card1-big.jpg";//some url for designer cert; // TODO: 26-08-2016
+                else url = null;
+                TitleDescImageDataObj dataObj = new TitleDescImageDataObj(txt, summary.new5details.get(txt), url);
+                moreOptionContainer.addView(getTitleMessageView(moreOptionContainer.getChildAt(moreOptChildCount), moreOptionContainer, dataObj));
+                moreOptChildCount++;
+            }
         }
     }
+
+    @Bind(R.id.moreOptionContainer)
+    LinearLayout moreOptionContainer;
 
     private View getRowView(Object obj, View convertView, LinearLayout parent, boolean display2Rows) {
         TableRowHolder holder = null;
@@ -394,7 +466,7 @@ public class ProductInfoFragment extends Fragment {
             holder.offer_price.setTextColor(getResources().getColor(R.color.controlColor));
             holder.offer_price.setTypeface(null, Typeface.BOLD);
 
-            holder.component.setText(DISCOUNT + /*" \n0%"*/"\n"+String.valueOf(mProduct.discount)+"%");
+            holder.component.setText(DISCOUNT + /*" \n0%"*/"\n" + String.valueOf(mProduct.discount) + "%");
             holder.rate.setText("");
             holder.weight.setText(" ");
             holder.price.setText(" ");
@@ -425,10 +497,10 @@ public class ProductInfoFragment extends Fragment {
                 mCollectionName.setText(collection.name.trim());
                 UiRandomUtils.underLineTv(mCollectionName, 0, mCollectionName.length());
             }
-            mCollectionStyle.setText(collection.category);
+            //mCollectionStyle.setText(collection.category);
         } else {
             mCollectionName.setVisibility(View.GONE);
-            mCollectionStyle.setText("");
+            //mCollectionStyle.setText("");
         }
     }
 

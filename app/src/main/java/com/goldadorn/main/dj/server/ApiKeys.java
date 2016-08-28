@@ -86,6 +86,13 @@ public class ApiKeys {
         return BuildConfig.END_POINT_COMERCIAL + VERB.CUSTOMIZE_PRICE_API;
     }
 
+    public static final String getProdInfoMetalStone(int prodId){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.INFO_METAL_STONE_API + "/" + String.valueOf(prodId);
+    }
+
+    /*http://107.170.48.64/goldadorn_prod/rest/getproductbasicinfov27/373
+http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
+
     private static final class VERB{
         private static final String GET_CART_ADDRESS_API = "getuseraddress";
         private static final String SET_CART_ADDRESS_API = "setuseraddress";
@@ -102,5 +109,6 @@ public class ApiKeys {
         private static final String GET_PRODUCTS = "getproducts";
         private static final String GET_FOLLOWERS = "fetchfollowers";
         private static final String CUSTOMIZE_PRICE_API = "getpriceforcustomizedproduct";
+        private static final String INFO_METAL_STONE_API = "getproductmetalstoneinfov27";
     }
 }

@@ -185,6 +185,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
     }
 
+
     boolean isSocialFeed;
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -291,9 +292,13 @@ public class ProductActivity extends BaseDrawerActivity {
                             mProductInfo = result.info;
                             //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
                             setAdapterForProdImages(mProductInfo.imageCount);
+                            isToWait = false;
+                            synchronized(crapString) {
+                                crapString.notifyAll();
+                            }
                             //mProdInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
-                            if (mProdInfoFragment != null)
-                                mProdInfoFragment.bindProductInfo(mProductInfo);
+                            /*if (mProdInfoFragment != null)
+                                mProdInfoFragment.bindProductInfo(mProductInfo);*/
 
                         }
                     }
@@ -309,9 +314,10 @@ public class ProductActivity extends BaseDrawerActivity {
                     if (mProdCustFrag != null)
                         mProdCustFrag.bindProductOptions(mProductOptions);
                 }
-                dismissOverLay();
+                //dismissOverLay();
             }
         });
+        query2ndAPIprodInfo();
         configureUI(UISTATE_CUSTOMIZE);
 
         /*new Handler().postDelayed(new Runnable() {
@@ -327,6 +333,12 @@ public class ProductActivity extends BaseDrawerActivity {
         tourThisScreen();
     }
 
+
+    public void query2ndAPIprodInfo(){
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(PROD_INFO_2nd_API_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQueryCustom().ajax(ApiKeys.getProdInfoMetalStone(mProduct.id), String.class, ajaxCallback);
+    }
 
     /*private void updateProductInfoTab(ProductInfoTabUpdationDataObj dataObj){
         mProductInfo.metalPurity = dataObj.getMetalPurity();
@@ -1363,6 +1375,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     private ArrayList<String> productInfoList;
+    private final int PROD_INFO_2nd_API_CALL = IDUtils.generateViewId();
 
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
@@ -1478,8 +1491,35 @@ public class ProductActivity extends BaseDrawerActivity {
                 CustomizationDisableList data = new CustomizationDisableList(metalDisableList, stoneDisableList, sizeList);
                 mProdCustFrag.updateCustomizationData(data);
             }
-        } else super.serverCallEnds(id, url, json, status);
+        }
+        else if (id == PROD_INFO_2nd_API_CALL){
+            try {
+                boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                        mTabLayout, this);
+                if (success) {
+                    if (isToWait) {
+                        synchronized (crapString) {
+                            crapString.wait();
+                        }
+                    }
+                    dismissOverLay();
+                    ProductInfo.parseStoneMetal(mProductInfo, new JSONObject(json.toString()));
+                    if (mProdInfoFragment != null)
+                        mProdInfoFragment.bindProductInfo(mProductInfo);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        else super.serverCallEnds(id, url, json, status);
     }
+
+
+    String crapString = "uff";
+
+    boolean isToWait = true;
 
     private void updateNameDescSKU(String SKU) {
         mProduct.name = getNewProdName(SKU);

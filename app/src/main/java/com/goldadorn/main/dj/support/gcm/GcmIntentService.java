@@ -1,31 +1,8 @@
 package com.goldadorn.main.dj.support.gcm;
 
-import android.app.IntentService;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.goldadorn.main.R;
-import com.goldadorn.main.activities.Application;
-import com.goldadorn.main.model.User;
-import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
-import com.google.android.gms.gcm.GcmPubSub;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.google.android.gms.iid.InstanceID;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.io.IOException;
-
-public class GcmIntentService extends IntentService {
+public class GcmIntentService /*extends IntentService*/ {
  
-    private static final String TAG = "djgcm";
+    /*private static final String TAG = "djgcm";
  
     public GcmIntentService() {
         super(TAG);
@@ -57,9 +34,9 @@ public class GcmIntentService extends IntentService {
  
     }
  
-    /**
+    *//**
      * Registering with GCM and obtaining the gcm registration id
-     */
+     *//*
     private void registerGCM() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String token = null;
@@ -134,9 +111,9 @@ public class GcmIntentService extends IntentService {
        // people.setPushRegistrationId(registrationId);
     }
  
-    /**
+    *//**
      * Subscribe to a topic
-     */
+     *//*
     public void subscribeToTopic(String topic) {
         GcmPubSub pubSub = GcmPubSub.getInstance(getApplicationContext());
         InstanceID instanceID = InstanceID.getInstance(getApplicationContext());
@@ -173,5 +150,5 @@ public class GcmIntentService extends IntentService {
             Log.e(TAG, "Topic unsubscribe error. Topic: " + topic + ", error: " + e.getMessage());
             Toast.makeText(getApplicationContext(), "Topic subscribe error. Topic: " + topic + ", error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    }
+    }*/
 }

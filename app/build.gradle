@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 //BINDING
 apply plugin: 'com.android.databinding'
 
@@ -210,14 +210,24 @@ dependencies {
     //compile 'com.ovenbits:quickactionview:1.0.0'
 
     //Added by DJphy
-    compile 'com.google.android.gms:play-services-auth:8.3.0'
+    /*compile 'com.google.android.gms:play-services-auth:8.3.0'
     compile 'com.google.android.gms:play-services-plus:8.3.0'
     compile 'com.google.android.gms:play-services-analytics:8.3.0'
     compile 'com.google.android.gms:play-services-maps:8.3.0'
-    compile 'com.google.android.gms:play-services-appindexing:8.3.0'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
-    compile 'com.google.android.gms:play-services-base:8.3.0'
-    compile 'com.google.android.gms:play-services-location:8.3.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.3.0'*/
+    compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-plus:9.0.0'
+    compile 'com.google.android.gms:play-services-analytics:9.0.0'
+    compile 'com.google.android.gms:play-services-maps:9.0.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.0.0'
+
+    //compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile "com.google.firebase:firebase-messaging:9.0.0" //replacement for GCM
+
+    /*compile 'com.google.android.gms:play-services-base:8.3.0'
+    compile 'com.google.android.gms:play-services-location:8.3.0'*/
+    compile 'com.google.android.gms:play-services-base:9.0.0'
+    compile 'com.google.android.gms:play-services-location:9.0.0'
 
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
     compile('com.twitter.sdk.android:twitter:1.13.1@aar') {
@@ -240,3 +250,5 @@ dependencies {
     compile 'io.github.kobakei:ratethisapp:1.0.5'
     compile 'com.venmo.view.tooltip:tooltip:0.1.2@aar'
 }
+
+apply plugin: 'com.google.gms.google-services'

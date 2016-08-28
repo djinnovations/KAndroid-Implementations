@@ -116,14 +116,14 @@ public class ApiFactory extends ExtractResponse {
             case PRODUCT_BASIC_INFO_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("getproductbasicinfo");
+                builder.appendPath("getproductbasicinfov27");
                 builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
                 break;
             }
             case PRODUCT_CUSTOMIZATION_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("getproductcustomization");
+                builder.appendPath("getproductcustomizationv27");
                 builder.appendPath(((ProductResponse) urlBuilder.mResponse).productId + "");
                 break;
             }

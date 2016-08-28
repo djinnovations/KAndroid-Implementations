@@ -109,13 +109,15 @@ public class DbHelper {
     }
 
     public static void writeProductCustomization(Context context, ProductResponse response) throws JSONException {
-        if (response.responseContent != null) {
+        /*if (response.responseContent != null) {
             JSONObject productObj = new JSONObject(response.responseContent);
             ContentValues cv = new ContentValues();
             cv.put(Tables.Products.CUSTOMIZATION_INFO, productObj.toString());
             response.options = ProductOptions.extractCustomization(productObj);
             context.getContentResolver().update(Tables.Products.CONTENT_URI_NO_NOTIFICATION, cv, Tables.Products._ID + " = ? ", new String[]{productObj.optLong(Constants.JsonConstants.PRODUCTID) + ""});
-        }
+        }*/
+        JSONObject productObj = new JSONObject(response.responseContent);
+        response.options = ProductOptions.extractCustomization(productObj);
     }
 
     public static SparseArray<Integer> mapOfUserIds;;

@@ -33,7 +33,7 @@ public class ImageLoaderUtils {
             final WeakReference<Callback> call = new WeakReference(callback);
             final WeakReference<ImageView> imageView = new WeakReference(image);
 
-            int placeholder= R.drawable.vector_icon_progress_animation;
+            int placeholder= /*R.drawable.vector_icon_progress_animation*/defaultImageRes;
             if(img.get().isLoaded)
                 placeholder =defaultImageRes;
             Picasso.with(context)

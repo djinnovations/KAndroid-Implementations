@@ -70,30 +70,31 @@ public class ProductOptions {
         ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
 
         Log.d("djcustom", "response Obj - ProductOptions: " + productInfo.toString());
-        float primaryMetalPrice;
-        float makingcharges;
+        float primaryMetalPrice = -1;
+        float makingcharges = -1;
+        stonePrice = -1;
         try {
-            primaryMetalPrice = (float) productInfo.getDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
+            //primaryMetalPrice = (float) productInfo.getDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
             stonePrice = (float) productInfo.getDouble(Constants.JsonConstants.STONEPRICE);
             makingcharges = (float) productInfo.getDouble(Constants.JsonConstants.MAKINGCHARGES);
         } catch (JSONException e) {
             e.printStackTrace();
-            primaryMetalPrice = -1;
+            //primaryMetalPrice = -1;
             stonePrice = -1;
             makingcharges = -1;
         }
 
         mCustDefVals = new CustomizationDefaultValues();
-        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
+        //p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Stone", stonePrice));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Making Charges", makingcharges));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("VAT (Tax)", (float) 00.00));
 
         p.priceUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
-        p.primaryMetalPurity = productInfo.optInt(Constants.JsonConstants.METALPURITY);
-        p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
-        p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.METALCOLOUR);
-        p.priceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
+        //p.primaryMetalPurity = productInfo.optInt(Constants.JsonConstants.METALPURITY);
+        //p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
+        //p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.METALCOLOUR);
+        //p.priceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
         p.size = productInfo.getDouble(Constants.JsonConstants.SIZE);
         try {
             p.prodType = productInfo.getString("prodType");
@@ -119,6 +120,21 @@ public class ProductOptions {
                     , gemStoneSwatch));
         parseDefStone(productInfo);
         parseDefMetal(productInfo);
+        try {
+            Swatches.MixedSwatch metal = mCustDefVals.getDefMetalSwatch();
+            primaryMetalPrice = (Float.parseFloat(metal.getCostPerUnit())
+                    * Float.parseFloat(metal.getWeight()));
+            p.primaryMetalPurity = (int) Float.parseFloat(metal.getPurity());
+            p.primaryMetal = metal.getType();
+            p.primaryMetalColor = metal.getColor();
+            p.priceUnits = metal.getCostUnits();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            primaryMetalPrice = -1;
+        }
+        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
+
+
         rawSizeListVals = new ArrayList<>();
         parsedSizeList = new ArrayList<>();
         extractSizeCust(productInfo, p.prodType);
