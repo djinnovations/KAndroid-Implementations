@@ -73,10 +73,10 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
 
         public PaymentMethodViewHolder(View itemView) {
             super(itemView);
-
-            tvMethods = (TextView) itemView.findViewById(R.id.tvMethod);
+            ButterKnife.bind(this, itemView);
+            /*tvMethods = (TextView) itemView.findViewById(R.id.tvMethod);
             rbtn = (RadioButton) itemView.findViewById(R.id.radioBtn);
-            rlCheckPay = itemView.findViewById(R.id.rlCheckPay);
+            rlCheckPay = itemView.findViewById(R.id.rlCheckPay);*/
             rlCheckPay.setOnClickListener(this);
         }
 
@@ -93,7 +93,7 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
         public void onClick(View v) {
 
             if (!lastCheckedItemStack.empty()) {
-                Log.d("djcart","stack not empty:");
+                Log.d("djcart", "stack not empty:");
                 lastCheckedItemStack.pop().setChecked(false);
             }
             rbtn.setChecked(true);
@@ -106,7 +106,6 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
 
 
     public static class PaymentMethodsDataObj {
-
         private String methodName;
         private boolean flag;
 

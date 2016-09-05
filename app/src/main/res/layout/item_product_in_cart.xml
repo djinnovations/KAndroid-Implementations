@@ -5,14 +5,12 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/padding_default"
     android:layout_marginTop="@dimen/padding_default"
-    android:gravity="center"
     android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.7"
-        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -29,16 +27,17 @@
 
         <ImageView
             android:id="@+id/product_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:adjustViewBounds="true"
+            android:layout_gravity="bottom|center_horizontal"
             android:src="@mipmap/ic_launcher" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_gravity="bottom"
         android:orientation="horizontal">
 
         <EditText
@@ -60,6 +59,7 @@
             android:adjustViewBounds="true"
             android:background="@color/colorPrimaryDark"
             android:scaleType="centerInside"
+            android:layout_marginBottom="4dp"
             android:src="@android:drawable/arrow_down_float" />
     </LinearLayout>
 
@@ -71,18 +71,17 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:layout_weight="0.8">
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:fontFamily="sans-serif-medium"
-            android:gravity="center"
             android:paddingLeft="8dp"
+            android:gravity="bottom"
             android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:layout_centerVertical="true"
             android:textSize="16sp"
             tools:text="Rs. 2500" />
 
@@ -98,7 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/tempView"
             android:layout_marginLeft="0dp"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="0dp" />
 
     </RelativeLayout>
 
@@ -106,8 +106,9 @@
         android:id="@+id/ivRemoveFromCart"
         android:layout_width="15dp"
         android:layout_height="15dp"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center"
         android:layout_marginLeft="5dp"
         android:background="@drawable/circle_bg"
+        android:padding="4dp"
         android:src="@drawable/vector_icon_cross_white" />
 </LinearLayout>

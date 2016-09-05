@@ -32,11 +32,13 @@ import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.ProductOptions;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.MemoryPolicy;
@@ -1172,10 +1174,13 @@ public class ProductCustomiseFragment extends Fragment {
     }
 
 
+    public static String PBD_discountVal = "discountVal";
     public void setPriceBreakDown(HashMap<String, String> mapVals) {
         ArrayList<PriceValueModel> tempList = pbda.getOurList();
         int j = 0;
         for (PriceValueModel pvm : tempList) {
+            if (pvm.getTvTitle().equals(PBD_Discount))
+                mProductOption.discount = Integer.parseInt(mapVals.get(PBD_discountVal));
             pvm.setTvValue(RandomUtils.getIndianCurrencyFormat(mapVals.get(pvm.getTvTitle()), true));
             tempList.set(j, pvm);
             j++;
@@ -1237,8 +1242,18 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolderNew holder, int position) {
-            holder.tvTitle.setText(ourList.get(position).getTvTitle());
+            String title = ourList.get(position).getTvTitle();
+            holder.tvTitle.setText(title);
+            TypefaceHelper.setFont(holder.tvTitle, holder.tvValue);
+            if (title.equals(PBD_Discount) || title.equals(PBD_FinalPrice) || title.equals(PBD_total)) {
+                UiRandomUtils.setTypefaceBold(holder.tvValue);
+                UiRandomUtils.setTypefaceBold(holder.tvTitle);
+            }
             holder.tvValue.setText(ourList.get(position).getTvValue());
+            if (title.equals(PBD_Discount)){
+                holder.tvTitle.setText(title + " ("+ mProductOption.discount + "%) ");
+                holder.tvValue.setText("- " + ourList.get(position).getTvValue());
+            }
         }
 
         /*class MyViewHolderNew extends RecyclerView.ViewHolder{

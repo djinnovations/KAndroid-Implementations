@@ -873,14 +873,16 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                         new IResultListener<LikeResponse>() {
                             @Override
                             public void onResult(LikeResponse result) {
-                                ShowcaseActivity.isCollectionLike = true;
+                                //ShowcaseActivity.isCollectionLike = true;
                                 v.setEnabled(true);
                                 v.setSelected(result.success != isLiked);
                                 if (isLiked) {
+                                    collection.isLiked = false;
                                     collection.likecount = collection.likecount - 1;
                                     likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
                                     //Toast.makeText(mContext,((String.format(Locale.getDefault(), "%d", collection.likecount))),Toast.LENGTH_SHORT).show();
                                 } else {
+                                    collection.isLiked = true;
                                     collection.likecount = collection.likecount + 1;
                                     likesCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
                                     // Toast.makeText(mContext,((String.format(Locale.getDefault(), "%d", collection.likecount))),Toast.LENGTH_SHORT).show();

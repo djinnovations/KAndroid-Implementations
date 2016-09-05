@@ -196,9 +196,11 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
                                             YoYo.with(Techniques.Landing).duration(300).playOn(likeBtn);
                                             likeMap.put(collection.id, likeBtn.isSelected());
                                             if (isLiked) {
+                                                collection.isLiked = false;
                                                 collection.likecount = collection.likecount - 1;
                                                 rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
                                             } else {
+                                                collection.isLiked = true;
                                                 collection.likecount = collection.likecount + 1;
                                                 rcv.likeCount.setText(String.format(Locale.getDefault(), "%d", collection.likecount));
                                             }
@@ -224,9 +226,9 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             holder.extra.setText(String.format(Locale.getDefault(), "%d Products", collection.productcount));
             holder.itemView.setTag(position);
 
-            Boolean t = likeMap.get(collection.id);
+            //Boolean t = likeMap.get(collection.id);
             //holder.like.setSelected(t == null ? collection.isLiked : t);
-            manupilateLikeBtnStatus(holder.like, t == null ? collection.isLiked : t);
+            manupilateLikeBtnStatus(holder.like, /*t == null ? */collection.isLiked /*: t*/);
             holder.like.setTag(collection);
             //holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
             Log.e("iii", collection.getImageUrl());

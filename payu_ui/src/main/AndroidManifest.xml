@@ -17,11 +17,15 @@
         </activity>
         <activity android:name=".PayUEmiActivity">
         </activity>
-        <activity android:name=".PayUCreditDebitCardActivity">
+        <activity android:name=".PayUCreditDebitCardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBarLibs">
         </activity>
         <activity android:name=".PayUCashCardActivity">
         </activity>
-        <activity android:name=".PayUNetBankingActivity">
+        <activity android:name=".PayUNetBankingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBarLibs">
         </activity>
         <activity android:name=".PayUVerifyApiActivity">
         </activity>

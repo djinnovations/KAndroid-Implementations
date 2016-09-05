@@ -48,6 +48,7 @@ import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.fragments.FilterTimelineFragment;
+import com.goldadorn.main.dj.model.AddToCartRequestDataObj;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.CustomizationStepResponse;
@@ -187,6 +188,17 @@ public class ProductActivity extends BaseDrawerActivity {
 
 
     boolean isSocialFeed;
+    boolean hasCert;
+
+    private void checkHasCert(){
+        Cursor cursor = RandomUtils.getUserInfoCursor(mProduct.userId);
+        hasCert = User.hasCertification(cursor);
+        mProduct.setHasCertificate(hasCert);
+    }
+
+    public boolean hasCertificate(){
+        return hasCert;
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -293,8 +305,8 @@ public class ProductActivity extends BaseDrawerActivity {
                             //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
                             setAdapterForProdImages(mProductInfo.imageCount);
                             isToWait = false;
-                            synchronized(crapString) {
-                                crapString.notifyAll();
+                            synchronized(holyString) {
+                                holyString.notifyAll();
                             }
                             //mProdInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             /*if (mProdInfoFragment != null)
@@ -307,6 +319,12 @@ public class ProductActivity extends BaseDrawerActivity {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success) {
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {*/
+                            query2ndAPIprodInfo();
+                     /*   }
+                    }, 2000);*/
                     mProductOptions = result.options;
                     mProductOptions.discount = mProduct.discount;
                     mProduct.addDefaultCustomisation(mProductOptions);
@@ -317,9 +335,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 //dismissOverLay();
             }
         });
-        query2ndAPIprodInfo();
         configureUI(UISTATE_CUSTOMIZE);
-
         /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -327,6 +343,7 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         }, 3000);*/
 
+        checkHasCert();
         getSupportLoaderManager().initLoader(mCollectionCallBack.hashCode(), null,
                 mCollectionCallBack);
 
@@ -353,11 +370,17 @@ public class ProductActivity extends BaseDrawerActivity {
         HashMap<String, String> map = new HashMap<>();
         map.put(ProductCustomiseFragment.PBD_metal, dataObj.getMetalCost());
         map.put(ProductCustomiseFragment.PBD_stone, String.valueOf(dataObj.getStonesTotalCost()));
+        cartRequestDataObj.setStonePrice(dataObj.getStonesTotalCost());
         map.put(ProductCustomiseFragment.PBD_making, dataObj.getMakingCharges());
+        cartRequestDataObj.setMakingCharges(dataObj.getMakingCharges());
         map.put(ProductCustomiseFragment.PBD_VAT, dataObj.getVAT());
         map.put(ProductCustomiseFragment.PBD_Discount, dataObj.getOffAmount());
+        map.put(ProductCustomiseFragment.PBD_discountVal, dataObj.getDiscount());
+        //cartRequestDataObj.setDiscount(Double.parseDouble(dataObj.getDiscount()));
         map.put(ProductCustomiseFragment.PBD_FinalPrice, dataObj.getFinalPrice());
+        cartRequestDataObj.setTotalAmount(dataObj.getFinalPrice());
         map.put(ProductCustomiseFragment.PBD_total, String.valueOf(dataObj.getTotalCost()));
+        cartRequestDataObj.setOfferReplicaPrice(String.valueOf(dataObj.getTotalCost()));
         mProdCustFrag.setPriceBreakDown(map);
     }
 
@@ -641,7 +664,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 });
     }*/
 
-    public void addToCartNew(final View cartBtn) {
+    public void addToCartNew(/*final View cartBtn*/) {
         if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
             return;
@@ -660,14 +683,14 @@ public class ProductActivity extends BaseDrawerActivity {
                         if (result.success) {
                             logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
                             Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
-                            confirmedToCart(cartBtn);
+                            confirmedToCart();
                         }
                     }
                 });
     }
 
 
-    private void confirmedToCart(final View cartBtn) {
+    private void confirmedToCart(/*final View cartBtn*/) {
         /*Log.d("iii","product id that was pushed to cart: "+mProduct.id);
         ViewConstructor.getInstance(getApplicationContext()).displayInfo(this, "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\nCheckout", "Continue\nShopping", true, new ViewConstructor.InfoDisplayListener() {
@@ -857,8 +880,12 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    int defaultDiscountVisibitly;
     private void updateDiscountUi(int discount) {
-        if (discount == 0) {
+        if (cartRequestDataObj != null)
+            cartRequestDataObj.setDiscount(discount);
+        if (discount <= 0) {
+            defaultDiscountVisibitly = View.GONE;
             mOverlayVH.discountHolder.setVisibility(View.GONE);
             mOverlayVH.product_price_slash.setVisibility(View.GONE);
             mOverlayVH.product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
@@ -867,8 +894,9 @@ public class ProductActivity extends BaseDrawerActivity {
             mOverlayVH.mProductCost.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
             return;
         }
-
+        defaultDiscountVisibitly = View.VISIBLE;
         mOverlayVH.discountHolder.setVisibility(View.VISIBLE);
+        //mOverlayVH.discountHolder.setVisibility(View.GONE);
         mOverlayVH.product_price_slash.setVisibility(View.VISIBLE);
         //mOverlayVH.tvDiscountOnRed.setVisibility(View.VISIBLE);
         mOverlayVH.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(discount)).append("%").append("\n").append("off"));
@@ -1020,7 +1048,10 @@ public class ProductActivity extends BaseDrawerActivity {
                 indicator.setVisibility(visibility);
                 productActionsToggle.setVisibility(visibility);
                 ivGlass.setVisibility(visibility);
-                discountHolder.setVisibility(visibility);
+                if (visibility == View.VISIBLE) {
+                    if (defaultDiscountVisibitly == View.VISIBLE)
+                        discountHolder.setVisibility(visibility);
+                } else discountHolder.setVisibility(visibility);
                 mProductOwner.setVisibility(View.GONE);
                 mProductCollection.setVisibility(View.GONE);
             }
@@ -1120,7 +1151,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     }
                 });
             } else if (v == cartButton) {
-                addToCartNew(cartButton);
+                //addToCartNew();
+                addToCartV27();
             } else if (v == followButton) {
                 v.setEnabled(false);
                 final boolean isFollowing = v.isSelected();
@@ -1348,6 +1380,8 @@ public class ProductActivity extends BaseDrawerActivity {
             return;
         }
         this.selectedParams = selectedParams;
+        cartRequestDataObj.setSelectedParams(selectedParams);
+        //mProduct.setSelectedParams(selectedParams);
         Map<String, Object> paramsMap = new HashMap<>();
         Set<String> keys = selectedParams.keySet();
         for (String str : keys) {
@@ -1444,7 +1478,19 @@ public class ProductActivity extends BaseDrawerActivity {
                     e.printStackTrace();
                 }
             }
-        } else if (id == CUSTOMIZATION_STEP_WISE_CALL) {
+        }
+        else if (id == ADD_TO_CART_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mTabLayout, this);
+            if (success) {
+                logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
+                Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
+                confirmedToCart();
+            }
+        }
+
+
+        else if (id == CUSTOMIZATION_STEP_WISE_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
             if (success) {
@@ -1498,14 +1544,15 @@ public class ProductActivity extends BaseDrawerActivity {
                         mTabLayout, this);
                 if (success) {
                     if (isToWait) {
-                        synchronized (crapString) {
-                            crapString.wait();
+                        synchronized (holyString) {
+                            holyString.wait();
                         }
                     }
                     dismissOverLay();
                     ProductInfo.parseStoneMetal(mProductInfo, new JSONObject(json.toString()));
                     if (mProdInfoFragment != null)
                         mProdInfoFragment.bindProductInfo(mProductInfo);
+                    setAddToCartReqObj();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1516,13 +1563,87 @@ public class ProductActivity extends BaseDrawerActivity {
         else super.serverCallEnds(id, url, json, status);
     }
 
+    public final int ADD_TO_CART_CALL = IDUtils.generateViewId();
 
-    String crapString = "uff";
+    public void addToCartV27(){
+        showOverLay(null, 0);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(ADD_TO_CART_CALL);
+       /* kjbk
+                kjnjkn
+                jjjknn;*/
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", cartRequestDataObj.getProdId());
+        map.put("prodName", cartRequestDataObj.getProdName());
+        map.put("prodType", cartRequestDataObj.getProdType());
+        map.put("desgnId", cartRequestDataObj.getDesId());
+        map.put("primaryMetal", cartRequestDataObj.getPrimaryMetal());
+        map.put("primaryMetalPurity", cartRequestDataObj.getMetalPurity());
+        map.put("primaryMetalColor", cartRequestDataObj.getMetalColor());
+        map.put("size", cartRequestDataObj.getSize());
+        map.put("priceUnits", "Rs");
+        map.put("totalPrice", cartRequestDataObj.getTotalAmount());
+        map.put("offPrice", cartRequestDataObj.getOfferReplicaPrice());
+        map.put("discount", cartRequestDataObj.getDiscount());
+        map.put("metalPrice", cartRequestDataObj.getMetalCostPerUnit());
+        map.put("stonePrice", cartRequestDataObj.getStonePrice());
+        map.put("makingCharges", cartRequestDataObj.getMakingCharges());
+        map.put("metalWeight", cartRequestDataObj.getMetalWeight());
+        map.put("orderQty", 1);
+        map.put("VAT", cartRequestDataObj.getVAT());
+        map.put("metalSel", cartRequestDataObj.getMetalSelectedString());
+        map.put("stoneSel", cartRequestDataObj.getStoneSelectedString());
+        map.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
+        Log.d("djprod", "reqParams- addToCartv27: " + map.toString());
+        getAQueryCustom().ajax(ApiKeys.getAddtoCartV27(), map,String.class, ajaxCallback);
+    }
+
+    private AddToCartRequestDataObj cartRequestDataObj;
+    private void setAddToCartReqObj(){
+        cartRequestDataObj = new AddToCartRequestDataObj();
+        cartRequestDataObj.setSelectedParams(new HashMap<String, List<String>>());
+        ArrayList<Map.Entry<String, Float>> p = mProductOptions.priceBreakDown;
+        for (Map.Entry<String, Float> entry : p) {
+            String name = entry.getKey();
+            Float price = entry.getValue();
+            if (name.equals(ProductCustomiseFragment.PBD_making))
+                cartRequestDataObj.setMakingCharges(price);
+            else if (name.equals(ProductCustomiseFragment.PBD_stone))
+                cartRequestDataObj.setStonePrice(price);
+            /*else {
+                break;
+            }*/
+        }
+        if (mProductOptions.discount > 0) {
+            cartRequestDataObj.setOfferReplicaPrice(String.valueOf(mProduct.unitPrice));
+            cartRequestDataObj.setDiscount(mProductOptions.discount);
+            cartRequestDataObj.setTotalAmount
+                    (String.valueOf(RandomUtils.getOfferPrice(mProductOptions.discount, String.valueOf(mProduct.unitPrice))));
+        }
+        else {
+            cartRequestDataObj.setOfferReplicaPrice(String.valueOf(0));
+            cartRequestDataObj.setDiscount(0);
+            cartRequestDataObj.setTotalAmount(String.valueOf(mProduct.unitPrice));
+        }
+        cartRequestDataObj.setStoneSwatch(mProductOptions.mCustDefVals.getDefStoneSwatch());
+        cartRequestDataObj.setMetalSwatch(mProductOptions.mCustDefVals.getDefMetalSwatch());
+        cartRequestDataObj.setMetalWeight(mProductInfo.metalWeight);
+        cartRequestDataObj.setMetalSelectedString(mProductOptions.mCustDefVals.getRawDefMetal());
+        cartRequestDataObj.setStoneSelectedString(mProductOptions.mCustDefVals.getRawDefStone());
+        cartRequestDataObj.setProdId(mProduct.id);
+        cartRequestDataObj.setProdName(mProduct.name);
+        cartRequestDataObj.setProdType(mProductOptions.prodType);
+        cartRequestDataObj.setSize(String.valueOf(mProductOptions.size));
+        cartRequestDataObj.setDesId(mProduct.userId);
+    }
+
+    String holyString = "bohr-tesla";
 
     boolean isToWait = true;
 
     private void updateNameDescSKU(String SKU) {
         mProduct.name = getNewProdName(SKU);
+        cartRequestDataObj.setProdName(mProduct.name);
         mOverlayVH.mProductName.setText(mProduct.name);
         mOverlayVH.mProductName2.setText(mProduct.name);
         mOverlayVH.toastProdName.setText(mProduct.name);
@@ -1555,6 +1676,10 @@ public class ProductActivity extends BaseDrawerActivity {
                 metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             else
                 metalSwatch = Swatches.getMixedSwatch(csr.getMetalSwatch(), Swatches.TYPE_METAL);
+
+            if (metalSwatch == null)
+                metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
+
             updateMetalInProdInfoTab(metalSwatch, csr.getWeight());
            /* metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             updateImages(metalSwatch);
@@ -1567,6 +1692,7 @@ public class ProductActivity extends BaseDrawerActivity {
         }
         if (selectedParams.containsKey(STONE)) {
             Swatches.MixedSwatch stoneSwatch = mProdCustFrag.getSelectedStoneSwatch();
+            cartRequestDataObj.setStoneSwatch(stoneSwatch);
             ProductOptions.mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
             StoneDetail stoneDetail = mProductInfo.stonesDetails.get(0);
             String[] array = stoneSwatch.getSwatchDisplayTxt().split("-");
@@ -1582,8 +1708,6 @@ public class ProductActivity extends BaseDrawerActivity {
 
         ProductCustomizationTabUpdationDataObj dataObj = new ProductCustomizationTabUpdationDataObj();
         /*if (metalSwatch != null) {*/
-        if (metalSwatch == null)
-            metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
 
         ProductOptions.mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
         dataObj.setMetalCostPerUnit(Float.parseFloat(metalSwatch.getCostPerUnit()))
@@ -1598,6 +1722,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private void updateMetalInProdInfoTab(Swatches.MixedSwatch metalSwatch, float weight) {
         updateImages(metalSwatch);
+        cartRequestDataObj.setMetalSwatch(metalSwatch);
         mProductInfo.metalrate = Float.parseFloat(metalSwatch.getCostPerUnit());
         mProductInfo.metalPurity = (int) Float.parseFloat(metalSwatch.getPurity());
         mProductInfo.metalColor = metalSwatch.getColor();
@@ -1605,6 +1730,7 @@ public class ProductActivity extends BaseDrawerActivity {
         float tempMetalWeight = mProductInfo.metalWeight;
         mProductInfo.metalWeight = weight == -1 ? Float.parseFloat(metalSwatch.getWeight()) : weight;
         mProductInfo.weight = mProductInfo.weight - tempMetalWeight + mProductInfo.metalWeight;
+        cartRequestDataObj.setMetalWeight(mProductInfo.weight);
     }
 
 

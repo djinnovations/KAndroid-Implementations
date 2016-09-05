@@ -174,14 +174,16 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 ((RadioButton) parent.getChildAt(position).findViewById(R.id.radio)).setChecked(true);
             }
         });*/
+        ((CartManagerActivity) getActivity()).getPayInfoView().setVisibility(View.VISIBLE);
+        ((CartManagerActivity) getActivity()).getPlaceOrderBtn().setVisibility(View.VISIBLE);
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
-        TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity) getActivity()).getTvAmount();
+        //TextView tvAmount = /*(TextView) view.findViewById(R.id.tvOrderAmount)*/ ((CartManagerActivity) getActivity()).getTvAmount();
         Button btnPlaceOrder = /*(Button) view.findViewById(R.id.btnPlaceOrder)*/ ((CartManagerActivity) getActivity()).getPlaceOrderBtn();
         //String txt = tvAmount.getText().toString();
         //String txt2 = String.valueOf(mCartData.getBillableAmount());
         String finalTxt = /*txt + */RandomUtils.getIndianCurrencyFormat(mCartData.getBillableAmount(), true) + "/-";
         Log.d("djcart", "billableAmount: " + finalTxt);
-        tvAmount.setText(finalTxt);
+        //tvAmount.setText(finalTxt);
         btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

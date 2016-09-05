@@ -1,5 +1,7 @@
 package com.goldadorn.main.activities.cart;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,14 +18,18 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.model.GetCartResponseObj;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
+import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 
@@ -33,10 +39,11 @@ import java.util.Set;
 public class MyCartFragment extends Fragment implements CartProductsViewHolder.IQuantityChangeListener {
     CartProductsViewHolder mCartProductsViewHolder;
     private View mCartEmptyView;
-    ArrayList<Product> mCart = new ArrayList<>(5);
-    View mShippingContainer, mTaxContainer, mTotalContainer;
-    LinearLayout mContainer_header_row;
+    ArrayList<GetCartResponseObj.ProductItem> mCart = new ArrayList<>();
+    View mShippingContainer, mPriceLabelContainer, mTotalContainer, mPriceItems;
+    //LinearLayout mContainer_header_row;
     long mCostShipping = 0, mCostTax = 0, mCostTotal;
+    View card_view;
 
     @Nullable
     @Override
@@ -45,46 +52,71 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     HashMap<Integer, Integer> mapOfProdsToQuantity;
+    Typeface typeface;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mCartEmptyView = view.findViewById(R.id.emptyview_cart);
+        card_view = view.findViewById(R.id.card_view);
         mapOfProdsToQuantity = new HashMap<>();
 
+        //((CartManagerActivity) getActivity()).getPayInfoView().setVisibility(View.GONE);
+        ((CartManagerActivity) getActivity()).getPlaceOrderBtn().setVisibility(View.VISIBLE);
+        typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
+                ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+
         mShippingContainer = view.findViewById(R.id.container_shipping);
-        mTaxContainer = view.findViewById(R.id.container_tax);
-        mTaxContainer.setVisibility(View.GONE);
+        mPriceLabelContainer = view.findViewById(R.id.priceDetailsLabel);
+        //mTaxContainer.setVisibility(View.VISIBLE);
         mTotalContainer = view.findViewById(R.id.container_total);
-        mContainer_header_row = (LinearLayout) view.findViewById(R.id.container_header_row);
-        ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping");
-        ((TextView) mTaxContainer.findViewById(R.id.title)).setText("Tax");
-        ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Total");
-        ((TextView) mContainer_header_row.getChildAt(0)).setText(R.string.Product);
-        ((TextView) mContainer_header_row.getChildAt(1)).setText(R.string.Quantity);
+        mPriceItems = view.findViewById(R.id.pricesOfItems);
+
+        ((TextView) mPriceLabelContainer.findViewById(R.id.title)).setTypeface(typeface, Typeface.BOLD);
+        ((TextView) mTotalContainer.findViewById(R.id.title)).setTypeface(typeface, Typeface.BOLD);
+        ResourceReader rsd = ResourceReader.getInstance(Application.getInstance());
+        ((TextView) mTotalContainer.findViewById(R.id.title)).setTextColor(Color.BLACK);
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setTextColor(Color.BLACK);
+        ((TextView) mPriceLabelContainer.findViewById(R.id.title)).setTextColor(Color.BLACK);
+
+        TypefaceHelper.setFont(((TextView) mShippingContainer.findViewById(R.id.title))
+        ,((TextView) mPriceItems.findViewById(R.id.title)), ((TextView) mPriceItems.findViewById(R.id.cost))
+        , ((TextView) mShippingContainer.findViewById(R.id.cost))
+        ,mCartEmptyView);
+
+        ((TextView) mTotalContainer.findViewById(R.id.cost)).setTypeface(typeface, Typeface.BOLD);
+
+        //mContainer_header_row = (LinearLayout) view.findViewById(R.id.container_header_row);
+        ((TextView) mPriceLabelContainer.findViewById(R.id.title)).setText("Price Details");
+        //((TextView) mPriceItems.findViewById(R.id.title)).setText("Price");
+        ((TextView) mShippingContainer.findViewById(R.id.title)).setText("Shipping (Free Delivery)");
+        ((TextView) mTotalContainer.findViewById(R.id.title)).setText("Amount Payable");
+        //((TextView) mContainer_header_row.getChildAt(0)).setText(R.string.Product);
+        //((TextView) mContainer_header_row.getChildAt(1)).setText(R.string.Quantity);
         SpannableStringBuilder sbr = new SpannableStringBuilder(getString(R.string.Price));
         int start = sbr.length();
         sbr.append("\n").append("(Quantity * Unit price)");
         int end = sbr.length();
 //        sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
+        //((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
 
 
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
 
         ((ILoadingProgress) getActivity()).showLoading(true);
-        UIController.getCartDetails(getContext(), new IResultListener<ProductResponse>() {
+        UIController.getCartDetails(getContext(), Application.getInstance().getCookies().get(0).getValue(), 0
+                ,new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 try {
                     if (result.success && result.productArray != null) {
                         for (int i = 0; i < result.productArray.size(); i++) {
-                            Product prod = result.productArray.get(i);
+                            GetCartResponseObj.ProductItem prod = result.productArrayNew.get(i);
                             //checkAndEntry(prod);
                         }
-                        mCart.addAll(/*getUniqueProdList(*/result.productArray/*)*/);
-                        mapTransIdOrderQty(result.productArray);
+                        mCart.addAll(/*getUniqueProdList(*/result.productArrayNew/*)*/);
+                        mapTransIdOrderQty(result.productArrayNew);
                         //getUniqueProdList();
                         onCartChanged();
                     }
@@ -111,10 +143,18 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
 
     HashMap<Integer, Integer> mapTransIdQty = new HashMap<>();
 
-    private void mapTransIdOrderQty(ArrayList<Product> prodList) {
-        for (Product product : prodList) {
-            mapTransIdQty.put(product.transid, product.orderQty);
+    private void mapTransIdOrderQty(List<GetCartResponseObj.ProductItem> prodList) {
+        for (GetCartResponseObj.ProductItem product : prodList) {
+            mapTransIdQty.put(product.getTransId(), product.getOrderQty());
         }
+    }
+
+    private int getTotalQty(List<GetCartResponseObj.ProductItem> prodList){
+        int totalQty = 0;
+        for (GetCartResponseObj.ProductItem product : prodList) {
+            totalQty = totalQty + product.getOrderQty();
+        }
+        return totalQty;
     }
 
 
@@ -132,14 +172,14 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         mCostTotal = 0;
         int totalUnits = 0;
         String currency = null;
-        for (final Product p : mCart) {
-            mCostTotal = mCostTotal + p.getTotalPriceNew();
-            totalUnits = totalUnits + p.orderQty;
-            currency = p.priceUnit;
-            Log.e("iii---", p.transid + "--" + mCostTotal + "--" + p.orderQty);
+        for (final GetCartResponseObj.ProductItem p : mCart) {
+            mCostTotal = mCostTotal + (long) p.getPricePaid();
+            totalUnits = totalUnits + p.getOrderQty();
+            currency = p.getPriceUnits();
+            Log.e("iii---", p.getTransId() + "--" + mCostTotal + "--" + p.getOrderQty());
 
-            if (p.orderQty == 0) {
-                UIController.removeFromCart(getContext(), p, getOrderQtyToRemove(p.transid, p.orderQty),
+            if (p.getOrderQty() == 0) {
+                UIController.removeFromCart(getContext(), p.getTransId(), /*p.getOrderQty()*/1, getOrderQtyToRemove(p.getTransId(), p.getOrderQty()),
                         new IResultListener<ProductResponse>() {
                             @Override
                             public void onResult(ProductResponse result) {
@@ -153,7 +193,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                                     Toast.makeText(getContext(), "Item removed", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        });
+                        }); //// TODO: 01-09-2016  remove cart implementation
             }
 
         }
@@ -166,10 +206,19 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         float taxCost = (mCostTax * t);
         float shipinCost = (mCostShipping * t);
         float totalCost = (mCostTotal * t);
-        ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(taxCost, true)/*"Rs " + (mCostTax * t)*/ + "/-");
+
+        if (getTotalQty(mCart) <= 0){
+            card_view.setVisibility(View.GONE);
+            ((CartManagerActivity) getActivity()).removeStaticBottomBar();
+            return;
+        }
+        ((TextView) mPriceItems.findViewById(R.id.title)).setText("Price" + " (" +getTotalQty(mCart) + " items)");
+        ((TextView) mPriceItems.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(totalCost, true));
+        //((TextView) mPriceLabelContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(taxCost, true)/*"Rs " + (mCostTax * t)*/ + "/-");
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(shipinCost, true)/*"Rs " + (mCostShipping * t)*/ + "/-");
         ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(RandomUtils.getIndianCurrencyFormat(totalCost, true)/*"Rs " + (mCostTotal * t)*/ + "/-");
-      /*  ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
+        ((CartManagerActivity) getActivity()).getTvAmount().setText(RandomUtils.getIndianCurrencyFormat(totalCost, true));
+        /*  ((TextView) mTaxContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTax * t) + "/-");
         ((TextView) mShippingContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostShipping * t) + "/-");
         ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");*/
     }
@@ -184,23 +233,25 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
         bindCostUi();
-        ((CartManagerActivity) getActivity()).storeCartData(mCart, mCostTotal);
+        ((CartManagerActivity) getActivity()).storeCartData(/*mCart,*/ mCostTotal);
     }
 
     @Override
-    public void onQuantityChanged(Product product) {
-        if (!isFirst)
-            ((CartManagerActivity) getActivity()).showOverLay("Updating cart", R.color.colorPrimary,
+    public void onQuantityChanged(/*Product product*/) {
+        if (!isFirst) {
+            WindowUtils.marginForProgressViewInGrid = 25;
+            ((CartManagerActivity) getActivity()).showOverLay(null, R.color.colorPrimary,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
+        }
         Log.d("djcart", "onQuantityChanged");
         bindCostUi();
     }
 
-    private Product find(int id) {
+    /*private Product find(int id) {
         Product t = new Product(id);
         int index = mCart.indexOf(t);
         return mCart.get(index);
-    }
+    }*/
 
     public ArrayList<Product> getUniqueProdList(ArrayList<Product> fullList) {
         ArrayList<Product> templist = new ArrayList<>();

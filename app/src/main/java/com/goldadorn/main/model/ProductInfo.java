@@ -23,7 +23,9 @@ public class ProductInfo {
     //public static ArrayList<String> imageUrlList;
     public String productType;
     public Double productDefaultPrice = 0.0;
-    public float productmaking_charges = 0, metalrate = 0, metalWeight = 0;
+    public double productmaking_charges = -1;
+    public float metalrate = -1;
+    public float metalWeight = -1;
     public String chainDetail;
     public final ArrayList<StoneDetail> stonesDetails = new ArrayList<>();
     public String warrantyTxt, moneyBackTxt, certificateTxt, estimatedDelTime, payModesTxt;
@@ -50,7 +52,7 @@ public class ProductInfo {
                 String[] array = jsonObject.getString("chainDetail").split(":");
                 if (array[0].equalsIgnoreCase("1"))
                     sb.append("Yes,");
-                sb.append(" ").append(array[1]).append("Chain of length ").append(array[2]).append(" inches");
+                sb.append(" ").append(array[1]).append(" Chain of length ").append(array[2]).append(" inches");
                 return sb.toString();
             }
         } catch (Exception e) {
@@ -58,6 +60,8 @@ public class ProductInfo {
         }
         return null;
     }
+
+
 
     public static ProductInfo extractFromJson(JSONObject obj) throws JSONException {
         ProductInfo p = new ProductInfo(obj.getInt(Constants.JsonConstants.PRODUCT_ID));
@@ -75,6 +79,7 @@ public class ProductInfo {
         p.productType = obj.getString("productType");
         p.code = obj.getString("productCode");
         p.productDefaultPrice = obj.getDouble("productDefaultPrice");
+        p.productmaking_charges = obj.getDouble("productMakChargesPerUnit");
         p.chainDetail = getChainDetail(obj);
         /*p.metalWeight = (float) obj.getDouble("metalWeight");
         p.metalrate = (float) obj.getDouble("metalRate");
@@ -161,7 +166,12 @@ public class ProductInfo {
                     try {
                         JSONObject stoneobj = stonedetailsarray.getJSONObject(i);
                         if (stoneobj.getInt("isPrecious") == 1){
-                            list.add(stoneobj.optString("stoneType")+ " ("+(float) stoneobj.optDouble("stoneWeight") + " cts) ");
+                            double weight = stoneobj.optDouble("stoneWeight");
+                            String weightString;
+                            if (weight < 0)
+                                weightString = "";
+                            else weightString = " ("+ String.valueOf(weight) + " cts) ";
+                            list.add(stoneobj.optString("stoneType")+ weightString);
                         }
                         else {
                             StoneDetail stoneDetail = new StoneDetail();

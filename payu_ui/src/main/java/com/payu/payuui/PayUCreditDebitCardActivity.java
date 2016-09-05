@@ -1,24 +1,24 @@
-    package com.payu.payuui;
+package com.payu.payuui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.payu.india.Model.CCDCCard;
-import com.payu.india.Model.PaymentDefaultParams;
 import com.payu.india.Model.PaymentParams;
 import com.payu.india.Model.PayuConfig;
 import com.payu.india.Model.PayuHashes;
@@ -26,12 +26,14 @@ import com.payu.india.Model.PostData;
 import com.payu.india.Payu.PayuConstants;
 import com.payu.india.Payu.PayuErrors;
 import com.payu.india.Payu.PayuUtils;
-import com.payu.india.PostParams.CCDCPostParams;
 import com.payu.india.PostParams.PaymentPostParams;
-import com.payu.payuui.customutil.GACurrencyUtil;
+import com.payu.payuui.customutil.GAUtil;
+
+import java.text.DateFormatSymbols;
+import java.util.Calendar;
 
 
-    public class PayUCreditDebitCardActivity extends AppCompatActivity implements View.OnClickListener {
+public class PayUCreditDebitCardActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button payNowButton;
     private EditText cardNameEditText;
@@ -70,14 +72,30 @@ import com.payu.payuui.customutil.GACurrencyUtil;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-        
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Enter Card Details");
+
         (payNowButton = (Button) findViewById(R.id.button_card_make_payment)).setOnClickListener(this);
 
         cardNameEditText = (EditText) findViewById(R.id.edit_text_name_on_card);
         cardNumberEditText = (EditText) findViewById(R.id.edit_text_card_number);
         cardCvvEditText = (EditText) findViewById(R.id.edit_text_card_cvv);
         cardExpiryMonthEditText = (EditText) findViewById(R.id.edit_text_expiry_month);
+        cardExpiryMonthEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayMMYYYYOption(true);
+            }
+        });
         cardExpiryYearEditText = (EditText) findViewById(R.id.edit_text_expiry_year);
+        cardExpiryYearEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayMMYYYYOption(false);
+            }
+        });
         saveCardCheckBox = (CheckBox) findViewById(R.id.check_box_save_card);
 
         bundle = getIntent().getExtras();
@@ -90,21 +108,32 @@ import com.payu.payuui.customutil.GACurrencyUtil;
         payuConfig = null != payuConfig ? payuConfig : new PayuConfig();
 
         (amountTextView = (TextView) findViewById(R.id.text_view_amount))
-                .setText(/*PayuConstants.AMOUNT*/"Amount" + ": " + GACurrencyUtil.getIndianCurrencyFormat(mPaymentParams.getAmount(), true) +"/-");
+                .setText(/*PayuConstants.AMOUNT*/"Amount" + ": " + GAUtil.getIndianCurrencyFormat(mPaymentParams.getAmount(), true) + "/-");
         (transactionIdTextView = (TextView) findViewById(R.id.text_view_transaction_id)).setText(PayuConstants.TXNID + ": " + mPaymentParams.getTxnId());
         transactionIdTextView.setVisibility(View.GONE);
+        payNowButton.setText("Pay "+ GAUtil.getIndianCurrencyFormat(mPaymentParams.getAmount(), true) + "/-");
+        GAUtil.setRelativeFontSize(payNowButton, 4, payNowButton.getText().toString().trim().length(), 1.3f);
+
         // lets not show the save card check box if user credentials is not found!
-        if(null == mPaymentParams.getUserCredentials())
+        if (null == mPaymentParams.getUserCredentials())
             saveCardCheckBox.setVisibility(View.GONE);
         else
             saveCardCheckBox.setVisibility(View.VISIBLE);
 
+        saveCardCheckBox.setVisibility(View.GONE);
         payuUtils = new PayuUtils();
 
 
         cardNumberEditText.addTextChangedListener(new TextWatcher() {
             String issuer;
             Drawable issuerDrawable;
+
+            private static final int TOTAL_SYMBOLS = 19; // size of pattern 0000-0000-0000-0000
+            private static final int TOTAL_DIGITS = 16; // max numbers of digits in pattern: 0000 x 4
+            private static final int DIVIDER_MODULO = 5; // means divider position is every 5th symbol beginning with 1
+            private static final int DIVIDER_POSITION = DIVIDER_MODULO - 1; // means divider position is every 4th symbol beginning with 0
+            private static final char DIVIDER = ' ';
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -112,21 +141,21 @@ import com.payu.payuui.customutil.GACurrencyUtil;
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 5){ // to confirm rupay card we need min 6 digit.
-                    if(null == issuer) issuer = payuUtils.getIssuer(charSequence.toString());
-                    if (issuer != null && issuer.length() > 1 && issuerDrawable == null){
+                if (charSequence.length() > 5) { // to confirm rupay card we need min 6 digit.
+                    if (null == issuer) issuer = payuUtils.getIssuer(charSequence.toString());
+                    if (issuer != null && issuer.length() > 1 && issuerDrawable == null) {
                         issuerDrawable = getIssuerDrawable(issuer);
-                        if(issuer.contentEquals(PayuConstants.SMAE)){ // hide cvv and expiry
+                        if (issuer.contentEquals(PayuConstants.SMAE)) { // hide cvv and expiry
                             cardExpiryMonthEditText.setVisibility(View.GONE);
                             cardExpiryYearEditText.setVisibility(View.GONE);
                             cardCvvEditText.setVisibility(View.GONE);
-                        }else{ //show cvv and expiry
+                        } else { //show cvv and expiry
                             cardExpiryMonthEditText.setVisibility(View.VISIBLE);
                             cardExpiryYearEditText.setVisibility(View.VISIBLE);
                             cardCvvEditText.setVisibility(View.VISIBLE);
                         }
                     }
-                }else{
+                } else {
                     issuer = null;
                     issuerDrawable = null;
                 }
@@ -135,17 +164,133 @@ import com.payu.payuui.customutil.GACurrencyUtil;
 
             @Override
             public void afterTextChanged(Editable editable) {
-
+                if (!isInputCorrect(editable, TOTAL_SYMBOLS, DIVIDER_MODULO, DIVIDER)) {
+                    editable.replace(0, editable.length(), buildCorrecntString(getDigitArray(editable, TOTAL_DIGITS)
+                            , DIVIDER_POSITION, DIVIDER));
+                }
             }
+
+            private boolean isInputCorrect(Editable s, int totalSymbols, int dividerModulo, char divider) {
+                boolean isCorrect = s.length() <= totalSymbols; // check size of entered string
+                for (int i = 0; i < s.length(); i++) { // chech that every element is right
+                    if (i > 0 && (i + 1) % dividerModulo == 0) {
+                        isCorrect &= divider == s.charAt(i);
+                    } else {
+                        isCorrect &= Character.isDigit(s.charAt(i));
+                    }
+                }
+                return isCorrect;
+            }
+
+            private String buildCorrecntString(char[] digits, int dividerPosition, char divider) {
+                final StringBuilder formatted = new StringBuilder();
+
+                for (int i = 0; i < digits.length; i++) {
+                    if (digits[i] != 0) {
+                        formatted.append(digits[i]);
+                        if ((i > 0) && (i < (digits.length - 1)) && (((i + 1) % dividerPosition) == 0)) {
+                            formatted.append(divider);
+                        }
+                    }
+                }
+
+                return formatted.toString();
+            }
+
+            private char[] getDigitArray(final Editable s, final int size) {
+                char[] digits = new char[size];
+                int index = 0;
+                for (int i = 0; i < s.length() && index < size; i++) {
+                    char current = s.charAt(i);
+                    if (Character.isDigit(current)) {
+                        digits[index] = current;
+                        index++;
+                    }
+                }
+                return digits;
+            }
+
         });
 
+    }
+
+    private int selectedMM = 0;
+    private int selectedYY = 0;
+
+    private void displayMMYYYYOption(boolean isMM) {
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+        //alt_bld.setIcon(R.drawable.icon);
+        if (isMM) {
+            alt_bld.setTitle("Select Expiry Month");
+            final String[] arr = months;
+            alt_bld.setSingleChoiceItems(arr, selectedMM, new DialogInterface
+                    .OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    selectedMM = item;
+                    Log.d("dj", "Month sel = " + arr[item]);
+                    cardExpiryMonthEditText.setText(String.valueOf(item + 1));
+                    /*Toast.makeText(getApplicationContext(),
+                            "Month = " + arr[item], Toast.LENGTH_SHORT).show();*/
+                    dialog.dismiss();// dismiss the alertbox after chose option
+                }
+            });
+        } else {
+            alt_bld.setTitle("Select Expiry Year");
+            final String[] arr = YYYY;
+            alt_bld.setSingleChoiceItems(arr, selectedYY, new DialogInterface
+                    .OnClickListener() {
+                public void onClick(DialogInterface dialog, int item) {
+                    selectedYY = item;
+                    Log.d("dj", "YYYY selected: " + arr[item]);
+                    cardExpiryYearEditText.setText(arr[item]);
+                    /*Toast.makeText(getApplicationContext(),
+                            "Year = " + arr[item], Toast.LENGTH_SHORT).show();*/
+                    dialog.dismiss();// dismiss the alertbox after chose option
+
+                }
+            });
+        }
+        AlertDialog alert = alt_bld.create();
+        alert.show();
+    }
+
+    String[] months = getMonths();
+    String[] YYYY = getYYYYData();
+
+    private String[] getYYYYData() {
+        String[] arr = new String[10];
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = 0; i < 10; i++) {
+            arr[i] = String.valueOf(currentYear);
+            currentYear++;
+        }
+        return arr;
+    }
+
+    private String[] getMonths() {
+       /* String[] months = new DateFormatSymbols().getMonths();
+        for (String month : months) {
+            System.out.println("month = " + month);
+        }*/
+
+        String[] shortMonths = new DateFormatSymbols().getShortMonths();
+        int i = 1;
+        for (String shortMon : shortMonths) {
+            System.out.println("shortMonth = " + shortMon);
+            if (i <= 9)
+                shortMonths[i-1] = shortMon + " (0" + String.valueOf(i) + ")";
+            else
+                shortMonths[i-1] = shortMon + " (" + String.valueOf(i) + ")";
+            i++;
+        }
+        return shortMonths;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_card, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -173,7 +318,7 @@ import com.payu.payuui.customutil.GACurrencyUtil;
             // do i have to store the card
             if (saveCardCheckBox.isChecked()) {
                 mPaymentParams.setStoreCard(1);
-            }else{
+            } else {
                 mPaymentParams.setStoreCard(0);
             }
             // setup the hash
@@ -185,7 +330,7 @@ import com.payu.payuui.customutil.GACurrencyUtil;
             // lets get the current card number;
             cardNumber = String.valueOf(cardNumberEditText.getText());
             cardName = cardNameEditText.getText().toString();
-            expiryMonth = cardExpiryMonthEditText.getText().toString();
+            expiryMonth = cardExpiryMonthEditText.getText().toString(); /*String.valueOf((selectedMM + 1));*/
             expiryYear = cardExpiryYearEditText.getText().toString();
             cvv = cardCvvEditText.getText().toString();
 
@@ -220,9 +365,9 @@ import com.payu.payuui.customutil.GACurrencyUtil;
         }
     }
 
-    private Drawable getIssuerDrawable(String issuer){
+    private Drawable getIssuerDrawable(String issuer) {
 
-        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
             switch (issuer) {
                 case PayuConstants.VISA:
                     return getResources().getDrawable(R.drawable.visa);
@@ -246,7 +391,7 @@ import com.payu.payuui.customutil.GACurrencyUtil;
                     return getResources().getDrawable(R.drawable.rupay);
             }
             return null;
-        }else {
+        } else {
 
             switch (issuer) {
                 case PayuConstants.VISA:

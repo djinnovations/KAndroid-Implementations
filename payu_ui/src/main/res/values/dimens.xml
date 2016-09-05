@@ -2,4 +2,9 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="buttonBorderWidth">0dip</dimen>
+    <dimen name="buttonRadius">0dp</dimen>
+
+    <integer name="buttonGradientAngle">-225</integer>
 </resources>

@@ -85,6 +85,8 @@ public class AddAddressFragment extends Fragment {
             mPhoneNumberInput.getEditText().setText(mAddressToEdit.phoneNumber);
         }
 
+        ((CartManagerActivity) getActivity()).removeStaticBottomBar();
+
         mInputs.add(mNameInput);
         mInputs.add(mStreetInput);
         mInputs.add(mCityInput);

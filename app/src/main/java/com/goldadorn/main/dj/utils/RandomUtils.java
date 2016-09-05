@@ -277,8 +277,16 @@ public class RandomUtils {
     }
 
     public static String getUnreadCount() {
-
         return unreadCount;
+    }
+
+
+    public static Cursor getUserInfoCursor(int userId){
+        String selection = Tables.Users._ID + "=?";
+        String[] selArgs = new String[]{String.valueOf(userId)};
+        Cursor cursor = Application.getInstance().getContentResolver()
+                .query(Tables.Users.CONTENT_URI, null, selection, selArgs, null);
+        return cursor;
     }
 
     private static Collection getCollectionObjFromDb(int collId) {

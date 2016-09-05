@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +31,24 @@ public class Product implements Serializable {
     public String defMetal = "";
     public String SKU;
     public int discount;
+    public boolean hasCertificate;
+    public Map<String, List<String>> selectedParams;
+
+    public Map<String, List<String>> getSelectedParams() {
+        return selectedParams;
+    }
+
+    public void setSelectedParams(Map<String, List<String>> selectedParams) {
+        this.selectedParams = selectedParams;
+    }
+
+    public void setHasCertificate(boolean val){
+        hasCertificate = val;
+    }
+
+    public boolean getHasCertificate(){
+        return hasCertificate;
+    }
 
     public int quantity;
     public int maxQuantity = 10;

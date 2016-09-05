@@ -119,7 +119,7 @@ import butterknife.OnClick;
 public class SocialFeedFragment extends DefaultVerticalListView {
     protected boolean isRefreshingData = false;
     protected int offset = 0;
-    protected int refreshOffset = 0;
+    protected int refreshOffset = -1;
     private SocialPost commentSocialPost;
     private int commentPosition;
 
@@ -248,7 +248,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         //askToRefresh();
         if (socialPost == null) {
             Log.d("djfeed", "postAdded- refresh");
-            refreshPosts(0);
+            refreshPosts(-1);
         } else {
             Log.d("djfeed", "postAdded- custom");
             getDataManager().add(0, socialPost);
@@ -765,7 +765,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 public void onRefresh() {
                     if (getDataManager().canLoadRefresh()) {
-                        refreshOffset = 0;
+                        refreshOffset = -1;
                         loadRefreshData();
                     } else {
                         getSwipeRefreshLayout().setRefreshing(false);
@@ -1412,8 +1412,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         //DJphy
         if (imageURL != null && isProductLink(imageURL) != null) {
             Log.d(Constants.TAG, "Image URL - gotoRecomendedProd: " + imageURL);
-            String id = imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());
-            id = id.substring(0, id.indexOf("/"));
+            String id = /*imageURL.substring(imageURL.indexOf("/products/") + 10, imageURL.length());*/
+                    String.valueOf(RandomUtils.getIdFromImageUrl(imageURL));
+            //id = id.substring(0, id.indexOf("/"));
             Log.d(Constants.TAG, "ID - gotoRecomendedProd: " + id);
 
             if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {

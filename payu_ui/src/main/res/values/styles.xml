@@ -2,4 +2,118 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme">
     </style>
+
+    <style name="AppTheme.PopupOverlayLibs" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AppTheme.AppBarOverlayLibs" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBarLibs" parent="Theme.AppCompat.Light">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/appBGColor</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">@color/colorAccent</item>
+        <item name="android:titleTextStyle">@style/Toolbar.TitleTextLibs</item>
+        <item name="titleTextAppearance">@style/Toolbar.TitleTextLibs</item>
+        <item name="android:buttonStyle">@style/buttonLibs</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyleLibs</item>
+        <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="android:textColorSecondary">@color/toolbarTextColor</item>
+        <item name="actionMenuTextColor">@color/toolbarIconColor</item>
+        <item name="android:actionBarStyle">@style/toolbarStyleLibs</item>
+    </style>
+
+
+    <style name="toolbarStyleLibs">
+        <item name="android:background">@color/toolbarBG</item>
+        <item name="background">@color/toolbarBG</item>
+        <item name="colorControlNormal">@color/toolbarIconColor</item>
+        <item name="titleTextAppearance">@style/Toolbar.TitleTextLibs</item>
+        <item name="drawerArrowStyle">@style/DrawerArrowStyleLibs</item>
+        <item name="android:textColorPrimary">@color/toolbarTextColor</item>
+        <item name="android:textColorSecondary">@color/toolbarTextColor</item>
+        <item name="actionMenuTextColor">@color/toolbarIconColor</item>
+        <item name="android:titleTextStyle">@style/Toolbar.TitleTextLibs</item>
+    </style>
+
+
+    <style name="DrawerArrowStyleLibs" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@color/toolbarIconColor</item>
+    </style>
+
+    <style name="Toolbar.TitleTextLibs" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="color">@color/toolbarTextColor</item>
+    </style>
+
+    <style name="buttonLibs" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@drawable/button_text_color_libs</item>
+        <item name="android:background">@drawable/button_libs</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <color name="appBGColor">#ffffff</color>
+
+    <color name="colorAccent">#b39d47</color>
+    <color name="colorAccentLighter">#CCD1C490</color>
+    <color name="colorAccentTransparent">#33b39d47</color>
+
+    <color name="colorPrimary">#866c52</color>
+    <color name="colorPrimaryAlpha">#55866c52</color>
+    <color name="controlColor">#000000</color>
+    <color name="colorBlackDimText">#595959</color>
+
+    <color name="tabBGColor">#cecece</color>
+
+    <color name="toolbarBG">#ffffff</color>
+    <color name="votedColor">#F01D96</color>
+
+    <color name="colorPrimaryDark">#6c533e</color>
+
+    <color name="semiTransparentWindow">#556c533e</color>
+
+    <color name="bgGradientEnd">#ffffff</color>
+    <color name="bgGradientStart">#ffffff</color>
+
+
+    <color name="darkDisable">#bbffffff</color>
+    <color name="overlay">#9f444444</color>
+    <color name="disabled_grey">#cccccc</color>
+    <color name="headerColor">#7c624b</color>
+    <color name="menuIconColor">#ffffff</color>
+    <color name="feedCardBGColor">#ffffff</color>
+    <color name="feedFotterDivColor">#cfcfcf</color>
+    <color name="avtarBorderColor">#cfcfcf</color>
+    <color name="toolbarIconColor">@color/colorPrimary</color>
+    <color name="toolbarTextColor">@color/colorPrimary</color>
+    <color name="staceColor1">#F01D96</color>
+    <color name="staceColor2">#3276b4</color>
+    <color name="staceColor3">#fdbf2d</color>
+    <color name="productFilterItemBackgraound">#ebebeb</color>
+    <color name="productLikeCountColor">#ff3996</color>
+
+
+    <color name="buttonPressBorder">@color/colorPrimaryDark</color>
+    <color name="buttonPressStart">#34281d</color>
+    <color name="buttonPressEnd">#34281d</color>
+    <color name="buttonPressTextColor">#ffffff</color>
+
+    <color name="buttonNormalBorder">#5d5143</color>
+    <color name="buttonNormalStart">#8e7358</color>
+    <color name="buttonNormalEnd">#6c533e</color>
+    <color name="buttonNormalTextColor">#ffffff</color>
+
+    <color name="buttonDisableBorder">@color/colorPrimaryDark</color>
+    <color name="buttonDisableStart">#dd34281d</color>
+    <color name="buttonDisableEnd">#dd34281d</color>
+    <color name="buttonDisableTextColor">#ddffffff</color>
 </resources>

@@ -1,9 +1,13 @@
 package com.payu.payuui.customutil;
 
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.widget.TextView;
+
 /**
  * Created by User on 01-07-2016.
  */
-public class GACurrencyUtil {
+public class GAUtil {
 
 
     private static String INDIAN_CURRENCY_SYMBOL = "₹";
@@ -58,4 +62,16 @@ public class GACurrencyUtil {
         String indianFormat = result + lastDigit;
         return INDIAN_CURRENCY_SYMBOL + " " + indianFormat;
     }
+
+
+
+    public static void setRelativeFontSize(TextView textView, int startIndex, int endIndex, float sizeUpdationPercent){
+        String s= textView.getText().toString().trim();
+        SpannableString ss1=  new SpannableString(s);
+        ss1.setSpan(new RelativeSizeSpan(sizeUpdationPercent), startIndex, endIndex, 0); // set size
+        //ss1.setSpan(new ForegroundColorSpan(Color.RED), 0, 5, 0);// set color
+        textView.setText(ss1);
+    }
+
+
 }

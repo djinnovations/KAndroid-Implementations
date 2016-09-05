@@ -1,5 +1,6 @@
 package com.goldadorn.main.server.response;
 
+import com.goldadorn.main.dj.model.GetCartResponseObj;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
@@ -8,6 +9,7 @@ import com.goldadorn.main.model.StoneDetail;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nithinjohn on 14/03/16.
@@ -17,7 +19,7 @@ public class ProductResponse extends BasicResponse {
     public int userId = -1;
     public int collectionId = -1;
     public int productId = -1;
-    public Double size = 0.0;
+    public double size = 0.0f;
     public Product product;
     public ProductInfo info;
     public ProductOptions options;
@@ -25,10 +27,12 @@ public class ProductResponse extends BasicResponse {
     public JSONArray idsForProducts = new JSONArray();
     //for get cart api and wishlist
     public final ArrayList<Product> productArray;
+    public List<GetCartResponseObj.ProductItem> productArrayNew;
+
     public final boolean writeToDb;
 
     public float metalWeight=0,metalrate=0;
-    public float productmaking_charges=0;
+    public double productmaking_charges=0;
     public int primaryMetalPurity=-1;
     public String primaryMetal="";
     public String primaryMetalColor="";
@@ -38,6 +42,7 @@ public class ProductResponse extends BasicResponse {
     private ProductResponse(boolean writeToDb, boolean fillList) {
         this.writeToDb = writeToDb;
         productArray = fillList ? new ArrayList<Product>() : null;
+        productArrayNew = fillList ? new ArrayList<GetCartResponseObj.ProductItem>() : null;
     }
 
     public ProductResponse() {
@@ -65,7 +70,7 @@ public class ProductResponse extends BasicResponse {
             response.primaryMetal=mProductOptions.primaryMetal;
             response.primaryMetalColor=mProductOptions.primaryMetalColor;
             response.priceUnits=mProductOptions.priceUnits;
-            response.size=mProductOptions.size;
+            response.size= mProductOptions.size;
             return response;
         } catch (Exception e) {
             e.printStackTrace();

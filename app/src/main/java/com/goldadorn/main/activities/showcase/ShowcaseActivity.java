@@ -138,7 +138,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
     private int mVerticalOffset = 0;
     private int mCurrentPosition = 0;
     private Handler mHandler = new Handler();
-    public static boolean isCollectionLike = false;
+    //public static boolean isCollectionLike = false;
 
 
     @Override

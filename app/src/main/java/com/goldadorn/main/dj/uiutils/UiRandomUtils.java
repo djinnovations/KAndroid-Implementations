@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
@@ -17,16 +19,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.utils.ImageFilePath;
+import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by User on 29-06-2016.
@@ -59,6 +66,33 @@ public class UiRandomUtils {
         }
         //textview.setPaintFlags(textview.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
+
+
+    public static String getFactor(Swatches.MixedSwatch swatch) {
+        String factor = new StringBuilder().append(swatch.getType().charAt(0))
+                .append(swatch.getPurity()).append(swatch.getColor().charAt(0)).toString();
+        //mProduct.defMetal = factor;
+        return factor;
+    }
+
+
+    public static ArrayList<String> getVariousProductLooks(int desId, int prodId, String metalFactor,
+                                                     int lookcount, boolean isNotDefault) {
+        if (lookcount == 0)
+            return new ArrayList<>();
+        ArrayList<String> imageUrlList = new ArrayList<>();
+        String defaultUrl = ImageFilePath.getImageUrlForProduct(desId, prodId, metalFactor, isNotDefault);
+        int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
+        char[] charArrOriginal = defaultUrl.toCharArray();
+        for (int i = 1; i <= lookcount; i++) {
+            char[] toreplace = String.valueOf(i).toCharArray();
+            charArrOriginal[indexToReplace] = toreplace[0];
+            imageUrlList.add(String.copyValueOf(charArrOriginal));
+            Log.d("djprod", "productimageurls: " + imageUrlList.get(i - 1));
+        }
+        return imageUrlList;
+    }
+
 
     public static void drawableFromUrl(final ImageView ivImage, final String url) {
         new Thread(){
@@ -114,4 +148,21 @@ public class UiRandomUtils {
     public static void strikeThroughText(TextView textView){
         textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
+
+
+    public static void setTypefaceBold(TextView tv){
+        Typeface typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
+                ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+        tv.setTypeface(typeface, Typeface.BOLD);
+    }
+
+
+    public static void setRelativeFontSize(TextView textView, int startIndex, int endIndex, float sizeUpdationPercent){
+        String s= textView.getText().toString().trim();
+        SpannableString ss1=  new SpannableString(s);
+        ss1.setSpan(new RelativeSizeSpan(sizeUpdationPercent), startIndex, endIndex, 0); // set size
+        //ss1.setSpan(new ForegroundColorSpan(Color.RED), 0, 5, 0);// set color
+        textView.setText(ss1);
+    }
+
 }

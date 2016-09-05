@@ -50,7 +50,7 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/llBody"
@@ -80,6 +80,59 @@
             android:text="Positive"
             android:textColor="@color/Black"
             android:textSize="15sp" />
+
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/llBody"
+        android:paddingTop="4dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:alpha="0.3"
+            android:background="@color/colorAccent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvNegative"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.99"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Move to WishList"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.005"
+                android:alpha="0.3"
+                android:background="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/tvPositive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.99"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Remove"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

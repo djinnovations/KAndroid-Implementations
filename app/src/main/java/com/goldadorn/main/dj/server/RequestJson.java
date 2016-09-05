@@ -67,7 +67,7 @@ public class RequestJson {
             productDescription = json.getString("productName");
             productDefaultPrice = json.getInt("productDefaultPrice");
             costUnits = json.getString("costUnits");
-            aspectRatio = /*json.getInt("aspectRatio")*/1;
+            aspectRatio = json.getInt("aspectRatio");
             discount = json.optInt("discount");
             productTemp = new ProductTemp(productId, userId, collectionId, productName,
                     productDescription, productDefaultPrice, costUnits,aspectRatio, discount);

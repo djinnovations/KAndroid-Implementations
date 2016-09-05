@@ -8,6 +8,7 @@ import android.util.Log;
 import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.dj.model.GetCartResponseObj;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProfileData;
@@ -22,6 +23,7 @@ import com.goldadorn.main.server.response.SearchResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.L;
 import com.goldadorn.main.utils.NetworkUtilities;
+import com.google.gson.Gson;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
@@ -81,13 +83,15 @@ public class ApiFactory extends ExtractResponse {
             case PRODUCT_SHOWCASE_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("getdesigners");
+                //builder.appendPath("getdesigners");
+                builder.appendPath("getdesignersv27");
                 break;
             }
             case ADD_CART_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("addproductstocart");
+                //builder.appendPath("addproductstocart");
+                builder.appendPath("addproductstocartv27");
                 break;
             }
 
@@ -107,10 +111,10 @@ public class ApiFactory extends ExtractResponse {
             case CART_DETAIL_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("getcartdetails");
+                builder.appendPath("getcartdetailsv27");
 
-                builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
-                builder.appendPath(urlBuilder.mResponse.mPageCount + "");
+                /*builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
+                builder.appendPath(urlBuilder.mResponse.mPageCount + "");*/
                 break;
             }
             case PRODUCT_BASIC_INFO_TYPE: {
@@ -263,7 +267,7 @@ public class ApiFactory extends ExtractResponse {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("idlist", response.idsForProducts);
-            jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
+            //jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             //body.
             L.d("getDesigners post body content " + jsonObject.toString());
@@ -693,7 +697,7 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-    protected static void getCartDetails(Context context, ProductResponse response) throws IOException, JSONException {
+    protected static void getCartDetails(Context context, String sessionId, int offset,ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -708,12 +712,24 @@ public class ApiFactory extends ExtractResponse {
             paramsBuilder.mContext = context;
             paramsBuilder.mApiType = CART_DETAIL_TYPE;
 
-
-            Response httpResponse = ServerRequest.doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder));
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
+            jsonObject.put("userid", Application.getInstance().getUser().id);
+            jsonObject.put("off", offset);
+            RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            Log.d("djapi","reqparams - getCartDetails: "+jsonObject);
+            Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
+            //JSONObject resp = new JSONObject(response.responseContent);
             L.d("getCartDetails " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
+            if (response.success && response.responseContent != null) {
+                Gson gson = new Gson();
+                GetCartResponseObj dataObj = gson.fromJson(response.responseContent, GetCartResponseObj.class);
+                dataObj.onBindResponse();
+                response.productArrayNew = dataObj.getItems();
+            }
         } else {
             response.success = false;
             response.responseCode = BasicResponse.IO_EXE;
@@ -829,6 +845,7 @@ public class ApiFactory extends ExtractResponse {
             L.d("iiiaddToCart BODY " + jsonObject.toString());
 
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
+            //doGetRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
@@ -841,7 +858,12 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-    protected static void removeFromCart(Context context, ProductResponse response, int orderQty) throws IOException, JSONException {
+    public static void addToCartv27(){
+
+    }
+
+
+    protected static void removeFromCart(Context context, int transId, final int reduceQty, ProductResponse response, int orderQty) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -859,9 +881,10 @@ public class ApiFactory extends ExtractResponse {
 
             final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("transId", response.product.transid);
+            jsonObject.put("transId", /*response.product.transid*/transId);
             jsonObject.put("userId", ((Application) context.getApplicationContext()).getUser().id);
-            jsonObject.put("reduceQty", orderQty);
+            jsonObject.put("reduceQty", /*orderQty*/ reduceQty);
+            jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
             Log.d("djcart", "req param - removefromcart: " + jsonObject);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);

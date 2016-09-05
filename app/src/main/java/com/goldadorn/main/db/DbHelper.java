@@ -58,7 +58,7 @@ public class DbHelper {
                             p.image_a_r = (float) productObj.optDouble(Constants.JsonConstants.ASPECTRATIO);
                             p.unitPrice = productObj.optLong(Constants.JsonConstants.PRODUCTPRICE);
                             p.priceUnit = productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
-                            p.discount = productObj.optInt("discount");
+                            p.discount = Math.round( (float) productObj.optDouble("discount"));
                             //p.defMetal = productObj.optString("defaultMetal");
                         }
                     }
@@ -231,7 +231,8 @@ public class DbHelper {
                         url = url.replace("../", ApiFactory.IMAGE_URL_HOST);
                         usercv.put(Tables.Users.IMAGEURL, url);
                     }
-                    usercv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT, 0));
+                    usercv.put(Tables.Users.HAS_CERT, userObj.optInt("hasCert", 0));
+                    //usercv.put(Tables.Users.COUNT_COLLECTIONS, userObj.optInt(Constants.JsonConstants.COLLECTIONCOUNT, 0));
                     //usercv.put(Tables.Users.COUNT_PRODUCTS, userObj.optInt(Constants.JsonConstants.PRODUCTCOUNT, 0));
                     int updatecnt = context.getContentResolver().update(Tables.Users.CONTENT_URI_NO_NOTIFICATION, usercv, Tables.Users._ID + " = ? ", new String[]{userId + ""});
                     if (updatecnt == 0)

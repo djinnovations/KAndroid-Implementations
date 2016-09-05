@@ -30,6 +30,7 @@ import com.goldadorn.main.model.StoneDetail;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.utils.ImageFilePath;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -239,7 +240,8 @@ public class ProductInfoFragment extends Fragment {
             List<StoneDetail> rows = summary.stonesDetails;
             if (summary.productmaking_charges < 0) {
                 //mTableContainer.setVisibility(View.GONE);
-                create2RowTable(summary, rows);
+                //create2RowTable(summary, rows);
+                //// TODO: 05-09-2016  do  nothting for now 
             }//rows = new ArrayList<>();//change
            /* if (rows.size() == 0) {
                 mTableContainer.setVisibility(View.GONE);
@@ -327,7 +329,7 @@ public class ProductInfoFragment extends Fragment {
             ArrayList<String> titles = new ArrayList<>();
             if (summary.semiPreciousString != null)
                 titles.add("Semi-Precious Stones");
-            titles.add("Collection Style");
+            //titles.add("Collection Style");
             titles.add("Payment Modes Available");
             titles.add("Buyback & Warranty Policy");
             titles.add("Money Back Policy");
@@ -342,10 +344,12 @@ public class ProductInfoFragment extends Fragment {
             if (titles.contains("Chain Details")){
                 summary.new5details.put("Chain Details", summary.chainDetail);
             }
+            String url = null;
             for (String txt: titles){
-                String url;
-                if (moreOptChildCount == titles.indexOf("Certificate Type"))
-                    url = "http://jeweladmin.com/images/gallery/67/userfiles/images/certificates/card1-big.jpg";//some url for designer cert; // TODO: 26-08-2016
+                if (moreOptChildCount == titles.indexOf("Certificate Type")) {
+                    if (mProduct.hasCertificate)
+                    url = ImageFilePath.getDesignerCertUrl(mProduct.userId);
+                }
                 else url = null;
                 TitleDescImageDataObj dataObj = new TitleDescImageDataObj(txt, summary.new5details.get(txt), url);
                 moreOptionContainer.addView(getTitleMessageView(moreOptionContainer.getChildAt(moreOptChildCount), moreOptionContainer, dataObj));

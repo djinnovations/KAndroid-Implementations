@@ -108,12 +108,12 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void getCartDetails(final Context context, final IResultListener<ProductResponse> listener) {
+    public static void getCartDetails(final Context context, final String sessionId, final int offset, final IResultListener<ProductResponse> listener) {
         final ProductResponse response=ProductResponse.getListResponse();
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.getCartDetails(context, response, 0);
+                Api.getCartDetails(context, sessionId, offset,response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -171,13 +171,13 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void removeFromCart(final Context context, Product product, final int orderQty, final IResultListener<ProductResponse> listener) {
+    public static void removeFromCart(final Context context, final int transId, final int reduceQty, /*Product product,*/ final int orderQty, final IResultListener<ProductResponse> listener) {
         final ProductResponse response = new ProductResponse();
-        response.product = product;
+        //response.product = product;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.removeFromCart(context, response, orderQty);
+                Api.removeFromCart(context, transId, reduceQty ,response, orderQty);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

@@ -118,6 +118,7 @@ public class Tables {
         public static final String COUNT_PRODUCTS = "products";
         public static final String IS_LIKED = "isliked";
         public static final String IS_FOLLOWING = "isfollowing";
+        public static final String HAS_CERT = "has_cert";
 
         public static final Uri CONTENT_URI = Uri.parse("content://" +
                 AUTHORITY + "/" +
@@ -198,6 +199,7 @@ public class Tables {
                 Users.COUNT_FOLLOWING + " INTEGER DEFAULT 0," +
                 Users.COUNT_COLLECTIONS + " INTEGER DEFAULT 0," +
                 Users.COUNT_PRODUCTS + " INTEGER DEFAULT 0," +
+                Users.HAS_CERT + " INTEGER DEFAULT 0," +
                 IDataVersion.DATAVERSION + " INTEGER DEFAULT 0)";
 
         static final String PRODUCTS = "CREATE TABLE IF NOT EXISTS " + Products.TABLENAME + " (" +

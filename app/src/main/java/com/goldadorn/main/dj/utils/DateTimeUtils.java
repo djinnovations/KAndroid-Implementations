@@ -43,6 +43,12 @@ public class DateTimeUtils {
     }
 
 
+    public static String get12HourFormatTime(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        Date date = new Date(System.currentTimeMillis());
+        return dateFormat.format(date);
+    }
+
     private static String _24To12Hour(String _24HrTime) {
 
         try {

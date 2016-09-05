@@ -50,6 +50,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
             tvCODNote.setVisibility(View.VISIBLE);
         else tvCODNote.setVisibility(View.INVISIBLE);
 
+        //((CartManagerActivity) getActivity()).getPayInfoView().setVisibility(View.GONE);
+        //((CartManagerActivity) getActivity()).getPlaceOrderBtn().setVisibility(View.VISIBLE);
         btnContactUs.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         //((TextView) view.findViewById(R.id.tvCongo)).setText(Html.fromHtml("Congrats <img> :) <img/>"));

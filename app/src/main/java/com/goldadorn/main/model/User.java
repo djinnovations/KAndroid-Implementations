@@ -74,6 +74,13 @@ public class User implements Serializable {
         return info;
     }
 
+    public static boolean hasCertification(Cursor cursor){
+        if (cursor != null){
+            cursor.moveToFirst();
+            return cursor.getInt(cursor.getColumnIndex(Users.HAS_CERT)) == 1;
+        }
+        return false;
+    }
 
     public static int getUserId(Cursor cursor){
         return cursor.getInt(cursor.getColumnIndex(Users._ID));

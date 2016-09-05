@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface ICartData {
     void storeAddressData(Address address);
-     void storeCartData(ArrayList<Product> cart, long costTotal);
+     void storeCartData(/*ArrayList<Product> cart,*/ long costTotal);
     public List<Product> getCartProducts();
     public long getBillableAmount();
     public void setPaymentDone(boolean done, boolean isCOD, String payMode);

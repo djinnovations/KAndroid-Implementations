@@ -132,7 +132,7 @@ public class ProductOptions {
             e.printStackTrace();
             primaryMetalPrice = -1;
         }
-        p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
+        p.priceBreakDown.add(0, new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
 
 
         rawSizeListVals = new ArrayList<>();
@@ -171,6 +171,7 @@ public class ProductOptions {
             return;
         }
         try {
+            mCustDefVals.setRawDefStone(jsonObject.getString("defaultStone"));
             Swatches.MixedSwatch stoneSwatch = Swatches.getMixedSwatch(addDummyVarToGemStoneCust(jsonObject.getString("defaultStone")),
                     Swatches.TYPE_GEMSTONE);
             mCustDefVals.setDefStoneSwatch(stoneSwatch);
@@ -190,6 +191,7 @@ public class ProductOptions {
             return;
         }
         try {
+            mCustDefVals.setRawDefMetal(jsonObject.getString("defaultMetal"));
             Swatches.MixedSwatch metalSwatch = Swatches.getMixedSwatch(jsonObject.getString("defaultMetal"),
                     Swatches.TYPE_METAL);
             mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
@@ -201,7 +203,7 @@ public class ProductOptions {
     }
 
 
-    private static String parseSize(double size, String prodType){
+    public static String parseSize(double size, String prodType){
         int sizeInInt = (int) size;
         if (size == -1.000)
             return "-1";
@@ -230,6 +232,24 @@ public class ProductOptions {
         private String stoneDescTxt;
         private Swatches.MixedSwatch defStoneSwatch;
         private Swatches.MixedSwatch defMetalSwatch;
+        private String rawDefMetal;
+        private String rawDefStone;
+
+        public String getRawDefMetal() {
+            return rawDefMetal;
+        }
+
+        public void setRawDefMetal(String rawDefMetal) {
+            this.rawDefMetal = rawDefMetal;
+        }
+
+        public String getRawDefStone() {
+            return rawDefStone;
+        }
+
+        public void setRawDefStone(String rawDefStone) {
+            this.rawDefStone = rawDefStone;
+        }
 
         public Swatches.MixedSwatch getDefMetalSwatch() {
             return defMetalSwatch;
@@ -355,6 +375,14 @@ public class ProductOptions {
             }
         }
         return swatchList;
+    }
+
+    public static Swatches.MixedSwatch getParsedMetalSwatch(String metal){
+        return Swatches.getMixedSwatch(metal, Swatches.TYPE_METAL);
+    }
+
+    public static Swatches.MixedSwatch getParsedStoneSwatch(String stone){
+        return Swatches.getMixedSwatch(addDummyVarToGemStoneCust(stone), Swatches.TYPE_GEMSTONE);
     }
 
 

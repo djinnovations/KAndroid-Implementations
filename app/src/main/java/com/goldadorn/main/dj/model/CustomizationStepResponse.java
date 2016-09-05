@@ -14,7 +14,7 @@ public class CustomizationStepResponse {
     String prodDesc;
     String metalSwatch;
     String sellerSku;
-    int discount;
+    double discount;
     float weight = -1;
 
     public float getWeight() {
@@ -30,7 +30,7 @@ public class CustomizationStepResponse {
     }
 
     public int getDiscount() {
-        return discount;
+        return Math.round((float) discount);
     }
 
     public void setDiscount(int discount) {

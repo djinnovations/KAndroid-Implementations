@@ -97,6 +97,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
             detailedAddress = (TextView) itemView.findViewById(R.id.address_detail);
             checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
             actionEdit = (ImageView) itemView.findViewById(R.id.action_edit);
+            checkBox.setVisibility(View.GONE);
             actionEdit.setOnClickListener(this);
         }
 

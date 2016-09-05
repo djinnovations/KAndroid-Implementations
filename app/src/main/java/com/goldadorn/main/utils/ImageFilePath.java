@@ -156,6 +156,16 @@ public class ImageFilePath {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
+    public static String getDesignerCertUrl(int desId){
+        //http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/certs/1661.jpg
+        /*return new StringBuilder().append(ApiFactory.IMAGE_URL_COLLECTIONS_HOST).append("certs/")
+                .append(String.valueOf(desId)).append(".jpg").toString();*/
+        String url = new StringBuilder().append(ApiFactory.IMAGE_URL_COLLECTIONS_HOST).append("certs/")
+                .append(String.valueOf(desId)).append(".jpg").toString();
+        Log.d("djurl","cert image url: "+ url);
+        return url;
+    }
+
     public static String getImageUrlForCollection(int collid) {
         return ApiFactory.IMAGE_URL_COLLECTIONS_HOST + "collections/" + collid + "/" + collid + ".jpg";
     }

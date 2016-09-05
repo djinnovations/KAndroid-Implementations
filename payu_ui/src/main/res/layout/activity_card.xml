@@ -1,13 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.payuResponse.testapp.CardActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/app_bar"
         android:orientation="vertical"
         android:weightSum="1">
 
@@ -16,7 +15,8 @@
             android:layout_height="match_parent"
             android:layout_weight=".70"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/text_view_amount"
@@ -33,6 +33,20 @@
                 android:text="Transaction id : " />
         </LinearLayout>
 
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlayLibs">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlayLibs" />
+        </android.support.design.widget.AppBarLayout>
+
         <LinearLayout
             android:id="@+id/linear_layout_root_detail"
             android:layout_width="match_parent"
@@ -40,92 +54,216 @@
             android:layout_weight=".30"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/text_view_issuer_down"
+            <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/error_box"
-                android:gravity="center"
-                android:textColor="#FF0000"
-                android:visibility="gone" />
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="12dp">
 
-
-            <EditText
-                android:id="@+id/edit_text_card_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:hint="Card Number"
-                android:imeOptions="actionNone"
-                android:inputType="number"
-                android:maxLength="19"
-                android:singleLine="true" />
-
-
-            <EditText
-                android:id="@+id/edit_text_name_on_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:hint="Card Name"
-                android:inputType="text"
-                android:singleLine="true" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <EditText
-
-                    android:id="@+id/edit_text_expiry_month"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:layout_weight="5"
-                    android:hint="MM"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:singleLine="true" />
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <EditText
-                    android:id="@+id/edit_text_expiry_year"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:layout_weight="5"
-                    android:hint="YYYY"
-                    android:inputType="number"
-                    android:maxLength="4"
-                    android:singleLine="true" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/text_view_issuer_down"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/error_box"
+                        android:gravity="center"
+                        android:textColor="#FF0000"
+                        android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/edit_text_card_cvv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:hint="CVV"
-                android:inputType="number"
-                android:maxLength="4"
-                android:singleLine="true" />
 
-            <CheckBox
-                android:id="@+id/check_box_save_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:text="Store card" />
+                    <!--<EditText
+                        android:id="@+id/edit_text_card_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:hint="Card Number"
+                        android:imeOptions="actionNone"
+                        android:inputType="number"
+                        android:maxLength="19"
+                        android:singleLine="true" />-->
 
-            <Button
-                android:id="@+id/button_card_make_payment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:text="Pay Now" />
+                    <!--<EditText
+                        android:id="@+id/edit_text_name_on_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:hint="Card Name"
+                        android:inputType="text"
+                        android:singleLine="true" />-->
+
+                    <android.support.design.widget.TextInputLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edit_text_name_on_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Name on Card"
+                            android:inputType="textPersonName"
+                            android:singleLine="true"
+                            android:textSize="16sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:id="@+id/edit_text_card_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:digits="0123456789 "
+                            android:hint="Card Number"
+                            android:inputType="number"
+                            android:singleLine="true"
+                            android:textSize="16sp" />
+                    </android.support.design.widget.TextInputLayout>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
+                        android:text="Expiry"
+                        android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="2dp"
+                        android:weightSum="3">
+
+                        <!--<EditText
+                            android:id="@+id/edit_text_expiry_month"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="5"
+                            android:hint="MM"
+                            android:inputType="number"
+                            android:maxLength="2"
+                            android:singleLine="true" />-->
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.55">
+
+                            <EditText
+                                android:id="@+id/edit_text_expiry_month"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@android:drawable/arrow_down_float"
+                                android:focusable="false"
+                                android:hint="MM"
+                                android:inputType="number"
+                                android:maxLength="2"
+                                android:singleLine="true"
+                                android:textSize="16sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.1" />
+
+                        <!--<EditText
+                            android:id="@+id/edit_text_expiry_year"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="2dp"
+                            android:layout_weight="5"
+                            android:hint="YYYY"
+                            android:inputType="number"
+                            android:maxLength="4"
+                            android:singleLine="true" />-->
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7">
+
+                            <EditText
+                                android:id="@+id/edit_text_expiry_year"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:drawableRight="@android:drawable/arrow_down_float"
+                                android:focusable="false"
+                                android:hint="YYYY"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:singleLine="true"
+                                android:textSize="16sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="0dp"
+                            android:layout_height="2dp"
+                            android:layout_weight="0.7" />
+
+                        <android.support.design.widget.TextInputLayout
+
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.95">
+
+                            <EditText
+                                android:id="@+id/edit_text_card_cvv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="CVV"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:singleLine="true"
+                                android:textSize="16sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>
+
+                    <!--<EditText
+                        android:id="@+id/edit_text_card_cvv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:hint="CVV"
+                        android:inputType="number"
+                        android:maxLength="4"
+                        android:singleLine="true" />-->
+
+                    <CheckBox
+                        android:id="@+id/check_box_save_card"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:text="Store card"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/button_card_make_payment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:minHeight="45dp"
+                        android:text="Pay Now" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
 
             <LinearLayout
@@ -179,17 +317,17 @@
     </LinearLayout>
 
     <!--<TextView-->
-        <!--android:id="@+id/text_view_note"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:layout_margin="5dp"-->
-        <!--android:text="@string/note" />-->
+    <!--android:id="@+id/text_view_note"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_margin="5dp"-->
+    <!--android:text="@string/note" />-->
 
-    <include
+    <!--<include
         android:id="@+id/footer"
+        layout="@layout/footer_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/footer_image"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />-->
 </RelativeLayout>

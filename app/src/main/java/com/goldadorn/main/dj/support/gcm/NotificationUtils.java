@@ -151,22 +151,22 @@ public class NotificationUtils {
         bigPictureStyle.setSummaryText(Html.fromHtml(message).toString());
         bigPictureStyle.bigPicture(bitmap);
         Notification notification;
-        /*notification =*/ mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
+        notification = mBuilder.setSmallIcon(icon).setTicker(title).setWhen(0)
                 .setAutoCancel(true)
                 .setContentTitle(title)
                 .setContentIntent(resultPendingIntent)
                 .setSound(alarmSound)
-                .setLights(Color.WHITE, 1500, 2000);
+                .setLights(Color.WHITE, 1500, 2000)
                 //.setStyle(bigPictureStyle)
-                //.setWhen(getTimeMilliSec(timeStamp))
-                //.setSmallIcon(iconToUse())
-                //.setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
-                //.setContentText(message)
-                //.build();
+                .setWhen(getTimeMilliSec(timeStamp))
+                .setSmallIcon(iconToUse())
+                .setLargeIcon(BitmapFactory.decodeResource(mContext.getResources(), icon))
+                .setContentText(message)
+                .build();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            notification = mBuilder.setContent(assignRemote(bitmap, title, message)).build();
-            //notification.bigContentView = assignRemote(bitmap, title, message);
+            //notification = mBuilder.setContent(assignRemote(bitmap, title, message)).build();
+            notification.bigContentView = assignRemote(bitmap, title, message);
         }else {
             notification = mBuilder.setStyle(bigPictureStyle)
             .setWhen(getTimeMilliSec(timeStamp))
@@ -188,7 +188,7 @@ public class NotificationUtils {
         expandedView.setTextViewText(R.id.message, message);
         expandedView.setImageViewBitmap(R.id.big_picture, bitmap);
         expandedView.setImageViewResource(R.id.big_icon, R.mipmap.ic_launcher);
-        expandedView.setTextViewText(R.id.time, getOnlyHrsMin());
+        expandedView.setTextViewText(R.id.time, DateTimeUtils.get12HourFormatTime());
         return expandedView;
     }
 

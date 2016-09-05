@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,11 +23,13 @@ import android.widget.Toast;
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.dj.model.ShipmentBillingAddress;
 import com.goldadorn.main.dj.server.ApiKeys;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -37,8 +40,12 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.response.SearchResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.StringEntity;
@@ -70,8 +77,14 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     Context mContext;
 
 
-    @Bind(R.id.continueButton)
+    @Bind(R.id./*continueButton*/btnPlaceOrder)
     TextView mContinueButton;
+    @Bind(R.id.payInfo)
+    View payInfo;
+    @Bind(R.id.tvOrderAmount)
+    TextView tvOrderAmount;
+    @Bind(R.id.ivShieldCheck)
+    ImageView ivShieldCheck;
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.frame_overlay)
@@ -83,6 +96,10 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     @Bind(R.id.paymentModeUI)
     View paymentModeUI;
     ProgressDialog mProgressDialog;
+    @Bind(R.id.tvShieldCheck)
+    TextView tvShieldCheck;
+    @Bind(R.id.tvCartTotal)
+    TextView tvCartTotal;
 
     public List<Product> mCartItems = new ArrayList<>();
     public long mCostTotal;
@@ -204,8 +221,9 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                     mContinueButton, this);
         /*}else if (id == SHIP_ADRESS_CALL){*/
             if (success) {
-                AddressFragment af = (AddressFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(UISTATE_ADDRESS));
-                af.refreshAddr();
+                /*AddressFragment af = (AddressFragment) getSupportFragmentManager().findFragmentByTag(String.valueOf(UISTATE_ADDRESS));
+                af.refreshAddr();*/
+                configureUI(UISTATE_ADDRESS);
                 Toast.makeText(getApplicationContext(), "Address updated", Toast.LENGTH_SHORT).show();
             } else
                 Toast.makeText(getApplicationContext(), "Address could not be updated", Toast.LENGTH_SHORT).show();
@@ -269,11 +287,17 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         mProgressDialog.setCancelable(false);
 
         fetchAddressFromServer(TYPE_ADDRESS_SHIPPING);
+        int color =  ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorBlackDimText);
+        ivShieldCheck.setImageDrawable(new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_shield_check)
+                .color(color)
+                .sizeDp(30));
 
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_CART).findViewById(R.id.text)).setText("My cart");
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_ADDRESS).findViewById(R.id.text)).setText("Address");
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_PAYMENT).findViewById(R.id.text)).setText("Payment");
         ((TextView) mContainerProgressImage.getChildAt(UISTATE_FINAL).findViewById(R.id.text)).setText("Complete");
+        setTypeface();
         for (int i = 0; i < mContainerProgressImage.getChildCount(); i++) {
             ImageView iv = (ImageView) mContainerProgressImage.getChildAt(i).findViewById(R.id.image);
             iv.setTag(i);
@@ -292,6 +316,10 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         });
     }
 
+    private void setTypeface(){
+        TypefaceHelper.setFont(tvCartTotal, tvOrderAmount, tvShieldCheck, mContinueButton);
+    }
+
     @Override
     public void onBackPressed() {
         if (closeOverlay())
@@ -304,40 +332,58 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             mOverlayFrame.setVisibility(View.GONE);
             mUIState = mMainUiState;
             refreshToolBar();
+            displayStaticBar();
             return true;
         }
         return false;
     }
 
+    MyCartFragment myCartFragment;
     SummaryFragment summaryFragment;
     public void configureUI(int uistate) {
         mUIState = uistate;
         Fragment f = null;
         int frame = R.id.frame;
-        paymentModeUI.setVisibility(View.GONE);
+        displayStaticBar();
+        //paymentModeUI.setVisibility(View.GONE);
         if (uistate == UISTATE_CART) {
-            f = new MyCartFragment();
-            mContinueButton.setText("Select address ->");
-            mContinueButton.setVisibility(View.VISIBLE);
+            if (myCartFragment == null) {
+                f = myCartFragment = new MyCartFragment();
+                //mContinueButton.setText("Select address ->");
+                mContinueButton.setVisibility(View.VISIBLE);
+            }else f = myCartFragment;
         } else if (uistate == UISTATE_ADDRESS) {
-            f = new AddressFragment();
-            mContinueButton.setVisibility(View.VISIBLE);
-            mContinueButton.setText("Proceed to payment");
+            if (addressList.size() > 0 && !isEditAddressCall) {
+                mUIState = uistate = UISTATE_ADDRESS;
+                f = new AddressFragment();
+                mContinueButton.setVisibility(View.VISIBLE);
+            }else {
+                frame = R.id.frame_overlay;
+                mUIState = uistate = UISTATE_OVERLAY_ADD_ADDRESS;
+                f = AddAddressFragment.newInstance(mAddressToEdit);
+            }
+            //mContinueButton.setText("Proceed to payment");
         } else if (uistate == UISTATE_PAYMENT) {
             f = new PaymentFragment();
-            paymentModeUI.setVisibility(View.VISIBLE);
-            mContinueButton.setVisibility(View.INVISIBLE);
+            //paymentModeUI.setVisibility(View.VISIBLE);
+            //mContinueButton.setVisibility(View.INVISIBLE);
         } else if (uistate == UISTATE_FINAL) {
             f =summaryFragment= new SummaryFragment();
             Bundle args = new Bundle();
             args.putBoolean(IntentKeys.COD_CALL, isCOD);
+
+            payInfo.setVisibility(View.GONE);
+            LinearLayout.LayoutParams param = (LinearLayout.LayoutParams) mContinueButton.getLayoutParams();
+            param.weight = 2;
+            mContinueButton.setLayoutParams(param);
+
             f.setArguments(args);
             mContinueButton.setText("Go To Social Feed");
             mContinueButton.setVisibility(View.VISIBLE);
-        } else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
+        } /*else if (uistate == UISTATE_OVERLAY_ADD_ADDRESS) {
             frame = R.id.frame_overlay;
             f = AddAddressFragment.newInstance(mAddressToEdit);
-        }
+        }*/
         if (frame == R.id.frame_overlay) {
             mOverlayFrame.setVisibility(View.VISIBLE);
         } else {
@@ -354,8 +400,24 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         refreshToolBar();
     }
 
+    @Bind(R.id.shadow)
+    View shadow;
+    public void removeStaticBottomBar(){
+        paymentModeUI.setVisibility(View.GONE);
+        shadow.setVisibility(View.GONE);
+    }
+
+    public void displayStaticBar(){
+        paymentModeUI.setVisibility(View.VISIBLE);
+        shadow.setVisibility(View.VISIBLE);
+    }
+
     public Button getPlaceOrderBtn() {
         return (Button) paymentModeUI.findViewById(R.id.btnPlaceOrder);
+    }
+
+    public View getPayInfoView(){
+        return payInfo;
     }
 
     public TextView getTvAmount() {
@@ -363,7 +425,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
     private void refreshToolBar() {
-        if (mUIState == UISTATE_OVERLAY_ADD_ADDRESS) {
+        if (mUIState == /*UISTATE_OVERLAY_ADD_ADDRESS*/UISTATE_ADDRESS) {
             mToolbar.setTitle("Add Address");
         } else {
             mToolbar.setTitle("My Cart");
@@ -401,6 +463,8 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.image) {
+                if (true)
+                    return;
                 if (summaryFragment != null) {
                     if (summaryFragment.getUserVisibleHint()) {
                         showDialogInfo("Sorry, you cannot go back!", false);
@@ -438,13 +502,13 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     };
 
     @Override
-    public void storeCartData(ArrayList<Product> cart, long costTotal) {
+    public void storeCartData(/*ArrayList<Product> cart,*/ long costTotal) {
         mCartItems.clear();
-        if (cart != null) {
-            mCartItems.addAll(cart);
+        /*if (cart != null) {*/
+            //mCartItems.addAll(cart);
             mCostTotal = costTotal;
             Log.d("djcart", "mCostTotal: " + mCostTotal);
-        }
+        //}
     }
 
     @Override
@@ -510,13 +574,17 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
     private Address mAddressToEdit;
+    private boolean isEditAddressCall;
 
     public void showAddAddress(Address address) {
+        isEditAddressCall = true;
         mAddressToEdit = address;
-        configureUI(UISTATE_OVERLAY_ADD_ADDRESS);
+        configureUI(/*UISTATE_OVERLAY_ADD_ADDRESS*/UISTATE_ADDRESS);
     }
 
     public void setAddressResult(ShipmentBillingAddress sba) {
+        addressList.clear();
+        isEditAddressCall = false;
         addressList.add(sba.getAddressDataObj());
         Map<String, String> params = new HashMap<>();
         params.put("fname", sba.getFname());
