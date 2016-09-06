@@ -167,12 +167,22 @@ public class ProductCustomiseFragment extends Fragment {
             }*/
             holder.itemView.findViewById(R.id.tvItem).setVisibility(View.INVISIBLE);
             holder.itemView.findViewById(R.id.image).setVisibility(View.VISIBLE);
-            if (!hideTxtVisiblity) {
-                holder.itemView.findViewById(R.id.tvItem).setVisibility(View.VISIBLE);
+            holder.itemView.findViewById(R.id.tvItem).setVisibility(View.VISIBLE);
+            if (!hideTxtVisiblity && drawable == null) {
                 ((TextView) holder.itemView.findViewById(R.id.tvItem)).setText(mProductOption.mCustDefVals.getStoneDescTxt());
             }
-            if (drawable != null)
+            if (drawable != null) {
                 ((ImageView) holder.itemView.findViewById(R.id.image)).setImageDrawable(drawable);
+                try {
+                    if (selectedMetalSwatch == null)
+                    ((TextView) holder.itemView.findViewById(R.id.tvItem))
+                            .setText(mProductOption.mCustDefVals.getDefMetalSwatch().getType());
+                    else ((TextView) holder.itemView.findViewById(R.id.tvItem))
+                            .setText(selectedMetalSwatch.getType());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
             else {
                 /*UiRandomUtils.drawableFromUrl(((ImageView) holder.itemView.findViewById(R.id.image))
                         , mProductOption.mCustDefVals.getUrlStoneImg());*/
@@ -198,7 +208,7 @@ public class ProductCustomiseFragment extends Fragment {
                             //.load(mProductOption.mCustDefVals.getUrlStoneImg())
                             .load(R.drawable.ic_diamond_small)
                             .centerCrop()
-                            .fit().memoryPolicy(MemoryPolicy.NO_STORE)
+                            .fit().memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                             .into((ImageView) holder.itemView.findViewById(R.id.image));
                 }
             }
@@ -276,7 +286,7 @@ public class ProductCustomiseFragment extends Fragment {
         if (options != null) {
             mProductOption = options;
             mCustomizeAdapter.changeData(options.customisationOptions);
-            metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), true);
+            metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), false);
             stoneTitleIconAdapter.setIconDrawable(null, false);
 
             if (options.priceBreakDown.size() > 0) {
@@ -315,7 +325,7 @@ public class ProductCustomiseFragment extends Fragment {
 
 
     public void updateTitleIconDefValues() {
-        metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), true);
+        metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), false);
         stoneTitleIconAdapter.setIconDrawable(null, false);
         sizeTitleIconAdapter.setExtraText(mProductOption.mCustDefVals.getSizeText());
     }
@@ -1245,7 +1255,7 @@ public class ProductCustomiseFragment extends Fragment {
             String title = ourList.get(position).getTvTitle();
             holder.tvTitle.setText(title);
             TypefaceHelper.setFont(holder.tvTitle, holder.tvValue);
-            if (title.equals(PBD_Discount) || title.equals(PBD_FinalPrice) || title.equals(PBD_total)) {
+            if (/*title.equals(PBD_Discount) || */title.equals(PBD_FinalPrice) || title.equals(PBD_total)) {
                 UiRandomUtils.setTypefaceBold(holder.tvValue);
                 UiRandomUtils.setTypefaceBold(holder.tvTitle);
             }
@@ -1254,6 +1264,10 @@ public class ProductCustomiseFragment extends Fragment {
                 holder.tvTitle.setText(title + " ("+ mProductOption.discount + "%) ");
                 holder.tvValue.setText("- " + ourList.get(position).getTvValue());
             }
+
+            if (title.equals(PBD_Discount) || title.equals(PBD_VAT) || title.equals(PBD_total) || title.equals(PBD_FinalPrice)){
+                holder.lineView.setVisibility(View.VISIBLE);
+            }else holder.lineView.setVisibility(View.GONE);
         }
 
         /*class MyViewHolderNew extends RecyclerView.ViewHolder{

@@ -563,6 +563,12 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         }*/
     }
 
+
+    public void logAnEvent(String eventName){
+        logEventsAnalytics(eventName);
+        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: eventName");
+    }
+
     @Override
     public boolean isPaymentDone() {
         return mPaymentSuccess;

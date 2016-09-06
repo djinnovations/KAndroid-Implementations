@@ -231,8 +231,8 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             manupilateLikeBtnStatus(holder.like, /*t == null ? */collection.isLiked /*: t*/);
             holder.like.setTag(collection);
             //holder.image.getLayoutParams().height = (int) (cardWidth / collection.image_a_r);
-            Log.e("iii", collection.getImageUrl());
-            Picasso.with(context).load(collection.getImageUrl()).into(holder.image);
+            Log.e("iii", collection.getImageUrl(collection.userId));
+            Picasso.with(context).load(collection.getImageUrl(collection.userId)).into(holder.image);
 
         }
 

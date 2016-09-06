@@ -166,13 +166,39 @@ public class ImageFilePath {
         return url;
     }
 
-    public static String getImageUrlForCollection(int collid) {
-        return ApiFactory.IMAGE_URL_COLLECTIONS_HOST + "collections/" + collid + "/" + collid + ".jpg";
+    public static String getImageUrlForCollection(int desId, int collid) {
+        //return ApiFactory.IMAGE_URL_COLLECTIONS_HOST + "collections/" + collid + "/" + collid + ".jpg";
+
+        StringBuilder baseUrl = new StringBuilder(ApiFactory.IMAGE_URL_COLLECTIONS_HOST);
+        /*if (!isNotDefault){
+            baseUrl.append("defaults/");
+            baseUrl.append("products/");
+        }
+        else*/ baseUrl.append("coll/");
+
+        //char[] digitsDesId = String.valueOf(desId).toCharArray();
+        /*for (char digit : digitsDesId) {*/
+        baseUrl.append(desId).append("/");
+        //}
+        char[] digitsProdId = String.valueOf(collid).toCharArray();
+        for (char digit : digitsProdId) {
+            baseUrl.append(digit).append("/");
+        }
+
+        baseUrl.append(collid);
+        /*if (isNotDefault)
+            baseUrl.append("-"+defMetal);*/
+        baseUrl.append(".jpg");
+        Log.d("djimage", "coll image url- getImageUrlForCollection: " + baseUrl.toString());
+        return baseUrl.toString();
+
+        //http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/coll/2/1/1/11-f.jpg
     }
 
 
     public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isDefault) {
         return getNewConvention(desId, productid, defMetal, isDefault);
+
         //return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }
 
@@ -181,8 +207,9 @@ public class ImageFilePath {
         StringBuilder baseUrl = new StringBuilder(ApiFactory.IMAGE_URL_COLLECTIONS_HOST);
         if (!isNotDefault){
             baseUrl.append("defaults/");
+            baseUrl.append("products/");
         }
-        baseUrl.append("products/");
+        else baseUrl.append("new/");
 
         //char[] digitsDesId = String.valueOf(desId).toCharArray();
         /*for (char digit : digitsDesId) {*/
@@ -197,11 +224,14 @@ public class ImageFilePath {
         if (isNotDefault)
             baseUrl.append("-"+defMetal);
         baseUrl.append("-1.jpg");
-        Log.d("djimage", "new image url" + baseUrl.toString());
+        Log.d("djimage", "prod image url- getImageUrlForProduct: " + baseUrl.toString());
         return baseUrl.toString();
     }
 
     //products/2/1/1010-G18Y-1.jpg
     //S3url/products/defaults/2/1/3/3/4/1334-1.jpg
+
+    /*http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/defaults/products/1523/4/4/1/441-1.jpg
+    2.7 new => http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/new/2/1/0/10-G18Y-2.jpg*/
 
 }

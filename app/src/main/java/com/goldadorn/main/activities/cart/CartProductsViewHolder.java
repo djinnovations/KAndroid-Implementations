@@ -140,8 +140,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityText.addTextChangedListener(this);
 
             Picasso.with(image.getContext()).
-                    load(itemToBind.getProdImageUrl()).memoryPolicy(MemoryPolicy.NO_STORE)
-                    .placeholder(R.drawable.vector_image_logo_square_100dp).fit().into(image);
+                    load(itemToBind.getProdImageUrl()).memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
+                    .placeholder(R.drawable.vector_image_logo_square_100dp)/*.fit()*/.into(image);
 
             //remove 0 at end the end
             /*DecimalFormat format = new DecimalFormat("0.#");

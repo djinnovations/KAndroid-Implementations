@@ -192,7 +192,7 @@ class CustomizeMainHolder extends ViewHolder {
                         //.load(UiRandomUtils.DIAMOND_URL)
                         .load(R.drawable.ic_diamond_small)
                         .centerCrop()
-                        .fit().memoryPolicy(MemoryPolicy.NO_STORE)
+                        .fit().memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)
                         .into(imageView);
             }

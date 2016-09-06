@@ -652,7 +652,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             Collection collection = getCollection(position);
             ImageView image = (ImageView) holder.itemView.findViewById(R.id.image);
-            Picasso.with(mContext).load(collection.getImageUrl()).into(image);
+            Picasso.with(mContext).load(collection.getImageUrl(collection.userId)).into(image);
             image.getLayoutParams().width = this.width;
             image.getLayoutParams().height = this.height;
             image.requestLayout();
@@ -754,7 +754,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             BookAppointmentDataObj baaDataObj = new BookAppointmentDataObj(BookAppointment.COLLECTION);
             baaDataObj.setCollectionId(String.valueOf(mCollection.id))
                     .setDesignerId(String.valueOf(mCollection.userId))
-                    .setItemImageUrl(mCollection.getImageUrl())
+                    .setItemImageUrl(mCollection.getImageUrl(mCollection.userId))
                     .setItemName(mCollection.name);
             intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             //startActivityForResult(intent, REQUEST_CODE_BAA);
@@ -766,7 +766,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
 
     private boolean canProceedToBAA() {
         if (mCollection != null) {
-            if (!TextUtils.isEmpty(mCollection.name) && !TextUtils.isEmpty(mCollection.getImageUrl())
+            if (!TextUtils.isEmpty(mCollection.name) && !TextUtils.isEmpty(mCollection.getImageUrl(mCollection.userId))
                     && mCollection.id != -1 && mCollection.userId != -1) {
                 return true;
             }

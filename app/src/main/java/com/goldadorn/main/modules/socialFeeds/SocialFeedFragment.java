@@ -920,8 +920,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == buy) {
                     if (!isVoted(socialPost, true)) {
-                        if (getActivity() instanceof MainActivity)
-                            ((MainActivity) getActivity()).displayDialogForIntimation();
+                        if (getActivity() instanceof MainActivity) {
+                            if (isProductLink(socialPost.getImage1()) != null)
+                                ((MainActivity) getActivity()).displayDialogForIntimation();
+                        }
                         socialPost.setIsVoted(1);
                         buy.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(buy);
@@ -1105,8 +1107,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             public void onClick(View v) {
                 if (v == option1Button) {
                     if (!isVoted(socialPost, true)) {
-                        if (getActivity() instanceof MainActivity)
+                        if (getActivity() instanceof MainActivity) {
+                            if (isProductLink(socialPost.getImage1()) != null)
                             ((MainActivity) getActivity()).displayDialogForIntimation();
+                        }
                         socialPost.setIsVoted(1);
                         option1Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option1Button);
@@ -1118,8 +1122,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option2Button) {
                     if (!isVoted(socialPost, true)) {
-                        if (getActivity() instanceof MainActivity)
+                        if (getActivity() instanceof MainActivity) {
+                            if (isProductLink(socialPost.getImage2()) != null)
                             ((MainActivity) getActivity()).displayDialogForIntimation();
+                        }
                         socialPost.setIsVoted(2);
                         option2Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option2Button);
@@ -1131,8 +1137,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     }
                 } else if (v == option3Button) {
                     if (!isVoted(socialPost, true)) {
-                        if (getActivity() instanceof MainActivity)
+                        if (getActivity() instanceof MainActivity) {
+                            if (isProductLink(socialPost.getImage3()) != null)
                             ((MainActivity) getActivity()).displayDialogForIntimation();
+                        }
                         socialPost.setIsVoted(3);
                         option3Button.setText("{hea_heart_fill}");
                         YoYo.with(Techniques.Landing).duration(300).playOn(option3Button);
@@ -1916,8 +1924,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                         socialPost.setLikeCount(socialPost.getLikeCount() - 1);
                     else {
                         if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {
-                            if (getActivity() instanceof MainActivity)
+                            if (getActivity() instanceof MainActivity) {
+                                if (isProductLink(socialPost.getImage1()) != null)
                                 ((MainActivity) getActivity()).displayDialogForIntimation();
+                            }
                         }
                         socialPost.setLikeCount(socialPost.getLikeCount() + 1);
                     }

@@ -44,8 +44,8 @@ public class Collection implements Serializable {
         return cursor.getInt(cursor.getColumnIndex(Tables.Collections._ID));
     }
 
-    public String getImageUrl() {
-        return ImageFilePath.getImageUrlForCollection(id);
+    public String getImageUrl(int desId) {
+        return ImageFilePath.getImageUrlForCollection(desId, id);
     }
     @Override
     public boolean equals(Object o) {

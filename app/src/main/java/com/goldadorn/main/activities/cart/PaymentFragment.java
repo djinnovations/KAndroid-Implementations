@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
@@ -92,6 +93,8 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         ((CartManagerActivity)getActivity()).showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
         setUpPaymentMethodView(view);
+
+        ((CartManagerActivity) getActivity()).logAnEvent(GAAnalyticsEventNames.CART_PAYMENT);
 
         //mStoredCardsAdapter = new PayUStoredCardsAdapter(view.getContext(), mPaymentModes);
         //mAddButton = (TextView) view.findViewById(R.id.action_add);

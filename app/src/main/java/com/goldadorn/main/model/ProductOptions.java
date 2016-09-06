@@ -1,5 +1,6 @@
 package com.goldadorn.main.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.goldadorn.main.R;
@@ -218,7 +219,16 @@ public class ProductOptions {
             String temp = String.valueOf(size);
             String[] tempArr = temp.split("\\.");
             String from = tempArr[0];
-            String to  = tempArr[1].replace("0","");
+            String to;
+            if (String.valueOf(tempArr[1].charAt(0)).equals("0")) {
+                to = tempArr[1].replace("0", "");
+            }
+            else if (tempArr[1].length() == 1){
+                to = tempArr[1] + "0";
+            }
+            else {
+                to = tempArr[1];
+            }
             //mCustDefVals.setSizeText(from+"-"+to+"\"");
             return from+"-"+to+"\"";
         }

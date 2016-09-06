@@ -19,6 +19,11 @@ public class GAAnalyticsEventNames {
     public static final String SHOWCASE = "Showcase";
     public static final String CART_VIEWED = "Cart_Viewed" /*AppEventsConstants.EVENT_NAME_VIEWED_CONTENT*/;
     public static final String CART_PRODUCT_ADDED = /*"Cart_Product_Added"*/ AppEventsConstants.EVENT_NAME_ADDED_TO_CART;
+    public static final String CART_GO_TO = "Go_To_Cart_From_PopUp";
+    public static final String CART_CONTINUE_SHOPPING = "Continue_Shopping_From_PopUp";
+    public static final String CART_ADDRESS = "Cart_Address_screen";
+    public static final String CART_PAYMENT = "Cart_Payment_screen";
+    public static final String CART_SUMMARY = "Cart_Summary_screen";
     public static final String CART_PRODUCT_REMOVED = "Cart_Product_Removed";
     public static final String CHECKOUT_SUCCESSFUL = "Checkout_Successfull";
     public static final String COLLECTION_SCREEN = "Collection_Screen";

@@ -2,9 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:paddingTop="5dp"
-    android:paddingBottom="5dp"
     android:paddingLeft="16dp"
     android:paddingRight="8dp">
 
@@ -13,6 +10,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="Making Charges"
         android:textSize="16sp" />
 
@@ -36,8 +35,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tempView2"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_centerVertical="true"
         android:text="Details Not Available"
         android:textSize="16sp" />
+
+    <View
+        android:id="@+id/tempView4"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_centerHorizontal="true" />
+
+    <View
+        android:id="@+id/tempView3"
+        android:layout_width="5dp"
+        android:layout_height="5dp"
+        android:layout_marginLeft="80dp"
+        android:layout_toRightOf="@+id/tempView4" />
+
+    <View
+        android:id="@+id/lineView"
+        android:layout_width="match_parent"
+        android:layout_alignRight="@+id/tempView3"
+        android:layout_height="1dp"
+        android:visibility="visible"
+        android:alpha="0.3"
+        android:layout_below="@+id/tvValue"
+        android:background="@android:color/black"/>
 
 </RelativeLayout>

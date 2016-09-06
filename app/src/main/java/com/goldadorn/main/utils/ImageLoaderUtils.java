@@ -37,11 +37,11 @@ public class ImageLoaderUtils {
             if(img.get().isLoaded)
                 placeholder =defaultImageRes;
             Picasso.with(context)
-                    .load(imageData.url).memoryPolicy(MemoryPolicy.NO_STORE)
+                    .load(imageData.url).memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                     .tag(context)
                     .placeholder(placeholder)
                     .error(defaultImageRes)
-                    .fit()
+                    /*.fit()*/
                     .into(image, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -98,7 +98,7 @@ public class ImageLoaderUtils {
                     .tag(context);
             if (placeholder != -1)
                 reqCreator.placeholder(placeholder);
-            reqCreator.error(errorImageRes).memoryPolicy(MemoryPolicy.NO_STORE).fit()
+            reqCreator.error(errorImageRes).memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)/*.fit()*/
                     .into(image/*, new Callback() {
                         @Override
                         public void onSuccess() {

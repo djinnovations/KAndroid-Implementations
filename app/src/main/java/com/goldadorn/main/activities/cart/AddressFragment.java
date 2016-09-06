@@ -19,6 +19,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
 import com.goldadorn.main.db.Tables;
+import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Address;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class AddressFragment extends Fragment {
         mAddButton = (TextView) view.findViewById(R.id.action_add);
         mAddButton.setVisibility(View.GONE);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-
+        ((CartManagerActivity) getActivity()).logAnEvent(GAAnalyticsEventNames.CART_ADDRESS);
         //((CartManagerActivity) getActivity()).getPayInfoView().setVisibility(View.GONE);
         //((CartManagerActivity) getActivity()).getPlaceOrderBtn().setVisibility(View.VISIBLE);
         //((CartManagerActivity) getActivity()).displayStaticBar();

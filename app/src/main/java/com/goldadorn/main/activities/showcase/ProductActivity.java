@@ -708,6 +708,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     public void onPositiveBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
                         //cartBtn.setEnabled(true);
+                        logEventsAnalytics(GAAnalyticsEventNames.CART_GO_TO);
+                        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: GO_TO_CART");
                         menuAction(R.id.nav_cart);
                     }
 
@@ -715,6 +717,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     public void onNegativeBtnClicked(Dialog dialog, View btn) {
                         dialog.dismiss();
                         //cartBtn.setEnabled(true);
+                        logEventsAnalytics(GAAnalyticsEventNames.CART_CONTINUE_SHOPPING);
+                        Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CART_CONTINUE_SHOPPING");
                         Toast.makeText(getApplicationContext(), "You can access your cart by selecting the cart option from the Slidemenu", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -1849,7 +1853,15 @@ public class ProductActivity extends BaseDrawerActivity {
 
         NEW: Earrings by GoldAdorn Design WITH 1.13 <space> gms 14K White GOLD, AND 0.23 CTS GHI-SI diamonds
         */
-        StringBuilder sb = new StringBuilder(mProductOptions.prodType)
+        /*String intials = "";
+        if (mProductOptions.prodType.equalsIgnoreCase("earrings"))
+            intials = mProductOptions.prodType;
+        else{
+            if(String.valueOf(mProductOptions.prodType.charAt(mProductOptions.prodType.length() - 1)).equals("s")){
+                intials = new StringBuilder(mProductOptions.prodType).deleteCharAt(mProductOptions.prodType.length() - 1).toString();
+            }else intials = mProductOptions.prodType;
+        }*/
+        StringBuilder sb = new StringBuilder(/*intials*/mProductOptions.prodType)
                 .append(" by ").append(mUser.name).append(" ")
                 .append("with ").append(mProductInfo.metalWeight).append(" gms").append(" ")
                 .append(mProductInfo.metalPurity).append(mProductInfo.metalPurityInUnits).append(" ")

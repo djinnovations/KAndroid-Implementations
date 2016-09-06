@@ -240,7 +240,7 @@ public class ProductInfoFragment extends Fragment {
             List<StoneDetail> rows = summary.stonesDetails;
             if (summary.productmaking_charges < 0) {
                 //mTableContainer.setVisibility(View.GONE);
-                //create2RowTable(summary, rows);
+                create2RowTable(summary, rows);
                 //// TODO: 05-09-2016  do  nothting for now 
             }//rows = new ArrayList<>();//change
            /* if (rows.size() == 0) {
