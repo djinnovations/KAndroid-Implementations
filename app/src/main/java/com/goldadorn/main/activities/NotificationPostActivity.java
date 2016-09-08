@@ -30,6 +30,7 @@ import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.modules.socialFeeds.helper.FollowHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.LikeHelper;
 import com.goldadorn.main.modules.socialFeeds.helper.PostUpdateHelper;
@@ -115,26 +116,40 @@ public class NotificationPostActivity extends BaseActivity{
             nf.updateComments();
     }
 
-    public static class NotificationFragment extends DefaultVerticalListView{
+    public static class NotificationFragment extends SocialFeedFragment{
 
         protected boolean isRefreshingData = false;
         protected final int offset = -1;
         protected int refreshOffset = 0;
-        private SocialPost commentSocialPost;
+        /*private SocialPost commentSocialPost;
         private int commentPosition;
 
 
         private LikeHelper likeHelper;
         private VoteHelper voteHelper;
         private SelectHelper selectHelper;
-        private FollowHelper followHelper;
+        private FollowHelper followHelper;*/
 
-        public Class getLoadedDataParsingAwareClass() {
-            return SocilFeedResult.class;
+        @Override
+        protected boolean allowPostOptions() {
+            //return super.allowPostOptions();
+            return false;
+        }
+
+        @Override
+        public void onViewCreated(View view) {
+            super.onViewCreated(view);
+            getFloatingActionsMenu().setVisibility(View.GONE);
+            getFabBackImage().setVisibility(View.GONE);
         }
 
 
-        public static class SocilFeedResult extends CodeDataParser {
+        /* public Class getLoadedDataParsingAwareClass() {
+            return SocilFeedResult.class;
+        }*/
+
+
+       /* public static class SocilFeedResult extends CodeDataParser {
             List<SocialPost> feeds;
             Object data;
             private String status;
@@ -171,9 +186,9 @@ public class NotificationPostActivity extends BaseActivity{
             public int getOffset() {
                 return offset;
             }
-        }
+        }*/
 
-        PostUpdateHelper.PostUpdateResult postUpdateResult = new PostUpdateHelper.PostUpdateResult() {
+        /*PostUpdateHelper.PostUpdateResult postUpdateResult = new PostUpdateHelper.PostUpdateResult() {
             @Override
             public void onFail(PostUpdateHelper host, SocialPost post, int pos) {
                 if (host instanceof LikeHelper) {
@@ -212,10 +227,10 @@ public class NotificationPostActivity extends BaseActivity{
                 else if (host instanceof FollowHelper)
                     getAdapter().notifyItemChanged(pos);
             }
-        };
+        };*/
 
 
-        private void likeAPost(SocialPost post, int pos) {
+        /*private void likeAPost(SocialPost post, int pos) {
             likeHelper.update(post, pos);
         }
 
@@ -237,7 +252,7 @@ public class NotificationPostActivity extends BaseActivity{
 
         private void followPeople(SocialPost post, int pos) {
             followHelper.update(post, pos);
-        }
+        }*/
 
 
         protected DataManager createDataManager() {
@@ -275,6 +290,16 @@ public class NotificationPostActivity extends BaseActivity{
         }
 
 
+        protected void configDataManager(DataManager dataManager) {
+            //People userData=crateUser();
+        /*if(userData!=null) {
+            setUser(userData);*/
+            //dataManager.setRefreshItemPos(1);
+            dataManager.setRefreshEnabled(false);
+            //    dataManager.add(userData);
+            //}
+        }
+
         boolean isFirst = true;
         public class SocialFeedProjectDataManager extends DefaultProjectDataManager {
             public SocialFeedProjectDataManager(Context context, IDataManagerDelegate delegate, List<Cookie> cookies) {
@@ -294,25 +319,27 @@ public class NotificationPostActivity extends BaseActivity{
                 else return false;
             }
 
-            /*public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
-                return getRefreshDataParams(data);
-            }*/
+            @Override
+            public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
+                //return super.getRefreshDataServerCallParams(data);
+                return null;
+            }
 
-            protected void updatePagingData(BaseDataParser loadedDataVO) {
-                /*try {
+            /*protected void updatePagingData(BaseDataParser loadedDataVO) {
+                try {
 
                     offset = loadedDataVO.getPageSize();
                     pageData.curruntPage += 1;
                     pageData.totalPage += 1;
                 } catch (Exception e) {
                     pageData.curruntPage = pageData.totalPage = 1;
-                }*/
-            }
+                }
+            }*/
 
         }
 
 
-        @Override
+       /* @Override
         public void garbageCollectorCall() {
             super.garbageCollectorCall();
             if (likeHelper != null)
@@ -340,9 +367,9 @@ public class NotificationPostActivity extends BaseActivity{
 
         protected View createRootView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view;
-            /*if (false)
+            *//*if (false)
                 view = inflater.inflate(R.layout.social_feed_fragment_recycler_with_swipe_refresh_layout, container, false);
-            else*/
+            else*//*
                 view = inflater.inflate(R.layout.fragment_notification_post, container, false);
 
             //setUpGesture(view);
@@ -361,7 +388,7 @@ public class NotificationPostActivity extends BaseActivity{
         public static boolean reateItemAdded = false;
 
         public void onCallEnd(List<?> dataList, boolean isRefreshData) {
-            super.onCallEnd(dataList, /*isRefreshData*/ false);
+            super.onCallEnd(dataList, *//*isRefreshData*//* false);
             if (!reateItemAdded) {
                 if (getDataManager().size() > 4) {
                     //RateApp rateApp = new RateApp();
@@ -809,7 +836,7 @@ public class NotificationPostActivity extends BaseActivity{
             //path = "http://goldadorn.cloudapp.net/goldadorn_dev/gallery/earrings/GALINK_1_the_an_anshar_ring.jpg";
 
             if (path != null && path.equals("") == false && path.indexOf("/products/") != -1) {
-            /*
+            *//*
             String link = path.substring(path.indexOf("/products/") + "/products/".length());
             link = link.substring(0,link.indexOf("."));
             try{
@@ -823,7 +850,7 @@ public class NotificationPostActivity extends BaseActivity{
             }
             if(link.indexOf("_")!=-1)
                 link = link.replaceAll("_","-");
-            */
+            *//*
                 return path;
 
             }
@@ -1026,7 +1053,6 @@ public class NotificationPostActivity extends BaseActivity{
                 String appPlayStoreURL = getString(R.string.palyStoreBasicURL) + getActivity().getPackageName();
                 shareActionData = new NavigationDataObject(IDUtils.generateViewId(), NavigationDataObject.ACTION_TYPE.ACTION_TYPE_TEXT_SHARE, appPlayStoreURL);
 
-
                 userImage.setOnClickListener(itemClick);
                 userName.setOnClickListener(itemClick);
                 followButton.setOnClickListener(itemClick);
@@ -1161,7 +1187,7 @@ public class NotificationPostActivity extends BaseActivity{
             data.put("POST", b);
             navigationDataObject.setParam(data);
             EventBus.getDefault().post(new AppActions(navigationDataObject));
-        }
+        }*/
 
 
     }

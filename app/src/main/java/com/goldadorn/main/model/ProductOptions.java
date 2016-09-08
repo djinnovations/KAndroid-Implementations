@@ -208,10 +208,10 @@ public class ProductOptions {
         int sizeInInt = (int) size;
         if (size == -1.000)
             return "-1";
-        if (prodType.equals("Rings")) {
+        if (prodType.equals("Ring")) {
             //mCustDefVals.setSizeText(String.valueOf(sizeInInt));
             return String.valueOf(sizeInInt);
-        }else if (prodType.equals("Necklaces") || prodType.equals("Chains")){
+        }else if (prodType.equals("Necklace") || prodType.equals("Chain")){
             //mCustDefVals.setSizeText(String.valueOf(sizeInInt) + "\"");
             return String.valueOf(sizeInInt) + "\"";
         }

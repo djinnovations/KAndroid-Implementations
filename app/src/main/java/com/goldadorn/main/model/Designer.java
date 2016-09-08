@@ -57,7 +57,7 @@ public class Designer extends BaseObservable implements IConfigurableObject,IIDI
     @Override
     public void config() {
         Log.d("dj", "config - url before parsing: "+designerPic);
-        setDesignerPic(URLHelper.parseImageURLDesignersTemp(designerPic));
+        setDesignerPic(URLHelper./*parseImageURLDesignersTemp(designerPic)*/parseImageURL(designerPic));
         id =getType()+designerId+"";
     }
     public int getDesignerId() {

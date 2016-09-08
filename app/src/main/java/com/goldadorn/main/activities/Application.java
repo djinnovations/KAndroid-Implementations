@@ -177,11 +177,13 @@ public class Application extends BaseApplication {
         //String urlForSizeGuide = "http://www.amazon.in/Ring-Size-Guides/b?ie=UTF8&node=5274290031";
         String urlForBuyBack = "file:///android_asset/web/buybackpolicy.html";
         String urlForSizeGuide =  "https://www.candere.com/shipping-delivery-and-return-policy.html/";
+        String urlForDiamondQual = /*""*/urlForSizeGuide;
 
         addItem(menu, R.id.nav_contact_us, R.string.contactUs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.contactUsURL), WebActivity.class);
         addItem(menu, R.id.nav_about_us, R.string.aboutUS, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.aboutUsURL), WebActivity.class);
         addItem(menu, R.id.nav_faqs, R.string.faqs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.faqsURL), WebActivity.class);
         addItem(menu, R.id.nav_size_guide, R.string.sizeGuide, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForSizeGuide, WebActivity.class);
+        addItem(menu, R.id.nav_dia_qual_guide, R.string.diaQualGuide, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForDiamondQual, WebActivity.class);
         addItem(menu, R.id.nav_buy_back_policy, R.string.buyBackPolicy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForBuyBack, WebActivity.class);
 
         addItem(menu, R.id.nav_shipping_and_return, R.string.shippingAndReturnPolicy, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.shippingAndReturnPolicyURL), WebActivity.class);

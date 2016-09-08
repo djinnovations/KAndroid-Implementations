@@ -27,8 +27,6 @@ import java.util.Map;
 public class FilterTimelineFragment extends SocialFeedFragment {
 
     static FilterPostParams fpp;
-
-
     public static FilterTimelineFragment newInstance(FilterPostParams fpp) {
         FilterTimelineFragment f = new FilterTimelineFragment();
         Bundle bundle = new Bundle();
@@ -49,7 +47,7 @@ public class FilterTimelineFragment extends SocialFeedFragment {
 
     @Override
     public void onResume() {
-        super.onResume();
+        //super.onResume();
         updateComments();
     }
 

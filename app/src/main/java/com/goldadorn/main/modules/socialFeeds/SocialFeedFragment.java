@@ -240,9 +240,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
 
     public void postAdded(SocialPost socialPost) {
-
-        // refreshPosts(0);
-
         /*FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.detach(this).attach(this).commit();*/
         //askToRefresh();
@@ -973,8 +970,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             pollLabel.setText(item.getVoteCount() + getActivity().getString(R.string.voteCountLabel));
             votePostButton.setText("{hea_buy_or_not}");
 
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): "+socialPost.getImage1());
+
             if (socialPost.getIsVoted() == 1) {
-                Log.d("djfeed", "poll post isVoted - must set color to pink: ");
+                //Log.d("djfeed", "poll post isVoted - must set color to pink: ");
                 votePostButton.setSelected(true);
             } else votePostButton.setSelected(false);
 
@@ -1191,6 +1190,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             /*if (socialPost.getIsVoted() == 1){
                 votePostButton.setSelected(true);
             }else votePostButton.setSelected(false);*/
+
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): "+socialPost.getImage1());
+            Log.d("djfeed", "socialPost2 imageUrl - onBind(): "+socialPost.getImage2());
+            Log.d("djfeed", "socialPost3 imageUrl - onBind(): "+socialPost.getImage3());
 
             Boolean isVoted = isVoted(item, false);
             Log.d("djfeed", "BOT-isVoted value: " + isVoted);
@@ -1639,6 +1642,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
 
         public void updatePostView(final SocialPost item, View view, int position) {
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): "+socialPost.getImage1());
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 detailsHolder.setVisibility(View.VISIBLE);
                 if (isProductLink(item.getImage1()) != null) {

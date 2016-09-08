@@ -681,7 +681,7 @@ public class ProductsFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 holder = new ProductViewHolder(LayoutInflater.from(context)
-                        .inflate(R.layout.layout_product_card,
+                        .inflate(R.layout.layout_product_card_v27,
                                 parent, false));
                 convertView = holder.itemview;
                 convertView.setTag(holder);

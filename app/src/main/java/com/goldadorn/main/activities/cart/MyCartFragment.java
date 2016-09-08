@@ -54,6 +54,14 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     HashMap<Integer, Integer> mapOfProdsToQuantity;
     Typeface typeface;
 
+    protected boolean displayBottomBtns(){
+        return true;
+    }
+
+    protected boolean displayQtyHolder(){
+        return true;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -179,7 +187,8 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             Log.e("iii---", p.getTransId() + "--" + mCostTotal + "--" + p.getOrderQty());
 
             if (p.getOrderQty() == 0) {
-                UIController.removeFromCart(getContext(), p.getTransId(), /*p.getOrderQty()*/1, getOrderQtyToRemove(p.getTransId(), p.getOrderQty()),
+                int reduceqty = p.getPreviousQty() - p.getOrderQty();
+                UIController.removeFromCart(getContext(), p.getTransId(), /*p.getOrderQty()*/ reduceqty, getOrderQtyToRemove(p.getTransId(), p.getOrderQty()),
                         new IResultListener<ProductResponse>() {
                             @Override
                             public void onResult(ProductResponse result) {
@@ -227,7 +236,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         if (mCart.size() > 0) {
             mCartEmptyView.setVisibility(View.GONE);
             mCartProductsViewHolder.setVisibility(View.VISIBLE);
-            mCartProductsViewHolder.bindUI(mCart);
+            mCartProductsViewHolder.bindUI(mCart, displayBottomBtns(), displayQtyHolder());
         } else {
             mCartEmptyView.setVisibility(View.VISIBLE);
             mCartProductsViewHolder.setVisibility(View.GONE);
@@ -237,7 +246,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     @Override
-    public void onQuantityChanged(/*Product product*/) {
+    public void onQuantityChanged(int prevQty, int newQty/*Product product*/) {
         if (!isFirst) {
             WindowUtils.marginForProgressViewInGrid = 25;
             ((CartManagerActivity) getActivity()).showOverLay(null, R.color.colorPrimary,

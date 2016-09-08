@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.support.gcm.GcmIntentService;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
@@ -31,6 +32,8 @@ public class MyFcmInstanceIDListenerService extends FirebaseInstanceIdService {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         // TODO: Implement this method to send any registration to your app's servers.
+
+        UserSession.getInstance().setFcmToken(refreshedToken);
         //sendRefreshTokenToServer(refreshedToken);
 
 

@@ -232,7 +232,6 @@ public class SocialPost extends ServerError implements IParseableObject {
 
             userPic = URLHelper.parseImageURL(userPic);
 
-            String oldData = image1;
             Log.d("dj", "image1: " + image1);
             if (image1 != null && image1.trim().equals("") == false)
                 image1 = URLHelper.parseImageURL(image1);

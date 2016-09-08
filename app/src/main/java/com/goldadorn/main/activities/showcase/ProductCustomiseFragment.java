@@ -1258,6 +1258,8 @@ public class ProductCustomiseFragment extends Fragment {
             if (/*title.equals(PBD_Discount) || */title.equals(PBD_FinalPrice) || title.equals(PBD_total)) {
                 UiRandomUtils.setTypefaceBold(holder.tvValue);
                 UiRandomUtils.setTypefaceBold(holder.tvTitle);
+                holder.tvTitle.setTextColor(Color.BLACK);
+                holder.tvValue.setTextColor(Color.BLACK);
             }
             holder.tvValue.setText(ourList.get(position).getTvValue());
             if (title.equals(PBD_Discount)){

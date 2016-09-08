@@ -353,6 +353,16 @@
             android:textSize="16sp" />
 
         <Button
+            android:id="@+id/nav_dia_qual_guide"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/diaQualGuide"
+            android:textSize="16sp" />
+
+        <Button
             android:id="@+id/nav_buy_back_policy"
             style="@style/linkButton"
             android:layout_width="match_parent"

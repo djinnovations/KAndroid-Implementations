@@ -22,6 +22,7 @@ android {
             //buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
             //both debug and live are referring to GA (changed at 16/o5/16 6:30 pm)
             buildConfigField 'String', 'END_POINT', '"http://107.170.99.118/goldadorn_dev/rest/"'
+            buildConfigField 'String', 'END_POINT_NO_REST', '"http://107.170.99.118/goldadorn_dev/"'
             //buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
 
             //buildConfigField 'String', 'IMAGE_END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/"'
@@ -93,6 +94,7 @@ android {
             buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
 
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
+            buildConfigField 'String', 'END_POINT_NO_REST', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
 
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://peopleimages.tuxer5qf9ekl44m.netdna-cdn.com/goldadorn_dev/"'

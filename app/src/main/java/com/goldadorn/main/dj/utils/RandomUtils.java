@@ -25,6 +25,7 @@ import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
+import com.goldadorn.main.model.Address;
 import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.server.response.TimelineResponse;
@@ -70,6 +71,14 @@ public class RandomUtils {
         }else return amtToReturn;*/
     }
 
+
+    public static String getAddressTxt(Address address){
+        StringBuilder sbr = new StringBuilder();
+        sbr.append(address.name).append("\n");
+        sbr.append(address.street).append(", ").append(address.city).append(", ").append(address.state)
+                .append(". Pin:").append(address.pincode).append("\n").append("Ph: ").append(address.phoneNumber);
+        return sbr.toString();
+    }
 
     public static void exitFromAPP() {
         System.exit(0);

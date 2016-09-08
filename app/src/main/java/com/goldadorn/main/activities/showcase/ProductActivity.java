@@ -354,7 +354,7 @@ public class ProductActivity extends BaseDrawerActivity {
     public void query2ndAPIprodInfo(){
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(PROD_INFO_2nd_API_CALL);
         ajaxCallback.method(AQuery.METHOD_GET);
-        getAQueryCustom().ajax(ApiKeys.getProdInfoMetalStone(mProduct.id), String.class, ajaxCallback);
+        getAQueryCustom().ajax(ApiKeys.getProdInfoMetalStoneAPI(mProduct.id), String.class, ajaxCallback);
     }
 
     /*private void updateProductInfoTab(ProductInfoTabUpdationDataObj dataObj){
@@ -403,7 +403,9 @@ public class ProductActivity extends BaseDrawerActivity {
 
     public String getDiscount() {
         String temp = mProdCustFrag.getPriceBreakDownParam(ProductCustomiseFragment.PBD_Discount);
-        return temp == null ? "NA" : temp;
+        if (temp != null)
+            temp = "- " + temp;
+        return temp == null ? "0" : temp;
     }
 
 

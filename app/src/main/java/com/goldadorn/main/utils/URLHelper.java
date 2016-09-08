@@ -36,7 +36,7 @@ public class URLHelper {
         endPointSocial = BuildConfig.END_POINT;
         htmlEndPoint= BuildConfig.HTML_END_POINT;
         iamgeEndPoint= BuildConfig.IMAGE_END_POINT;
-        productImageEndPoint= BuildConfig.PRODUCT_IMAGE_END_POINT;
+        productImageEndPoint= BuildConfig./*PRODUCT_IMAGE_END_POINT*/SHOWCASE_COLLECTION_HOST;
         collectionImageEndPoint=BuildConfig.COLLECTION_IMAGE_END_POINT;
         websiteEndPoint= BuildConfig.WEBSITE_PRODUCT_END_POINT;
         productTypesImageEndPoint=BuildConfig.PRODUCT_TYPES_IMAGE_END_POINT;
@@ -58,14 +58,15 @@ public class URLHelper {
         return endPointSocial+VERB.GET_PRODUCTS_LIKES;
     }
 
-    /*public String getDesignersFilter(int offset) {
+    public String getDesignersFilter(int offset) {
         return endPointSocial+VERB.GET_DESIGNERS_FILTER+"/"+offset;
-    }*/
+    }
 
+   /* @Deprecated
     public String getDesignersFilter(int offset) {
         String newEndPoint = "http://goldadorn.cloudapp.net/goldadorn_dev/rest/";
         return newEndPoint+VERB.GET_DESIGNERS_FILTER+"/"+offset;
-    }
+    }*/
 
     public String getCollectionData(int offset) {
         return endPointCommercial+VERB.GET_SCROLL_DATA+"/c/"+offset;
@@ -102,9 +103,9 @@ public class URLHelper {
             url = url.trim().replace(".../", "");
         }
         if(url!=null) {
-            if(url.indexOf("products/")!=-1) {
+            if(url.contains(/*"products/"*/"defaults/")/*!=-1*/ || url.contains("products/")) {
                 url = getInstance().productImageEndPoint + url;
-                url = url.replace("/products/","/");
+                //url = url.replace("/products/","/");
                 return url;
             }
             else
@@ -113,6 +114,7 @@ public class URLHelper {
         return null;
     }
 
+    @Deprecated
     public static String parseImageURLDesignersTemp(String url)
     {
         if(url!=null && url.trim().startsWith("../")) {
@@ -131,7 +133,7 @@ public class URLHelper {
                 return url;
             }
             else{
-                String newEndPointImages = "http://goldadorn.cloudapp.net/goldadorn_dev/";
+                String newEndPointImages = BuildConfig.END_POINT_NO_REST;
                 return newEndPointImages + url;
             }
 

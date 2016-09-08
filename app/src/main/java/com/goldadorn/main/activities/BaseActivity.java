@@ -121,6 +121,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    protected void sendFcmToken(){
+        String token = UserSession.getInstance().getFcmToken();
+        if (token == null)
+            return;
+        Map<String, String> params = new HashMap<>();
+        params.put("token", token);
+        getAQuery().ajax(ApiKeys.getSendFcmTokenAAPI(), params, String.class, getAjaxCallback(SEND_FCM_TOKEN_CALL));
+    }
+
     protected void gotoApp() {
         new Action(this).launchActivity(MainActivity.class, true);
     }
@@ -145,8 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         isMainActivity = isMain;
     }
 
-    ;
-
+    public static final int SEND_FCM_TOKEN_CALL = IDUtils.generateViewId();
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
 
         Log.d("djmain", "url queried- MainActivity: " + url);
@@ -164,7 +172,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             stopProgress();
             new Action(this).launchActivity(LandingPageActivity.class, true);
 
-        } else if (id == postCallToken) {
+        }else if (id == SEND_FCM_TOKEN_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);
+            if (success)
+                Log.d("djfcm", "fcm refresh token successfully sent to server");
+            else Log.d("djfcm", "fcm refresh token failed to be sent to server");
+        }
+        else if (id == postCallToken) {
             SocialFeedFragment socialFeedFragment = UserSession.getInstance().getSocialFeedFragment();
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);

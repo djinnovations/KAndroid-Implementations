@@ -141,8 +141,9 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.length() > 5) { // to confirm rupay card we need min 6 digit.
-                    if (null == issuer) issuer = payuUtils.getIssuer(charSequence.toString());
+                String toCheck = charSequence.toString().trim().replaceAll("\\s","");
+                if (toCheck.length() > 5) { // to confirm rupay card we need min 6 digit.
+                    if (null == issuer) issuer = payuUtils.getIssuer(toCheck);
                     if (issuer != null && issuer.length() > 1 && issuerDrawable == null) {
                         issuerDrawable = getIssuerDrawable(issuer);
                         if (issuer.contentEquals(PayuConstants.SMAE)) { // hide cvv and expiry
@@ -228,7 +229,8 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
                 public void onClick(DialogInterface dialog, int item) {
                     selectedMM = item;
                     Log.d("dj", "Month sel = " + arr[item]);
-                    cardExpiryMonthEditText.setText(String.valueOf(item + 1));
+                    String num = (item+1) < 10 ? "0"+String.valueOf(item) : String.valueOf(item);
+                    cardExpiryMonthEditText.setText(/*String.valueOf(item + 1)*/num);
                     /*Toast.makeText(getApplicationContext(),
                             "Month = " + arr[item], Toast.LENGTH_SHORT).show();*/
                     dialog.dismiss();// dismiss the alertbox after chose option
@@ -328,11 +330,11 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
 
             postData = null;
             // lets get the current card number;
-            cardNumber = String.valueOf(cardNumberEditText.getText());
-            cardName = cardNameEditText.getText().toString();
-            expiryMonth = cardExpiryMonthEditText.getText().toString(); /*String.valueOf((selectedMM + 1));*/
-            expiryYear = cardExpiryYearEditText.getText().toString();
-            cvv = cardCvvEditText.getText().toString();
+            cardNumber = String.valueOf(cardNumberEditText.getText().toString().trim()).replaceAll("\\s","");
+            cardName = cardNameEditText.getText().toString().trim();
+            expiryMonth = /*cardExpiryMonthEditText.getText().toString();*/ String.valueOf((selectedMM + 1));
+            expiryYear = cardExpiryYearEditText.getText().toString().trim();
+            cvv = cardCvvEditText.getText().toString().trim();
 
             // lets not worry about ui validations.
             mPaymentParams.setCardNumber(cardNumber);

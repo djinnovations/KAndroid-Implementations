@@ -49,6 +49,15 @@ public class DateTimeUtils {
         return dateFormat.format(date);
     }
 
+
+    public static String getCurrentDateTime12hr(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
+        Date date = new Date(System.currentTimeMillis());
+        return dateFormat.format(date);
+    }
+
+
+
     private static String _24To12Hour(String _24HrTime) {
 
         try {

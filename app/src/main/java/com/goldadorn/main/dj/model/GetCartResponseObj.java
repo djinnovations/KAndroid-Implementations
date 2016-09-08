@@ -39,6 +39,7 @@ public class GetCartResponseObj {
         Swatches.MixedSwatch stoneSwatch;
         private String prodImageUrl;
         private String toSendBackSize;
+        private int previousQty;
 
         private void onBindResponse() {
             if (!TextUtils.isEmpty(metalSel))
@@ -49,6 +50,7 @@ public class GetCartResponseObj {
             prodImageUrl = UiRandomUtils.getVariousProductLooks(desgnId, productId,
                     UiRandomUtils.getFactor(metalSwatch), 1, true).get(0);
             toSendBackSize = ProductOptions.parseSize(prodSize, prodType);
+            setPreviousQty(orderQty);
         }
 
         public String getMetalDisplayText() {
@@ -138,6 +140,14 @@ public class GetCartResponseObj {
 
         public void setOrderQty(int orderQty) {
             this.orderQty = orderQty;
+        }
+
+        public void setPreviousQty(int prevQty){
+            previousQty = prevQty;
+        }
+
+        public int getPreviousQty(){
+            return previousQty;
         }
     }
 

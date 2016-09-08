@@ -11,10 +11,11 @@ public class UserSession {
 	//private UserProfile currentlyLoggedInUser;
 
 	private SocialFeedFragment socialFeedFragment;
+    private String fcmToken;
+
 	private UserSession(){
 		
 	}
-	
 	
 	public static UserSession getInstance(){
 		if(mUserSession == null){
@@ -22,6 +23,15 @@ public class UserSession {
 		}
 		return mUserSession;
 	}
+
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 
     public SocialFeedFragment getSocialFeedFragment() {
         return socialFeedFragment;
@@ -35,6 +45,8 @@ public class UserSession {
     public void setIsBonbRefreshPending(boolean isPendingRefreshDone){
         isBonbRefreshPending = isPendingRefreshDone;
     }
+
+
 
     public boolean getIsBonbRefreshPending(){
         return isBonbRefreshPending;

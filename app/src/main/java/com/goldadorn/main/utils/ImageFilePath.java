@@ -196,8 +196,8 @@ public class ImageFilePath {
     }
 
 
-    public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isDefault) {
-        return getNewConvention(desId, productid, defMetal, isDefault);
+    public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isNotDefault) {
+        return getNewConvention(desId, productid, defMetal, isNotDefault);
 
         //return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }

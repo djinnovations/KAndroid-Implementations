@@ -234,7 +234,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                 return;
             }
             //status.
-            boolean success = NetworkResultValidator.getInstance().isResultOK(url,(String) json, status, null,
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mContinueButton, this);
             if (success) {
                 if (mPaymentSuccess) {
@@ -287,7 +287,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         mProgressDialog.setCancelable(false);
 
         fetchAddressFromServer(TYPE_ADDRESS_SHIPPING);
-        int color =  ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorBlackDimText);
+        int color = ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorBlackDimText);
         ivShieldCheck.setImageDrawable(new IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_shield_check)
                 .color(color)
@@ -316,7 +316,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         });
     }
 
-    private void setTypeface(){
+    private void setTypeface() {
         TypefaceHelper.setFont(tvCartTotal, tvOrderAmount, tvShieldCheck, mContinueButton);
     }
 
@@ -338,8 +338,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         return false;
     }
 
-    MyCartFragment myCartFragment;
-    SummaryFragment summaryFragment;
+
     public void configureUI(int uistate) {
         mUIState = uistate;
         Fragment f = null;
@@ -347,17 +346,15 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         displayStaticBar();
         //paymentModeUI.setVisibility(View.GONE);
         if (uistate == UISTATE_CART) {
-            if (myCartFragment == null) {
-                f = myCartFragment = new MyCartFragment();
+                f = new MyCartFragment();
                 //mContinueButton.setText("Select address ->");
                 mContinueButton.setVisibility(View.VISIBLE);
-            }else f = myCartFragment;
         } else if (uistate == UISTATE_ADDRESS) {
             if (addressList.size() > 0 && !isEditAddressCall) {
                 mUIState = uistate = UISTATE_ADDRESS;
                 f = new AddressFragment();
                 mContinueButton.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 frame = R.id.frame_overlay;
                 mUIState = uistate = UISTATE_OVERLAY_ADD_ADDRESS;
                 f = AddAddressFragment.newInstance(mAddressToEdit);
@@ -368,7 +365,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             //paymentModeUI.setVisibility(View.VISIBLE);
             //mContinueButton.setVisibility(View.INVISIBLE);
         } else if (uistate == UISTATE_FINAL) {
-            f =summaryFragment= new SummaryFragment();
+            f = new SummaryFragment();
             Bundle args = new Bundle();
             args.putBoolean(IntentKeys.COD_CALL, isCOD);
 
@@ -376,6 +373,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             LinearLayout.LayoutParams param = (LinearLayout.LayoutParams) mContinueButton.getLayoutParams();
             param.weight = 2;
             mContinueButton.setLayoutParams(param);
+            mContinueButton.setOnClickListener(mClickListener);
 
             f.setArguments(args);
             mContinueButton.setText("Go To Social Feed");
@@ -402,12 +400,13 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
 
     @Bind(R.id.shadow)
     View shadow;
-    public void removeStaticBottomBar(){
+
+    public void removeStaticBottomBar() {
         paymentModeUI.setVisibility(View.GONE);
         shadow.setVisibility(View.GONE);
     }
 
-    public void displayStaticBar(){
+    public void displayStaticBar() {
         paymentModeUI.setVisibility(View.VISIBLE);
         shadow.setVisibility(View.VISIBLE);
     }
@@ -416,7 +415,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         return (Button) paymentModeUI.findViewById(R.id.btnPlaceOrder);
     }
 
-    public View getPayInfoView(){
+    public View getPayInfoView() {
         return payInfo;
     }
 
@@ -427,6 +426,8 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     private void refreshToolBar() {
         if (mUIState == /*UISTATE_OVERLAY_ADD_ADDRESS*/UISTATE_ADDRESS) {
             mToolbar.setTitle("Add Address");
+        } else if (mUIState == UISTATE_FINAL) {
+            mToolbar.setTitle("Order Summary");
         } else {
             mToolbar.setTitle("My Cart");
         }
@@ -453,8 +454,8 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         }
     }
 
-    public void showDialogInfo(String msg, boolean isPositive){
-        int color ;
+    public void showDialogInfo(String msg, boolean isPositive) {
+        int color;
         color = isPositive ? R.color.colorPrimary : R.color.Red;
         WindowUtils.getInstance(getApplicationContext()).genericInfoMsgWithOK(this, null, msg, color);
     }
@@ -465,16 +466,16 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             if (v.getId() == R.id.image) {
                 if (true)
                     return;
-                if (summaryFragment != null) {
+                /*if (summaryFragment != null) {
                     if (summaryFragment.getUserVisibleHint()) {
                         showDialogInfo("Sorry, you cannot go back!", false);
                         return;
                     }
-                }
+                }*/
                 boolean complete = (boolean) v.getTag(TAG_PROGRESS);
                 if (complete) {
                     int uistate = (int) v.getTag();
-                    if (uistate != UISTATE_FINAL){
+                    if (uistate != UISTATE_FINAL) {
                         configureUI(uistate);
                     }
                 }
@@ -505,9 +506,9 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     public void storeCartData(/*ArrayList<Product> cart,*/ long costTotal) {
         mCartItems.clear();
         /*if (cart != null) {*/
-            //mCartItems.addAll(cart);
-            mCostTotal = costTotal;
-            Log.d("djcart", "mCostTotal: " + mCostTotal);
+        //mCartItems.addAll(cart);
+        mCostTotal = costTotal;
+        Log.d("djcart", "mCostTotal: " + mCostTotal);
         //}
     }
 
@@ -522,11 +523,33 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
     private boolean isCOD;
+    String payMode;
+
+    @Override
+    public String getPaymentDone() {
+        if (payMode.equals("net"))
+            return "Net Banking";
+        else if (payMode.equals("cre"))
+            return "Credit Card";
+        else if (payMode.equals("deb"))
+            return "Debit Card";
+        else if (payMode.equals("emi"))
+            return "EMI";
+        else if (payMode.equals("cod"))
+            return "Cash On Delivery";
+        return "";
+    }
+
+
+    public Address getShippingAddress() {
+        return mSelectedAddress;
+    }
 
     @Override
     public void setPaymentDone(boolean done, boolean isCOD, String payMode) {
         mPaymentSuccess = done;
         this.isCOD = isCOD;
+        this.payMode = payMode;
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: CHECKOUT_SUCCESSFUL");
         logEventsAnalytics(GAAnalyticsEventNames.CHECKOUT_SUCCESSFUL);
         if (done) {
@@ -553,6 +576,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
+            Log.d("djcart", "req params - paymentMadeAPI" + params);
             Map<String, Object> paramsMap = new HashMap<>();
             paramsMap.put(AQuery.POST_ENTITY, entity);
             //params.put("transId", transIds);
@@ -564,7 +588,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
 
-    public void logAnEvent(String eventName){
+    public void logAnEvent(String eventName) {
         logEventsAnalytics(eventName);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: eventName");
     }

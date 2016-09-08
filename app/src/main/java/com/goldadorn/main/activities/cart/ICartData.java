@@ -16,4 +16,7 @@ public interface ICartData {
     public long getBillableAmount();
     public void setPaymentDone(boolean done, boolean isCOD, String payMode);
     public boolean isPaymentDone();
+
+    String getPaymentDone();
+    Address getShippingAddress();
 }
