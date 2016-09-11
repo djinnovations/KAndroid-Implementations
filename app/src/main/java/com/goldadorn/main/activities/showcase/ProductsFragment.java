@@ -50,6 +50,7 @@ import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.ImageLoaderUtils;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.mikepenz.iconics.view.IconicsButton;
@@ -124,6 +125,11 @@ public class ProductsFragment extends Fragment {
 
     private SwipeDeckAdapter mSwipeDeckAdapter;
     private Product mProduct;
+
+    private void setFontTypeface(){
+        UiRandomUtils.setTypefaceBold(mNameText);
+        TypefaceHelper.setFont(mPriceText, product_price_slash, mBuyButton);
+    }
 
     public static ProductsFragment newInstance(int mode, User user, Collection collection) {
         ProductsFragment f = new ProductsFragment();
@@ -224,6 +230,7 @@ public class ProductsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         //setUserIdAndCollectionId();
+        setFontTypeface();
         UiRandomUtils.strikeThroughText(product_price_slash);
         mEndView.setOnClickListener(/*new View.OnClickListener() {
             @Override

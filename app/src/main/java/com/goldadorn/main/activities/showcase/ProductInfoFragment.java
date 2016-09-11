@@ -31,6 +31,7 @@ import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.utils.ImageFilePath;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -82,7 +83,6 @@ public class ProductInfoFragment extends Fragment {
     View mChileview = null;
 
     private float mTotalPrice = 0;
-
     ProductActivity mProductActivity;
 
     @Nullable
@@ -107,6 +107,10 @@ public class ProductInfoFragment extends Fragment {
         estimatedDelTime_desc.setText(listOfDescription.get(3) == null ? "" : listOfDescription.get(3)*//* + " days"*//*);
         paymentModesAvail_desc.setText(listOfDescription.get(4) == null ? "" : listOfDescription.get(4));
     }*/
+
+    private void setFontTypeface(){
+        TypefaceHelper.setFont(mProductOwnerName, mCollectionName, mdescription, mProductDetail);
+    }
 
 
     private View getTitleMessageView(View child, ViewGroup parent , TitleDescImageDataObj dataObj) {
@@ -155,6 +159,9 @@ public class ProductInfoFragment extends Fragment {
                 "Collection Style");*/
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
+        setFontTypeface();
+        TypefaceHelper.setFont(view.findViewById(R.id.description), view.findViewById(R.id.product_detail_style)
+                , view.findViewById(R.id.product_detail_style).findViewById(R.id.title));
 
         //followButton.setVisibility(View.GONE);
         /*((TextView) view.findViewById(R.id.paymentModesAvail).findViewById(R.id.title)).setText(
@@ -250,10 +257,12 @@ public class ProductInfoFragment extends Fragment {
                 mTableContainer.setVisibility(View.VISIBLE);
                 //StoneDetail t = rows.get(0);
                 TableRowHolder head = new TableRowHolder(mTableContainer.findViewById(R.id.heading));
+                TypefaceHelper.setFont(mTableContainer.findViewById(R.id.heading));
                 head.setTextColor(Color.WHITE);
                 head.setTextSize(getResources().getDimension(R.dimen.ts_primary));
                 head.itemView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 head.component.setText("Component");
+                TypefaceHelper.setFont(head.component, head.rate, head.weight, head.price, head.offer_price);
                 head.rate.setText("Rate\n(" + "INR/weight" + ")");//to be changed from backend
                 head.weight.setText("Weight");
                 //(" + t.weightunit + ");
@@ -371,6 +380,8 @@ public class ProductInfoFragment extends Fragment {
         } else {
             holder = (TableRowHolder) convertView.getTag();
         }
+        TypefaceHelper.setFont(holder.component, holder.rate, holder.offer_price, holder.price
+                , holder.weight, holder.component);
         int grey = getResources().getColor(R.color.cb_dark_grey);
         int gold = getResources().getColor(R.color.colorPrimary);
         if (display2Rows) {
@@ -429,6 +440,8 @@ public class ProductInfoFragment extends Fragment {
         } else {
             holder = (TableRowHolder) convertView.getTag();
         }
+        TypefaceHelper.setFont(holder.component, holder.rate, holder.weight
+        , holder.offer_price, holder.price);
         holder.itemView.setBackgroundColor(Color.WHITE);
         if (mType.equalsIgnoreCase(MAKING_CHARGES)) {
             holder.component.setTextColor(getResources().getColor(R.color.controlColor));

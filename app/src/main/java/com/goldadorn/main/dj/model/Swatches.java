@@ -61,8 +61,11 @@ public class Swatches {
                 return purity + purityUnits + " " + color + " " + type;
             }
             else if (WHICH_TYPE == TYPE_GEMSTONE) {
-                if (getType().equalsIgnoreCase("diamond"))
+                if (getType().equalsIgnoreCase("diamond")) {
+                    if (color.equals("-1"))
+                        return purity;
                     return color + " - " + purity;
+                }
                 else return "NA";
             }
             return "";

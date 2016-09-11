@@ -101,9 +101,9 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     private void setUpSection1() {
         Map<String, String> attr = new HashMap<>();
         attr.put("Order Date", DateTimeUtils.getCurrentDateTime12hr());
-        attr.put("Order ID", "XXXX0123");
+        attr.put("Order ID", ((CartManagerActivity) getActivity()).getOrderId());
         attr.put("Order Amount", ((CartManagerActivity) getActivity()).getTvAmount().getText().toString());
-        View tempView = getCardView(attr, null, "Manage Orders");
+        View tempView = getCardView(attr, null, "Manage Orders", true);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
         , ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.BELOW, congratsHolder.getId());
@@ -117,19 +117,21 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
     private void setUpSection3and4() {
         Map<String, String> attr = new HashMap<>();
         attr.put("Payment Method", ((CartManagerActivity) getActivity()).getPaymentDone());
-        View tempView = getCardView(attr, "Payment Info", null);
+        View tempView = getCardView(attr, "Payment Info", null, false);
         section3and4Holder.addView(tempView);
         Map<String, String> attr1 = new HashMap<>();
         attr1.put(RandomUtils.getAddressTxt(((CartManagerActivity) getActivity()).getShippingAddress())
                 , /*((CartManagerActivity) getActivity()).getPaymentDone()*/null);
-        View tempView1 = getCardView(attr1, "Shipping Address", null);
+        View tempView1 = getCardView(attr1, "Shipping Address", null, false);
         section3and4Holder.addView(tempView1);
     }
 
     ResourceReader rsdr;
-    private View getCardView(Map<String, String> bodyItems, String headerTxt, String bottomFunc) {
+    private View getCardView(Map<String, String> bodyItems, String headerTxt, String bottomFunc, boolean isSection1) {
         CardItemsViewHolder viewHolder = new CardItemsViewHolder(View.inflate(Application.getInstance()
                 , R.layout.title_bottom_function_body_txt, null));
+        if (isSection1)
+            viewHolder.line1.setVisibility(View.GONE);
         viewHolder.onBind(bodyItems, headerTxt, bottomFunc);
         return viewHolder.itemView;
     }
@@ -139,6 +141,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
 
         @Bind(R.id.titleLabel)
         View titleLabel;
+        @Bind(R.id.line1)
+        View line1;
         @Bind(R.id.llbodyHolder)
         LinearLayout llbodyHolder;
         @Bind(R.id.bottomFunction)

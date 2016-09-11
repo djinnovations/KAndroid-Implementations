@@ -106,6 +106,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         View bottomBtnHolder;
         @Bind(R.id.qtyHolder)
         View qtyHolder;
+        @Bind(R.id.tvQty)
+        TextView tvQty;
         /*@Bind(R.id.tvPositive)
         ImageView ivRemoveFromCart;*/
         //private Product product;
@@ -188,6 +190,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
             String metalTxt = itemToBind.getMetalDisplayText();
             String stoneTxt = itemToBind.getDiamondDisplayText();
+            tvQty.setText("Quantity: "+String.valueOf(itemToBind.getOrderQty()));
             if (metalTxt != null)
                 metal.setText("Metal: "+metalTxt);
             if (!TextUtils.isEmpty(stoneTxt)){

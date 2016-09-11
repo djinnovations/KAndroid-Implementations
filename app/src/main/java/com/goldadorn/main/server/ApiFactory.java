@@ -105,13 +105,16 @@ public class ApiFactory extends ExtractResponse {
             case REMOVE_CART_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("removeproductsfromcart");
+                builder.appendPath("removeproductsfromcartv27");
                 break;
             }
             case CART_DETAIL_TYPE: {
                 builder.appendPath("goldadorn_prod");
                 builder.appendPath("rest");
-                builder.appendPath("getcartdetailsv27");
+                if (isUseGetCart)
+                    builder.appendPath("getcartdetailsv27");
+                else builder.appendPath("getorderdetailsv27");
+
 
                 /*builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
                 builder.appendPath(urlBuilder.mResponse.mPageCount + "");*/
@@ -146,6 +149,8 @@ public class ApiFactory extends ExtractResponse {
         }
         return builder.build().toString();
     }
+
+    static boolean isUseGetCart = true;
 
 
     private static String getUrlFromSocialAPI(Context context, UrlBuilder urlBuilder) {
@@ -697,12 +702,14 @@ public class ApiFactory extends ExtractResponse {
     }
 
 
-    protected static void getCartDetails(Context context, String sessionId, int offset,ProductResponse response) throws IOException, JSONException {
+    protected static void getCartDetails(Context context, boolean isUseGetCart, String orderId, int offset,ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
             return;
         }
+
+        ApiFactory.isUseGetCart = isUseGetCart;
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
             urlBuilder.mUrlType = CART_DETAIL_TYPE;
@@ -714,8 +721,10 @@ public class ApiFactory extends ExtractResponse {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
-            jsonObject.put("userid", Application.getInstance().getUser().id);
+            jsonObject.put("userId", Application.getInstance().getUser().id);
             jsonObject.put("off", offset);
+            if (!isUseGetCart)
+                jsonObject.put("orderId", orderId);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Log.d("djapi","reqparams - getCartDetails: "+jsonObject);
             Response httpResponse = ServerRequest.doPostRequest(context, getUrl(context, urlBuilder), getHeaders(context, paramsBuilder), body);

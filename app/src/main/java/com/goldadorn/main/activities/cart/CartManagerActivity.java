@@ -27,6 +27,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
+import com.goldadorn.main.dj.model.GetCartResponseObj;
 import com.goldadorn.main.dj.model.ShipmentBillingAddress;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
@@ -101,7 +102,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     @Bind(R.id.tvCartTotal)
     TextView tvCartTotal;
 
-    public List<Product> mCartItems = new ArrayList<>();
+    public ArrayList<GetCartResponseObj.ProductItem> mCartMain = new ArrayList<>();
     public long mCostTotal;
     private boolean mPaymentSuccess;
     private Address mSelectedAddress;
@@ -118,6 +119,19 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             action(navigationDataObject);
     }
 
+    @Override
+    public int getItemCount() {
+        return getTotalQty(mCartMain);
+    }
+
+
+    public int getTotalQty(List<GetCartResponseObj.ProductItem> prodList){
+        int totalQty = 0;
+        for (GetCartResponseObj.ProductItem product : prodList) {
+            totalQty = totalQty + product.getOrderQty();
+        }
+        return totalQty;
+    }
 
     private Dialog overLayDialog;
 
@@ -185,7 +199,6 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     private final int NOTIFY_PAYMENT_CALL = IDUtils.generateViewId();
 
     private void updatePaymentStatToServer(Map<String, Object> params) {
-        Log.d("djcart", "req param - updatePaymentStatToServer: " + params);
         WindowUtils.marginForProgressViewInGrid = 20;
         showOverLay("Processing...", R.color.colorPrimary, WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(NOTIFY_PAYMENT_CALL);
@@ -238,7 +251,13 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                     mContinueButton, this);
             if (success) {
                 if (mPaymentSuccess) {
-                    configureUI(UISTATE_FINAL);
+                    try {
+                        JSONObject jsonObject = new JSONObject(json.toString());
+                        setOrderId(jsonObject.getString("orderId"));
+                        configureUI(UISTATE_FINAL);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else
                 Toast.makeText(getApplicationContext(), "Unable to process", Toast.LENGTH_SHORT).show();
@@ -346,13 +365,13 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         displayStaticBar();
         //paymentModeUI.setVisibility(View.GONE);
         if (uistate == UISTATE_CART) {
-                f = new MyCartFragment();
-                //mContinueButton.setText("Select address ->");
-                mContinueButton.setVisibility(View.VISIBLE);
+            f = new MyCartFragment();
+            //mContinueButton.setText("Select address ->");
+            mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_ADDRESS) {
             if (addressList.size() > 0 && !isEditAddressCall) {
-                mUIState = uistate = UISTATE_ADDRESS;
-                f = new AddressFragment();
+                mUIState = uistate = /*UISTATE_ADDRESS*/UISTATE_PAYMENT;
+                f = new /*AddressFragment()*/PaymentFragment();
                 mContinueButton.setVisibility(View.VISIBLE);
             } else {
                 frame = R.id.frame_overlay;
@@ -503,18 +522,30 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     };
 
     @Override
-    public void storeCartData(/*ArrayList<Product> cart,*/ long costTotal) {
-        mCartItems.clear();
-        /*if (cart != null) {*/
-        //mCartItems.addAll(cart);
-        mCostTotal = costTotal;
-        Log.d("djcart", "mCostTotal: " + mCostTotal);
-        //}
+    public void storeCartData(ArrayList<GetCartResponseObj.ProductItem> mCart, long costTotal) {
+        mCartMain = new ArrayList<>();
+        if (mCart != null) {
+            mCartMain.addAll(mCart);
+            mCostTotal = costTotal;
+            Log.d("djcart", "mCostTotal: " + mCostTotal);
+        }
+    }
+
+    private String orderId = "-1";
+    @Override
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+
+    @Override
+    public String getOrderId() {
+        return orderId;
     }
 
     @Override
-    public List<Product> getCartProducts() {
-        return mCartItems;
+    public ArrayList<GetCartResponseObj.ProductItem> getCartProducts() {
+        return mCartMain;
     }
 
     @Override
@@ -558,12 +589,13 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             params.put("status", Integer.valueOf(2));*/
             JSONObject params = new JSONObject();
             try {
-                params.put("userID", getApp().getUser().id);
+                params.put("userId", getApp().getUser().id);
                 params.put("status", /*Integer.valueOf(2)*/"pass");
+                params.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
                 JSONArray transIds = new JSONArray();
                 int i = 0;
-                for (Product prod : mCartItems) {
-                    transIds.put(prod.transid);
+                for (GetCartResponseObj.ProductItem prod : mCartMain) {
+                    transIds.put(prod.getTransId());
                 }
                 params.put("transId", transIds);
                 params.put("modePay", payMode);

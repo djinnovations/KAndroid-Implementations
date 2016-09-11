@@ -154,6 +154,8 @@ public class ProductCustomiseFragment extends Fragment {
         public void onBindViewHolder(ViewHolder holder, int position) {
             this.holder = holder;
             ((TextView) holder.itemView.findViewById(R.id.tvTitle)).setText(title);
+            TypefaceHelper.setFont(holder.itemView.findViewById(R.id.tvTitle));
+            TypefaceHelper.setFont(holder.itemView.findViewById(R.id.tvItem));
             /*if (isHolderWasNull) {
                 bindProductOptions(mProductOption);
             }*/
@@ -248,6 +250,7 @@ public class ProductCustomiseFragment extends Fragment {
             @Override
             public void onBindView(int id, RecyclerView.ViewHolder holder) {
                 ((TextView) holder.itemView.findViewById(R.id.title)).setText(title);
+                TypefaceHelper.setFont(holder.itemView.findViewById(R.id.title));
             }
         });
     }
@@ -262,6 +265,7 @@ public class ProductCustomiseFragment extends Fragment {
             @Override
             public void onBindView(int id, RecyclerView.ViewHolder holder) {
                 ((TextView) holder.itemView.findViewById(R.id.title)).setText(title);
+                TypefaceHelper.setFont(holder.itemView.findViewById(R.id.title));
                 /*if (which == TITLE_SIZE_DIALOG) {
                     setTextStyle((TextView) holder.itemView.findViewById(R.id.title), 16,
                             rsRdr.getColorFromResource(R.color.colorBlackDimText), Gravity.LEFT);
@@ -892,7 +896,7 @@ public class ProductCustomiseFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-
+            TypefaceHelper.setFont(holder.itemView.findViewById(R.id.addToCart));
             holder.itemView.findViewById(R.id.addToCart).setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -974,6 +978,7 @@ public class ProductCustomiseFragment extends Fragment {
             holder.itemView.findViewById(R.id.tvNegative).setOnClickListener(negativeClick);
             tvPositive = (TextView) holder.itemView.findViewById(R.id.tvPositive);
             tvPositive.setOnClickListener(positiveClick);
+            TypefaceHelper.setFont(tvPositive, holder.itemView.findViewById(R.id.tvNegative));
             enableDoneIfNeeded();
         }
 
@@ -1057,6 +1062,7 @@ public class ProductCustomiseFragment extends Fragment {
         @Override
         public void onBindViewHolder(SizeViewHolder holder, int position) {
             this.holder = holder;
+            TypefaceHelper.setFont(holder.tvTitle, holder.tvSelectExtra, holder.tvAdapter);
             holder.ivImageExtra.setVisibility(View.GONE);
             //holder.tvSelectExtra.setVisibility(View.GONE);
             holder.ivAddRemove.setOnClickListener(ivAddClick);

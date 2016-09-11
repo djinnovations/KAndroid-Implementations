@@ -106,7 +106,7 @@ http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
         private static final String SET_CART_ADDRESS_API = "setuseraddress";
         private static final String CONTACT_US_API = "contactus";
         private static final String UPDATE_NOTIFICATION_COUNT = "updatenotification";
-        private static final String UPDATE_PAYMENT_API = "notifypaymentstatus";
+        private static final String UPDATE_PAYMENT_API = "notifypaymentstatusv27";
         @Deprecated
         private static final String NEW5_DESC_API = "getproductbasicinfo";
         private static final String BOOK_APPOINTMENT_API = "bookappointment";

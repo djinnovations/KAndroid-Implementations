@@ -30,4 +30,10 @@ public class MyCartFragmentReplica extends MyCartFragment{
         //return super.displayQtyHolder();
         return false;
     }
+
+    @Override
+    protected boolean getIsUseCart() {
+        //return super.getIsUseCart();
+        return false;
+    }
 }

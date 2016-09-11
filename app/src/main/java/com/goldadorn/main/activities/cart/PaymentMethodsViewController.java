@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,6 +78,7 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
             /*tvMethods = (TextView) itemView.findViewById(R.id.tvMethod);
             rbtn = (RadioButton) itemView.findViewById(R.id.radioBtn);
             rlCheckPay = itemView.findViewById(R.id.rlCheckPay);*/
+            TypefaceHelper.setFont(tvMethods);
             rlCheckPay.setOnClickListener(this);
         }
 

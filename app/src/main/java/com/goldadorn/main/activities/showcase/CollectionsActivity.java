@@ -58,6 +58,7 @@ import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -833,6 +834,10 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
         @Bind(R.id.shareButton)
         ImageView share;
 
+        private void setFontTypeface(){
+            TypefaceHelper.setFont(name, ownerName, extra);
+        }
+
         public void setBadges(boolean featured, boolean trending) {
             mFeatured.setVisibility(featured ? View.VISIBLE : View.GONE);
             mTrending.setVisibility(trending ? View.VISIBLE : View.GONE);
@@ -846,6 +851,7 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
             share.setOnClickListener(this);
             btnBookApoint.setOnClickListener(this);
             ownerName.setOnClickListener(this);
+            setFontTypeface();
             //RandomUtils.underLineTv(ownerName);
         }
 

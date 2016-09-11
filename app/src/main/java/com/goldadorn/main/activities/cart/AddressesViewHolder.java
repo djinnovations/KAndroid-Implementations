@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.model.Address;
+import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.util.ArrayList;
 
@@ -99,6 +100,7 @@ class AddressesViewHolder extends RecyclerView.ViewHolder {
             actionEdit = (ImageView) itemView.findViewById(R.id.action_edit);
             checkBox.setVisibility(View.GONE);
             actionEdit.setOnClickListener(this);
+            TypefaceHelper.setFont(name, detailedAddress);
         }
 
         public void bindUI(Address address) {

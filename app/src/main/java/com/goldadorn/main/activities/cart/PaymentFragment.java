@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -27,9 +29,12 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.model.Address;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.payu.india.Interfaces.DeleteCardApiListener;
 import com.payu.india.Interfaces.GetStoredCardApiListener;
 import com.payu.india.Interfaces.PaymentRelatedDetailsListener;
@@ -58,6 +63,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Kiran BH on 10/03/16.
@@ -90,7 +98,8 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
     public void onViewCreated(View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((CartManagerActivity)getActivity()).showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        ButterKnife.bind(this, view);
+        ((CartManagerActivity) getActivity()).showOverLay(null, R.color.Black, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         LinearLayout paymethodContainer = (LinearLayout) view.findViewById(R.id.paymethodContainer);
         setUpPaymentMethodView(view);
 
@@ -103,6 +112,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         //mAddButton.setText("Add new payment method");
         //mAddButton.setOnClickListener(mAddClick);
         ((TextView) view.findViewById(R.id.cart_desc)).setText("Pay with");
+        TypefaceHelper.setFont(((TextView) view.findViewById(R.id.cart_desc)));
         //mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         mPayUHelper = new PayUHelper(getActivity(), mCartData.getBillableAmount(), new IResultListener<Bundle>() {
@@ -136,7 +146,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                         // close the progress bar
                         //mProgressBar.setVisibility(View.GONE);
                     }
-                    ((CartManagerActivity)getActivity()).dismissOverLay();
+                    ((CartManagerActivity) getActivity()).dismissOverLay();
                 } //i'll check
             }
         });
@@ -153,6 +163,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     //private final String[] payMethodArr = new String[]{"Net Banking", "Credit Card", "EMI", "Debit Card", "Cash on Delivery"};
     private final String[] payMethodArr = new String[]{"Debit Card", "Net Banking", "Credit Card", "Cash on Delivery", "EMI"};
+
     private void setUpPaymentMethodView(View view) {
         /*payMethodList = new ArrayList<>();
 
@@ -197,14 +208,88 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         int selection = 0;// select debit card by default
         int i = 0;
         for (String str : payMethodArr) {
-            /*if (i == 1)*/if (i == selection)
+            /*if (i == 1)*/
+            if (i == selection)
                 list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, true));
             else list.add(new PaymentMethodsViewController.PaymentMethodsDataObj(str, false));
             i++;
         }
         new PaymentMethodsViewController(paymethodContainer, payMethodListener).displayMethods(list);
         modeChosen = /*payMethodArr[1]*/payMethodArr[selection];
+
+        mAddressesHolder = new AddressesViewHolder(getActivity(), (LinearLayout) view.findViewById(R.id.shipAddContainer), mAddressSelectedListener);
+        refreshAddr();
+        setUpPriceDetails(RandomUtils.getIndianCurrencyFormat(getCartActivity().getBillableAmount(), true)
+                , RandomUtils.getIndianCurrencyFormat(getCartActivity().getBillableAmount(), true), getCartActivity().getItemCount());
     }
+
+    private CartManagerActivity getCartActivity() {
+        return (CartManagerActivity) getActivity();
+    }
+
+    ArrayList<Address> mAddresses = new ArrayList<>(5);
+    AddressesViewHolder mAddressesHolder;
+
+    public void refreshAddr() {
+        //mAddresses.clear();
+        mAddresses = ((CartManagerActivity) getActivity()).getShippingAdress();
+        if (mAddresses != null) {
+            if (mAddresses.size() > 0)
+                ((ICartData) getActivity()).storeAddressData(mAddresses.get(0));
+        }
+        onAddressesChanged();
+    }
+
+    /*@Bind(R.id.priceDetailsLabel)
+    View priceDetailsLabel;*/
+    @Bind(R.id.tvPriceDetailTitle)
+    TextView tvPriceDetailTitle;
+    @Bind(R.id.pricesOfItems)
+    View pricesOfItems;
+    @Bind(R.id.container_shipping)
+    View container_shipping;
+    @Bind(R.id.container_total)
+    View container_total;
+    @Bind(R.id.tvShipTitle)
+    TextView tvShipTitle;
+
+    private void setUpPriceDetails(String totalPrice, String itemPrice, int itemCount) {
+        TextView tvPriceLabel = tvPriceDetailTitle;
+        TextView tvPrice = (TextView) pricesOfItems.findViewById(R.id.title);
+        TextView tvPriceCost = (TextView) pricesOfItems.findViewById(R.id.cost);
+        TextView tvShipping = (TextView) container_shipping.findViewById(R.id.title);
+        TextView tvShippingCost = (TextView) container_shipping.findViewById(R.id.cost);
+        TextView tvTotal = (TextView) container_total.findViewById(R.id.title);
+        TextView tvTotalCost = (TextView) container_total.findViewById(R.id.cost);
+        UiRandomUtils.setTypefaceBold(tvTotal);
+        TypefaceHelper.setFont(tvPriceLabel, tvPrice, tvPriceCost, tvShipping, tvShippingCost, tvTotalCost, tvShipTitle);
+        tvPriceLabel.setTextColor(Color.BLACK);
+        tvTotal.setTextColor(Color.BLACK);
+        tvTotalCost.setText(totalPrice);
+        tvPriceCost.setText(itemPrice);
+        tvPrice.setText("Price (" + String.valueOf(itemCount) + "items)");
+        //tvPriceLabel.setText("Price Details");
+        tvShipping.setText("Shipping (Free Delivery)");
+        tvShippingCost.setText(RandomUtils.getIndianCurrencyFormat(0, true));
+        tvTotal.setText("Amount Payable");
+    }
+
+    private void onAddressesChanged() {
+        if (mAddresses.size() > 0) {
+            mAddressesHolder.setVisibility(View.VISIBLE);
+            mAddressesHolder.bindUI(mAddresses);
+        } else {
+            mAddressesHolder.setVisibility(View.GONE);
+        }
+    }
+
+
+    IResultListener<Address> mAddressSelectedListener = new IResultListener<Address>() {
+        @Override
+        public void onResult(Address address) {
+            ((ICartData) getActivity()).storeAddressData(address);
+        }
+    };
 
 
     String paymentMode = "";
@@ -220,7 +305,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 intent.putParcelableArrayListExtra(PayuConstants.NETBANKING, mPayuResponse.getNetBanks());
                 //Toast.makeText(getContext().getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
                 //return;
-            break;
+                break;
             case "Credit Card":
                 paymentMode = "cre";
                 intent = new Intent(getContext(), PayUCreditDebitCardActivity.class);
@@ -286,7 +371,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("djpay", "onActivityResult - PaymentFragment: "+data);
+        Log.d("djpay", "onActivityResult - PaymentFragment: " + data);
         if (requestCode == PayuConstants.PAYU_REQUEST_CODE) {
             if (data != null) {
                 try {
@@ -295,7 +380,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                 if(result.equals(mPaymentParams.getSurl())){
                     mCartData.setPaymentDone(true);
                 }*/
-                    Log.d("djpay", "onActivityResult - payu_response: "+result);
+                    Log.d("djpay", "onActivityResult - payu_response: " + result);
                     String status = null;
                     try {
                         JSONObject json = new JSONObject(result);
@@ -303,12 +388,12 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("djpay", "onActivityResult - transaction stat: "+status);
-                    if (!TextUtils.isEmpty(status)){
-                        if (status.equalsIgnoreCase("success")){
+                    Log.d("djpay", "onActivityResult - transaction stat: " + status);
+                    if (!TextUtils.isEmpty(status)) {
+                        if (status.equalsIgnoreCase("success")) {
                             Log.d("djpay", "onActivityResult - sucecss transaction");
                             mCartData.setPaymentDone(true, false, paymentMode);
-                        }else {
+                        } else {
                             Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -316,9 +401,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
                     e.printStackTrace();
                     try {
                         String result = data.getStringExtra("result");
-                        if(result.contains(mPaymentParams.getSurl())){
+                        if (result.contains(mPaymentParams.getSurl())) {
                             mCartData.setPaymentDone(true, false, paymentMode);
-                        }else {
+                        } else {
                             Toast.makeText(getContext(), "Transaction Unsuccessful", Toast.LENGTH_LONG).show();
                         }
                     } catch (Exception e1) {

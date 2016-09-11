@@ -80,6 +80,7 @@ import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.google.gson.Gson;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -998,11 +999,19 @@ public class ProductActivity extends BaseDrawerActivity {
             }
         };
 
+
+        private void setFontTypeface(){
+            //UiRandomUtils.setTypefaceBold(mNameText);
+            TypefaceHelper.setFont(likesCount, product_price_slash, mProductName, mProductOwner
+            , mProductCollection, mProductCost, mProductName2, mProductCost2, tvDiscountOnRed);
+        }
+
         public OverlayViewHolder(View itemView, AppBarLayout appBarLayout) {
             super(itemView);
             this.appBarLayout = appBarLayout;
             ButterKnife.bind(this, itemView);
             setDrawableForMagGlass();
+            setFontTypeface();
             ivGlass.setOnClickListener(this);
             mProductName.setOnTouchListener(prodNameTouchListener);
             productActionsToggle.setOnClickListener(this);
@@ -1041,6 +1050,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     .color(color)
                     .sizeDp(20));
         }
+
+
 
         public void setVisisbility(int visibility) {
             if (!isProductActions) {
@@ -1683,9 +1694,6 @@ public class ProductActivity extends BaseDrawerActivity {
             else
                 metalSwatch = Swatches.getMixedSwatch(csr.getMetalSwatch(), Swatches.TYPE_METAL);
 
-            if (metalSwatch == null)
-                metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
-
             updateMetalInProdInfoTab(metalSwatch, csr.getWeight());
            /* metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             updateImages(metalSwatch);
@@ -1712,6 +1720,8 @@ public class ProductActivity extends BaseDrawerActivity {
             mProdInfoFragment = null;
         }
 
+        if (metalSwatch == null)
+            metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
         ProductCustomizationTabUpdationDataObj dataObj = new ProductCustomizationTabUpdationDataObj();
         /*if (metalSwatch != null) {*/
 
@@ -1883,7 +1893,7 @@ public class ProductActivity extends BaseDrawerActivity {
         for (StoneDetail stds : mProductInfo.stonesDetails) {
             if (stds.type.equalsIgnoreCase("diamond")) {
                 sb.append(", and ").append(getWeights(mProductInfo.stonesDetails)).append(" cts ")
-                        .append(stds.color).append("-").append(stds.clarity).append(" ").append("diamonds");
+                        .append(stds.color).append("-").append(stds.clarity).append(" quality").append(" ").append("diamonds");
                 break;
             }
         }

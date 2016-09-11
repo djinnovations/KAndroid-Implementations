@@ -47,6 +47,7 @@ import com.goldadorn.main.db.Tables.Users;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -57,6 +58,7 @@ import com.goldadorn.main.server.response.LikeResponse;
 import com.goldadorn.main.server.response.TimelineResponse;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
@@ -1012,14 +1014,30 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         @Bind(R.id.shareButton)
         ImageView shareButton;
 
+        @Bind(R.id.followers_label)
+        TextView followers_label;
+        @Bind(R.id.appointment_label)
+        TextView appointment_label;
+        @Bind(R.id.following_label)
+        TextView following_label;
+
+        private void setFontsTypeface(){
+            UiRandomUtils.setTypefaceBold(brandName);
+            TypefaceHelper.setFont(brandName, followers_label, appointment_label, following_label);
+        }
+
+
         public OverlayViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
+            setFontsTypeface();
             btnBookAppoint.setOnClickListener(this);
             shareButton.setOnClickListener(this);
             followButton.setOnClickListener(this);
         }
+
+
 
         public void setBadges(boolean trending, boolean featured) {
             this.featured.setVisibility(featured ? View.VISIBLE : View.GONE);

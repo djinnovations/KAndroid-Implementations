@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -150,10 +151,33 @@ public class UiRandomUtils {
     }
 
 
-    public static void setTypefaceBold(TextView tv){
+    public static void setTypefaceBold(View... views){
         Typeface typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
                 ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
-        tv.setTypeface(typeface, Typeface.BOLD);
+        for (View tvs: views) {
+            if (tvs instanceof TextView)
+                ((TextView) tvs).setTypeface(typeface, Typeface.BOLD);
+        }
+    }
+
+
+    public static void setTypefaceItalics(View... views){
+        Typeface typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
+                ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+        for (View view: views){
+            if (view instanceof TextView)
+                ((TextView) view).setTypeface(typeface, Typeface.ITALIC);
+        }
+    }
+
+
+    public static void setTypefaceBoldItalics(View... views){
+        Typeface typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
+                ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
+        for (View view: views){
+            if (view instanceof TextView)
+                ((TextView) view).setTypeface(typeface, Typeface.BOLD_ITALIC);
+        }
     }
 
 

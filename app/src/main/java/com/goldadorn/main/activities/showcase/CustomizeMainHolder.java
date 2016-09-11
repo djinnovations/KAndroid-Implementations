@@ -21,6 +21,7 @@ import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.google.repacked.apache.commons.lang3.ArrayUtils;
 import com.rey.material.widget.CircleCheckedTextView;
@@ -130,6 +131,11 @@ class CustomizeMainHolder extends ViewHolder {
             }
         });
 
+        setFontTypeface();
+    }
+
+    private void setFontTypeface(){
+        TypefaceHelper.setFont(name, extra);
     }
 
     /*public void bindUI(Map.Entry<OptionKey, ArrayList<OptionValue>> option) {*/
@@ -181,6 +187,7 @@ class CustomizeMainHolder extends ViewHolder {
             v.setTag(swatch);
             v.setOnClickListener(mItemClick);
             TextView tv = (TextView) v.findViewById(R.id.name);
+            TypefaceHelper.setFont(name);
             /*CircleCheckedTextView image = (CircleCheckedTextView) v.findViewById(R.id.image);
             image.setText(s.getDisplayString());*/
             /*Circular*/ImageView imageView = (/*Circular*/ImageView) v.findViewById(R.id.image);

@@ -29,6 +29,7 @@ import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.LikeResponse;
+import com.goldadorn.main.utils.TypefaceHelper;
 import com.mikepenz.iconics.view.IconicsButton;
 import com.squareup.picasso.Picasso;
 
@@ -287,6 +288,8 @@ public class CollectionsFragment extends Fragment implements UserChangeListener 
             likeCount = (TextView) itemView.findViewById(R.id.collection_likes);
             like = (IconicsButton) itemView.findViewById(R.id.likeButton);
             image = (ImageView) itemView.findViewById(R.id.collection_image);
+
+            TypefaceHelper.setFont(name, description, extra, likeCount);
         }
 
     }

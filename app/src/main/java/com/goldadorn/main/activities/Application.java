@@ -177,7 +177,7 @@ public class Application extends BaseApplication {
         //String urlForSizeGuide = "http://www.amazon.in/Ring-Size-Guides/b?ie=UTF8&node=5274290031";
         String urlForBuyBack = "file:///android_asset/web/buybackpolicy.html";
         String urlForSizeGuide =  "https://www.candere.com/shipping-delivery-and-return-policy.html/";
-        String urlForDiamondQual = /*""*/urlForSizeGuide;
+        String urlForDiamondQual = "http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/o/idsg.jpg";
 
         addItem(menu, R.id.nav_contact_us, R.string.contactUs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.contactUsURL), WebActivity.class);
         addItem(menu, R.id.nav_about_us, R.string.aboutUS, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.aboutUsURL), WebActivity.class);

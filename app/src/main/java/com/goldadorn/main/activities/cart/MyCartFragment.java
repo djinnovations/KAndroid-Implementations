@@ -62,6 +62,20 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         return true;
     }
 
+    /*private boolean isUseCart;
+    protected void setIsUseCart(boolean isUseCart){
+     this.isUseCart = isUseCart;
+    }*/
+
+    protected boolean getIsUseCart(){
+        return true;
+    }
+
+    /*private String orderId;
+     public void setOrderId(String orderId){
+        this.orderId = orderId;
+    }*/
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -111,9 +125,9 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
 
 
         mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
-
+        String orderId = ((CartManagerActivity) getActivity()).getOrderId();
         ((ILoadingProgress) getActivity()).showLoading(true);
-        UIController.getCartDetails(getContext(), Application.getInstance().getCookies().get(0).getValue(), 0
+        UIController.getCartDetails(getContext(), getIsUseCart(), orderId,0
                 ,new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
@@ -157,12 +171,13 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         }
     }
 
-    private int getTotalQty(List<GetCartResponseObj.ProductItem> prodList){
-        int totalQty = 0;
+    public int getTotalQty(List<GetCartResponseObj.ProductItem> prodList){
+       /* int totalQty = 0;
         for (GetCartResponseObj.ProductItem product : prodList) {
             totalQty = totalQty + product.getOrderQty();
         }
-        return totalQty;
+        return totalQty;*/
+        return ((CartManagerActivity) getActivity()).getTotalQty(prodList);
     }
 
 
@@ -242,7 +257,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
         bindCostUi();
-        ((CartManagerActivity) getActivity()).storeCartData(/*mCart,*/ mCostTotal);
+        ((CartManagerActivity) getActivity()).storeCartData(mCart, mCostTotal);
     }
 
     @Override
