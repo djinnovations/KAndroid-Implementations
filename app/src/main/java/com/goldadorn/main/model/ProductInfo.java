@@ -165,7 +165,7 @@ public class ProductInfo {
                 for (int i = 0; i < stonedetailsarray.length(); i++) {
                     try {
                         JSONObject stoneobj = stonedetailsarray.getJSONObject(i);
-                        if (stoneobj.getInt("isPrecious") == 1){
+                        if (stoneobj.getInt("isPrecious") != 1){
                             double weight = stoneobj.optDouble("stoneWeight");
                             String weightString;
                             if (weight < 0)

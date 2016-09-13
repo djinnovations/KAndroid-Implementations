@@ -220,7 +220,7 @@ public class PostPollActivity extends AbstractPostActivity {
             //Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
             ImageLoaderUtils.loadImage(Application.getInstance()
                     , new Image(mProduct.getImageUrl(mProduct.userId, null, false)),
-                    previewIamge, R.drawable.vector_image_logo_square_100dp);
+                    previewIamge, R.drawable.vector_image_logo_square_100dp, false);
         }
     }
 

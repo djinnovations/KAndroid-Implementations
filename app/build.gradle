@@ -17,7 +17,7 @@ android {
             //added by DJphy (Darshan)
             //buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/sociallogin"'
             //buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
-            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://107.170.99.118/goldadorn_dev/rest/sociallogin"'
+/*            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://107.170.99.118/goldadorn_dev/rest/sociallogin"'
 
             //buildConfigField 'String', 'END_POINT', '"http://demo.eremotus-portal.com/goldadorn_dev/rest/"'
             //both debug and live are referring to GA (changed at 16/o5/16 6:30 pm)
@@ -58,13 +58,13 @@ android {
 
             buildConfigField 'String', 'PAYU_ENVIRONMENT', '"1"'
             buildConfigField 'String', 'PAYU_SURL', '"http://107.170.48.64/goldadorn_prod/html/success.html"'
-            buildConfigField 'String', 'PAYU_FURL', '"http://107.170.48.64/goldadorn_prod/html/failure.html"'
+            buildConfigField 'String', 'PAYU_FURL', '"http://107.170.48.64/goldadorn_prod/html/failure.html"'*/
 
 
-
-            /*buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
+            buildConfigField 'String', 'END_POINT_SOCIAL_LOGIN', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/sociallogin"'
 
             buildConfigField 'String', 'END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/rest/"'
+            buildConfigField 'String', 'END_POINT_NO_REST', '"http://goldadorn.cloudapp.net/goldadorn_dev/"'
             buildConfigField 'String', 'END_POINT_COMERCIAL', '"http://demo.eremotus-portal.com/goldadorn_prod/rest/"'
 
             buildConfigField 'String', 'IMAGE_END_POINT', '"http://peopleimages.tuxer5qf9ekl44m.netdna-cdn.com/goldadorn_dev/"'
@@ -76,13 +76,13 @@ android {
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
 
-            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://demo.eremotus-portal.com/"'
+            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/"'
             buildConfigField 'String', 'SHOWCASE_COMMERCIAL', '"demo.eremotus-portal.com"'
             buildConfigField 'String', 'SHOWCASE_SOCIAL', '"goldadorn.cloudapp.net"'
 
             buildConfigField 'String', 'PAYU_ENVIRONMENT', '"0"'
             buildConfigField 'String', 'PAYU_SURL', '"http://demo.eremotus-portal.com/goldadorn_prod/html/success.html"'
-            buildConfigField 'String', 'PAYU_FURL', '"http://demo.eremotus-portal.com/goldadorn_prod/html/failure.html"'*/
+            buildConfigField 'String', 'PAYU_FURL', '"http://demo.eremotus-portal.com/goldadorn_prod/html/failure.html"'
 
         }
 
@@ -106,7 +106,7 @@ android {
             buildConfigField 'String', 'HTML_END_POINT', '"http://goldadorn.cloudapp.net/goldadorn_dev/html/"'
             buildConfigField 'String', 'WEBSITE_PRODUCT_END_POINT', '"http://www.goldadorn.com/"'
 
-            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://demo.eremotus-portal.com/"'
+            buildConfigField 'String', 'SHOWCASE_COLLECTION_HOST', '"http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/"'
             buildConfigField 'String', 'SHOWCASE_COMMERCIAL', '"demo.eremotus-portal.com"'
             buildConfigField 'String', 'SHOWCASE_SOCIAL', '"goldadorn.cloudapp.net"'
 

@@ -239,7 +239,7 @@ public class URLHelper {
     public static class VERB
     {
         //Author DJphy
-        public static final String GET_BASIC_PRODUCT = "getproductbasicinfo";
+        public static final String GET_BASIC_PRODUCT = "getproductbasicinfov27";
 
         public static final String REGISTER="register";
         public static final String LOGIN="login";

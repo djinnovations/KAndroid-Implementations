@@ -47,7 +47,7 @@ public class FilterTimelineFragment extends SocialFeedFragment {
 
     @Override
     public void onResume() {
-        //super.onResume();
+        super.onResume();
         updateComments();
     }
 

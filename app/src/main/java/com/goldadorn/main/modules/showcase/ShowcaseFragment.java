@@ -40,7 +40,7 @@ public class ShowcaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        Bundle b = bundle == null ? getArguments() : bundle;
+        Bundle b = getArguments();
         if(b!=null) {
             mImageUrl = b.getString(EXTRA_IMAGE_URL);
             mPosition = b.getInt(EXTRA_CATEGORY_POSITION);

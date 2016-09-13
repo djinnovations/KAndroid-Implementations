@@ -25,26 +25,18 @@ public class TypefaceHelper {
         text.setTypeface(typeface);
     }
     public static void setFont(TextView text,String fontName) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
     public static void setFont(TextInputLayout text,String fontName) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
     public static void setFont(Button text,String fontName) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
     public static void setFont(RadioButton text,String fontName) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),fontName);
         text.setTypeface(typeface);
     }
@@ -53,55 +45,39 @@ public class TypefaceHelper {
 
 
     public static void setFont(EditText text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_edit_text));
         text.setTypeface(typeface);
     }
     public static void setFont(TextView text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
 
     }
     public static void setFont(TextInputLayout text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
     }
 
     public static void setFont(RadioButton text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
     }
     public static void setFont(Spinner text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
 
     }
     public static void setFont(Spinner text,String fontName) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
 
     }
 
 
     public static void setFont(Button text) {
-        if (true)
-            return;
         Typeface typeface = getTypeFace(text.getContext(),text.getResources().getString(R.string.font_name_text_normal));
         text.setTypeface(typeface);
     }
 
     public static void setFont(View... views) {
-        if (true)
-            return;
         View view;
 
         for (int i = 0; i < views.length; i++) {
@@ -124,9 +100,6 @@ public class TypefaceHelper {
     }
 
     public static void setFont(String fontName,View... views) {
-
-        if (true)
-            return;
         View view;
 
         for (int i = 0; i < views.length; i++) {

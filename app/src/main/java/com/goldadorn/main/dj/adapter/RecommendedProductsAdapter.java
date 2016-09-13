@@ -64,7 +64,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
             ImageLoaderUtils.loadImage(Application.getInstance()
                     , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
                             listOfRecoProds.get(position).getProductId(), null, false)),
-                    holder.ivProd, R.drawable.vector_image_logo_square_100dp);
+                    holder.ivProd, R.drawable.vector_image_logo_square_100dp, true);
 
         } catch (Exception e) {
             e.printStackTrace();

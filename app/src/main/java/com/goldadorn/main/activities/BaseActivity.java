@@ -121,7 +121,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    protected void sendFcmToken(){
+    protected void sendFcmToken() {
         String token = UserSession.getInstance().getFcmToken();
         if (token == null)
             return;
@@ -155,6 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public static final int SEND_FCM_TOKEN_CALL = IDUtils.generateViewId();
+
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
 
         Log.d("djmain", "url queried- MainActivity: " + url);
@@ -172,39 +173,38 @@ public abstract class BaseActivity extends AppCompatActivity {
             stopProgress();
             new Action(this).launchActivity(LandingPageActivity.class, true);
 
-        }else if (id == SEND_FCM_TOKEN_CALL){
+        } else if (id == SEND_FCM_TOKEN_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);
             if (success)
                 Log.d("djfcm", "fcm refresh token successfully sent to server");
             else Log.d("djfcm", "fcm refresh token failed to be sent to server");
-        }
-        else if (id == postCallToken) {
+        } else if (id == postCallToken) {
             SocialFeedFragment socialFeedFragment = UserSession.getInstance().getSocialFeedFragment();
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);
             if (success && socialFeedFragment != null) {
+                int postId = -1;
+                try {
+                    postId = new JSONObject((String) json).getInt("postid");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    postId = -1;
+                }
                 if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
                     if (isMainActivity) {
-                        socialFeedFragment.postAdded(null);
+                        socialFeedFragment.postAdded(null, String.valueOf(postId));
                     }/*else {
                         if (socialFeedFragment.getDataManagerCustom() != null)
                             socialFeedFragment.getDataManagerCustom().add(0, );
                     }*/
                 } else {
-                    int postId = -1;
-                    try {
-                        postId = new JSONObject((String) json).getInt("postid");
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        postId = -1;
-                    }
                     tempPostObj.setPostId(postId);
                     com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
                     if (isMainActivity) {
                         /*if (activePage instanceof HomePage) {
                             ((HomePage) activePage).socialFeedFragmentpage.postAdded(socialPost);
                         }*/
-                        socialFeedFragment.postAdded(socialPost);
+                        socialFeedFragment.postAdded(socialPost, String.valueOf(postId));
                     } else if (socialFeedFragment.getDataManagerCustom() != null) {
                         UserSession.getInstance().setIsBonbRefreshPending(true);
                         socialFeedFragment.getDataManagerCustom().add(0, socialPost);

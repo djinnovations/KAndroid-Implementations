@@ -799,6 +799,15 @@ public class ProductActivity extends BaseDrawerActivity {
             notifyDataSetChanged();
         }
 
+
+        @Override
+        public int getItemPosition(Object object) {
+            /*if(getSupportFragmentManager().getFragments().contains(object))*/
+                return POSITION_NONE;
+            /*else
+                return POSITION_UNCHANGED;*/
+        }
+
     }
 
 

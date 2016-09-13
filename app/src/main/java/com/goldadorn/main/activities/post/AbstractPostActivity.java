@@ -274,7 +274,9 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
         isFirstTime = false;
         for (FilterProductListing params : dataFromSelection) {
             HashMap<String, Object> eachMap = new HashMap<>();
-            String path = ".." + params.getImage().substring(params.getImage().indexOf("/product"), params.getImage().length());
+            String path = /*".." +*/ params.getImage().substring(params.getImage()
+                    .indexOf(/*"/product"*/"defaults/"), params.getImage().length());
+                    /*".." + params.getImage().substring(params.getImage().indexOf("/product"), params.getImage().length());*/
             eachMap.put(GalleryImageSelector.KEY_PATH, path);
             eachMap.put(GalleryImageSelector.KEY_PREVIEW, params.getImage());
             eachMap.put(GalleryImageSelector.KEY_PRICE, params.getProductPrice());
