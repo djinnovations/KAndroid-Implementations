@@ -64,6 +64,10 @@ public class ApiKeys {
         return BuildConfig.END_POINT + VERB.POST_DELETE;
     }
 
+    public static final String getUrlForSideMenu(String pageName){
+       return BuildConfig.SHOWCASE_COLLECTION_HOST + "o/html/"+pageName+".html";
+    }
+
 
     public static final String getChangePasswordAPI(){
         return BuildConfig.END_POINT + VERB.CHANGE_PASSWORD;

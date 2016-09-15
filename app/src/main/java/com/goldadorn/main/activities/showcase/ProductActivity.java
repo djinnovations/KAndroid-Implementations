@@ -1434,6 +1434,11 @@ public class ProductActivity extends BaseDrawerActivity {
     }
 
 
+    public AddToCartRequestDataObj getCartReqObj(){
+        return cartRequestDataObj;
+    }
+
+
     private ArrayList<String> productInfoList;
     private final int PROD_INFO_2nd_API_CALL = IDUtils.generateViewId();
 
@@ -1698,10 +1703,11 @@ public class ProductActivity extends BaseDrawerActivity {
         Swatches.MixedSwatch metalSwatch = null;
         if (selectedParams.containsKey(METAL) || selectedParams.containsKey(SIZE)) {
 
+            if (selectedParams.containsKey(SIZE))
+                cartRequestDataObj.setSize(String.valueOf(csr.getSize().get(0)));
             if (selectedParams.containsKey(METAL))
                 metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             else {
-                cartRequestDataObj.setSize(String.valueOf(csr.getSize().get(0)));
                 metalSwatch = Swatches.getMixedSwatch(csr.getMetalSwatch(), Swatches.TYPE_METAL);
             }
 

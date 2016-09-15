@@ -1090,6 +1090,15 @@ public class ProductCustomiseFragment extends Fragment {
                         (int) (5 * DisplayProperties.getInstance(Application.getInstance(),
                                 DisplayProperties.ORIENTATION_PORTRAIT).getXPixelsPerCell()), 0 );*/
                 mSelectedIndex = 0;
+                //new code 16-09-2016  for SZYC issue
+                if (!sizeList.get(0).equals("NA") ) {
+                    /*List<String> tempList = new ArrayList<>();
+                    ProductOptions.mCustDefVals.setSizeText(sizeList.get(mSelectedIndex));
+                    tempList.add(String.valueOf(ProductOptions.rawSizeListVals.get(mSelectedIndex)));
+                    mCustomizeAdapter.paramsMap.put(ProductActivity.SIZE, tempList);*/
+                    ((ProductActivity) getActivity()).getCartReqObj().setSize(String.valueOf(ProductOptions
+                            .rawSizeListVals.get(mSelectedIndex)));
+                }
             }/*else holder.tvSelectExtra.setVisibility(View.GONE);*/
         }
 
@@ -1157,6 +1166,7 @@ public class ProductCustomiseFragment extends Fragment {
                 holder.tvAdapter.setText(sizeList.get(mSelectedIndex + 1));
                 mSelectedIndex++;
             }
+
             holder.tvSelectExtra.setText(holder.tvAdapter.getText().toString());
             ((ProductActivity) getActivity()).dontCallNextTime = false;
         }

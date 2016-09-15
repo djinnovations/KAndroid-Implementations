@@ -53,41 +53,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                tools:background="#66ffcc">
-
-                <ImageButton
-                    android:id="@+id/nav_timeline"
-                    style="@style/menuButton"
-                    android:layout_width="@dimen/circle_button_small1_height"
-                    android:layout_height="@dimen/circle_button_small1_height"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_time_line" />
-
-                <TextView
-                    android:id="@+id/labelTimeLine"
-                    style="@style/menuButtonLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginBottom="15dp"
-                    android:gravity="center_horizontal"
-                    android:text="My Timeline"
-                    android:textSize="16sp" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/menuButtonHeight"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
                 tools:background="#ddffcc">
 
                 <!--<ImageButton
@@ -120,6 +85,42 @@
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
                     android:text="@string/showcase"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/menuButtonHeight"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                tools:background="#66ffcc">
+
+                <ImageButton
+                    android:id="@+id/nav_timeline"
+                    style="@style/menuButton"
+                    android:layout_width="@dimen/circle_button_small1_height"
+                    android:layout_height="@dimen/circle_button_small1_height"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/vector_icon_time_line" />
+
+                <TextView
+                    android:id="@+id/labelTimeLine"
+                    style="@style/menuButtonLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginBottom="15dp"
+                    android:gravity="center_horizontal"
+                    android:text="My Timeline"
                     android:textSize="16sp" />
             </RelativeLayout>
 

@@ -209,7 +209,7 @@ public class ProductInfo {
         for (int i = 0; i<list.size(); i++){
             sb.append(list.get(i)).append(", ");
         }
-        return sb.substring(0, (sb.lastIndexOf(",") - 1));
+        return sb.substring(0, (sb.lastIndexOf(",")));
     }
 
 
