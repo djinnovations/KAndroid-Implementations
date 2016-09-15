@@ -119,7 +119,7 @@ import butterknife.OnClick;
 public class SocialFeedFragment extends DefaultVerticalListView {
     protected boolean isRefreshingData = false;
     protected int offset = 0;
-    protected int refreshOffset = -2;
+    protected int refreshOffset = 0;
     private SocialPost commentSocialPost;
     private int commentPosition;
 
@@ -249,6 +249,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             refreshPosts(-1);
         } else {
             Log.d("djfeed", "postAdded- custom");
+            postIdMain = postId;
             getDataManager().add(0, socialPost);
             getAdapter().notifyItemInserted(0);
             //getAdapter().notifyDataSetChanged();
@@ -307,6 +308,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         SocialPost sp = (SocialPost) getDataManager().get(0);
         params.put(URLHelper.LIKE_A_POST.POST_ID, postIdMain);
         Log.d("djfeed", "req params: "+params.toString());
+        /*getDataManager().clear();
+        Log.d("djfeed", "size of dataManager: "+getDataManager().size());*/
         return params;
     }
 
@@ -344,7 +347,6 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         protected void updatePagingData(BaseDataParser loadedDataVO) {
             try {
-
                 offset = loadedDataVO.getPageSize();
                 pageData.curruntPage += 1;
                 pageData.totalPage += 1;
@@ -366,12 +368,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     @Bind(R.id.refreshTriger)
     Button refreshTriger;
 
-    @OnClick(R.id.refreshTriger)
+    /*@OnClick(R.id.refreshTriger)
     void onRefreshTrigerClick() {
         refreshPosts();
         fadeOutRefreshTriger();
 
-    }
+    }*/
 
 
     private void fadeOutRefreshTriger() {
@@ -737,11 +739,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
     }
 
-    String postIdMain;
-    public void refreshPosts() {
-        postIdMain = ((SocialPost) getDataManager().get(0)).getPostId();
-        refreshPosts(-2);
-    }
+    String postIdMain = "0";
+    /*public void refreshPosts() {
+        postIdMain = *//*((SocialPost) getDataManager().get(0)).getPostId()*//*"0";
+        getDataManager().clear();
+        refreshPosts(0);
+    }*/
 
     protected void loadRefreshData() {
         super.loadRefreshData();
@@ -766,8 +769,13 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 public void onRefresh() {
                     if (getDataManager().canLoadRefresh()) {
-                        refreshOffset = -2;
-                        loadRefreshData();
+                        refreshOffset = 0;
+                        offset = 0;
+                        postIdMain = "0";
+                        getDataManager().getPageData().curruntPage = 1;
+                        getDataManager().getPageData().totalPage = 2;
+                        //loadRefreshData();
+                        getDataManager().reset();
                     } else {
                         getSwipeRefreshLayout().setRefreshing(false);
                     }
@@ -1989,10 +1997,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             ivDropdown.setOnClickListener(itemClick);
             ivDropdown.setVisibility(allowPostOptions() ? View.VISIBLE : View.INVISIBLE);
 
+            //postIdMain = ((SocialPost) getDataManager().get(0)).getPostId();
             TypefaceHelper.setFont(userName, age, details, recomandationLabel);
 
             TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), likesLabel, pollLabel, commentsLabel, shareLabel);
-            postIdMain = ((SocialPost) getDataManager().get(0)).getPostId();
         }
 
         private final int POST_OPTION_HIDE = 1991;

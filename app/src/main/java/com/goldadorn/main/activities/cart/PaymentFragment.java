@@ -267,7 +267,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         tvTotal.setTextColor(Color.BLACK);
         tvTotalCost.setText(totalPrice);
         tvPriceCost.setText(itemPrice);
-        tvPrice.setText("Price (" + String.valueOf(itemCount) + "items)");
+        tvPrice.setText("Price (" + String.valueOf(itemCount) + " items)");
         //tvPriceLabel.setText("Price Details");
         tvShipping.setText("Shipping (Free Delivery)");
         tvShippingCost.setText(RandomUtils.getIndianCurrencyFormat(0, true));

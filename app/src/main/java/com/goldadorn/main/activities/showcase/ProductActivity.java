@@ -1700,8 +1700,10 @@ public class ProductActivity extends BaseDrawerActivity {
 
             if (selectedParams.containsKey(METAL))
                 metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
-            else
+            else {
+                cartRequestDataObj.setSize(String.valueOf(csr.getSize().get(0)));
                 metalSwatch = Swatches.getMixedSwatch(csr.getMetalSwatch(), Swatches.TYPE_METAL);
+            }
 
             updateMetalInProdInfoTab(metalSwatch, csr.getWeight());
            /* metalSwatch = mProdCustFrag.getSelectedMetalSwatch();

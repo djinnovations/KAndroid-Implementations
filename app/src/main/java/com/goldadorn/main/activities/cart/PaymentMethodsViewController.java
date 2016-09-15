@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
 
         void bindView(PaymentMethodsDataObj dataObj) {
             tvMethods.setText(dataObj.getMethodName());
+            if (dataObj.getMethodName().equals("Debit Card") || dataObj.getMethodName().equals("Cash on Delivery"))
+                UiRandomUtils.setTypefaceBold(tvMethods);
             rbtn.setChecked(dataObj.flag);
             if (dataObj.flag) {
                 lastCheckedItemStack.push(rbtn);

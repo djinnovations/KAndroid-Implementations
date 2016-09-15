@@ -217,6 +217,7 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
 
     private int selectedMM = 0;
     private int selectedYY = 0;
+    private String selectedMMMain = "01";
 
     private void displayMMYYYYOption(boolean isMM) {
         AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
@@ -229,7 +230,8 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
                 public void onClick(DialogInterface dialog, int item) {
                     selectedMM = item;
                     Log.d("dj", "Month sel = " + arr[item]);
-                    String num = (item+1) < 10 ? "0"+String.valueOf(item) : String.valueOf(item);
+                    String num = (item+1) < 10 ? "0"+String.valueOf(item+1) : String.valueOf(item+1);
+                    selectedMMMain = num;
                     cardExpiryMonthEditText.setText(/*String.valueOf(item + 1)*/num);
                     /*Toast.makeText(getApplicationContext(),
                             "Month = " + arr[item], Toast.LENGTH_SHORT).show();*/
@@ -332,7 +334,7 @@ public class PayUCreditDebitCardActivity extends AppCompatActivity implements Vi
             // lets get the current card number;
             cardNumber = String.valueOf(cardNumberEditText.getText().toString().trim()).replaceAll("\\s","");
             cardName = cardNameEditText.getText().toString().trim();
-            expiryMonth = /*cardExpiryMonthEditText.getText().toString();*/ String.valueOf((selectedMM + 1));
+            expiryMonth = /*cardExpiryMonthEditText.getText().toString();*/ selectedMMMain;
             expiryYear = cardExpiryYearEditText.getText().toString().trim();
             cvv = cardCvvEditText.getText().toString().trim();
 

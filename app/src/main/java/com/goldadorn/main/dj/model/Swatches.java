@@ -222,7 +222,7 @@ public class Swatches {
                 case "gold_white_9k":
                     return R.drawable.gold_white_9k;
                 case "gold_white_10k":
-                    return R.drawable.gold_rose_10k;
+                    return R.drawable.gold_white_10k;
                 case "gold_yellow_9k":
                     return R.drawable.gold_yellow_9k;
                 case "gold_yellow_10k":

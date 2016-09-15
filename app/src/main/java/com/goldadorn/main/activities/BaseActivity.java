@@ -146,7 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     final private int postCallToken = IDUtils.generateViewId();
     private int recentlyPostedPost = -1;
     TemporaryCreatePostObj tempPostObj;
-    private boolean uploadInProgress;
+    protected boolean uploadInProgress;
 
     private boolean isMainActivity;
 
@@ -248,12 +248,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         this.progressBar = progressBar;
     }
 
-    private void startUploadProgress() {
+    protected void startUploadProgress() {
         if (progressBar != null)
             progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void stopUploadProgress(boolean success) {
+    protected void stopUploadProgress(boolean success) {
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
     }
@@ -484,8 +484,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     ajaxCallback.method(AQuery.METHOD_POST);
                     getAQuery().ajax(url, params, String.class, ajaxCallback);
                     uploadInProgress = true;
-                    if (isMainActivity)
-                        startUploadProgress();
+                    /*if (isMainActivity)
+                        startUploadProgress();*/
                 }
 
 

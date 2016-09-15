@@ -1,6 +1,5 @@
 package com.goldadorn.main.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,9 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
@@ -24,9 +21,7 @@ import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
-import com.goldadorn.main.dj.model.TemporaryCreatePostObj;
 import com.goldadorn.main.dj.model.UserSession;
-import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
@@ -34,34 +29,21 @@ import com.goldadorn.main.dj.support.gcm.MixPanelHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
-import com.goldadorn.main.dj.utils.TemporarySocialPostParser;
 import com.goldadorn.main.eventBusEvents.SocialPost;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
-import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
-import com.goldadorn.main.utils.IDUtils;
-import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
-import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.fragments.BaseFragment;
 
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.greenrobot.eventbus.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 
@@ -109,8 +91,8 @@ public class MainActivity extends BaseDrawerActivity {
         return indicator;
     }
 
-    private boolean uploadInProgress;
-    private WeakReference<SocialFeedFragment> socialPostHost;
+    //private boolean uploadInProgress;
+    //private WeakReference<SocialFeedFragment> socialPostHost;
     private boolean backEntry;
 
     public static RelativeLayout getRlMain() {
@@ -314,7 +296,7 @@ public class MainActivity extends BaseDrawerActivity {
             if (intent != null) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Create_post_initiation");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
-                socialPostHost = new WeakReference<>(data.host);
+                //socialPostHost = new WeakReference<>(data.host);
                 People people = getApp().getPeople();
                 intent.putExtra("NAME", people.getUserName());
                 intent.putExtra("FOLLOWER_COUNT", people.getFollowerCount());
@@ -340,6 +322,7 @@ public class MainActivity extends BaseDrawerActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setProgressBar(progressBar);
+        startUploadProgress();
         super.onActivityResult(requestCode, resultCode, data);
        /* Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
