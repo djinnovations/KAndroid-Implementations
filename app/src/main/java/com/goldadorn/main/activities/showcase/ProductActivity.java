@@ -1703,8 +1703,8 @@ public class ProductActivity extends BaseDrawerActivity {
         Swatches.MixedSwatch metalSwatch = null;
         if (selectedParams.containsKey(METAL) || selectedParams.containsKey(SIZE)) {
 
-            if (selectedParams.containsKey(SIZE))
-                cartRequestDataObj.setSize(String.valueOf(csr.getSize().get(0)));
+            /*if (selectedParams.containsKey(SIZE))
+                cartRequestDataObj.setSize(String.valueOf(csr.getSize().get(0)));*/
             if (selectedParams.containsKey(METAL))
                 metalSwatch = mProdCustFrag.getSelectedMetalSwatch();
             else {
