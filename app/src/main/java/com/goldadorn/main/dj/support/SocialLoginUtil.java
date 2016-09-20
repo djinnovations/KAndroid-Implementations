@@ -556,7 +556,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
                     }*/
                 doSuccessOperation(loginResult, cookies);
-                genericInfo("Authorization successful");
+                //genericInfo("Authorization successful");
             } else {
                 setErrSnackBar(loginResult.getMsg());
                 dismissOverlayView();

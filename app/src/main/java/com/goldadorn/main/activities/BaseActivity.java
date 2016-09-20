@@ -185,19 +185,19 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (success && socialFeedFragment != null) {
                 int postId = -1;
                 try {
-                    postId = new JSONObject((String) json).getInt("postid");
+                    postId = new JSONObject(json.toString()).getInt("postid");
                 } catch (JSONException e) {
                     e.printStackTrace();
                     postId = -1;
                 }
-                if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
+                /*if (recentlyPostedPost != -1 && recentlyPostedPost == com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST) {
                     if (isMainActivity) {
                         socialFeedFragment.postAdded(null, String.valueOf(postId));
-                    }/*else {
+                    }*//*else {
                         if (socialFeedFragment.getDataManagerCustom() != null)
                             socialFeedFragment.getDataManagerCustom().add(0, );
-                    }*/
-                } else {
+                    }*//*
+                } else {*/
                     tempPostObj.setPostId(postId);
                     com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
                     if (isMainActivity) {
@@ -209,9 +209,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                         UserSession.getInstance().setIsBonbRefreshPending(true);
                         socialFeedFragment.getDataManagerCustom().add(0, socialPost);
                     }
-                }
+                //}
                 if (isMainActivity)
-                    stopUploadProgress(true);
+                    stopUploadProgress();
 
                 Log.d(com.goldadorn.main.dj.utils.Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
@@ -219,7 +219,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             } else {
                 if (isMainActivity)
-                    stopUploadProgress(success);
+                    stopUploadProgress();
             }
 
         } else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL || id == POST_REPORT_CALL) {
@@ -239,6 +239,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
             position = -1;
         }
+
+        if (isMainActivity)
+            stopUploadProgress();
     }
 
 
@@ -253,7 +256,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
     }
 
-    protected void stopUploadProgress(boolean success) {
+    protected void stopUploadProgress() {
         if (progressBar != null)
             progressBar.setVisibility(View.GONE);
     }
@@ -315,6 +318,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private int position = -1;
 
     public void updatePostForThisUser(int what, String postId, int position) {
+        if (isMainActivity)
+            startUploadProgress();
         ExtendedAjaxCallback ajaxCallback = null;
         this.position = position;
         Map<String, String> params = new HashMap<>();
@@ -344,6 +349,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
+            if (isMainActivity)
+                startUploadProgress();
             try {
                 //String fileData=data.getStringExtra("fileData");
                 int type = recentlyPostedPost = data.getIntExtra("type", -1);
@@ -484,8 +491,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                     ajaxCallback.method(AQuery.METHOD_POST);
                     getAQuery().ajax(url, params, String.class, ajaxCallback);
                     uploadInProgress = true;
-                    /*if (isMainActivity)
-                        startUploadProgress();*/
                 }
 
 

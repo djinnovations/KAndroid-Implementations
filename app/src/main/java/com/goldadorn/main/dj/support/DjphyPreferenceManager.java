@@ -45,6 +45,8 @@ public class DjphyPreferenceManager {
     private final String KEY_RATING_IS_DAYS_COUNT_STARTED = "app_rate_is_day_count_started";
     private final String KEY_RATING_START_TIME = "app_rate_start_time";
 
+    private final String KEY_PAYMENT_MODE = "goldadorn.payment_mode";
+
     private DjphyPreferenceManager(Context appContext) {
         //DjphyPreferenceManager._context = context;
         pref = appContext.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -59,6 +61,20 @@ public class DjphyPreferenceManager {
         }
 
         return mCoachManager;
+    }
+
+
+    public void setPaymentMode(int mode){
+        editor.putInt(KEY_PAYMENT_MODE, mode);
+        editor.commit();
+        Log.d(Constants.TAG, "setPaymentMode: " + mode);
+    }
+
+
+    public int getPaymentMode(){
+        int mode = pref.getInt(KEY_PAYMENT_MODE, -1);
+        Log.d(Constants.TAG, "getPaymentMode - DjphyPreferenceManager: " + mode);
+        return mode;
     }
 
 
@@ -167,10 +183,23 @@ public class DjphyPreferenceManager {
 
 
     public boolean isCollectionTourdone() {
-
         boolean stat = pref.getBoolean(KEY_IS_COLLECTION_DONE, false);
         Log.d(Constants.TAG, "collection coach mark stat - DjphyPreferenceManager: " + stat);
         return stat;
+    }
+
+
+    private static final String KEY_IS_CUST_DONE = "goldadorn.cust";
+    public boolean isCustTourDone(){
+        boolean stat = pref.getBoolean(KEY_IS_CUST_DONE, false);
+        Log.d(Constants.TAG, "cust coach mark stat - DjphyPreferenceManager: " + stat);
+        return stat;
+    }
+
+    public void setCustTourStatus(boolean isDone) {
+        editor.putBoolean(KEY_IS_CUST_DONE, isDone);
+        editor.commit();
+        Log.d(Constants.TAG, "cust coach mark stat: " + isDone);
     }
 
 

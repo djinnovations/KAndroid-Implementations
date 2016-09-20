@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+   <!-- <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.mikepenz.iconics.view.IconicsButton
+            android:id="@+id/ivTitleIcon"
+            style="@style/IconBgTransparent"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="2dp"
+            android:layout_toLeftOf="@+id/tvTitle"
+            android:text="@string/icon_cart_new" />-->
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:layout_marginLeft="30dp"
+            android:padding="8dp"
+            android:textColor="@color/Black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+   <!-- </RelativeLayout>-->
+
+    <LinearLayout
+        android:id="@+id/llBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTitle"
+        android:gravity="center"
+        android:padding="12dp">
+
+        <EditText
+            android:id="@+id/etPinCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_style_bg"
+            android:text=""
+            android:textColor="@color/colorBlackDimText"
+            android:maxLength="8"
+            android:textSize="14sp"
+            android:inputType="numberDecimal"
+            android:padding="12dp"/>
+    </LinearLayout>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llBody"
+        android:weightSum="2">
+
+
+        <TextView
+            android:id="@+id/tvNegative"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Negative"
+            android:textColor="@color/Black"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tvPositive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Positive"
+            android:textColor="@color/Black"
+            android:textSize="15sp" />
+
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/llBody"
+        android:paddingTop="4dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:alpha="0.3"
+            android:background="@color/colorAccent" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvNegative"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.99"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Move to WishList"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.005"
+                android:alpha="0.3"
+                android:background="@color/colorAccent" />
+
+            <TextView
+                android:id="@+id/tvPositive"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.99"
+                android:background="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Remove"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -9,6 +9,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.support.DjphyPreferenceManager;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 
@@ -45,7 +47,7 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
     }
 
     public void displayMethods(ArrayList<PaymentMethodsDataObj> payMethodList) {
-        //this.payMethodList = payMethodList;
+        this.payMethodList = payMethodList;
         for (PaymentMethodsDataObj pdo : payMethodList) {
             PaymentMethodViewHolder pvh = createItems();
             pvh.bindView(pdo);
@@ -104,6 +106,7 @@ public class PaymentMethodsViewController extends RecyclerView.ViewHolder {
             rbtn.setChecked(true);
             lastCheckedItemStack.push(rbtn);
             if (paySelectionListener != null) {
+                DjphyPreferenceManager.getInstance(Application.getInstance()).setPaymentMode(payMethodList.indexOf(dataObj));
                 paySelectionListener.onPaymentSelected(dataObj);
             }
         }

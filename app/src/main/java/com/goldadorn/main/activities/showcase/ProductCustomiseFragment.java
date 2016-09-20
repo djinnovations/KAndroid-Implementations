@@ -2,11 +2,11 @@ package com.goldadorn.main.activities.showcase;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +18,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,6 @@ import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
-import com.goldadorn.main.model.Collection;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -43,11 +43,9 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,6 +87,9 @@ public class ProductCustomiseFragment extends Fragment {
     private TitleIconAdapter stoneTitleIconAdapter;
     private ResourceReader rsRdr;
     private PositiveNegativeButtonAdapter pnbtn;
+    private TitleTvAdapter titleTvAdapter;
+
+    RecyclerAdapter<ViewHolder> viewForCustomizeCoach;
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -111,11 +112,13 @@ public class ProductCustomiseFragment extends Fragment {
 
         //mAdapter.addAdapter(sizeTitleAdapter = getTitleAdapter("Size", true));//// TODO: 10-07-2016
         /***************************************************************************/
-        mAdapter.addAdapter(getTitleAdapter("Customize"));
+        mAdapter.addAdapter(viewForCustomizeCoach = getTitleAdapter("Customize"));
+        mAdapter.addAdapter( titleTvAdapter = new TitleTvAdapter("Price Range: ", true));
         mAdapter.addAdapter(sizeTitleIconAdapter = new TitleIconAdapter("Size", true));
         mAdapter.addAdapter(metalTitleIconAdapter = new TitleIconAdapter("Metal", true));
         mAdapter.addAdapter(stoneTitleIconAdapter = new TitleIconAdapter("Diamond Quality", true));
-        mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity()));
+        mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity(), "Customize to lowest Price", autoCustomizeClick));
+        mAdapter.addAdapter( cba = new CustomizeButtonAdapter(getActivity(), "Explore All Customization Option", customizeBtnClick));
         mRecyclerView.setAdapter(mAdapter);
         /***************************************************************************/
 
@@ -132,9 +135,48 @@ public class ProductCustomiseFragment extends Fragment {
 
         bindProductOptions(mProductActivity.mProductOptions);
     }
+    CustomizeButtonAdapter cba;
 
 
     //boolean isHolderWasNull = false;
+
+    private class TitleTvAdapter extends RecyclerAdapter<ViewHolder> {
+
+        ViewHolder holder;
+        String title;
+
+        public TitleTvAdapter(String title, boolean enabled) {
+            super(getActivity(), enabled);
+            this.title = title;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return ViewHolderFactory.TYPE.VHT_TITLE_TV;
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            this.holder = holder;
+            ((TextView) holder.itemView.findViewById(R.id.tvTitle)).setText(title);
+            UiRandomUtils.setTypefaceBold(holder.itemView.findViewById(R.id.tvTitle));
+            TypefaceHelper.setFont(holder.itemView.findViewById(R.id.tvItem));
+            /*if (isHolderWasNull) {
+                bindProductOptions(mProductOption);
+            }*/
+        }
+
+        public void setAmtData(String amtTxt){
+            ((TextView) holder.itemView.findViewById(R.id.tvItem)).setText(amtTxt);
+        }
+
+        @Override
+        public int getItemCount() {
+            return 1;
+        }
+
+    }
+
     private class TitleIconAdapter extends RecyclerAdapter<ViewHolder> {
 
         ViewHolder holder;
@@ -292,6 +334,8 @@ public class ProductCustomiseFragment extends Fragment {
             mCustomizeAdapter.changeData(options.customisationOptions);
             metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), false);
             stoneTitleIconAdapter.setIconDrawable(null, false);
+            titleTvAdapter.setAmtData("9889898989 - 43589899866");
+            cba.setLighterBg();
 
             if (options.priceBreakDown.size() > 0) {
                 //mPriceAdapter.setEnabled(true);
@@ -880,8 +924,14 @@ public class ProductCustomiseFragment extends Fragment {
     class CustomizeButtonAdapter extends RecyclerAdapter<ViewHolder> {
 
 
-        public CustomizeButtonAdapter(Context context) {
+        String text;
+        View.OnClickListener listener;
+        Button btn;
+        ViewHolder holder;
+        public CustomizeButtonAdapter(Context context, String textOnBtn, View.OnClickListener listener) {
             super(context, true);
+            text = textOnBtn;
+            this.listener = listener;
         }
 
         @Override
@@ -897,14 +947,29 @@ public class ProductCustomiseFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             TypefaceHelper.setFont(holder.itemView.findViewById(R.id.addToCart));
-            holder.itemView.findViewById(R.id.addToCart).setOnClickListener(new View.OnClickListener() {
+            this.holder = holder;
+            btn = ((Button) holder.itemView.findViewById(R.id.addToCart));
+            ((Button) holder.itemView.findViewById(R.id.addToCart)).setText(text);
+            holder.itemView.findViewById(R.id.addToCart).setOnClickListener(
+                    listener/*new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     //((ProductActivity) getActivity()).addToCartNew(v);
                     displayCustomizationDialog();
                 }
-            });
+            }*/);
+        }
+
+        public void setLighterBg(){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                btn.setBackground(ResourceReader.getInstance(Application.getInstance())
+                        .getDrawableFromResId(R.drawable.button_lighter));
+            }
+            else btn.setBackgroundDrawable(ResourceReader.getInstance(Application.getInstance())
+                    .getDrawableFromResId(R.drawable.button_lighter));
+            int temp = holder.itemView.getPaddingTop();
+            holder.itemView.setPadding(temp, temp, temp, temp);
         }
 
         @Override
@@ -916,20 +981,32 @@ public class ProductCustomiseFragment extends Fragment {
 
     private Dialog customizationDialog;
 
-    private void displayCustomizationDialog() {
-        //clearSelection();
-        if (!mProductOption.isCustomizationAvail()){
-            Toast.makeText(getContext(), "Customization is Not Available for this Product", Toast.LENGTH_SHORT).show();
-            return;
+    View.OnClickListener autoCustomizeClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
         }
-        enableDoneIfNeeded();
-        if (customizationDialog == null) {
-            customizationDialog = WindowUtils.getInstance(getActivity().getApplicationContext())
-                    .displayCustomizationDialog(getActivity(), recyclerViewForCustomizeDialog);
-        }
+    };
 
-        customizationDialog.show();
-    }
+    View.OnClickListener customizeBtnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            /*private void displayCustomizationDialog() {*/
+                //clearSelection();
+                if (!mProductOption.isCustomizationAvail()){
+                    Toast.makeText(getContext(), "Customization is Not Available for this Product", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                enableDoneIfNeeded();
+                if (customizationDialog == null) {
+                    customizationDialog = WindowUtils.getInstance(getActivity().getApplicationContext())
+                            .displayViewDialog(getActivity(), recyclerViewForCustomizeDialog);
+                }
+
+                customizationDialog.show();
+            //}
+        }
+    };
 
     private void enableDoneIfNeeded() {
         if (canCheckForStone && canCheckForMetal) {

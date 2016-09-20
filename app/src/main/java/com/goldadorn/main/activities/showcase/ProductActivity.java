@@ -57,6 +57,7 @@ import com.goldadorn.main.dj.model.ProductCustomizationTabUpdationDataObj;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
+import com.goldadorn.main.dj.uiutils.DisplayProperties;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.ViewConstructor;
@@ -201,6 +202,9 @@ public class ProductActivity extends BaseDrawerActivity {
         return hasCert;
     }
 
+
+    private int lastStep;
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -272,6 +276,10 @@ public class ProductActivity extends BaseDrawerActivity {
                     mBrandButtonsLayout.setLayoutParams(lp);
                     mOverlayVH.setVisisbility(visibility);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
+                    if ((verticalOffset * -1) - lastStep > 150) {
+                        lastStep = (verticalOffset * -1);
+                        checkOutTour(verticalOffset);
+                    }
                     mHandler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -349,6 +357,41 @@ public class ProductActivity extends BaseDrawerActivity {
                 mCollectionCallBack);
 
         tourThisScreen();
+        setUpGuideListener();
+    }
+
+    int limit = 23;
+    private boolean isTourInProgress = false;
+    private DisplayProperties disProp;
+
+    private void setUpGuideListener() {
+        disProp = DisplayProperties.getInstance(getBaseContext(), 1);
+        limit = Math.round(limit * disProp.getYPixelsPerCell());
+        Log.d(Constants.TAG, "limit allowed: " + limit);
+        //mTourHelper = AppTourGuideHelper.getInstance(getApplicationContext());
+    }
+
+    private void checkOutTour(int offset) {
+        if (isTourInProgress)
+            return;
+        offset = -1 * offset;
+        Log.d(Constants.TAG, "offset: " + offset);
+        if (offset > limit) {
+            tourThisScreenNew();
+        }
+    }
+
+    @Bind(R.id.transViewBottom)
+    View transViewBottom;
+    private void tourThisScreenNew() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                isTourInProgress = true;
+                Log.d(Constants.TAG, "tour customization");
+                mTourHelper.displayCustomizationTour(ProductActivity.this,transViewBottom);
+            }
+        }, 50);
     }
 
 

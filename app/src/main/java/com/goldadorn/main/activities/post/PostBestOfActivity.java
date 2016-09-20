@@ -187,30 +187,45 @@ public class PostBestOfActivity extends AbstractPostActivity {
     }*/
 
     @Override
-    protected List<String> getProductAppendedColDesIdPrice() {
+    protected List<String> getClubbingData() {
         boolean isAdded = false;
         List<String> list = new ArrayList<>();
         if (imageSelector1.isValid()) {
             if (imageSelector1.getProductId() != -1){
                 isAdded = true;
-                list.add(imageSelector1.getProductId()+":"+imageSelector1.getCollId()
-                        +":"+imageSelector1.getDesId()+":"+imageSelector1.getPrice());
+                StringBuilder sb = new StringBuilder();
+                list.add(sb.append(imageSelector1.getProductId()).append(":")
+                        .append(imageSelector1.getCollId()).append(":")
+                        .append(imageSelector1.getDesId()).append(":")
+                        .append(imageSelector1.getPrice()).append(":")
+                        .append(imageSelector1.getRange()).append(":")
+                        .append(imageSelector1.getDiscount()).toString());
             }
         }
 
         if (imageSelector2.isValid()) {
             if (imageSelector2.getProductId() != -1){
                 isAdded = true;
-                list.add(imageSelector2.getProductId()+":"+imageSelector2.getCollId()
-                        +":"+imageSelector2.getDesId()+":"+imageSelector2.getPrice());
+                StringBuilder sb = new StringBuilder();
+                list.add(sb.append(imageSelector2.getProductId()).append(":")
+                        .append(imageSelector2.getCollId()).append(":")
+                        .append(imageSelector2.getDesId()).append(":")
+                        .append(imageSelector2.getPrice()).append(":")
+                        .append(imageSelector2.getRange()).append(":")
+                        .append(imageSelector2.getDiscount()).toString());
             }
         }
 
         if (imageSelector3.isValid()) {
             if (imageSelector3.getProductId() != -1){
                 isAdded = true;
-                list.add(imageSelector3.getProductId()+":"+imageSelector3.getCollId()
-                        +":"+imageSelector3.getDesId()+":"+imageSelector3.getPrice());
+                StringBuilder sb = new StringBuilder();
+                list.add(sb.append(imageSelector3.getProductId()).append(":")
+                        .append(imageSelector3.getCollId()).append(":")
+                        .append(imageSelector3.getDesId()).append(":")
+                        .append(imageSelector3.getPrice()).append(":")
+                        .append(imageSelector3.getRange()).append(":")
+                        .append(imageSelector3.getDiscount()).toString());
             }
         }
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--button_disabled-->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/buttonRadius" />
+            <padding android:bottom="@dimen/buttonRadius" android:left="@dimen/buttonRadius" android:right="@dimen/buttonRadius" android:top="@dimen/buttonRadius" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/buttonDisableBorder" />
+            <gradient android:angle="@integer/buttonGradientAngle" android:endColor="@color/buttonDisableEnd" android:startColor="@color/buttonDisableStart" />
+        </shape>
+    </item>
+
+    <!--button_pressed-->
+    <item android:state_enabled="true" android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/buttonRadius" />
+            <padding android:bottom="@dimen/buttonRadius" android:left="@dimen/buttonRadius" android:right="@dimen/buttonRadius" android:top="@dimen/buttonRadius" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/buttonPressBorder" />
+            <gradient android:angle="@integer/buttonGradientAngle" android:endColor="@color/buttonPressEnd" android:startColor="@color/buttonPressStart" />
+        </shape>
+    </item>
+
+    <!--button_focused-->
+    <item android:state_enabled="true" android:state_focused="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/buttonRadius" />
+            <padding android:bottom="@dimen/buttonRadius" android:left="@dimen/buttonRadius" android:right="@dimen/buttonRadius" android:top="@dimen/buttonRadius" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="@color/buttonPressBorder" />
+            <gradient android:angle="@integer/buttonGradientAngle" android:endColor="@color/buttonPressEnd" android:startColor="@color/buttonPressStart" />
+        </shape>
+    </item>
+
+    <!--button_enabled-->
+    <item android:state_enabled="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/buttonRadius" />
+            <padding android:bottom="@dimen/buttonRadius" android:left="@dimen/buttonRadius" android:right="@dimen/buttonRadius" android:top="@dimen/buttonRadius" />
+            <stroke android:width="@dimen/buttonBorderWidth" android:color="#7D6D31" />
+            <gradient android:angle="@integer/buttonGradientAngle" android:endColor="#a18d3f" android:startColor="@color/colorAccent" />
+        </shape>
+    </item>
+</selector>

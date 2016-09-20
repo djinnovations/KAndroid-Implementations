@@ -32,7 +32,6 @@ import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.server.ApiKeys;
-import com.goldadorn.main.dj.support.SocialLoginUtil;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
@@ -46,7 +45,6 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
-import com.google.repacked.apache.commons.lang3.StringUtils;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -681,7 +679,7 @@ public class ProfileEditActivity extends BaseActivity {
 
     }
 
-    final private int postCallToken = IDUtils.generateViewId();
+    final private int profileUpdateCall = IDUtils.generateViewId();
 
 
     protected void submitProfile(ProfileData mProfileData) {
@@ -731,7 +729,7 @@ public class ProfileEditActivity extends BaseActivity {
 
 
         String url = getUrlHelper().getSetBasicProfileURL();
-        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(postCallToken);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(profileUpdateCall);
         ajaxCallback.setClazz(String.class);
         ajaxCallback.setParams(params);
         ajaxCallback.method(AQuery.METHOD_POST);
@@ -743,7 +741,7 @@ public class ProfileEditActivity extends BaseActivity {
         Log.d("djweb", "url queried- ProfileEditActivity: " + url);
         Log.d("djweb", "response- ProfileEditActivity: " + json);
         isProfileImageChanged = false;
-        if (id == postCallToken) {
+        if (id == profileUpdateCall) {
             dismissOverLayScreen1();
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
             if (success) {

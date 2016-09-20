@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities.cart;
 
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,11 +13,18 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.db.Tables;
 import com.goldadorn.main.dj.model.ShipmentBillingAddress;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
+import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.model.Address;
+import com.goldadorn.main.utils.TypefaceHelper;
 
 import java.util.ArrayList;
 
@@ -84,7 +92,9 @@ public class AddAddressFragment extends Fragment {
             mPinCodeInput.getEditText().setText(mAddressToEdit.pincode + "");
             mPhoneNumberInput.getEditText().setText(mAddressToEdit.phoneNumber);
         }
-
+        /*else {*/
+            tryautofill();
+        //}
         ((CartManagerActivity) getActivity()).removeStaticBottomBar();
 
         mInputs.add(mNameInput);
@@ -101,6 +111,58 @@ public class AddAddressFragment extends Fragment {
         mPinCodeInput.getEditText().addTextChangedListener(mPinCodeWatcher);
 
         mDoneButton.setOnClickListener(mClick);
+    }
+
+    private void tryautofill() {
+        displayDialog();
+    }
+
+    private Dialog pincodeDialog;
+    View.OnClickListener positiveClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String pincode  = editText.getText().toString().trim();
+            if (pincode.length() < 6){
+                Toast.makeText( Application.getInstance(),"Invalid Area Pin Code", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            mPinCodeInput.getEditText().setText(pincode);
+            ((CartManagerActivity) getActivity()).queryPincodeAddressData(pincode);
+        }
+    };
+
+
+    public void updateFields(PayUHelper.PincodeFieldData data){
+        pincodeDialog.dismiss();
+        mCityInput.getEditText().setText(data.getCity());
+        mStateInput.getEditText().setText(data.getState());
+        mStreetInput.getEditText().setText(data.getStreet());
+    }
+
+    EditText editText;
+    private void displayDialog(){
+        if (pincodeDialog == null){
+            View layout = LayoutInflater.from(Application.getInstance()).inflate(R.layout.dialog_pincode_input, null);
+            pincodeDialog = WindowUtils.getInstance(Application.getInstance())
+                    .displayViewDialog(getActivity(), layout);
+            TextView title = (TextView) layout.findViewById(R.id.tvTitle);
+            title.setText("Pincode");
+            editText = (EditText) layout.findViewById(R.id.etPinCode);
+            TextView positive = (TextView) layout.findViewById(R.id.tvPositive);
+            TextView negative = (TextView) layout.findViewById(R.id.tvNegative);
+            negative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pincodeDialog.dismiss();
+                }
+            });
+            positive.setOnClickListener(positiveClick);
+            positive.setText("Done");
+            negative.setText("I don't know");
+            TypefaceHelper.setFont(editText, positive, negative);
+            UiRandomUtils.setTypefaceBold(title);
+        }
+        pincodeDialog.show();
     }
 
     @Override

@@ -28,7 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.dj.support.DjphyPreferenceManager;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -162,7 +164,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             };
 
     //private final String[] payMethodArr = new String[]{"Net Banking", "Credit Card", "EMI", "Debit Card", "Cash on Delivery"};
-    private final String[] payMethodArr = new String[]{"Debit Card", "Net Banking", "Credit Card", "Cash on Delivery", "EMI"};
+    private final String[] payMethodArr = new String[]{"Cash on Delivery", "Net Banking", "Debit Card", "Credit Card", "EMI"};
 
     private void setUpPaymentMethodView(View view) {
         /*payMethodList = new ArrayList<>();
@@ -205,7 +207,9 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
             }
         });
         ArrayList<PaymentMethodsViewController.PaymentMethodsDataObj> list = new ArrayList<>();
-        int selection = 0;// select debit card by default
+        int selection = DjphyPreferenceManager.getInstance(Application.getInstance()).getPaymentMode();// select debit card by default
+        if (selection == -1)
+            selection = 0;
         int i = 0;
         for (String str : payMethodArr) {
             /*if (i == 1)*/
@@ -216,6 +220,7 @@ public class PaymentFragment extends Fragment implements PaymentRelatedDetailsLi
         }
         new PaymentMethodsViewController(paymethodContainer, payMethodListener).displayMethods(list);
         modeChosen = /*payMethodArr[1]*/payMethodArr[selection];
+        DjphyPreferenceManager.getInstance(Application.getInstance()).setPaymentMode(selection);
 
         mAddressesHolder = new AddressesViewHolder(getActivity(), (LinearLayout) view.findViewById(R.id.shipAddContainer), mAddressSelectedListener);
         refreshAddr();

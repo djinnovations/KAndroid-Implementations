@@ -322,7 +322,7 @@ public class MainActivity extends BaseDrawerActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         setProgressBar(progressBar);
-        startUploadProgress();
+        setIsMainActivityBase(true);
         super.onActivityResult(requestCode, resultCode, data);
        /* Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {

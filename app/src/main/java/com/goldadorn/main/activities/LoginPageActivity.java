@@ -133,6 +133,8 @@ public class LoginPageActivity extends BaseActivity {
                     User user = new User(Integer.valueOf(loginResult.getUserid()), User.TYPE_INDIVIDUAL);
                     user.setName(loginResult.getUsername());
                     Log.e("iiii",loginResult.getUserid()+"");
+                    if (cookies.size() > 0)
+                    Log.d("dj","cookie val: "+cookies.get(0).getValue());
                     user.setImageUrl(loginResult.getUserpic());
                     getApp().setUser(user);
 

@@ -114,9 +114,9 @@
                             android:shadowDx="5"
                             android:shadowDy="5"
                             android:shadowRadius="5"
-                            android:text="50%"
+                            android:text="-50%"
                             android:textColor="@color/White"
-                            android:textSize="9sp" />
+                            android:textSize="7sp" />
                     </RelativeLayout>
 
                     <View
@@ -208,9 +208,9 @@
                             android:shadowDx="5"
                             android:shadowDy="5"
                             android:shadowRadius="5"
-                            android:text="50%"
+                            android:text="-50%"
                             android:textColor="@color/White"
-                            android:textSize="9sp" />
+                            android:textSize="7sp" />
                     </RelativeLayout>
 
                     <View
@@ -308,9 +308,9 @@
                             android:shadowDx="5"
                             android:shadowDy="5"
                             android:shadowRadius="5"
-                            android:text="50%"
+                            android:text="-50%"
                             android:textColor="@color/White"
-                            android:textSize="9sp" />
+                            android:textSize="7sp" />
                     </RelativeLayout>
 
                     <View

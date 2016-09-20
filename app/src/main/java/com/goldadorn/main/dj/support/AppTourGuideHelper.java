@@ -49,6 +49,7 @@ public class AppTourGuideHelper {
             "Tap on a product to view its full details.";
     private final String msgProductTab = "Tap on a tab to know more about the product";
     private final String msgBAA = "To Book an Appointment with this designer, click here";
+    private final String msgCustomize = "Customize to select Metal type, Diamond Quality and Size as per your requirement";
 
     private ResourceReader resRdr;
     private DjphyPreferenceManager coachMarkMgr;
@@ -615,7 +616,6 @@ public class AppTourGuideHelper {
 
 
     private TourGuide tgProduct;
-
     public void displayProductsTour(Activity productActivity, View centeredView) {
 
         if (coachMarkMgr.isProductTourdone())
@@ -658,4 +658,46 @@ public class AppTourGuideHelper {
         coachMarkMgr.setProductTourGuideStatus(true);
     }
 
+
+    private TourGuide tgCustFrag;
+    public void displayCustomizationTour(Activity productActivity, View centeredView) {
+        if (coachMarkMgr.isCustTourDone())
+            return;
+        try {
+            ToolTip toolTip = new ToolTip()
+                    .setDescription(msgCustomize)
+                    .setTextColor(Color.WHITE)
+                    .setBackgroundColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))
+                    .setShadow(true)
+                    .setEnterAnimation(fadeInAnim)
+                    .setGravity(Gravity.CENTER);
+
+
+            Pointer pointer = new Pointer()./*setColor(resRdr.getColorFromResource(R.color.colorPrimaryDark))*/
+                    setColor(Color.parseColor("#66FDFDFD"))
+                    .setGravity(Gravity.CENTER);
+
+            tgCustFrag = TourGuide.init(productActivity)
+                    .setToolTip(toolTip)
+                    .setPointer(pointer)
+                    .setOverlay(new Overlay()
+                            .setBackgroundColor(Color.parseColor(overLayBgColorShowcase))
+                            .setStyle(Overlay.Style.Circle))
+                    .playOn(centeredView);
+
+            tgCustFrag.getOverlay().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    tgCustFrag.cleanUp();
+                }
+            });
+        } catch (OutOfMemoryError ex) {
+            if (tgCustFrag != null)
+                tgCustFrag.cleanUp();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //coachMarkMgr.setCustTourStatus(true);
+    }
 }

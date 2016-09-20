@@ -13,7 +13,6 @@ import android.widget.EditText;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
-import com.goldadorn.main.dj.model.FilterPostParams;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.People;
@@ -47,7 +46,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
     abstract protected List<Integer> getDesignerIds();*/
 
-    abstract protected List<String> getProductAppendedColDesIdPrice();
+    abstract protected List<String> getClubbingData();
 
     abstract protected void viewCreted(People people, int maxImageSize);
 
@@ -162,7 +161,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             intent.putExtra("collIdList", collIdList.toArray());
             List<Integer> desIdList = getDesignerIds();
             intent.putExtra("desIdList", desIdList.toArray());*/
-            List<String> prodColDesIdPrice = getProductAppendedColDesIdPrice();
+            List<String> prodColDesIdPrice = getClubbingData();
             if (prodColDesIdPrice != null) {
                 if (prodColDesIdPrice.size() != 0) {
                     String[] clubbedArr = new String[prodColDesIdPrice.size()];
@@ -283,6 +282,8 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             eachMap.put(GalleryImageSelector.KEY_COLLID, params.getCollId());
             eachMap.put(GalleryImageSelector.KEY_DESID, params.getDesgnId());
             eachMap.put(GalleryImageSelector.KEY_PRODID, params.getProdId());
+            eachMap.put(GalleryImageSelector.KEY_DISCOUNT, params.getDiscount());
+            eachMap.put(GalleryImageSelector.KEY_RANGE, params.getRange());
             dataMap.add(eachMap);
         }
         return dataMap;

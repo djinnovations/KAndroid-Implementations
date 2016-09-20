@@ -177,13 +177,39 @@ public class PayUNetBankingActivity extends AppCompatActivity implements View.On
                                         ArrayList<PaymentDetails> netBankingList, String bankCode) {
             this.container = container;
             lastCheckedItemStack = new Stack<>();
-            this.netBankingList = netBankingList;
+            this.netBankingList = getNewArrangementList(netBankingList);
             //this.bankCode = bankCode;
         }
 
+
+        private ArrayList<PaymentDetails> getNewArrangementList(ArrayList<PaymentDetails> netBankingList){
+            ArrayList<PaymentDetails> list = new ArrayList<>();
+            payMethodList = new ArrayList<>();
+            for (PaymentDetails details: netBankingList){
+                if (details.getBankName().contains("ICICI") ||
+                        details.getBankName().contains("HDFC") ||
+                        details.getBankName().contains("Citi") ||
+                        details.getBankName().contains("State Bank Of India") ||
+                        details.getBankName().contains("Axis") ||
+                        details.getBankName().contains("Kotak") ||
+                        details.getBankName().contains("Yes")){
+                    list.add(details);
+                    payMethodList.add(details.getBankName());
+                }
+            }
+
+            for (PaymentDetails details: netBankingList){
+                if (!list.contains(details)) {
+                    list.add(details);
+                    payMethodList.add(details.getBankName());
+                }
+            }
+            return list;
+        }
+
         public void displayMethods(List<String> payMethodList) {
-            this.payMethodList = payMethodList;
-            for (String names : payMethodList) {
+            //this.payMethodList = payMethodList;
+            for (String names : this.payMethodList) {
                 PaymentMethodViewHolder pvh = createItems();
                 pvh.bindView(names);
             }

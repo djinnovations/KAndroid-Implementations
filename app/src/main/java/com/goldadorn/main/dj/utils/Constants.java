@@ -17,6 +17,8 @@ public class Constants {
     public static final int REQUEST_SMS_READ = 2904;
     public static final int REQUEST_SMS_RECEIVE = 2905;
 
+    public static final String WHIZ_API_PROJECT_KEY = "oml3yvigo4ibf2ze6xfqpgle";
+
     public final static String TAG = "dj";
     public final static String TAG_APP_EVENT = "djAppEvent";
 

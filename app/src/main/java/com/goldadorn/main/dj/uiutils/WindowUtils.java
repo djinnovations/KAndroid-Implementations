@@ -205,8 +205,11 @@ public class WindowUtils {
     }
 
 
-    public Dialog displayCustomizationDialog(Activity activity, View cutomizationView){
+    public Dialog displayViewDialog(Activity activity, View cutomizationView){
 
         return mViewConstructor.displayDialog(activity, cutomizationView);
     }
+
+
+
 }

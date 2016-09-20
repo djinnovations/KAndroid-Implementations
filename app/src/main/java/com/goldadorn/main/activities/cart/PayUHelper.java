@@ -32,7 +32,38 @@ import java.util.Iterator;
 /**
  * Created by Kiran BH on 26/03/16.
  */
- class PayUHelper {
+ public class PayUHelper {
+
+
+    public static class PincodeFieldData{
+        String city;
+        String state;
+        String country;
+        String street;
+
+        public PincodeFieldData(String street, String city, String state, String country) {
+            this.street = street;
+            this.city = city;
+            this.state = state;
+            this.country = country;
+        }
+
+        public String getStreet() {
+            return street;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public String getCountry() {
+            return country;
+        }
+    }
 
     public static final boolean PRODUCTION = true;
     int merchantIndex = 0;

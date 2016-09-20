@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -49,11 +50,20 @@ import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,6 +122,108 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         Intent in = new Intent(context, CartManagerActivity.class);
         return in;
     }
+
+    public void queryPincodeAddressData(String pincode){
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        /*ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(PINCDOE_ADD_CALL);
+        ajaxCallback.method(AQuery.METHOD_POST);
+        //ajaxCallback.params(params);
+        Map<String, String> params = new HashMap<>();
+        params.put("pin", pincode);
+        params.put("project-app-key", Constants.WHIZ_API_PROJECT_KEY);
+        getAQueryCustom().ajax(ApiKeys.getPinCodeWhizAPI(pincode), params, String.class, ajaxCallback);*/
+        sendwhizquery(pincode);
+    }
+
+
+    public void sendwhizquery(final String pincode){
+            new Thread() {
+                public void run() {
+                    Uri.Builder uriBuilder = Uri.parse(ApiKeys.getPinCodeWhizAPI()).buildUpon();
+                    uriBuilder.appendQueryParameter("pin", pincode);
+                    uriBuilder.appendQueryParameter("project-app-key", Constants.WHIZ_API_PROJECT_KEY);
+                    String queryUrl = uriBuilder.build().toString();
+                    JSONObject jsonResponse = exceuteGetRequest(queryUrl);
+                    if (jsonResponse != null)
+                        Log.d("dj", "check user method: " + jsonResponse.toString());
+                    if (addressFragment != null){
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonResponse.toString());
+                            JSONObject data = jsonObject.getJSONArray("Data").getJSONObject(0);
+                            final PayUHelper.PincodeFieldData fieldData = new PayUHelper
+                                    .PincodeFieldData(data.getString("Address"), data.getString("City")
+                                    , data.getString("State"), data.getString("Country"));
+                            Application.getInstance().getUIHandler().post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dismissOverLay();
+                                    addressFragment.updateFields(fieldData);
+                                }
+                            });
+                        } catch (JSONException e) {
+                            dismissOverLay();
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }.start();
+    }
+
+
+    protected JSONObject exceuteGetRequest(String queryUrl){
+
+        Log.d("dj", "query url - exceuteGetRequest: "+queryUrl);
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet genericHttpGetRequest = new HttpGet(queryUrl);
+
+        InputStream is = null;
+        // Making HTTP Request
+        try {
+            HttpResponse response = httpClient.execute(genericHttpGetRequest);
+            HttpEntity httpEntity = response.getEntity();
+            is = httpEntity.getContent();
+            // writing response to log
+        } catch (ClientProtocolException e) {
+            // writing exception to log
+            e.printStackTrace();
+        } catch (IOException e) {
+            // writing exception to log
+            e.printStackTrace();
+
+        }
+
+        return getJsonFromInputStream(is);
+    }
+
+
+    private JSONObject getJsonFromInputStream(InputStream is){
+
+        JSONObject genericJsonObj = null;
+        try {
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line + "\n");
+            }
+
+            String jsonResponse = sb.toString();
+            Log.d("dj", "response - getJsonFromInputStream: "+jsonResponse);
+            genericJsonObj = new JSONObject(jsonResponse);
+            is.close();
+
+        } catch (Exception e) {
+
+            Log.e("Buffer Error", "Error converting result " + e.toString());
+            e.printStackTrace();
+        }
+
+        return genericJsonObj;
+
+    }
+
 
     public void contactUs() {
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_contact_us);
@@ -226,7 +338,11 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                     addressList.add(getAddressObj(sba));
                 }
             }
-        } else if (id == SET_CART_ADDRESS_CALL) {
+        }
+        /*else if (id == PINCDOE_ADD_CALL){
+
+        }*/
+        else if (id == SET_CART_ADDRESS_CALL) {
             if (mProgressDialog.isShowing()) {
                 showLoading(false);
             }
@@ -357,6 +473,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         return false;
     }
 
+    private AddAddressFragment addressFragment;
 
     public void configureUI(int uistate) {
         mUIState = uistate;
@@ -376,7 +493,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             } else {
                 frame = R.id.frame_overlay;
                 mUIState = uistate = UISTATE_OVERLAY_ADD_ADDRESS;
-                f = AddAddressFragment.newInstance(mAddressToEdit);
+                f = addressFragment = AddAddressFragment.newInstance(mAddressToEdit);
             }
             //mContinueButton.setText("Proceed to payment");
         } else if (uistate == UISTATE_PAYMENT) {

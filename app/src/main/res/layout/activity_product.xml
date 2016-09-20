@@ -44,8 +44,18 @@
 
                     <View
                         android:id="@+id/transViewProductsHelper"
-                        android:layout_width="1dp"
+                        android:layout_width="10dp"
                         android:layout_height="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:visibility="invisible" />
+
+                    <View
+                        android:id="@+id/transViewBottom"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_below="@+id/transViewProductsHelper"
+                        android:layout_marginTop="80dp"
+                        android:layout_centerHorizontal="true"
                         android:visibility="invisible" />
 
                 </RelativeLayout>

@@ -92,8 +92,11 @@ public class TemporarySocialPostParser {
         socialPost.setIsLiked(0);
         socialPost.setVoteCount(0);
         socialPost.setIsVoted(0);
-        if (clubbedDataObj1 != null)
+        if (clubbedDataObj1 != null) {
             socialPost.setPrice1(clubbedDataObj1.price);
+            socialPost.setDiscount1(clubbedDataObj1.discount);
+            socialPost.setRange1(clubbedDataObj1.range);
+        }
         if (tempPostObj.getLinksList() != null)
             socialPost.setImage1(tempPostObj.getLinksList()[0]);
 
@@ -101,10 +104,16 @@ public class TemporarySocialPostParser {
             socialPost.setBof3Percent1(0);
             socialPost.setBof3Percent2(0);
             socialPost.setBof3Percent3(0);
-            if (clubbedDataObj2 != null)
+            if (clubbedDataObj2 != null) {
                 socialPost.setPrice2(clubbedDataObj2.price);
-            if (clubbedDataObj3 != null)
+                socialPost.setDiscount2(clubbedDataObj2.discount);
+                socialPost.setRange2(clubbedDataObj2.range);
+            }
+            if (clubbedDataObj3 != null) {
                 socialPost.setPrice3(clubbedDataObj3.price);
+                socialPost.setDiscount3(clubbedDataObj3.discount);
+                socialPost.setRange3(clubbedDataObj3.range);
+            }
             if (tempPostObj.getLinksList().length > 1)
                 socialPost.setImage2(tempPostObj.getLinksList()[1]);
             if (tempPostObj.getLinksList().length > 2)
@@ -136,6 +145,8 @@ public class TemporarySocialPostParser {
         dataObj.collId = dataArr[1];
         dataObj.desId = dataArr[2];
         dataObj.price = dataArr[3];
+        dataObj.range = dataArr[4];
+        dataObj.discount = dataArr[5];
         return dataObj;
     }
 
@@ -145,5 +156,7 @@ public class TemporarySocialPostParser {
         String collId;
         String desId;
         String price;
+        String range;
+        String discount;
     }
 }

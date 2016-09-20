@@ -59,6 +59,9 @@ class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
             case TYPE.VHT_TITLE_ICON_TV:
                 vh = new ViewHolder(inflater.inflate(R.layout.adapter_layout_title_icon_tv, parent, false));
                 break;
+            case TYPE.VHT_TITLE_TV:
+                vh = new ViewHolder(inflater.inflate(R.layout.adapter_layout_title_tv, parent, false));
+                break;
             default:
                 throw new IllegalStateException("undefined state " + viewType);
         }
@@ -79,6 +82,7 @@ class ViewHolderFactory implements MergeRecycleAdapter.IViewHolderFactory {
         int VHT_SIZE_NEW = 5090;
         int VHT_BTN_POS_NEG = 6000;
         int VHT_TITLE_ICON_TV = 6010;
+        int VHT_TITLE_TV = 6020;
     }
 
 }

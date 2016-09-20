@@ -34,6 +34,61 @@ public class SocialPost extends ServerError implements IParseableObject {
     private String recommendation3;
     private String recommendation4;
 
+    private String range1;
+    private String range2;
+    private String range3;
+    private String discount1;
+    private String discount2;
+    private String discount3;
+
+    public String getRange1() {
+        return range1;
+    }
+
+    public void setRange1(String range1) {
+        this.range1 = range1;
+    }
+
+    public String getRange2() {
+        return range2;
+    }
+
+    public void setRange2(String range2) {
+        this.range2 = range2;
+    }
+
+    public String getRange3() {
+        return range3;
+    }
+
+    public void setRange3(String range3) {
+        this.range3 = range3;
+    }
+
+    public String getDiscount1() {
+        return discount1;
+    }
+
+    public void setDiscount1(String discount1) {
+        this.discount1 = discount1;
+    }
+
+    public String getDiscount2() {
+        return discount2;
+    }
+
+    public void setDiscount2(String discount2) {
+        this.discount2 = discount2;
+    }
+
+    public String getDiscount3() {
+        return discount3;
+    }
+
+    public void setDiscount3(String discount3) {
+        this.discount3 = discount3;
+    }
+
     //private List<>
 
     private String age;

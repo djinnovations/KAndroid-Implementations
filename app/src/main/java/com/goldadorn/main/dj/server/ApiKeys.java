@@ -2,6 +2,7 @@ package com.goldadorn.main.dj.server;
 
 import com.goldadorn.main.BuildConfig;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.URLHelper;
 
 /**
@@ -26,6 +27,12 @@ public class ApiKeys {
     public static final String ENDPOINT_PRODUCT_BASIC_INFO = BuildConfig.END_POINT_COMERCIAL +
             URLHelper.VERB.GET_BASIC_PRODUCT + "/";
 
+
+
+    public static final String getPinCodeWhizAPI(){
+        return "https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?";
+       //return  "https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?pin="+pincode+"&project-app-key="+ Constants.WHIZ_API_PROJECT_KEY;
+    }
 
     public static final String getCartAddressAPI(String type){
         return BuildConfig.END_POINT + VERB.GET_CART_ADDRESS_API + "/" +type;

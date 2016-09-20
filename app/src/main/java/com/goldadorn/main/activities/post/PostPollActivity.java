@@ -177,18 +177,28 @@ public class PostPollActivity extends AbstractPostActivity {
     }*/
 
     @Override
-    protected List<String> getProductAppendedColDesIdPrice() {
+    protected List<String> getClubbingData() {
 
         if (mProduct != null){
             List<String> list = new ArrayList<>();
-            list.add(mProduct.id+":"+mProduct.collectionId+":"+mProduct.userId+":"+mProduct.getDisplayPrice());
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(mProduct.id).append(":")
+                    .append(mProduct.collectionId).append(":")
+                    .append(mProduct.userId).append(":")
+                    .append(mProduct.getDisplayPrice()).toString());
             return list;
         }
         else if (imageSelector1.isValid()) {
             if (imageSelector1.getProductId() == -1)
                 return null;
             List<String> list = new ArrayList<>();
-            list.add(imageSelector1.getProductId()+":"+imageSelector1.getCollId()+":"+imageSelector1.getDesId()+":"+imageSelector1.getPrice());
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(imageSelector1.getProductId()).append(":")
+                    .append(imageSelector1.getCollId()).append(":")
+                    .append(imageSelector1.getDesId()).append(":")
+                    .append(imageSelector1.getPrice()).append(":")
+                    .append(imageSelector1.getRange()).append(":")
+                    .append(imageSelector1.getDiscount()).toString());
             return list;
         }
         return null;

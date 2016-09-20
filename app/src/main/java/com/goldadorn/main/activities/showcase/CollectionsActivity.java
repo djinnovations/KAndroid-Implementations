@@ -352,7 +352,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private DisplayProperties disProp;
 
     private void setUpGuideListener() {
-
         disProp = DisplayProperties.getInstance(getBaseContext(), 1);
         limit = Math.round(limit * disProp.getYPixelsPerCell());
         Log.d(Constants.TAG, "limit allowed: " + limit);
@@ -364,7 +363,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     private int lastStep;
 
     private void tourThisScreen() {
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -378,7 +376,6 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
     int limit = 30;
 
     private void checkOutTour(int offset) {
-
         if (isTourInProgress)
             return;
         offset = -1 * offset;

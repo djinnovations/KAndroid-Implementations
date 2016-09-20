@@ -108,6 +108,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         View qtyHolder;
         @Bind(R.id.tvQty)
         TextView tvQty;
+        @Bind(R.id.tvAmt)
+        TextView tvAmt;
         /*@Bind(R.id.tvPositive)
         ImageView ivRemoveFromCart;*/
         //private Product product;
@@ -128,6 +130,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             tvPositive = (TextView) views.get(8);
             View[] viewsArr = new View[views.size()];
             TypefaceHelper.setFont((views.toArray(viewsArr)));
+            TypefaceHelper.setFont(tvQty, tvAmt);
 
             //image = (ImageView) itemView.findViewById(R.id.product_image);
             //name = (TextView) itemView.findViewById(R.id.product_name);

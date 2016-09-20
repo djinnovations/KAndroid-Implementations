@@ -109,6 +109,15 @@
         <item name="android:clickable">true</item>
     </style>
 
+    <style name="buttonLighter" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@drawable/button_text_color</item>
+        <item name="android:background">@drawable/button_lighter</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
     <style name="RoundButton">
         <item name="android:padding">0dp</item>
         <item name="android:background">@drawable/btn_round</item>
