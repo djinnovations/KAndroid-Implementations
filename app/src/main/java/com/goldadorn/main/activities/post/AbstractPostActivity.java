@@ -274,7 +274,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
         for (FilterProductListing params : dataFromSelection) {
             HashMap<String, Object> eachMap = new HashMap<>();
             String path = /*".." +*/ params.getImage().substring(params.getImage()
-                    .indexOf(/*"/product"*/"defaults/"), params.getImage().length());
+                    .indexOf(/*"/product"*/"v200/"), params.getImage().length());
                     /*".." + params.getImage().substring(params.getImage().indexOf("/product"), params.getImage().length());*/
             eachMap.put(GalleryImageSelector.KEY_PATH, path);
             eachMap.put(GalleryImageSelector.KEY_PREVIEW, params.getImage());

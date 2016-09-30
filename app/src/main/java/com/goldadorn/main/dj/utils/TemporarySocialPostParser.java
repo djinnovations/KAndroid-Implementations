@@ -100,9 +100,11 @@ public class TemporarySocialPostParser {
             socialPost.setRange1(clubbedDataObj1.range);
         }
         if (tempPostObj.getLinksList() != null)
-            socialPost.setImage1(tempPostObj.getLinksList()[0]);
+            //socialPost.setImage1(tempPostObj.getLinksList()[0]);
+            socialPost.setImage1loc(tempPostObj.getLinksList()[0]);
         else if (!TextUtils.isEmpty(tempPostObj.getUploadedImages()))
-            socialPost.setImage1(tempPostObj.getUploadedImages());
+            //socialPost.setImage1(tempPostObj.getUploadedImages());
+            socialPost.setImage1loc(tempPostObj.getUploadedImages());
 
         if (tempPostObj.getPostType() == SocialPost.POST_TYPE_BEST_OF) {
             socialPost.setBof3Percent1(0);
@@ -119,17 +121,19 @@ public class TemporarySocialPostParser {
                 socialPost.setRange3(clubbedDataObj3.range);
             }
             if (tempPostObj.getLinksList().length > 1)
-                socialPost.setImage2(tempPostObj.getLinksList()[1]);
+                //socialPost.setImage2(tempPostObj.getLinksList()[1]);
+                socialPost.setImage2loc(tempPostObj.getLinksList()[1]);
             if (tempPostObj.getLinksList().length > 2)
-                socialPost.setImage3(tempPostObj.getLinksList()[2]);
+                //socialPost.setImage3(tempPostObj.getLinksList()[2]);
+                socialPost.setImage3loc(tempPostObj.getLinksList()[2]);
 
             if (!TextUtils.isEmpty(tempPostObj.getUploadedImages())){
                 List<String> list = Arrays.asList(getUrllistUploaded(tempPostObj.getUploadedImages()));
                 if (list != null) {
                     if (list.size() > 1)
-                        socialPost.setImage2(list.get(1));
+                        socialPost.setImage2loc(list.get(1));
                     if (list.size() > 2)
-                        socialPost.setImage3(list.get(2));
+                        socialPost.setImage3loc(list.get(2));
                 }
             }
 

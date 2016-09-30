@@ -476,7 +476,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         if (lookcount == 0)
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
-        String defaultUrl = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, isNotDefault, 400);
+        String defaultUrl = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, isNotDefault, -1);
         int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {
@@ -816,7 +816,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
     public List<String> getLinks() {
         if (mProduct != null) {
             List<String> t = new ArrayList<>();
-            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400);
+            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, -1);
             String path = /*".." + */url.substring(url.indexOf(/*"/product"*/"defaults/"), url.length());
             t.add(path);
             return t;
@@ -966,7 +966,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
             baaDataObj.setCollectionId(String.valueOf(mProduct.collectionId))
                     .setDesignerId(String.valueOf(mProduct.userId))
                     .setProductId(String.valueOf(mProduct.id))
-                    .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
+                    .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, -1))
                     .setItemName(mProduct.name);
             intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             startActivity(intent);
@@ -978,7 +978,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
     private boolean canProceedToBAA() {
         if (mProduct != null) {
-            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, -1))
                     && mProduct.id != -1 && mProduct.collectionId != -1 && mProduct.userId != -1) {
                 return true;
             }
@@ -1759,7 +1759,6 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                 //dismissOverLay();
                 confirmedToCart();
             }
-
             super.serverCallEnds(id, url, json, status);
         }
     }

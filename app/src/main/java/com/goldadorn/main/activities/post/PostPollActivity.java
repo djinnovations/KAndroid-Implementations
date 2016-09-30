@@ -129,6 +129,7 @@ public class PostPollActivity extends AbstractPostActivity {
             List<String> map = new ArrayList<>();
             if (imageSelector1.getLink() != null){
                 String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+                url = url.substring(url.indexOf("defaults/"), url.length());
                 map.add(url);
             }
                 //map.add(imageSelector1.getLink());

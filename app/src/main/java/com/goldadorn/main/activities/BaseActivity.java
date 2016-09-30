@@ -223,7 +223,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                     }*//*
                 } else {*/
                 tempPostObj.setPostId(postId);
-                tempPostObj.setUploadedImages(uploadedUrls);
+                if (isUploaded)
+                    tempPostObj.setUploadedImages(uploadedUrls);
                 com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
                 if (isMainActivity) {
                         /*if (activePage instanceof HomePage) {
@@ -246,6 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 if (isMainActivity)
                     stopUploadProgress();
             }
+            isUploaded = false;
 
         } else if (id == POST_DELETE_CALL || id == POST_HIDE_CALL || id == POST_REPORT_CALL) {
             SocialFeedFragment socialFeedFragment = UserSession.getInstance().getSocialFeedFragment();
@@ -368,6 +370,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     final public static int POST_FEED = 1111;
+    private boolean isUploaded = false;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -398,6 +401,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             tempPostObj.setFileList(files);
                             File file;
                             int count = 1;
+                            isUploaded = true;
                             for (int i = 0; i < files.length; i++) {
                                 file = files[i];
                                 if (file != null && file.exists() && file.canRead()) {
@@ -412,6 +416,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                             tempPostObj.setFileUriList(uris);
                             File file;
                             int count = 1;
+                            isUploaded = true;
                             for (int i = 0; i < uris.length; i++) {
                                 file = new File(uris[i]);
                                 ;

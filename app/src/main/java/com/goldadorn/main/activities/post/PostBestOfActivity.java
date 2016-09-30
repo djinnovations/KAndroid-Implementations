@@ -100,6 +100,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
             isAdded=true;
             //map.add(imageSelector1.getLink());
             String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+            url = url.substring(url.indexOf("defaults/"), url.length());
             map.add(url);
         }
 
@@ -108,6 +109,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
             isAdded=true;
             //map.add(imageSelector2.getLink());
             String url = Product.getImageUrl(imageSelector2.getProductId(), imageSelector2.getDesId(), null, false, -1);
+            url = url.substring(url.indexOf("defaults/"), url.length());
             map.add(url);
         }
 
@@ -116,6 +118,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
             isAdded=true;
             //map.add(imageSelector3.getLink());
             String url = Product.getImageUrl(imageSelector3.getProductId(), imageSelector3.getDesId(), null, false, -1);
+            url = url.substring(url.indexOf("defaults/"), url.length());
             map.add(url);
         }
 

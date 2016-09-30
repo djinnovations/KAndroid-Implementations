@@ -710,7 +710,7 @@ public class ProductsFragment extends Fragment {
             holder.like.setSelected(product.isLiked);
             //Glide.with(context).load(product.getImageUrl()).into(holder.image);
             ImageLoaderUtils.loadImageNew(Application.getInstance()
-                    , product.getImageUrl(mProduct.userId, mProduct.defMetal, false, 200), holder.image
+                    , product.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400), holder.image
                     , R.drawable.img_404_place_holder, -1);
             //Log.d("djprod", "imageURL: " + product.getImageUrl());
             return convertView;

@@ -1006,8 +1006,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 votePostButton.setSelected(true);
             } else votePostButton.setSelected(false);
 
-            if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
-                ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp, true);
+            if (item.getImg1loc() != null && item.getImg1loc().url.trim().equals("") == false) {
+                ImageLoaderUtils.loadImage(getContext(), item.getImg1loc(), image, R.drawable.vector_image_logo_square_100dp, true);
                 detailsHolder.setVisibility(View.VISIBLE);
                 if (isProductLink(item.getImage1loc()) != null) {
                     //
@@ -1299,8 +1299,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 votePostButton.setSelected(true);
             } else votePostButton.setSelected(false);
 
-            if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
-                ImageLoaderUtils.loadImage(getContext(), item.getImg1(), option1Image, R.drawable.vector_image_logo_square_100dp, true);
+            if (item.getImg1loc() != null && item.getImg1loc().url.trim().equals("") == false) {
+                /*String urlnew = Product.getImageUrl(RandomUtils.getIdFromImageUrl(item.getImage1loc()),
+                        );
+                Log.d("djfeed", "image1 url-BOT: " + );*/
+                ImageLoaderUtils.loadImage(getContext(), item.getImg1loc(), option1Image, R.drawable.vector_image_logo_square_100dp, true);
                 optionBox1.setVisibility(View.VISIBLE);
                 if (isVoted)
                     option1Label.setText(item.getBof3Percent1() + "%");

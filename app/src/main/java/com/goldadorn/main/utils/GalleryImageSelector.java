@@ -249,7 +249,7 @@ public class GalleryImageSelector extends ImageSelector
     public void showPreview(String preview) {
         if(holder!=null) {
             String url = Product.getImageUrl(productId, desId, null, false, 400);
-            Picasso.with(activity).load(preview).into(holder);
+            Picasso.with(activity).load(url).into(holder);
         }
 
         if(triger!=null)

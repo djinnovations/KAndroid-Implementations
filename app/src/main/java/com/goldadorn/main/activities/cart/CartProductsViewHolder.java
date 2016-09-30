@@ -272,6 +272,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         private void updateComponentBasedStatus(GetCartResponseObj.ProductItem itemToBind){
             StringBuilder sb = new StringBuilder();
+            if (itemToBind.getStatus().toLowerCase().equals("reached back"))
+                itemToBind.setStatus("returned");
             switch (itemToBind.getStatus().toLowerCase()){
                 case "pass"://order placed
                     changeDrawable(image1, R.color.colorPrimary);
@@ -318,6 +320,9 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
                     tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.redStatus));
                 /*case "":*/
             }
+            if (itemToBind.getStatus().toLowerCase().equals("pass"))
+                sb.append(itemToBind.getEstimatedDeliveyDateTime());
+            else
             sb.append(itemToBind.getStatusDateTime());
             tvStatusDate.setText(sb.toString());
         }

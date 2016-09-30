@@ -51,6 +51,7 @@ public class PostNormalActivity extends AbstractPostActivity {
             if (imageSelector1.getLink() != null) {
                 //map.add(imageSelector1.getLink());
                 String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+                url = url.substring(url.indexOf("defaults/"), url.length());
                 map.add(url);
             }
             return map;

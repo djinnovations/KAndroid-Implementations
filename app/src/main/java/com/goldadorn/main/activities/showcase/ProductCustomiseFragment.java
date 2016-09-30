@@ -990,8 +990,8 @@ public class ProductCustomiseFragment extends Fragment {
     View.OnClickListener autoCustomizeClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
-            ((ProductActivity) getActivity()).sendMinAutoCustReq();
+            Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            //((ProductActivity) getActivity()).sendMinAutoCustReq();
         }
     };
 

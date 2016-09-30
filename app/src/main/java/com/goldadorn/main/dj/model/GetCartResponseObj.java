@@ -50,9 +50,11 @@ public class GetCartResponseObj {
         private String status;
         private long statusChangeTs;
         private String orderId;
+        private long timeSLA;
 
         private String purchaseTime;
         private String statusDateTime;
+        private String estimatedDeliveyDateTime;
         private boolean isDisplayOrderId = false;
 
         public boolean isDisplayOrderId() {
@@ -93,10 +95,21 @@ public class GetCartResponseObj {
                     UiRandomUtils.getFactor(metalSwatch), 1, true).get(0);
             toSendBackSize = ProductOptions.parseSize(prodSize, prodType);
             purchaseTime = DateTimeUtils.getFormattedTimestamp("dd/MM/yyyy hh:mm a", (timePurchase * 1000));
+            if (timeSLA > 0)
+                estimatedDeliveyDateTime = DateTimeUtils.getFormattedTimestamp("dd/MM/yyyy", (timeSLA * 1000));
+            else estimatedDeliveyDateTime = "NA";
             if (statusChangeTs > 0)
                 statusDateTime = DateTimeUtils.getFormattedTimestamp("dd/MM/yyyy", (statusChangeTs * 1000));
             else statusDateTime = "NA";
             setPreviousQty(orderQty);
+        }
+
+        public String getEstimatedDeliveyDateTime() {
+            return estimatedDeliveyDateTime;
+        }
+
+        public void setEstimatedDeliveyDateTime(String estimatedDeliveyDateTime) {
+            this.estimatedDeliveyDateTime = estimatedDeliveyDateTime;
         }
 
         public String getMetalDisplayText() {
