@@ -1,5 +1,6 @@
 package com.goldadorn.main.model;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
@@ -24,6 +25,7 @@ public class SocialPost extends ServerError implements IParseableObject {
     public static final Integer POST_TYPE_POLL =2;
     public static final Integer POST_TYPE_BEST_OF =3;
     public static final Integer POST_RECOMMENDED_PRODS = 4;
+    public static final Integer POST_ATC = 8;
     private Integer isDesigner=1;
     private Integer bof3Percent1;
     private Integer bof3Percent2;
@@ -40,6 +42,9 @@ public class SocialPost extends ServerError implements IParseableObject {
     private String discount1;
     private String discount2;
     private String discount3;
+    private String image1loc;
+    private String image2loc;
+    private String image3loc;
 
     public String getRange1() {
         return range1;
@@ -95,6 +100,10 @@ public class SocialPost extends ServerError implements IParseableObject {
     private Image img2=null;
     private Image img1=null;
     private Image img3=null;
+    private Image img1loc=null;
+    private Image img2loc=null;
+    private Image img3loc=null;
+
 
     private String postId;
     private String userName;
@@ -234,6 +243,29 @@ public class SocialPost extends ServerError implements IParseableObject {
     }
 
 
+    public Image getImg1loc() {
+        return img1loc;
+    }
+
+    public void setImg1loc(Image img1loc) {
+        this.img1loc = img1loc;
+    }
+
+    public Image getImg2loc() {
+        return img2loc;
+    }
+
+    public void setImg2loc(Image img2loc) {
+        this.img2loc = img2loc;
+    }
+
+    public Image getImg3loc() {
+        return img3loc;
+    }
+
+    public void setImg3loc(Image img3loc) {
+        this.img3loc = img3loc;
+    }
 
     public Image getImg1() {
         return img1;
@@ -279,6 +311,8 @@ public class SocialPost extends ServerError implements IParseableObject {
         else if (getType().trim().equals("7")){
             setPostType(POST_RECOMMENDED_PRODS);
         }
+        else if (getType().trim().equals("8"))
+            setPostType(POST_ATC);
         else setPostType(POST_TYPE_NORMAL_POST);
 
         if (this.postType != POST_RECOMMENDED_PRODS) {
@@ -287,24 +321,26 @@ public class SocialPost extends ServerError implements IParseableObject {
 
             userPic = URLHelper.parseImageURL(userPic);
 
-            Log.d("dj", "image1: " + image1);
             if (image1 != null && image1.trim().equals("") == false)
                 image1 = URLHelper.parseImageURL(image1);
             else
                 image1 = null;
+            if (!TextUtils.isEmpty(image1loc))
+                image1loc = URLHelper.parseImageURL(image1loc);
 
-            Log.d("dj", "image2: " + image2);
             if (image2 != null && image2.trim().equals("") == false)
                 image2 = URLHelper.parseImageURL(image2);
             else
                 image2 = null;
+            if (!TextUtils.isEmpty(image2loc))
+                image2loc = URLHelper.parseImageURL(image2loc);
 
-            Log.d("dj", "image3: " + image3);
             if (image3 != null && image3.trim().equals("") == false)
                 image3 = URLHelper.parseImageURL(image3);
             else
                 image3 = null;
-
+            if (!TextUtils.isEmpty(image3loc))
+                image3loc = URLHelper.parseImageURL(image3loc);
 
             if (image1 != null)
                 img1 = new Image(image1);
@@ -313,6 +349,12 @@ public class SocialPost extends ServerError implements IParseableObject {
             if (image3 != null)
                 img3 = new Image(image3);
 
+            if (!TextUtils.isEmpty(image1loc))
+                img1loc = new Image(image1loc);
+            if (!TextUtils.isEmpty(image2loc))
+                img2loc = new Image(image2loc);
+            if (!TextUtils.isEmpty(image3loc))
+                img3loc = new Image(image3loc);
 
 
 
@@ -356,6 +398,30 @@ public class SocialPost extends ServerError implements IParseableObject {
 
     }
 
+
+    public String getImage1loc() {
+        return image1loc;
+    }
+
+    public void setImage1loc(String image1loc) {
+        this.image1loc = image1loc;
+    }
+
+    public String getImage2loc() {
+        return image2loc;
+    }
+
+    public void setImage2loc(String image2loc) {
+        this.image2loc = image2loc;
+    }
+
+    public String getImage3loc() {
+        return image3loc;
+    }
+
+    public void setImage3loc(String image3loc) {
+        this.image3loc = image3loc;
+    }
 
     private void setDateAsEarlier(){
         Date date = (new Date(Long.parseLong(timestamp.toString())));

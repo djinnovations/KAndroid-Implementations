@@ -250,7 +250,8 @@ public class ProductCustomiseFragment extends Fragment {
                 if (!TextUtils.isEmpty(mProductOption.mCustDefVals.getUrlStoneImg())) {
                     Picasso.with(getContext().getApplicationContext())
                             //.load(mProductOption.mCustDefVals.getUrlStoneImg())
-                            .load(R.drawable.ic_diamond_small)
+                            .load(/*R.drawable.ic_diamond_small*/ProductOptions
+                                    .getDiaQualityResId(mProductOption.mCustDefVals.getStoneDescTxt()))
                             .centerCrop()
                             .fit().memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                             .into((ImageView) holder.itemView.findViewById(R.id.image));
@@ -328,13 +329,18 @@ public class ProductCustomiseFragment extends Fragment {
         });
     }
 
+    public void setPriceRange(String range){
+        titleTvAdapter.setAmtData(range);
+    }
+
+
     public void bindProductOptions(ProductOptions options) {
         if (options != null) {
             mProductOption = options;
             mCustomizeAdapter.changeData(options.customisationOptions);
+            titleTvAdapter.setAmtData(options.range);
             metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), false);
             stoneTitleIconAdapter.setIconDrawable(null, false);
-            titleTvAdapter.setAmtData("9889898989 - 43589899866");
             cba.setLighterBg();
 
             if (options.priceBreakDown.size() > 0) {
@@ -984,7 +990,8 @@ public class ProductCustomiseFragment extends Fragment {
     View.OnClickListener autoCustomizeClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            ((ProductActivity) getActivity()).sendMinAutoCustReq();
         }
     };
 

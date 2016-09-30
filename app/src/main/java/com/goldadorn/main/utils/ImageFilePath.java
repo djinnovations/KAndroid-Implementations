@@ -196,16 +196,21 @@ public class ImageFilePath {
     }
 
 
-    public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isNotDefault) {
-        return getNewConvention(desId, productid, defMetal, isNotDefault);
+    public static String getImageUrlForProduct(int desId, int productid, String defMetal, boolean isNotDefault, int dimen) {
+        return getNewConvention(desId, productid, defMetal, isNotDefault, dimen);
 
         //return ApiFactory.IMAGE_URL_COLLECTIONS_HOST+"products/"+productid+"/"+productid+"-1.jpg";
     }
 
 
-    static String getNewConvention(int desId, int productid, String defMetal, boolean isNotDefault) {
+    static String getNewConvention(int desId, int productid, String defMetal, boolean isNotDefault, int dimen) {
         StringBuilder baseUrl = new StringBuilder(ApiFactory.IMAGE_URL_COLLECTIONS_HOST);
-        if (!isNotDefault){
+        if (dimen > 0 && !isNotDefault){
+            baseUrl.append("v").append(dimen).append("/");
+            baseUrl.append("products/");
+        }
+        else if (!isNotDefault){
+            //baseUrl.append("v").append(dimen).append("/");
             baseUrl.append("defaults/");
             baseUrl.append("products/");
         }

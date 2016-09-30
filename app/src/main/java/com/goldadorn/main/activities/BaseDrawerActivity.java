@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.RandomUtils;
@@ -80,7 +81,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_settings,
             R.id.nav_logout,
             R.id.nav_size_guide, R.id.nav_buy_back_policy,
-            R.id.nav_dia_qual_guide
+            R.id.nav_dia_qual_guide, R.id.nav_my_orders
     })
     public void menuButtonClick(View view) {
         int id = view.getId();
@@ -109,6 +110,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         menuAction(id);
     }
 
+
+
     protected void menuAction(int id) {
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
@@ -135,6 +138,13 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             }
            /* if (drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);*/
+            return;
+        }
+
+        if (id == R.id.nav_my_orders){
+            Intent intent = new Intent(this, MyOrdersActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
             return;
         }
 
@@ -169,7 +179,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_terms_conditions,
             R.id.nav_settings,R.id.nav_size_guide,
             R.id.nav_buy_back_policy, R.id.nav_dia_qual_guide,
-            R.id.nav_logout})
+            R.id.nav_logout, R.id.nav_my_orders})
     List<View> views;
 
     public void setupMenu() {

@@ -20,15 +20,16 @@
     <uses-permission android:name="android.permission.READ_SMS" />
 
     <!-- Adding for GCM -->
-    <!--<permission
+    <!--
+<permission
         android:name="com.goldadorn.main.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.goldadorn.main.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />-->
-
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    -->
     <!-- End of addition for GCM -->
     <application
         android:name=".activities.Application"
@@ -211,6 +212,7 @@
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.FacebookActivity"
+            tools:replace="android:theme"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -247,7 +249,9 @@
 
         <!-- Adding for GCM -->
 
-        <!--<receiver for GCM
+
+        <!--
+        <receiver for GCM
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
@@ -256,33 +260,36 @@
 
                 <category android:name="com.goldadorn.main" />
             </intent-filter>
-        </receiver>-->
+        </receiver>
+        -->
 
-        <!--<service for GCM
+
+        <!--
+        <service for GCM
             android:name=".dj.support.gcm.MyGcmPushReceiver"
             android:exported="false"
             android:permission="com.google.android.c2dm.permission.RECEIVE">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-        </service>-->
-        <!--<service for GCM
+        </service>
+        -->
+        <!--
+        <service for GCM
             android:name=".dj.support.gcm.GcmIntentService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
-        </service>-->
+        </service>
+        -->
 
-        <service
-            android:name=".dj.support.fcm.MyFcmListenerService">
+        <service android:name=".dj.support.fcm.MyFcmListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".dj.support.fcm.MyFcmInstanceIDListenerService">
+        <service android:name=".dj.support.fcm.MyFcmInstanceIDListenerService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -297,14 +304,22 @@
             android:name=".activities.showcase.BookAppointment"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.showcase.FollowerListActivity"
+        <activity
+            android:name=".activities.showcase.FollowerListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.showcase.ProjectorViewActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name=".activities.cart.MyOrdersActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".activities.showcase.ProjectorViewActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>

@@ -56,7 +56,6 @@ public class PostPollActivity extends AbstractPostActivity {
         in.putExtra("IS_SELF", people.isSelf());
         in.putExtra("backEnabled", true);
         return in;
-
     }
 
     protected List<Integer> getPrice() {
@@ -121,15 +120,18 @@ public class PostPollActivity extends AbstractPostActivity {
     protected List<String> getLinks() {
         if (mProduct != null) {
             List<String> t = new ArrayList<>();
-            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false);
+            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, -1);
             String path = /*".." + */url.substring(url.indexOf(/*"/product"*/"defaults/"), url.length());
             t.add(path);
             return t;
         }
         if (imageSelector1 != null && imageSelector1.isValid()) {
             List<String> map = new ArrayList<>();
-            if (imageSelector1.getLink() != null)
-                map.add(imageSelector1.getLink());
+            if (imageSelector1.getLink() != null){
+                String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+                map.add(url);
+            }
+                //map.add(imageSelector1.getLink());
             return map;
         }
         return null;
@@ -185,7 +187,9 @@ public class PostPollActivity extends AbstractPostActivity {
             list.add(sb.append(mProduct.id).append(":")
                     .append(mProduct.collectionId).append(":")
                     .append(mProduct.userId).append(":")
-                    .append(mProduct.getDisplayPrice()).toString());
+                    .append(mProduct.getDisplayPrice()).append(":")
+                    .append(mProduct.princeRange).append(":")
+                    .append(mProduct.discount).toString());
             return list;
         }
         else if (imageSelector1.isValid()) {
@@ -229,7 +233,7 @@ public class PostPollActivity extends AbstractPostActivity {
             trigger.setVisibility(View.GONE);
             //Picasso.with(this).load(mProduct.getImageUrl()).into(previewIamge);
             ImageLoaderUtils.loadImage(Application.getInstance()
-                    , new Image(mProduct.getImageUrl(mProduct.userId, null, false)),
+                    , new Image(mProduct.getImageUrl(mProduct.userId, null, false, 400)),
                     previewIamge, R.drawable.vector_image_logo_square_100dp, false);
         }
     }

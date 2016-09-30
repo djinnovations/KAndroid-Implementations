@@ -232,7 +232,7 @@ public class RandomUtils {
     public static void launchCollectionScreen(Activity activity, int desId, int collId) {
 
         if (activity instanceof ProductActivity) {
-            ((ProductActivity) activity).showOverLay(null, 0);
+            ((ProductActivity) activity).showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         }
         Collection colObj = getCollectionObjFromDb(collId);
         if (colObj != null) {

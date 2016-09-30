@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.dj.model.TemporaryCreatePostObj;
 import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.server.ApiKeys;
@@ -76,10 +78,29 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    private View viewForSnackBar;
+    protected View viewForSnackBar;
+
+
+    private Dialog overLayDialog;
+
+    public void showOverLay(String text, int colorResId, int gravity) {
+        //if (overLayDialog == null) {
+        overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlayLogo(this, text, colorResId,
+                gravity);
+        //}
+        overLayDialog.show();
+    }
+
+    public void dismissOverLay() {
+        if (overLayDialog != null) {
+            if (overLayDialog.isShowing()) {
+                WindowUtils.marginForProgressViewInGrid = 5;
+                overLayDialog.dismiss();
+            }
+        }
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         viewForSnackBar = findViewById(android.R.id.content).getRootView();
     }
@@ -143,7 +164,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-    final private int postCallToken = IDUtils.generateViewId();
+    final protected int postCallToken = IDUtils.generateViewId();
     private int recentlyPostedPost = -1;
     TemporaryCreatePostObj tempPostObj;
     protected boolean uploadInProgress;
@@ -184,8 +205,11 @@ public abstract class BaseActivity extends AppCompatActivity {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);
             if (success && socialFeedFragment != null) {
                 int postId = -1;
+                String uploadedUrls = null;
                 try {
-                    postId = new JSONObject(json.toString()).getInt("postid");
+                    JSONObject jsonObject = new JSONObject(json.toString());
+                    postId = jsonObject.getInt("postid");
+                    uploadedUrls = jsonObject.getString("url");
                 } catch (JSONException e) {
                     e.printStackTrace();
                     postId = -1;
@@ -198,17 +222,18 @@ public abstract class BaseActivity extends AppCompatActivity {
                             socialFeedFragment.getDataManagerCustom().add(0, );
                     }*//*
                 } else {*/
-                    tempPostObj.setPostId(postId);
-                    com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
-                    if (isMainActivity) {
+                tempPostObj.setPostId(postId);
+                tempPostObj.setUploadedImages(uploadedUrls);
+                com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
+                if (isMainActivity) {
                         /*if (activePage instanceof HomePage) {
                             ((HomePage) activePage).socialFeedFragmentpage.postAdded(socialPost);
                         }*/
-                        socialFeedFragment.postAdded(socialPost, String.valueOf(postId));
-                    } else if (socialFeedFragment.getDataManagerCustom() != null) {
-                        UserSession.getInstance().setIsBonbRefreshPending(true);
-                        socialFeedFragment.getDataManagerCustom().add(0, socialPost);
-                    }
+                    socialFeedFragment.postAdded(socialPost, String.valueOf(postId));
+                } else if (socialFeedFragment.getDataManagerCustom() != null) {
+                    UserSession.getInstance().setIsBonbRefreshPending(true);
+                    socialFeedFragment.getDataManagerCustom().add(0, socialPost);
+                }
                 //}
                 if (isMainActivity)
                     stopUploadProgress();
@@ -562,6 +587,13 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
 
         } else if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY)) {
+
+            if (navigationDataObject.idInt == R.id.nav_my_orders){
+                Intent intent = new Intent(this, MyOrdersActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                return true;
+            }
 
             Class target = navigationDataObject.getView();
             if (target != null) {

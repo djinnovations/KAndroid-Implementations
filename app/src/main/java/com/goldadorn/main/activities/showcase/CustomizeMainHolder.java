@@ -21,6 +21,7 @@ import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.model.OptionKey;
 import com.goldadorn.main.model.OptionValue;
+import com.goldadorn.main.model.ProductOptions;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.utils.URLHelper;
 import com.google.repacked.apache.commons.lang3.ArrayUtils;
@@ -197,7 +198,7 @@ class CustomizeMainHolder extends ViewHolder {
                 Picasso.with(v.getContext())
                         //.load("http://buisnessofjewelry.com/images/passionfire-round_small.png")
                         //.load(UiRandomUtils.DIAMOND_URL)
-                        .load(R.drawable.ic_diamond_small)
+                        .load(ProductOptions.getDiaQualityResId(swatch.getSwatchDisplayTxt()))
                         .centerCrop()
                         .fit().memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                         //.placeholder(R.drawable.vector_image_place_holder_profile_dark)

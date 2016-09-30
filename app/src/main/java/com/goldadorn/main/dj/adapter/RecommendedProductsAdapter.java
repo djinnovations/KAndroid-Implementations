@@ -76,7 +76,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
                     .into(holder.ivProd);*/
             ImageLoaderUtils.loadImage(Application.getInstance()
                     , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
-                            listOfRecoProds.get(position).getProductId(), null, false)),
+                            listOfRecoProds.get(position).getProductId(), null, false, 200)),
                     holder.ivProd, R.drawable.vector_image_logo_square_100dp, true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,7 +110,8 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
         public void onClick(View v) {
             if (v.getId() == R.id.image) {
                 itemClick.onRecommendedPostClick(
-                        ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(getAdapterPosition()).getDesgnId(), listOfRecoProds.get(getAdapterPosition()).getProductId(), null, false),
+                        ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(getAdapterPosition()).getDesgnId(),
+                                listOfRecoProds.get(getAdapterPosition()).getProductId(), null, false, 200),
                         listOfRecoProds.get(getAdapterPosition()).getIsLiked(),
                         listOfRecoProds.get(getAdapterPosition()).getLikeCount());
             }

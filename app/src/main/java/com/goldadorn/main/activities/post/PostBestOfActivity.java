@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.goldadorn.main.R;
 import com.goldadorn.main.bindings.ImageBindings;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.utils.GalleryImageSelector;
 import com.goldadorn.main.utils.ImageSelector;
@@ -97,19 +98,25 @@ public class PostBestOfActivity extends AbstractPostActivity {
         if(imageSelector1.isValid() && imageSelector1.getLink()!=null)
         {
             isAdded=true;
-            map.add(imageSelector1.getLink());
+            //map.add(imageSelector1.getLink());
+            String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+            map.add(url);
         }
 
         if(imageSelector2.isValid() && imageSelector2.getLink()!=null)
         {
             isAdded=true;
-            map.add(imageSelector2.getLink());
+            //map.add(imageSelector2.getLink());
+            String url = Product.getImageUrl(imageSelector2.getProductId(), imageSelector2.getDesId(), null, false, -1);
+            map.add(url);
         }
 
         if(imageSelector3.isValid() && imageSelector3.getLink()!=null)
         {
             isAdded=true;
-            map.add(imageSelector3.getLink());
+            //map.add(imageSelector3.getLink());
+            String url = Product.getImageUrl(imageSelector3.getProductId(), imageSelector3.getDesId(), null, false, -1);
+            map.add(url);
         }
 
 

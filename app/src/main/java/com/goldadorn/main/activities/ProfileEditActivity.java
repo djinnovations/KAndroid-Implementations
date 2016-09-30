@@ -457,7 +457,7 @@ public class ProfileEditActivity extends BaseActivity {
         pgView.setVisibility(View.VISIBLE);
     }
 
-    private void dismissOverLay() {
+    private void dismissCustom() {
         tvResetPassword.setEnabled(true);
         tvResetPassword.setClickable(true);
         pgView.setVisibility(View.GONE);
@@ -754,7 +754,7 @@ public class ProfileEditActivity extends BaseActivity {
             }
 
         } else if (id == CHANGE_PASSWORD_CALL) {
-            dismissOverLay();
+            dismissCustom();
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mImage, this);
             if (success) {

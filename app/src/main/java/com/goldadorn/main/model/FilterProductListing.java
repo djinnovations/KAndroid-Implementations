@@ -50,7 +50,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     {
         price = /*productPriceUnits+" "+*/RandomUtils.getIndianCurrencyFormat(productPrice, true) + "/-";
         //image = URLHelper.getInstance().productImageEndPoint+prodId+"/"+prodId+"-1.jpg";
-        image = ImageFilePath.getImageUrlForProduct(desgnId, prodId, null, false);
+        image = ImageFilePath.getImageUrlForProduct(desgnId, prodId, null, false, 200);
         //System.out.println(image);
     }
 

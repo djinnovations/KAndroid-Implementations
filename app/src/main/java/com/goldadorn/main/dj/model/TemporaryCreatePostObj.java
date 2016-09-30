@@ -14,6 +14,7 @@ public class TemporaryCreatePostObj {
     private String[] fileUriList;
     private String[] linksList;
     private String[] clubbedList;
+    private String uploadedImages;
     private int postId;
 
 
@@ -26,8 +27,18 @@ public class TemporaryCreatePostObj {
                 ", fileUriList=" + Arrays.toString(fileUriList) +
                 ", linksList=" + Arrays.toString(linksList) +
                 ", clubbedList=" + Arrays.toString(clubbedList) +
+                ", uploadedImages=" + uploadedImages +
                 ", postId=" + postId +
                 '}';
+    }
+
+
+    public String getUploadedImages() {
+        return uploadedImages;
+    }
+
+    public void setUploadedImages(String uploadedImages) {
+        this.uploadedImages = uploadedImages;
     }
 
     public int getPostId() {

@@ -36,9 +36,10 @@ public class DateTimeUtils {
 
 
     public static String getFormattedTimestamp(String outputFormat, long timestamp){
-
-        DateFormat dateFormat = new SimpleDateFormat(outputFormat, Locale.getDefault());
+        Log.d("dj", "input getFormattedTimestamp: " + outputFormat +" && "+timestamp);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(outputFormat, Locale.getDefault());
         Date date = new Date(timestamp);
+        Log.d("dj", "datetime: getFormattedTimestamp: " + dateFormat.format(date));
         return dateFormat.format(date);
     }
 
@@ -53,6 +54,7 @@ public class DateTimeUtils {
     public static String getCurrentDateTime12hr(){
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
         Date date = new Date(System.currentTimeMillis());
+        Log.d("dj", "datetime: getCurrentDateTime12hr" + dateFormat.format(date));
         return dateFormat.format(date);
     }
 

@@ -108,12 +108,12 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void getCartDetails(final Context context, final boolean isUseCart, final String orderId, final int offset, final IResultListener<ProductResponse> listener) {
+    public static void getCartDetails(final Context context, final boolean isUseCart, final boolean isMyOrder, final String orderId, final int offset, final IResultListener<ProductResponse> listener) {
         final ProductResponse response=ProductResponse.getListResponse();
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
-                Api.getCartDetails(context, isUseCart, orderId, offset,response, 0);
+                Api.getCartDetails(context, isUseCart, isMyOrder, orderId, offset,response, 0);
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

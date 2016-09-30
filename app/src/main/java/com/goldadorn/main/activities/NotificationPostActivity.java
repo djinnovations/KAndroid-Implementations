@@ -279,7 +279,7 @@ public class NotificationPostActivity extends BaseActivity{
             return params;
         }
 
-        public String getNextDataURL(PageData pageData) {
+        /*public String getNextDataURL(PageData pageData) {
             isRefreshingData = false;
             return getApp().getUrlHelper().getSocialFeedServiceURL();
         }
@@ -287,7 +287,7 @@ public class NotificationPostActivity extends BaseActivity{
         public String getRefreshDataURL(PageData pageData) {
             isRefreshingData = true;
             return getApp().getUrlHelper().getSocialFeedServiceURL();
-        }
+        }*/
 
 
         protected void configDataManager(DataManager dataManager) {

@@ -36,4 +36,9 @@ public class MyCartFragmentReplica extends MyCartFragment{
         //return super.getIsUseCart();
         return false;
     }
+
+    @Override
+    protected String getInitialTxt() {
+        return "Summary";
+    }
 }

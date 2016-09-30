@@ -135,6 +135,11 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         sendwhizquery(pincode);
     }
 
+    public void launchMyOrderScreen(){
+        NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_my_orders);
+        if (navigationDataObject != null)
+            action(navigationDataObject);
+    }
 
     public void sendwhizquery(final String pincode){
             new Thread() {
@@ -201,7 +206,6 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
 
         JSONObject genericJsonObj = null;
         try {
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;

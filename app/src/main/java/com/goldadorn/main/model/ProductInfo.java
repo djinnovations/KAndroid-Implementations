@@ -30,6 +30,7 @@ public class ProductInfo {
     public final ArrayList<StoneDetail> stonesDetails = new ArrayList<>();
     public String warrantyTxt, moneyBackTxt, certificateTxt, estimatedDelTime, payModesTxt;
     public HashMap<String, String> new5details;
+    //public String range;
 
 
    /* "metalWeight": 1.52,
@@ -46,6 +47,8 @@ public class ProductInfo {
     private static String getChainDetail(JSONObject jsonObject){
         try {
             if (!jsonObject.isNull("chainDetail")){
+                if (jsonObject.getString("chainDetail").equalsIgnoreCase("0"))
+                    return "No";
                 if (jsonObject.getString("chainDetail").equalsIgnoreCase("-1"))
                     return null;
                 StringBuilder sb = new StringBuilder();
@@ -81,6 +84,12 @@ public class ProductInfo {
         p.productDefaultPrice = obj.getDouble("productDefaultPrice");
         p.productmaking_charges = obj.getDouble("productMakChargesPerUnit");
         p.chainDetail = getChainDetail(obj);
+        try {
+            p.estimatedDelTime = obj.getString("productEDTInDays");
+        } catch (JSONException e) {
+            p.estimatedDelTime = null;
+        }
+
         /*p.metalWeight = (float) obj.getDouble("metalWeight");
         p.metalrate = (float) obj.getDouble("metalRate");
         p.metalType = obj.getString("metalType");

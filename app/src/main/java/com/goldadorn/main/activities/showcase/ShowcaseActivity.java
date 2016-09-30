@@ -424,7 +424,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         return getAQuery();
     }
 
-    private Dialog overLayDialog;
+    /*private Dialog overLayDialog;
 
     private void showOverLay(String text, int colorResId) {
         if (overLayDialog == null) {
@@ -440,7 +440,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 overLayDialog.dismiss();
             }
         }
-    }
+    }*/
 
 
     LinearLayoutManager recyclerLinLayManger;
@@ -450,7 +450,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcase);
 
-        showOverLay(null, R.color.Black);
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: SHOWCASE");
         logEventsAnalytics(GAAnalyticsEventNames.SHOWCASE);
 

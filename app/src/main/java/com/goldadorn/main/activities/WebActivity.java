@@ -112,7 +112,7 @@ public class WebActivity extends BaseActivity {
 
     public void sendContactUsInfoToServer(Map<String, String> params, ProgressView progressBar) {
         pgView = progressBar;
-        showOverLay(null, R.color.colorPrimaryDark);
+        showOverLayCustom(null, R.color.colorPrimaryDark);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(CONTACT_US_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         getAQueryCustom().ajax(ApiKeys.getContactUsAPI(), params, String.class, ajaxCallback);
@@ -120,10 +120,9 @@ public class WebActivity extends BaseActivity {
 
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
-
         Log.d("djweb", "url queried- WebActivity: " + url);
         Log.d("djweb", "response- WebActivity: " + json);
-        dismissOverLay();
+        dismissCustom();
         if (id == CONTACT_US_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mainHolder, this);
@@ -149,7 +148,7 @@ public class WebActivity extends BaseActivity {
 
     private Dialog overLayDialog;
 
-    private void showOverLay(String text, int colorResId) {
+    private void showOverLayCustom(String text, int colorResId) {
         if (overLayDialog == null) {
             // WindowUtils.marginForProgressViewInGrid = 6;
             WindowUtils.justPlainOverLay = true;
@@ -160,7 +159,7 @@ public class WebActivity extends BaseActivity {
         overLayDialog.show();
     }
 
-    private void dismissOverLay() {
+    private void dismissCustom() {
         if (overLayDialog != null) {
             //WindowUtils.marginForProgressViewInGrid = 5;
             if (overLayDialog.isShowing()) {

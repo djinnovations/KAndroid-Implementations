@@ -38,7 +38,7 @@ import java.util.Set;
  */
 public class MyCartFragment extends Fragment implements CartProductsViewHolder.IQuantityChangeListener {
     CartProductsViewHolder mCartProductsViewHolder;
-    private View mCartEmptyView;
+    private TextView mCartEmptyView;
     ArrayList<GetCartResponseObj.ProductItem> mCart = new ArrayList<>();
     View mShippingContainer, mPriceLabelContainer, mTotalContainer, mPriceItems;
     //LinearLayout mContainer_header_row;
@@ -62,29 +62,39 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         return true;
     }
 
-    /*private boolean isUseCart;
-    protected void setIsUseCart(boolean isUseCart){
-     this.isUseCart = isUseCart;
-    }*/
-
     protected boolean getIsUseCart(){
         return true;
     }
 
-    /*private String orderId;
-     public void setOrderId(String orderId){
-        this.orderId = orderId;
-    }*/
+    protected boolean getIsMyOrderScreen(){
+        return false;
+    }
+
+    protected boolean isDontShowInitialUi(){
+        return false;
+    }
+
+    protected String getInitialTxt(){
+        return "No items in Cart";
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mCartEmptyView = view.findViewById(R.id.emptyview_cart);
+        mCartEmptyView = (TextView) view.findViewById(R.id.emptyview_cart);
         card_view = view.findViewById(R.id.card_view);
         mapOfProdsToQuantity = new HashMap<>();
 
+        if (isDontShowInitialUi()){
+            //mCartEmptyView.setVisibility(View.GONE);
+            mCartEmptyView.setText(getInitialTxt());
+            card_view.setVisibility(View.GONE);
+        }
+
         //((CartManagerActivity) getActivity()).getPayInfoView().setVisibility(View.GONE);
+        if (getActivity() instanceof CartManagerActivity)
         ((CartManagerActivity) getActivity()).getPlaceOrderBtn().setVisibility(View.VISIBLE);
         typeface = TypefaceHelper.getTypeFace(Application.getInstance(),
                 ResourceReader.getInstance(Application.getInstance()).getStringFromResource(R.string.font_name_text_normal));
@@ -124,10 +134,13 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         //((TextView) mContainer_header_row.getChildAt(2)).setText(sbr);
 
 
-        mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart), this);
-        String orderId = ((CartManagerActivity) getActivity()).getOrderId();
+        mCartProductsViewHolder = new CartProductsViewHolder((LinearLayout) view.findViewById(R.id.container_cart)
+                , this, getCancelListener());
+        String orderId = null;
+        if (getActivity() instanceof CartManagerActivity)
+            orderId = ((CartManagerActivity) getActivity()).getOrderId();
         ((ILoadingProgress) getActivity()).showLoading(true);
-        UIController.getCartDetails(getContext(), getIsUseCart(), orderId,0
+        UIController.getCartDetails(getContext(), getIsUseCart(), getIsMyOrderScreen(), orderId, 0
                 ,new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
@@ -207,7 +220,10 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                         new IResultListener<ProductResponse>() {
                             @Override
                             public void onResult(ProductResponse result) {
+                                if (getActivity() instanceof CartManagerActivity)
                                 ((CartManagerActivity) getActivity()).dismissOverLay();
+                                else if (getActivity() instanceof MyOrdersActivity)
+                                    ((MyOrdersActivity) getActivity()).dismissOverLay();
                                 if (result.success) {
                                     mCart.remove(p);
                                     //   notifyDataSetChanged();
@@ -231,9 +247,14 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         float shipinCost = (mCostShipping * t);
         float totalCost = (mCostTotal * t);
 
-        if (getTotalQty(mCart) <= 0){
+        if (getActivity() instanceof CartManagerActivity) {
+            if (getTotalQty(mCart) <= 0) {
+                card_view.setVisibility(View.GONE);
+                ((CartManagerActivity) getActivity()).removeStaticBottomBar();
+                return;
+            }
+        }else if (getActivity() instanceof MyOrdersActivity){
             card_view.setVisibility(View.GONE);
-            ((CartManagerActivity) getActivity()).removeStaticBottomBar();
             return;
         }
         ((TextView) mPriceItems.findViewById(R.id.title)).setText("Price" + " (" +getTotalQty(mCart) + " items)");
@@ -247,23 +268,31 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         ((TextView) mTotalContainer.findViewById(R.id.cost)).setText(currency + ". " + (mCostTotal * t) + "/-");*/
     }
 
-    private void onCartChanged() {
+    public void onCartChanged() {
         if (mCart.size() > 0) {
             mCartEmptyView.setVisibility(View.GONE);
             mCartProductsViewHolder.setVisibility(View.VISIBLE);
-            mCartProductsViewHolder.bindUI(mCart, displayBottomBtns(), displayQtyHolder());
+            mCartProductsViewHolder.bindUI(mCart, displayBottomBtns(), displayQtyHolder(), getIsMyOrderScreen());
         } else {
+            if (getIsMyOrderScreen())
+                mCartEmptyView.setText("No Order history");
             mCartEmptyView.setVisibility(View.VISIBLE);
             mCartProductsViewHolder.setVisibility(View.GONE);
         }
         bindCostUi();
+        if (getActivity() instanceof CartManagerActivity)
         ((CartManagerActivity) getActivity()).storeCartData(mCart, mCostTotal);
+    }
+
+    protected CartProductsViewHolder.CancellationListener getCancelListener(){
+        return null;
     }
 
     @Override
     public void onQuantityChanged(int prevQty, int newQty/*Product product*/) {
         if (!isFirst) {
             WindowUtils.marginForProgressViewInGrid = 25;
+            if (getActivity() instanceof CartManagerActivity)
             ((CartManagerActivity) getActivity()).showOverLay(null, R.color.colorPrimary,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         }

@@ -304,13 +304,13 @@
             android:textSize="16sp" />
 
         <Button
-            android:id="@+id/nav_contact_us"
+            android:id="@+id/nav_my_orders"
             style="@style/linkButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginLeft="10dp"
             android:gravity="left|center_vertical"
-            android:text="@string/contactUs"
+            android:text="@string/myOrder"
             android:textSize="16sp" />
 
         <Button
@@ -323,25 +323,10 @@
             android:text="Rate Us"
             android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/nav_about_us"
-            style="@style/linkButton"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/aboutUS"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/nav_faqs"
-            style="@style/linkButton"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:gravity="left|center_vertical"
-            android:text="@string/faqs"
-            android:textSize="16sp" />
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
 
         <Button
             android:id="@+id/nav_size_guide"
@@ -363,6 +348,38 @@
             android:text="@string/diaQualGuide"
             android:textSize="16sp" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
+
+        <Button
+            android:id="@+id/nav_faqs"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/faqs"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/nav_contact_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/contactUs"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
+
         <Button
             android:id="@+id/nav_buy_back_policy"
             style="@style/linkButton"
@@ -372,6 +389,7 @@
             android:gravity="left|center_vertical"
             android:text="@string/buyBackPolicy"
             android:textSize="16sp" />
+
 
         <Button
             android:id="@+id/nav_shipping_and_return"
@@ -393,7 +411,6 @@
             android:text="@string/privacyPolicy"
             android:textSize="16sp" />
 
-
         <Button
             android:id="@+id/nav_terms_conditions"
             style="@style/linkButton"
@@ -403,6 +420,24 @@
             android:gravity="left|center_vertical"
             android:text="@string/termsAndConditions"
             android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/black" />
+
+
+
+        <Button
+            android:id="@+id/nav_about_us"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/aboutUS"
+            android:textSize="16sp" />
+
 
         <Button
             android:id="@+id/nav_logout"

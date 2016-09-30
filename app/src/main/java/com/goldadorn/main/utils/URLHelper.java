@@ -103,7 +103,8 @@ public class URLHelper {
             url = url.trim().replace(".../", "");
         }
         if(url!=null) {
-            if(url.contains(/*"products/"*/"defaults/")/*!=-1*/ || url.contains("products/")) {
+            if(url.contains(/*"products/"*/"defaults/")/*!=-1*/ || url.contains("products/")
+                    || url.contains("uploadedimages/")) {
                 url = getInstance().productImageEndPoint + url;
                 //url = url.replace("/products/","/");
                 return url;
@@ -248,8 +249,10 @@ public class URLHelper {
         public static final String LOGOUT="logout";
         public static final String PEOPLE="people";
         public static final String SOCIAL_FEED="socialfeed";
-        public static final String CREATE_POST="createpost";
-        public static final String SET_BASIC_PROFILE="setbasicprofile";
+        //public static final String CREATE_POST="createpost";
+        public static final String CREATE_POST="createpostv28";
+        //public static final String SET_BASIC_PROFILE="setbasicprofile";
+        public static final String SET_BASIC_PROFILE="setbasicprofilev28";
 
         public static final String LIKE="like";
         public static final String POLL="poll";

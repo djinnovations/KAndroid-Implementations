@@ -177,7 +177,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
 
             holder.name.setText(p.name);
             holder.description.setText(p.description);
-            Picasso.with(WishListManagerActivity.this).load(p.getImageUrl(p.userId, p.defMetal, false)).into(holder.image);
+            Picasso.with(WishListManagerActivity.this).load(p.getImageUrl(p.userId, p.defMetal, false, 200)).into(holder.image);
 
             holder.addToCart.setTag(p);
             holder.delete.setTag(p);

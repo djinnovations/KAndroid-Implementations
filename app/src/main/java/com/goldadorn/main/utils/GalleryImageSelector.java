@@ -32,6 +32,7 @@ import com.goldadorn.main.activities.post.SelectServerImageActivity;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.model.Image;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.Product;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
@@ -246,8 +247,10 @@ public class GalleryImageSelector extends ImageSelector
     }
 
     public void showPreview(String preview) {
-        if(holder!=null)
+        if(holder!=null) {
+            String url = Product.getImageUrl(productId, desId, null, false, 400);
             Picasso.with(activity).load(preview).into(holder);
+        }
 
         if(triger!=null)
             triger.setVisibility(View.VISIBLE);

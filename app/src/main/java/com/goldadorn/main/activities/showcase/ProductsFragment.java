@@ -559,7 +559,7 @@ public class ProductsFragment extends Fragment {
         baaDataObj.setCollectionId(String.valueOf(collectionId))
                 .setDesignerId(String.valueOf(desId))
                 .setProductId(String.valueOf(mProduct.id))
-                .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
+                .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
                 .setItemName(mProduct.name);
         intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
         startActivity(intent);
@@ -623,7 +623,7 @@ public class ProductsFragment extends Fragment {
 
     private boolean canProceedToBAA() {
         if (mProduct != null) {
-            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
                     && mProduct.id != -1) {
                 return true;
             }
@@ -710,7 +710,7 @@ public class ProductsFragment extends Fragment {
             holder.like.setSelected(product.isLiked);
             //Glide.with(context).load(product.getImageUrl()).into(holder.image);
             ImageLoaderUtils.loadImageNew(Application.getInstance()
-                    , product.getImageUrl(mProduct.userId, mProduct.defMetal, false), holder.image
+                    , product.getImageUrl(mProduct.userId, mProduct.defMetal, false, 200), holder.image
                     , R.drawable.img_404_place_holder, -1);
             //Log.d("djprod", "imageURL: " + product.getImageUrl());
             return convertView;

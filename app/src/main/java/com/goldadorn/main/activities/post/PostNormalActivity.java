@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.model.People;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.utils.GalleryImageSelector;
 import com.goldadorn.main.utils.ImageSelector;
@@ -47,8 +48,11 @@ public class PostNormalActivity extends AbstractPostActivity {
     protected List<String> getLinks() {
         if (imageSelector1.isValid()) {
             List<String> map = new ArrayList<>();
-            if (imageSelector1.getLink() != null)
-                map.add(imageSelector1.getLink());
+            if (imageSelector1.getLink() != null) {
+                //map.add(imageSelector1.getLink());
+                String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
+                map.add(url);
+            }
             return map;
         }
         return null;

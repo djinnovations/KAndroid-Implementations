@@ -82,7 +82,7 @@ public class UiRandomUtils {
         if (lookcount == 0)
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
-        String defaultUrl = ImageFilePath.getImageUrlForProduct(desId, prodId, metalFactor, isNotDefault);
+        String defaultUrl = ImageFilePath.getImageUrlForProduct(desId, prodId, metalFactor, isNotDefault, 50);
         int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {

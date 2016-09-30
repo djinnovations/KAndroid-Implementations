@@ -5,18 +5,45 @@
     android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
     android:layout_marginLeft="1dp"
     android:layout_marginRight="1dp"
     android:layout_marginTop="4dp"
-    android:layout_marginBottom="8dp"
     app:cardCornerRadius="@dimen/feedCardCornerRadius">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/feedCardBGColor"
-        android:paddingTop="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/llOrderId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/productFilterItemBackgraound"
+            android:paddingTop="10dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+            <TextView
+                android:id="@+id/tvOrderDateTimeId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:layout_gravity="center_vertical"
+                android:text="Order date-time and ID"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:alpha="0.3"
+                android:background="@color/colorAccent" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,6 +51,7 @@
             android:orientation="horizontal"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
+            android:paddingTop="10dp"
             android:weightSum="2">
 
             <LinearLayout
@@ -72,6 +100,7 @@
                     android:text="Size"
                     android:textColor="@color/colorBlackDimText"
                     android:textSize="14sp" />
+
                 <TextView
                     android:id="@+id/tvQty"
                     android:layout_width="match_parent"
@@ -81,6 +110,7 @@
                     android:text="Quantity"
                     android:textColor="@color/colorBlackDimText"
                     android:textSize="14sp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -97,6 +127,42 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llOrderStatusHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:padding="2dp"
+                android:text="Order Status"
+                android:textColor="@color/colorBlackDimText"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tvStatusDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:padding="2dp"
+                android:text="Order Status date"
+                android:textColor="@color/colorBlackDimText"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <include
+            android:id="@+id/progressFrame"
+            layout="@layout/checkmark_progress"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"/>
+
         <TextView
             android:id="@+id/tvAmt"
             android:layout_width="match_parent"
@@ -109,12 +175,13 @@
             android:textSize="14sp" />
 
         <LinearLayout
+            android:id="@+id/llPriceStripHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingBottom="4dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingBottom="4dp"
             android:weightSum="2">
 
             <LinearLayout
@@ -244,6 +311,39 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCancelHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:paddingTop="10dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.8dp"
+                android:alpha="0.3"
+                android:layout_marginTop="8dp"
+                android:background="@color/colorAccent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.99"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:padding="14dp"
+                    android:text="Request Cancellation"
+                    android:textColor="@color/Black"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

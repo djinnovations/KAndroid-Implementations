@@ -31,6 +31,7 @@ public class Product implements Serializable {
     public String defMetal = "";
     public String SKU;
     public int discount;
+    public String princeRange;
     public boolean hasCertificate;
     public Map<String, List<String>> selectedParams;
 
@@ -104,8 +105,12 @@ public class Product implements Serializable {
         else return false;
     }
 
-    public String getImageUrl(int desId, String defMetal, boolean isNotDefault) {
-        return ImageFilePath.getImageUrlForProduct(desId, id, defMetal, isNotDefault);
+    public String getImageUrl(int desId, String defMetal, boolean isNotDefault, int dimen) {
+        return ImageFilePath.getImageUrlForProduct(desId, id, defMetal, isNotDefault, dimen);
+    }
+
+    public static String getImageUrl(int productId, int desId, String defMetal, boolean isNotDefault, int dimen){
+        return ImageFilePath.getImageUrlForProduct(desId, productId, defMetal, isNotDefault, dimen);
     }
 
 

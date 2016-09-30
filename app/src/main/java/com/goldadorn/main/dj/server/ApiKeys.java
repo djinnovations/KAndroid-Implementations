@@ -109,6 +109,14 @@ public class ApiKeys {
         return BuildConfig.END_POINT + VERB.SEND_FCM_TOKEN_API;
     }
 
+    public static final String getAutoMinCustomizeAPI(String prodId){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.MIN_CUST_API + "/"+prodId;
+    }
+
+    public static final String getCancelReqAPI(){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.CANCEL_REQ_API;
+    }
+
     /*http://107.170.48.64/goldadorn_prod/rest/getproductbasicinfov27/373
 http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
 
@@ -131,5 +139,7 @@ http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
         private static final String INFO_METAL_STONE_API = "getproductmetalstoneinfov27";
         private static final String ADD_TO_CART_V27 = "addproductstocartv27";
         private static final String SEND_FCM_TOKEN_API = "setCloudMessagingToken";
+        private static final String MIN_CUST_API = "getproductminconfigurationv28";
+        private static final String CANCEL_REQ_API = "cancelordersv28";
     }
 }

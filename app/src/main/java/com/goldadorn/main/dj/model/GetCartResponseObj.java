@@ -3,9 +3,15 @@ package com.goldadorn.main.dj.model;
 import android.text.TextUtils;
 
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
+import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.model.ProductOptions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by User on 31-08-2016.
@@ -40,6 +46,42 @@ public class GetCartResponseObj {
         private String prodImageUrl;
         private String toSendBackSize;
         private int previousQty;
+        private long timePurchase;
+        private String status;
+        private long statusChangeTs;
+        private String orderId;
+
+        private String purchaseTime;
+        private String statusDateTime;
+        private boolean isDisplayOrderId = false;
+
+        public boolean isDisplayOrderId() {
+            return isDisplayOrderId;
+        }
+
+        public void setDisplayOrderId(boolean displayOrderId) {
+            isDisplayOrderId = displayOrderId;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getPurchaseDateTime(){
+            return purchaseTime;
+        }
+
+        public String getStatusDateTime(){
+            return statusDateTime;
+        }
+
+        public String getOrderId() {
+            return orderId;
+        }
 
         private void onBindResponse() {
             if (!TextUtils.isEmpty(metalSel))
@@ -50,6 +92,10 @@ public class GetCartResponseObj {
             prodImageUrl = UiRandomUtils.getVariousProductLooks(desgnId, productId,
                     UiRandomUtils.getFactor(metalSwatch), 1, true).get(0);
             toSendBackSize = ProductOptions.parseSize(prodSize, prodType);
+            purchaseTime = DateTimeUtils.getFormattedTimestamp("dd/MM/yyyy hh:mm a", (timePurchase * 1000));
+            if (statusChangeTs > 0)
+                statusDateTime = DateTimeUtils.getFormattedTimestamp("dd/MM/yyyy", (statusChangeTs * 1000));
+            else statusDateTime = "NA";
             setPreviousQty(orderQty);
         }
 
@@ -163,7 +209,34 @@ public class GetCartResponseObj {
     }
 
     public void onBindResponse() {
-        for (ProductItem prod : items)
+        HashSet<String> keySet = new HashSet<>();
+        for (ProductItem prod : items) {
             prod.onBindResponse();
+            keySet.add(prod.getOrderId());
+
+        }
+        if (items.get(0).getOrderId() == null)
+            return;
+        setDisplayStatus(keySet);
+    }
+
+    private void setDisplayStatus(HashSet<String> keySet) {
+        Map<String, ArrayList<ProductItem>> map = new HashMap<>();
+
+        for (String set: keySet) {
+            ArrayList<ProductItem> list = new ArrayList<>();
+            for (ProductItem prod : items) {
+                if (prod.getOrderId().equals(set)) {
+                    list.add(prod);
+                }
+            }
+            map.put(set, list);
+        }
+        Iterator it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, ArrayList<ProductItem>> pair = (Map.Entry) it.next();
+            if (pair.getValue().size() > 0)
+                pair.getValue().get(0).setDisplayOrderId(true);
+        }
     }
 }

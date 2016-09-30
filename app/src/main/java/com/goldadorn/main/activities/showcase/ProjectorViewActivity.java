@@ -38,9 +38,27 @@ public class ProjectorViewActivity extends AppCompatActivity {
         if (getIntent() != null) {
             urlArrayList = getIntent().getStringArrayListExtra(IntentKeys.PROJECTOR_VIEW_IMAGES_LIST);
             productName = getIntent().getStringExtra(IntentKeys.PRODUCT_NAME);
+            if (urlArrayList != null){
+                if (urlArrayList.size() > 0){
+                    urlArrayList = new ArrayList<>(modifyUrls(urlArrayList));
+                }
+            }
         }
         intializeViews();
         setUpImageList();
+    }
+
+    private ArrayList<String> modifyUrls(ArrayList<String> urlArrayList){
+        int position = 0;
+        ArrayList<String> toreturn = new ArrayList<>(urlArrayList);
+        for (String url: toreturn){
+            if (url.contains("v400")){
+                url = url.replace("v400", "v800");
+                toreturn.set(position, url);
+            }
+            position++;
+        }
+        return toreturn;
     }
 
     private void setUpImageList() {

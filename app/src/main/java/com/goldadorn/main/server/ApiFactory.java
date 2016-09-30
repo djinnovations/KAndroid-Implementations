@@ -113,7 +113,8 @@ public class ApiFactory extends ExtractResponse {
                 builder.appendPath("rest");
                 if (isUseGetCart)
                     builder.appendPath("getcartdetailsv27");
-                else builder.appendPath("getorderdetailsv27");
+                else if (!isUseGetCart && !isMyOrder) builder.appendPath("getorderdetailsv27");
+                else if (isMyOrder) builder.appendPath("getmyordersv28");
 
 
                 /*builder.appendPath(((Application) context.getApplicationContext()).getUser().id + "");
@@ -701,8 +702,9 @@ public class ApiFactory extends ExtractResponse {
         }
     }
 
+    static boolean isMyOrder = false;
 
-    protected static void getCartDetails(Context context, boolean isUseGetCart, String orderId, int offset,ProductResponse response) throws IOException, JSONException {
+    protected static void getCartDetails(Context context, boolean isUseGetCart, boolean isMyOrder, String orderId, int offset,ProductResponse response) throws IOException, JSONException {
         if (response.mCookies == null || response.mCookies.isEmpty()) {
             response.responseCode = BasicResponse.FORBIDDEN;
             response.success = false;
@@ -710,6 +712,8 @@ public class ApiFactory extends ExtractResponse {
         }
 
         ApiFactory.isUseGetCart = isUseGetCart;
+        ApiFactory.isMyOrder = isMyOrder;
+
         if (NetworkUtilities.isConnected(context)) {
             UrlBuilder urlBuilder = new UrlBuilder();
             urlBuilder.mUrlType = CART_DETAIL_TYPE;
@@ -723,7 +727,7 @@ public class ApiFactory extends ExtractResponse {
             jsonObject.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
             jsonObject.put("userId", Application.getInstance().getUser().id);
             jsonObject.put("off", offset);
-            if (!isUseGetCart)
+            if (!isUseGetCart && !isMyOrder)
                 jsonObject.put("orderId", orderId);
             RequestBody body = RequestBody.create(JSON, jsonObject.toString());
             Log.d("djapi","reqparams - getCartDetails: "+jsonObject);

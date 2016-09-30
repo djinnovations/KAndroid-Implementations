@@ -24,6 +24,7 @@
             android:fontFamily="sans-serif-light"
             android:paddingBottom="8dp"
             android:paddingLeft="20dp"
+
             android:paddingTop="8dp"
             android:paddingRight="12dp"
             android:textColor="@android:color/black"

@@ -1,6 +1,7 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -42,6 +43,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseDrawerActivity;
+import com.goldadorn.main.activities.cart.IPostCreationCallBacks;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.ObjectAsyncLoader;
@@ -53,6 +55,7 @@ import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.model.CustomizationDisableList;
 import com.goldadorn.main.dj.model.CustomizationStepResponse;
 import com.goldadorn.main.dj.model.FilterPostParams;
+import com.goldadorn.main.dj.model.MinAutoCustResponse;
 import com.goldadorn.main.dj.model.ProductCustomizationTabUpdationDataObj;
 import com.goldadorn.main.dj.model.Swatches;
 import com.goldadorn.main.dj.server.ApiKeys;
@@ -73,6 +76,7 @@ import com.goldadorn.main.model.OptionValue;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
+import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.model.StoneDetail;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.showcase.ShowcaseFragment;
@@ -106,7 +110,7 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ProductActivity extends BaseDrawerActivity {
+public class ProductActivity extends BaseDrawerActivity implements IPostCreationCallBacks{
     private final static int UISTATE_CUSTOMIZE = 0;
     private final static int UISTATE_PRODUCT = 1;
     private final static int UISTATE_SOCIAL = 2;
@@ -160,7 +164,7 @@ public class ProductActivity extends BaseDrawerActivity {
         return intent;
     }
 
-    private Dialog overLayDialog;
+    /*private Dialog overLayDialog;
 
     public void showOverLay(String text, int colorResId) {
         //if (overLayDialog == null){
@@ -168,9 +172,9 @@ public class ProductActivity extends BaseDrawerActivity {
                 WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         //}
         overLayDialog.show();
-    }
+    }*/
 
-    private void showOverLay(String text, int colorResId, int gravity) {
+    /*private void showOverLay(String text, int colorResId, int gravity) {
         if (overLayDialog == null) {
             //WindowUtils.justPlainOverLay = true;
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
@@ -186,7 +190,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 overLayDialog.dismiss();
             }
         }
-    }
+    }*/
 
 
     boolean isSocialFeed;
@@ -198,12 +202,17 @@ public class ProductActivity extends BaseDrawerActivity {
         mProduct.setHasCertificate(hasCert);
     }
 
+
+
+
+
+
     public boolean hasCertificate(){
         return hasCert;
     }
 
 
-    private int lastStep;
+    //private int lastStep;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -211,7 +220,7 @@ public class ProductActivity extends BaseDrawerActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        showOverLay(null, R.color.colorPrimary);
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_SCREEN");
         logEventsAnalytics(GAAnalyticsEventNames.PRODUCT_SCREEN);
 
@@ -276,8 +285,8 @@ public class ProductActivity extends BaseDrawerActivity {
                     mBrandButtonsLayout.setLayoutParams(lp);
                     mOverlayVH.setVisisbility(visibility);
                     mTabLayout.animate().setDuration(0).yBy(verticalOffset - mVerticalOffset);
-                    if ((verticalOffset * -1) - lastStep > 150) {
-                        lastStep = (verticalOffset * -1);
+                    if ((verticalOffset * -1) /*- lastStep*/ > 320) {
+                        //lastStep = (verticalOffset * -1);
                         checkOutTour(verticalOffset);
                     }
                     mHandler.postDelayed(new Runnable() {
@@ -360,7 +369,7 @@ public class ProductActivity extends BaseDrawerActivity {
         setUpGuideListener();
     }
 
-    int limit = 23;
+    int limit = 35;
     private boolean isTourInProgress = false;
     private DisplayProperties disProp;
 
@@ -376,6 +385,8 @@ public class ProductActivity extends BaseDrawerActivity {
             return;
         offset = -1 * offset;
         Log.d(Constants.TAG, "offset: " + offset);
+        if (frame_no_scroll_dummy_cust.getVisibility() == View.GONE || frame_no_scroll_dummy_cust.getVisibility() == View.INVISIBLE)
+            return;
         if (offset > limit) {
             tourThisScreenNew();
         }
@@ -384,10 +395,11 @@ public class ProductActivity extends BaseDrawerActivity {
     @Bind(R.id.transViewBottom)
     View transViewBottom;
     private void tourThisScreenNew() {
+        //if (true)return;
+        isTourInProgress = true;
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                isTourInProgress = true;
                 Log.d(Constants.TAG, "tour customization");
                 mTourHelper.displayCustomizationTour(ProductActivity.this,transViewBottom);
             }
@@ -464,7 +476,7 @@ public class ProductActivity extends BaseDrawerActivity {
         if (lookcount == 0)
             return new ArrayList<>();
         ArrayList<String> imageUrlList = new ArrayList<>();
-        String defaultUrl = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, isNotDefault);
+        String defaultUrl = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, isNotDefault, 400);
         int indexToReplace = defaultUrl.indexOf(/*'-'*/".jpg") /*+*/ - 1;
         char[] charArrOriginal = defaultUrl.toCharArray();
         for (int i = 1; i <= lookcount; i++) {
@@ -710,6 +722,7 @@ public class ProductActivity extends BaseDrawerActivity {
                 });
     }*/
 
+    @Deprecated
     public void addToCartNew(/*final View cartBtn*/) {
         if (!ConnectionDetector.getInstance(Application.getInstance()).isNetworkAvailable()) {
             Toast.makeText(getApplicationContext(), "No Network Connection", Toast.LENGTH_LONG).show();
@@ -717,19 +730,18 @@ public class ProductActivity extends BaseDrawerActivity {
         }
 
         //cartBtn.setEnabled(false);
-        showOverLay("Adding to cart..", R.color.colorPrimary);
+        //showOverLay("Adding to cart..", R.color.colorPrimary, );
         UIController.addToCartNewProduct(mContext, mProduct, mProductInfo, mProductOptions,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
                         //logEventsAnalytics(AppEventsConstants.EVENT_NAME_ADDED_TO_CART);
-                        dismissOverLay();
+                        //dismissOverLay();
                         if (result == null)
                             return;
                         if (result.success) {
                             logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
                             Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
-                            confirmedToCart();
                         }
                     }
                 });
@@ -776,6 +788,78 @@ public class ProductActivity extends BaseDrawerActivity {
         if (text.length() > 15)
             endEllipsizedName = text.substring(0, 15) + "...";
         return endEllipsizedName;
+    }
+
+    @Override
+    public int getPostType() {
+        return SocialPost.POST_ATC;
+    }
+
+    @Override
+    public List<String> getClubbingData() {
+        if (mProduct != null){
+            mProduct.princeRange = mProductOptions.range;
+            List<String> list = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(mProduct.id).append(":")
+                    .append(mProduct.collectionId).append(":")
+                    .append(mProduct.userId).append(":")
+                    .append(mProduct.getDisplayPrice()).append(":")
+                    .append(mProduct.princeRange).append(":")
+                    .append(mProduct.discount).toString());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> getLinks() {
+        if (mProduct != null) {
+            List<String> t = new ArrayList<>();
+            String url = mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400);
+            String path = /*".." + */url.substring(url.indexOf(/*"/product"*/"defaults/"), url.length());
+            t.add(path);
+            return t;
+        }
+        return null;
+    }
+
+    @Override
+    public String getPostMsg() {
+        return "Hey, I just added this "+ mProductOptions.prodType + " to my cart. What do you guys think?! :)";
+    }
+
+
+    public void postATC(){
+        String msg = getPostMsg().trim();
+        int type = getPostType();
+        Intent intent = new Intent();
+        List<String> prodColDesIdPrice = getClubbingData();
+        if (prodColDesIdPrice != null) {
+            if (prodColDesIdPrice.size() != 0) {
+                String[] clubbedArr = new String[prodColDesIdPrice.size()];
+                int index = 0;
+                for (String s : prodColDesIdPrice) {
+                    clubbedArr[index] = s;
+                    index++;
+                }
+                intent.putExtra("clubbed", clubbedArr);
+            }
+        }
+
+        List<String> linksList = getLinks();
+        if (linksList != null && linksList.size() != 0) {
+            String[] links = new String[linksList.size()];
+            for (int i = 0; i < linksList.size(); i++) {
+                links[i] = linksList.get(i);
+            }
+            intent.putExtra("links", links);
+        }
+
+        intent.putExtra("type", type);
+        intent.putExtra("msg", msg);
+        //setResult(Activity.RESULT_OK, intent);
+        super.onActivityResult(POST_FEED, RESULT_OK, intent);
     }
 
 
@@ -882,7 +966,7 @@ public class ProductActivity extends BaseDrawerActivity {
             baaDataObj.setCollectionId(String.valueOf(mProduct.collectionId))
                     .setDesignerId(String.valueOf(mProduct.userId))
                     .setProductId(String.valueOf(mProduct.id))
-                    .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
+                    .setItemImageUrl(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
                     .setItemName(mProduct.name);
             intent.putExtra(IntentKeys.BOOK_APPOINT_DATA, baaDataObj);
             startActivity(intent);
@@ -894,7 +978,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     private boolean canProceedToBAA() {
         if (mProduct != null) {
-            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false))
+            if (!TextUtils.isEmpty(mProduct.name) && !TextUtils.isEmpty(mProduct.getImageUrl(mProduct.userId, mProduct.defMetal, false, 400))
                     && mProduct.id != -1 && mProduct.collectionId != -1 && mProduct.userId != -1) {
                 return true;
             }
@@ -941,6 +1025,7 @@ public class ProductActivity extends BaseDrawerActivity {
 
     int defaultDiscountVisibitly;
     private void updateDiscountUi(int discount) {
+        mProduct.discount = discount;
         if (cartRequestDataObj != null)
             cartRequestDataObj.setDiscount(discount);
         if (discount <= 0) {
@@ -1439,10 +1524,18 @@ public class ProductActivity extends BaseDrawerActivity {
     Map<String, List<String>> selectedParams;
     //boolean isDoneBtnCall;
 
+    public static final int MIN_AUTO_CUST_CALL = IDUtils.generateViewId();
+    public void sendMinAutoCustReq(){
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(MIN_AUTO_CUST_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQueryCustom().ajax(ApiKeys.getAutoMinCustomizeAPI(String.valueOf(mProduct.id)), String.class, ajaxCallback);
+    }
+
     public void sendCustomizationToServer(Map<String, List<String>> selectedParams, boolean isDoneBtnCall) {
         //WindowUtils.marginForProgressViewInGrid = 25;
         //this.isDoneBtnCall = isDoneBtnCall;
-        showOverLay(null, 0);
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         if (isDoneBtnCall && dontCallNextTime) {
             dismissOverLay();
             mProdCustFrag.clearSelection(true);
@@ -1490,7 +1583,8 @@ public class ProductActivity extends BaseDrawerActivity {
 
         Log.d("djprod", "url queried- ProductActivity: " + url);
         Log.d("djprod", "response- ProductActivity: " + json);
-        dismissOverLay();
+        if (/*id != postCallToken &&*/ id != ADD_TO_CART_CALL)
+            dismissOverLay();
         if (id == DESC_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
@@ -1557,9 +1651,34 @@ public class ProductActivity extends BaseDrawerActivity {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
             if (success) {
+                postATC();
                 logEventsAnalytics(GAAnalyticsEventNames.CART_PRODUCT_ADDED);
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: PRODUCT_ADDED_TO_CART");
-                confirmedToCart();
+                //confirmedToCart();
+            }
+        }
+        
+        else if (id == MIN_AUTO_CUST_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mTabLayout, this);
+            if (success){
+                //// TODO: 21-09-2016
+                Gson gson = new Gson();
+                MinAutoCustResponse mac = gson.fromJson((String) json, MinAutoCustResponse.class);
+                if (mac.getPrice() > 0) {
+                    int tocompare;
+                    try {
+                        tocompare = (int) mac.getPrice();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        tocompare = -1;
+                    }
+                    if (tocompare > 0) {
+                        updateTabsMinAutoCust(tocompare, mac);
+                        updateNameDescSKU(mac.getSellerSku());
+                        updateDiscountUi(mac.getDiscount());
+                    }
+                }
             }
         }
 
@@ -1626,6 +1745,7 @@ public class ProductActivity extends BaseDrawerActivity {
                     ProductInfo.parseStoneMetal(mProductInfo, new JSONObject(json.toString()));
                     if (mProdInfoFragment != null)
                         mProdInfoFragment.bindProductInfo(mProductInfo);
+                    //mProdCustFrag.setPriceRange(mProductInfo.range);
                     setAddToCartReqObj();
                 }
             } catch (Exception e) {
@@ -1634,13 +1754,20 @@ public class ProductActivity extends BaseDrawerActivity {
 
         }
 
-        else super.serverCallEnds(id, url, json, status);
+        else {
+            if (id == postCallToken){
+                //dismissOverLay();
+                confirmedToCart();
+            }
+
+            super.serverCallEnds(id, url, json, status);
+        }
     }
 
     public final int ADD_TO_CART_CALL = IDUtils.generateViewId();
 
     public void addToCartV27(){
-        showOverLay(null, 0);
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(ADD_TO_CART_CALL);
        /* kjbk
                 kjnjkn
@@ -1656,6 +1783,7 @@ public class ProductActivity extends BaseDrawerActivity {
         map.put("primaryMetalColor", cartRequestDataObj.getMetalColor());
         map.put("size", cartRequestDataObj.getSize());
         map.put("priceUnits", "Rs");
+        map.put("productEDTInDays", mProductInfo.estimatedDelTime);
         map.put("totalPrice", cartRequestDataObj.getTotalAmount());
         map.put("offPrice", cartRequestDataObj.getOfferReplicaPrice());
         map.put("discount", cartRequestDataObj.getDiscount());
@@ -1739,6 +1867,61 @@ public class ProductActivity extends BaseDrawerActivity {
                 .append(swatch.getPurity()).append(swatch.getColor().charAt(0)).toString();
         mProduct.defMetal = factor;
         return factor;
+    }
+
+
+    private void updateTabsMinAutoCust(int totalPrice, MinAutoCustResponse mac){
+        mProduct.unitPrice = totalPrice;
+        Swatches.MixedSwatch metalSwatch = null;
+        Swatches.MixedSwatch stoneSwatch = null;
+        if (!TextUtils.isEmpty(mac.getMetalSwatch()))
+        metalSwatch = Swatches.getMixedSwatch(mac.getMetalSwatch(), Swatches.TYPE_METAL);
+        if (metalSwatch != null)
+            updateMetalInProdInfoTab(metalSwatch, mac.getWeight());
+        if (!TextUtils.isEmpty(mac.getStone())) {
+            stoneSwatch = ProductOptions.getParsedStoneSwatch(mac.getStone());
+            if (stoneSwatch != null){
+                cartRequestDataObj.setStoneSwatch(stoneSwatch);
+                ProductOptions.mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
+                StoneDetail stoneDetail = mProductInfo.stonesDetails.get(0);
+                String[] array = stoneSwatch.getSwatchDisplayTxt().split("-");
+                stoneDetail.color = array[0];
+                stoneDetail.clarity = array[1];
+                mProductInfo.stonesDetails.set(0, stoneDetail);
+            }
+
+        }
+
+        if (mProdInfoFragment != null) {
+            //mProdInfoFragment.bindProductInfo(mProductInfo);
+            mProdInfoFragment = null;
+        }
+
+        if (metalSwatch == null)
+            metalSwatch = ProductOptions.mCustDefVals.getDefMetalSwatch();
+        ProductCustomizationTabUpdationDataObj dataObj = new ProductCustomizationTabUpdationDataObj();
+
+        ProductOptions.mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
+        dataObj.setMetalCostPerUnit(Float.parseFloat(metalSwatch.getCostPerUnit()))
+                .setMetalWeight(Float.parseFloat(metalSwatch.getWeight()))
+                .setStonesTotalCost((int) ProductOptions.stonePrice)
+                .setDiscount(/*mProductOptions.discount*/mac.getDiscount())
+                .setTotalCost(totalPrice);
+        //}
+        if (metalSwatch != null){
+            ProductOptions.mCustDefVals.setDefMetalSwatch(metalSwatch);
+            ProductOptions.mCustDefVals.setRawDefMetal(mac.getMetalSwatch());
+            ProductOptions.mCustDefVals.setResIdMetal(metalSwatch.getSwatchDisplayIconResId());
+        }
+        if (stoneSwatch != null) {
+            ProductOptions.mCustDefVals.setDefStoneSwatch(stoneSwatch);
+            ProductOptions.mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
+            ProductOptions.mCustDefVals.setRawDefStone(mac.getStone());
+        }
+        ProductOptions.mCustDefVals.setSizeText(ProductOptions.parseSize(mac.getSize(), mProductOptions.prodType));
+
+        updateCustomizationTab(dataObj);
+
     }
 
     private void updateTabs(int totalPrice, CustomizationStepResponse csr) {

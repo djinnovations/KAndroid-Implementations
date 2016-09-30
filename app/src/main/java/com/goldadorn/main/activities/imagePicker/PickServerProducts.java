@@ -36,7 +36,7 @@ public class PickServerProducts  extends ServerProducts{
                 Intent intent = new Intent();
                 ////http://demo.eremotus-portal.com/goldadorn_dev/gallery/pendants/gallery.jpg
                 String path = /*".." +*/ data.getImage().substring(data.getImage()
-                        .indexOf(/*"/product"*/"defaults/"), data.getImage().length());
+                        .indexOf(/*"/product"*/"v200/"), data.getImage().length());
                 intent.putExtra("PATH", path);
                 intent.putExtra("PREVIEW", data.getImage());
                 intent.putExtra("PRICE", data.getProductPrice());

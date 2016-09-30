@@ -19,9 +19,12 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.model.GetCartResponseObj;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -39,8 +42,15 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
     private ArrayList<ProductViewHolder> productsVh = new ArrayList<>(5);
     IQuantityChangeListener quatityChangeListener;
 
-    public CartProductsViewHolder(LinearLayout itemView, IQuantityChangeListener quatityChangeListener) {
+    public interface CancellationListener {
+        void onCancelRequest(GetCartResponseObj.ProductItem product);
+    }
+
+    CancellationListener mCancelListener;
+
+    public CartProductsViewHolder(LinearLayout itemView, IQuantityChangeListener quatityChangeListener, CancellationListener mCancelListener) {
         super(itemView);
+        this.mCancelListener = mCancelListener;
         container = itemView;
         this.quatityChangeListener = quatityChangeListener;
     }
@@ -50,7 +60,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         ProductViewHolder vh = new ProductViewHolder(LayoutInflater.from(itemView.getContext()).inflate(R.layout./*item_product_in_cart*/fragment_my_cart_v2
                 , container, false));
         //vh.product = product;
-        vh.itemToBind = product;
+        //vh.itemToBind = product;
         container.addView(vh.itemView);
         productsVh.add(vh);
         return vh;
@@ -65,7 +75,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
     private boolean showBtns;
     private boolean showQty;
 
-    public void bindUI(/*ArrayList<Product> cart*/ ArrayList<GetCartResponseObj.ProductItem> cart, boolean showBtns, boolean showQty) {
+    public void bindUI(/*ArrayList<Product> cart*/ ArrayList<GetCartResponseObj.ProductItem> cart,
+                       boolean showBtns, boolean showQty, boolean isMyOrderScreen) {
         this.showBtns = showBtns;
         this.showQty = showQty;
         for (ProductViewHolder vh : productsVh) {
@@ -75,7 +86,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         for (GetCartResponseObj.ProductItem product : cart) {
             ProductViewHolder pvh = createItem(product);
             //pvh.bindUI(product);
-            pvh.bindUI(product, showBtns, showQty);
+            pvh.bindUI(product, showBtns, showQty, isMyOrderScreen);
         }
     }
 
@@ -110,6 +121,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         TextView tvQty;
         @Bind(R.id.tvAmt)
         TextView tvAmt;
+        View itemView;
+
         /*@Bind(R.id.tvPositive)
         ImageView ivRemoveFromCart;*/
         //private Product product;
@@ -118,6 +131,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         public ProductViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             ButterKnife.bind(this, itemView);
             name = (TextView) views.get(0);
             price = (TextView) views.get(1);
@@ -130,7 +144,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             tvPositive = (TextView) views.get(8);
             View[] viewsArr = new View[views.size()];
             TypefaceHelper.setFont((views.toArray(viewsArr)));
-            TypefaceHelper.setFont(tvQty, tvAmt);
+            TypefaceHelper.setFont(tvQty, tvAmt, tvOrderDateTimeId,
+                    tvStatusDate, tvCancel, tv1, tv2);
+
+            UiRandomUtils.setTypefaceBold(tvStatus);
 
             //image = (ImageView) itemView.findViewById(R.id.product_image);
             //name = (TextView) itemView.findViewById(R.id.product_name);
@@ -142,11 +159,23 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             quantityChange.setOnClickListener(this);
             tvPositive.setOnClickListener(this);
             tvNegative.setOnClickListener(this);
+            tvCancel.setOnClickListener(mCancelClick);
         }
 
+        View.OnClickListener mCancelClick = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCancelListener != null) {
+                    itemToBind.setStatus("cancel");
+                    mCancelListener.onCancelRequest(itemToBind);
+                }
+            }
+        };
+
         /*public void bindUI(Product product) {*/
-        public void bindUI(GetCartResponseObj.ProductItem itemToBind, boolean showBtns, boolean showQty) {
+        public void bindUI(GetCartResponseObj.ProductItem itemToBind, boolean showBtns, boolean showQty, boolean isMyOrderScreen) {
             Log.d("djcart","product name: "+itemToBind.getProductName());
+            this.itemToBind = itemToBind;
             //name.setText(product.name);
             name.setText(itemToBind.getProductName());
             quantityText.removeTextChangedListener(this);
@@ -158,12 +187,6 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
                     load(itemToBind.getProdImageUrl()).memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
                     .placeholder(R.drawable.vector_image_logo_square_100dp)/*.fit()*/.into(image);
 
-            if (showBtns)
-                bottomBtnHolder.setVisibility(View.VISIBLE);
-            else bottomBtnHolder.setVisibility(View.GONE);
-            if (showQty)
-                qtyHolder.setVisibility(View.VISIBLE);
-            else qtyHolder.setVisibility(View.GONE);
             //remove 0 at end the end
             /*DecimalFormat format = new DecimalFormat("0.#");
             int pricee= Integer.parseInt(format.format(product.pricePaid));
@@ -176,10 +199,138 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             sbr.setSpan(new RelativeSizeSpan(0.5f), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);*/
             ;
             price.setText(RandomUtils.getIndianCurrencyFormat(itemToBind.getPricePaid(), true));
-            updateComponents();
+            updateComponents(itemToBind);
+            bindMyOrder(isMyOrderScreen, itemToBind);
+            if (showBtns)
+                bottomBtnHolder.setVisibility(View.VISIBLE);
+            else bottomBtnHolder.setVisibility(View.GONE);
+            if (showQty)
+                qtyHolder.setVisibility(View.VISIBLE);
+            else qtyHolder.setVisibility(View.GONE);
+
         }
 
-        public void updateComponents(){
+        @Bind(R.id.llOrderId)
+        View llOrderId;
+        @Bind(R.id.tvOrderDateTimeId)
+        TextView tvOrderDateTimeId;
+        @Bind(R.id.llOrderStatusHolder)
+        View llOrderStatusHolder;
+        @Bind(R.id.tvStatus)
+        TextView tvStatus;
+        @Bind(R.id.tvStatusDate)
+        TextView tvStatusDate;
+        @Bind(R.id.llCancelHolder)
+        View llCancelHolder;
+        @Bind(R.id.tvCancel)
+        TextView tvCancel;
+        @Bind(R.id.progressFrame)
+        View progressFrame;
+        @Bind(R.id.image1)
+        ImageView image1;
+        @Bind(R.id.image2)
+        ImageView image2;
+        @Bind(R.id.tv1)
+        TextView tv1;
+        @Bind(R.id.tv2)
+        TextView tv2;
+        @Bind(R.id.llPriceStripHolder)
+        View llPriceStripHolder;
+
+        private void bindMyOrder(boolean isMyOrderScreen, GetCartResponseObj.ProductItem itemToBind) {
+            if (isMyOrderScreen){
+                llOrderId.setVisibility(View.VISIBLE);
+                llOrderStatusHolder.setVisibility(View.VISIBLE);
+                llCancelHolder.setVisibility(View.VISIBLE);
+                qtyHolder.setVisibility(View.GONE);
+                bottomBtnHolder.setVisibility(View.GONE);
+                progressFrame.setVisibility(View.VISIBLE);
+                //tvAmt.setVisibility(View.GONE);
+                //llPriceStripHolder.setVisibility(View.GONE);
+
+
+                /*tvOrderDateTimeId.setText("20/09/2016 OrderId: XXXX8989880");
+                tvStatus.setText("Completed");
+                tvStatus.setTextColor(Color.GREEN);
+                tvStatusDate.setText("Completed On 22/09/2016");*/
+                tvOrderDateTimeId.setText(itemToBind.getPurchaseDateTime() + "\nOrder ID: "+itemToBind.getOrderId());
+                if (itemToBind.isDisplayOrderId())
+                    llOrderId.setVisibility(View.VISIBLE);
+                else llOrderId.setVisibility(View.GONE);
+                updateComponentBasedStatus(itemToBind);
+
+            }else {
+                llOrderId.setVisibility(View.GONE);
+                llOrderStatusHolder.setVisibility(View.GONE);
+                llCancelHolder.setVisibility(View.GONE);
+                qtyHolder.setVisibility(View.VISIBLE);
+                progressFrame.setVisibility(View.GONE);
+                bottomBtnHolder.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        private void updateComponentBasedStatus(GetCartResponseObj.ProductItem itemToBind){
+            StringBuilder sb = new StringBuilder();
+            switch (itemToBind.getStatus().toLowerCase()){
+                case "pass"://order placed
+                    changeDrawable(image1, R.color.colorPrimary);
+                    tvStatus.setText("Placed");
+                    sb.append("Delivered by ");
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.staceColor2));
+                    break;
+                case "delivered":
+                    changeDrawable(image1, R.color.colorPrimary);
+                    changeDrawable(image2, R.color.colorPrimary);
+                    tvStatus.setText("Completed");
+                    sb.append("Completed On ");
+                    //tvCancel.setText("Return");
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.greenStatus));
+                    break;
+                case "cancel":
+                    progressFrame.setVisibility(View.GONE);
+                    llCancelHolder.setVisibility(View.GONE);
+                    tvStatus.setText("Cancellation requested");
+                    sb.append("Cancellation requested On ");
+                    itemView.setAlpha(0.6f);
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.staceColor2));
+                break;
+                case "returned":
+                    progressFrame.setVisibility(View.GONE);
+                    llCancelHolder.setVisibility(View.GONE);
+                    tvStatus.setText("Returned");
+                    sb.append("Returned On ");
+                    itemView.setAlpha(0.6f);
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.redStatus));
+                    break;
+                case "deny"://cancellation denied
+                    changeDrawable(image1, R.color.colorPrimary);
+                    tvStatus.setText("Placed/Delivered");
+                    sb.append("Delivered by ");
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.staceColor2));
+                    break;
+                case /*"cancelled"*/"accept":
+                    progressFrame.setVisibility(View.GONE);
+                    llCancelHolder.setVisibility(View.GONE);
+                    tvStatus.setText("Cancelled");
+                    sb.append("Cancelled On ");
+                    itemView.setAlpha(0.6f);
+                    tvStatus.setTextColor(ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.redStatus));
+                /*case "":*/
+            }
+            sb.append(itemToBind.getStatusDateTime());
+            tvStatusDate.setText(sb.toString());
+        }
+
+        private void changeDrawable(ImageView imageView, int colorResId){
+            int color = ResourceReader.getInstance(Application.getInstance()).getColorFromResource(colorResId);
+            imageView.setImageDrawable(new IconicsDrawable(name.getContext())
+                    .icon(CommunityMaterial.Icon.cmd_checkbox_marked_circle)
+                    .color(color)
+                    .sizeDp(30));
+        }
+
+        public void updateComponents(GetCartResponseObj.ProductItem itemToBind){
             if (itemToBind.getDiscount() > 0){
                 strikeThroughPrice.setVisibility(View.VISIBLE);
                 discount.setVisibility(View.VISIBLE);

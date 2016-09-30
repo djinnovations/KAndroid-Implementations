@@ -3,9 +3,9 @@ package com.goldadorn.main.activities.showcase;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -25,7 +25,6 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
 import com.goldadorn.main.dj.server.ApiKeys;
-import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.IntentKeys;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
@@ -33,9 +32,6 @@ import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -289,7 +285,7 @@ public class BookAppointment extends BaseActivity {
     }
 
     private void sendAppointmentRequest(Map<String, String> params) {
-        showOverLay();
+        showOverLayCustom();
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(BOOK_APPOINTMENT_CALL);
         ajaxCallback.method(AQuery.METHOD_POST);
         getAQuery().ajax(ApiKeys.getAppointmentAPI(), params, String.class, ajaxCallback);
@@ -300,7 +296,7 @@ public class BookAppointment extends BaseActivity {
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
         Log.d("djweb", "url queried- BookAppointment: " + url);
         Log.d("djweb", "response- BookAppointment: " + json);
-        dismissOverLay();
+        dismissCustom();
         if (id == BOOK_APPOINTMENT_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     etPhNum, this);
@@ -343,7 +339,7 @@ public class BookAppointment extends BaseActivity {
     @Bind(R.id.progressBar)
     ProgressView pgView;
 
-    private void showOverLay() {
+    private void showOverLayCustom() {
         /*if (overLayDialog == null) {
             overLayDialog = WindowUtils.getInstance(getApplicationContext()).displayOverlay(this, text, colorResId,
                     WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
@@ -354,7 +350,7 @@ public class BookAppointment extends BaseActivity {
         pgView.setVisibility(View.VISIBLE);
     }
 
-    private void dismissOverLay() {
+    private void dismissCustom() {
         /*if (overLayDialog != null) {
             if (overLayDialog.isShowing()) {
                 overLayDialog.dismiss();

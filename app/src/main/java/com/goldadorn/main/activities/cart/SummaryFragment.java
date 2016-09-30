@@ -158,7 +158,8 @@ public class SummaryFragment extends Fragment implements View.OnClickListener {
         View.OnClickListener btnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                ((CartManagerActivity) getActivity()).launchMyOrderScreen();
             }
         };
 

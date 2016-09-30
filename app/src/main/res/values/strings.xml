@@ -51,6 +51,7 @@
     <string name="search">Search</string>
     <string name="moreOptions">More Options</string>
     <string name="myProfile">My Profile</string>
+    <string name="myOrder">My Orders</string>
     <string name="orderTracking">Order Tracking</string>
     <string name="aboutUS">About US</string>
     <string name="policies">Policies</string>

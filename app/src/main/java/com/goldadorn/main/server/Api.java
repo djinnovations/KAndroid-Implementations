@@ -217,10 +217,10 @@ public class Api {
         }
     }
 
-    public static void getCartDetails(Context context, boolean isUseCart, String orderId, int offset,ProductResponse response, int retryCount) {
+    public static void getCartDetails(Context context, boolean isUseCart, boolean isMyOrder, String orderId, int offset,ProductResponse response, int retryCount) {
         try {
             generateUserCredentials(context, response);
-            ApiFactory.getCartDetails(context, isUseCart, orderId,offset, response);
+            ApiFactory.getCartDetails(context, isUseCart, isMyOrder, orderId,offset, response);
             /*if (response.success && response.responseContent != null) {
                 ExtractResponse.extractGetCart(response);
             }*/

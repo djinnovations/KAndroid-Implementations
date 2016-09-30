@@ -11,6 +11,7 @@ import android.util.Log;
 import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
+import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
@@ -142,6 +143,7 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_collections, R.string.collections, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, TestActivity.class);
         addItem(menu, R.id.nav_cart, R.string.cart, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CartManagerActivity.class);
         addItem(menu, R.id.nav_wishlist, R.string.wishlist, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, WishListManagerActivity.class);
+        addItem(menu, R.id.nav_my_orders, R.string.myOrder, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, MyOrdersActivity.class);
 
 
         //UsersTimeLineFragment

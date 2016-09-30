@@ -47,6 +47,19 @@ public class ProductOptions {
         this.id = id;
     }
 
+    public static int getDiaQualityResId(String stoneTxt){
+        char startChar = stoneTxt.trim().charAt(0);
+        switch (startChar){
+            case 'D': return R.drawable.ic_def;
+            case 'F': return R.drawable.ic_fg;
+            case 'G': return R.drawable.ic_ghi;
+            case 'H': return R.drawable.ic_hi;
+            case 'I': return R.drawable.ic_ij;
+            case 'J': return R.drawable.ic_jk;
+            default: return R.drawable.ic_diamond_small;
+        }
+    }
+
     private static void extract(JSONObject productInfo, OptionKey key, List<Map.Entry<OptionKey,
             ArrayList<OptionValue>>> map) throws JSONException {
         if (productInfo.has(key.keyID)) {
@@ -66,18 +79,19 @@ public class ProductOptions {
 
 
     public static float stonePrice;
+    public String range;
 
-    public static ProductOptions extractCustomization(JSONObject productInfo) throws JSONException {
-        ProductOptions p = new ProductOptions(productInfo.optInt(Constants.JsonConstants.PRODUCTID));
+    public static ProductOptions extractCustomization(JSONObject productOptions) throws JSONException {
+        ProductOptions p = new ProductOptions(productOptions.optInt(Constants.JsonConstants.PRODUCTID));
 
-        Log.d("djcustom", "response Obj - ProductOptions: " + productInfo.toString());
+        Log.d("djcustom", "response Obj - ProductOptions: " + productOptions.toString());
         float primaryMetalPrice = -1;
         float makingcharges = -1;
         stonePrice = -1;
         try {
             //primaryMetalPrice = (float) productInfo.getDouble(Constants.JsonConstants.PRIMARYMETALPRICE);
-            stonePrice = (float) productInfo.getDouble(Constants.JsonConstants.STONEPRICE);
-            makingcharges = (float) productInfo.getDouble(Constants.JsonConstants.MAKINGCHARGES);
+            stonePrice = (float) productOptions.getDouble(Constants.JsonConstants.STONEPRICE);
+            makingcharges = (float) productOptions.getDouble(Constants.JsonConstants.MAKINGCHARGES);
         } catch (JSONException e) {
             e.printStackTrace();
             //primaryMetalPrice = -1;
@@ -86,19 +100,20 @@ public class ProductOptions {
         }
 
         mCustDefVals = new CustomizationDefaultValues();
+        p.range = productOptions.getString("range");
         //p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Metal", primaryMetalPrice));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Stone", stonePrice));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("Making Charges", makingcharges));
         p.priceBreakDown.add(new AbstractMap.SimpleEntry<>("VAT (Tax)", (float) 00.00));
 
-        p.priceUnit = productInfo.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
+        p.priceUnit = productOptions.optString(Constants.JsonConstants.MAKINGCHARGESUNITS);
         //p.primaryMetalPurity = productInfo.optInt(Constants.JsonConstants.METALPURITY);
         //p.primaryMetal = productInfo.optString(Constants.JsonConstants.PRIMARYMETAL);
         //p.primaryMetalColor = productInfo.optString(Constants.JsonConstants.METALCOLOUR);
         //p.priceUnits = productInfo.optString(Constants.JsonConstants.PRIMARYMETALPRICEUNITS);
-        p.size = productInfo.getDouble(Constants.JsonConstants.SIZE);
+        p.size = productOptions.getDouble(Constants.JsonConstants.SIZE);
         try {
-            p.prodType = productInfo.getString("prodType");
+            p.prodType = productOptions.getString("prodType");
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -111,16 +126,16 @@ public class ProductOptions {
         //DJphy
 
         p.customisationOptions = new ArrayList<>();
-        ArrayList<Swatches.MixedSwatch> metalSwatch = extractSwatch(productInfo, Swatches.TYPE_METAL);
+        ArrayList<Swatches.MixedSwatch> metalSwatch = extractSwatch(productOptions, Swatches.TYPE_METAL);
         if (metalSwatch.size() != 0)
             p.customisationOptions.add(new AbstractMap.SimpleEntry<>(new OptionKey("Metal", false)
                     , metalSwatch));
-        ArrayList<Swatches.MixedSwatch> gemStoneSwatch = extractSwatch(productInfo, Swatches.TYPE_GEMSTONE);
+        ArrayList<Swatches.MixedSwatch> gemStoneSwatch = extractSwatch(productOptions, Swatches.TYPE_GEMSTONE);
         if (gemStoneSwatch.size() != 0)
             p.customisationOptions.add(new AbstractMap.SimpleEntry<>(new OptionKey("Diamond Quality", false)
                     , gemStoneSwatch));
-        parseDefStone(productInfo);
-        parseDefMetal(productInfo);
+        parseDefStone(productOptions);
+        parseDefMetal(productOptions);
         try {
             Swatches.MixedSwatch metal = mCustDefVals.getDefMetalSwatch();
             primaryMetalPrice = (Float.parseFloat(metal.getCostPerUnit())
@@ -138,7 +153,7 @@ public class ProductOptions {
 
         rawSizeListVals = new ArrayList<>();
         parsedSizeList = new ArrayList<>();
-        extractSizeCust(productInfo, p.prodType);
+        extractSizeCust(productOptions, p.prodType);
         /*if (!productInfo.isNull("discount"))
             p.discount = productInfo.getInt("discount");*/
         // p.allSwatches = new AllSwatches(extractMetalSwatch(productInfo), extractGemStoneSwatch(productInfo));

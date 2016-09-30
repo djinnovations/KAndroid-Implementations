@@ -698,6 +698,6 @@ public class AppTourGuideHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //coachMarkMgr.setCustTourStatus(true);
+        coachMarkMgr.setCustTourStatus(true);
     }
 }

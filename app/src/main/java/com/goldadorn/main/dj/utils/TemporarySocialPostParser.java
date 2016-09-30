@@ -1,5 +1,6 @@
 package com.goldadorn.main.dj.utils;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.IParseableObject;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -99,6 +101,8 @@ public class TemporarySocialPostParser {
         }
         if (tempPostObj.getLinksList() != null)
             socialPost.setImage1(tempPostObj.getLinksList()[0]);
+        else if (!TextUtils.isEmpty(tempPostObj.getUploadedImages()))
+            socialPost.setImage1(tempPostObj.getUploadedImages());
 
         if (tempPostObj.getPostType() == SocialPost.POST_TYPE_BEST_OF) {
             socialPost.setBof3Percent1(0);
@@ -118,6 +122,18 @@ public class TemporarySocialPostParser {
                 socialPost.setImage2(tempPostObj.getLinksList()[1]);
             if (tempPostObj.getLinksList().length > 2)
                 socialPost.setImage3(tempPostObj.getLinksList()[2]);
+
+            if (!TextUtils.isEmpty(tempPostObj.getUploadedImages())){
+                List<String> list = Arrays.asList(getUrllistUploaded(tempPostObj.getUploadedImages()));
+                if (list != null) {
+                    if (list.size() > 1)
+                        socialPost.setImage2(list.get(1));
+                    if (list.size() > 2)
+                        socialPost.setImage3(list.get(2));
+                }
+            }
+
+
         } else if (tempPostObj.getPostType() == SocialPost.POST_TYPE_POLL) {
             socialPost.setYesPercent(0);
             socialPost.setNoPercent(0);
@@ -148,6 +164,11 @@ public class TemporarySocialPostParser {
         dataObj.range = dataArr[4];
         dataObj.discount = dataArr[5];
         return dataObj;
+    }
+
+    private static String[] getUrllistUploaded(String url){
+        String[] urlist = url.split(":");
+        return urlist;
     }
 
 

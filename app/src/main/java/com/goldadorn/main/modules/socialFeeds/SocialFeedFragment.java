@@ -321,7 +321,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     public String getRefreshDataURL(PageData pageData) {
-        isRefreshingData = false;
+        isRefreshingData = true;
         return getApp().getUrlHelper().getSocialFeedServiceURL();
     }
 
@@ -770,10 +770,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         if (view != null) {
             view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 public void onRefresh() {
-                    if (getDataManager().canLoadRefresh()) {
-                        /*refreshOffset = -2;
+                    /*if (getDataManager().canLoadRefresh()) {
+                        *//*refreshOffset = -2;
                         postIdMain = ((SocialPost) getDataManager().get(0)).getPostId();
-                        loadRefreshData();*/
+                        loadRefreshData();*//*
                         offset = 0;
                         postIdMain = "0";
                         getDataManager().getPageData().curruntPage = 1;
@@ -784,7 +784,14 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                         getSwipeRefreshLayout().setRefreshing(false);
                     }
 
-                    getSwipeRefreshLayout().setEnabled(getDataManager().hasScopeOfRefresh());
+                    getSwipeRefreshLayout().setEnabled(getDataManager().hasScopeOfRefresh());*/
+                    offset = 0;
+                    //postIdMain = "0";
+                    getDataManager().getPageData().curruntPage = 1;
+                    getDataManager().getPageData().totalPage = 2;
+                    isRefreshingData = false;
+                    getDataManager().reset();
+                    getSwipeRefreshLayout().setRefreshing(false);
                 }
             });
             boolean refreshEnabled = this.getDataManager().getRefreshEnabled();
@@ -811,6 +818,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public static final int VIEW_BEST_OF = 15;
         public static final int VIEW_RATE_US = 20;
         public static final int VIEW_RECO_PROD = 25;
+        public static final int VIEW_ATC = 30;
     }
 
     public static boolean reateItemAdded = false;
@@ -847,6 +855,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 return ViewTypes.VIEW_POLL;
             else if (post.getPostType() == SocialPost.POST_RECOMMENDED_PRODS)
                 return ViewTypes.VIEW_RECO_PROD;
+            else if (post.getPostType() == SocialPost.POST_ATC)
+                return ViewTypes.VIEW_ATC;
             else
                 return ViewTypes.VIEW_NORMAL;
         }
@@ -873,6 +883,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return new BestOfPostItemHolder(view);
         else if ((viewType == ViewTypes.VIEW_RECO_PROD))
             return new RecommendedProductsItemHolder(view);
+        else if ((viewType == ViewTypes.VIEW_ATC))
+            return new AddToCartPost(view);
         return new NormalPostItemHolder(view);
     }
 
@@ -934,7 +946,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 if (v == buy) {
                     if (!isVoted(socialPost, true)) {
                         if (getActivity() instanceof MainActivity) {
-                            if (isProductLink(socialPost.getImage1()) != null)
+                            if (isProductLink(socialPost.getImage1loc()) != null)
                                 ((MainActivity) getActivity()).displayDialogForIntimation();
                         }
                         socialPost.setIsVoted(1);
@@ -987,7 +999,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             votePostButton.setText("{hea_buy_or_not}");
 
             updatePriceAndDiscount(item, false);
-            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1());
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1loc());
 
             if (socialPost.getIsVoted() == 1) {
                 //Log.d("djfeed", "poll post isVoted - must set color to pink: ");
@@ -997,7 +1009,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
                 ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp, true);
                 detailsHolder.setVisibility(View.VISIBLE);
-                if (isProductLink(item.getImage1()) != null) {
+                if (isProductLink(item.getImage1loc()) != null) {
                     //
                     buyNow.setVisibility(View.VISIBLE);
                 } else {
@@ -1124,7 +1136,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 if (v == option1Button) {
                     if (!isVoted(socialPost, true)) {
                         if (getActivity() instanceof MainActivity) {
-                            if (isProductLink(socialPost.getImage1()) != null)
+                            if (isProductLink(socialPost.getImage1loc()) != null)
                                 ((MainActivity) getActivity()).displayDialogForIntimation();
                         }
                         socialPost.setIsVoted(1);
@@ -1139,7 +1151,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 } else if (v == option2Button) {
                     if (!isVoted(socialPost, true)) {
                         if (getActivity() instanceof MainActivity) {
-                            if (isProductLink(socialPost.getImage2()) != null)
+                            if (isProductLink(socialPost.getImage2loc()) != null)
                                 ((MainActivity) getActivity()).displayDialogForIntimation();
                         }
                         socialPost.setIsVoted(2);
@@ -1154,7 +1166,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 } else if (v == option3Button) {
                     if (!isVoted(socialPost, true)) {
                         if (getActivity() instanceof MainActivity) {
-                            if (isProductLink(socialPost.getImage3()) != null)
+                            if (isProductLink(socialPost.getImage3loc()) != null)
                                 ((MainActivity) getActivity()).displayDialogForIntimation();
                         }
                         socialPost.setIsVoted(3);
@@ -1276,9 +1288,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 votePostButton.setSelected(true);
             }else votePostButton.setSelected(false);*/
 
-            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1());
-            Log.d("djfeed", "socialPost2 imageUrl - onBind(): " + socialPost.getImage2());
-            Log.d("djfeed", "socialPost3 imageUrl - onBind(): " + socialPost.getImage3());
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1loc());
+            Log.d("djfeed", "socialPost2 imageUrl - onBind(): " + socialPost.getImage2loc());
+            Log.d("djfeed", "socialPost3 imageUrl - onBind(): " + socialPost.getImage3loc());
 
             Boolean isVoted = isVoted(item, false);
             Log.d("djfeed", "BOT-isVoted value: " + isVoted);
@@ -1303,8 +1315,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             } else
                 optionBox1.setVisibility(View.GONE);
 
-            if (item.getImg2() != null && item.getImg2().url.trim().equals("") == false) {
-                ImageLoaderUtils.loadImage(getContext(), item.getImg2(), option2Image, R.drawable.vector_image_logo_square_100dp, true);
+            if (item.getImg2loc() != null && item.getImg2loc().url.trim().equals("") == false) {
+                ImageLoaderUtils.loadImage(getContext(), item.getImg2loc(), option2Image, R.drawable.vector_image_logo_square_100dp, true);
                 optionBox2.setVisibility(View.VISIBLE);
 
                /* if (item.getImg1() == null) {
@@ -1323,8 +1335,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             } else
                 optionBox2.setVisibility(View.GONE);
 
-            if (item.getImg3() != null && item.getImg3().url.trim().equals("") == false) {
-                ImageLoaderUtils.loadImage(getContext(), item.getImg3(), option3Image, R.drawable.vector_image_logo_square_100dp, true);
+            if (item.getImg3loc() != null && item.getImg3loc().url.trim().equals("") == false) {
+                ImageLoaderUtils.loadImage(getContext(), item.getImg3loc(), option3Image, R.drawable.vector_image_logo_square_100dp, true);
                 optionBox3.setVisibility(View.VISIBLE);
                 /*if (item.getImg2() == null) {
                     tvBOT3.setText(String.valueOf(1));
@@ -1443,12 +1455,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     private void zoomImages(SocialPost socialPost, int index) {
 
         String imageURL = null;
-        if (index == 0 && socialPost.getImage1() != null && socialPost.getImage1().equals("") == false)
-            imageURL = socialPost.getImage1();
-        else if (index == 1 && socialPost.getImage2() != null && socialPost.getImage2().equals("") == false)
-            imageURL = socialPost.getImage2();
-        else if (index == 2 && socialPost.getImage3() != null && socialPost.getImage3().equals("") == false)
-            imageURL = socialPost.getImage3();
+        if (index == 0 && socialPost.getImage1loc() != null && socialPost.getImage1loc().equals("") == false)
+            imageURL = socialPost.getImage1loc();
+        else if (index == 1 && socialPost.getImage2loc() != null && socialPost.getImage2loc().equals("") == false)
+            imageURL = socialPost.getImage2loc();
+        else if (index == 2 && socialPost.getImage3loc() != null && socialPost.getImage3loc().equals("") == false)
+            imageURL = socialPost.getImage3loc();
 
 
         //DJphy
@@ -1710,8 +1722,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
-                if (v == image && socialPost.getImg1() != null && socialPost.getImg1().url.trim().equals("") == false) {
-
+                if (v == image && socialPost.getImg1loc() != null && socialPost.getImg1loc().url.trim().equals("") == false) {
                     zoomImages(socialPost, 0);
                 }
             }
@@ -1727,11 +1738,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
 
         public void updatePostView(final SocialPost item, View view, int position) {
-            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1());
+            Log.d("djfeed", "socialPost1 imageUrl - onBind(): " + socialPost.getImage1loc());
             updatePriceAndDiscount(item, false);
-            if (item.getImg1() != null && item.getImg1().url.trim().equals("") == false) {
+            if (item.getImg1loc() != null && item.getImg1loc().url.trim().equals("") == false) {
                 detailsHolder.setVisibility(View.VISIBLE);
-                if (isProductLink(item.getImage1()) != null) {
+                if (isProductLink(item.getImage1loc()) != null) {
                     //productPrice.setText(item.getPrice1());
                     prodPrice.setVisibility(View.VISIBLE);
                     productCollectionLogo.setVisibility(View.VISIBLE);
@@ -1741,7 +1752,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     prodPrice.setVisibility(View.GONE);
                     buyNow.setVisibility(View.GONE);
                 }
-                ImageLoaderUtils.loadImage(getContext(), item.getImg1(), image, R.drawable.vector_image_logo_square_100dp, true);
+                ImageLoaderUtils.loadImage(getContext(), item.getImg1loc(), image, R.drawable.vector_image_logo_square_100dp, true);
             } else {
                 detailsHolder.setVisibility(View.GONE);
             }
@@ -1865,6 +1876,21 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 }
             });
         }*/
+    }
+
+
+    public class AddToCartPost extends NormalPostItemHolder{
+
+
+        public AddToCartPost(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void updatePostView(SocialPost item, View view, int position) {
+            super.updatePostView(item, view, position);
+            //((TextView) view.findViewById(R.id.userName)).setText("New ATC type of post");
+        }
     }
 
     abstract public class PostItemHolder extends BaseItemHolder {
@@ -2015,7 +2041,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     else {
                         if (socialPost.getPostType() == SocialPost.POST_TYPE_NORMAL_POST) {
                             if (getActivity() instanceof MainActivity) {
-                                if (isProductLink(socialPost.getImage1()) != null)
+                                if (isProductLink(socialPost.getImage1loc()) != null)
                                     ((MainActivity) getActivity()).displayDialogForIntimation();
                             }
                         }

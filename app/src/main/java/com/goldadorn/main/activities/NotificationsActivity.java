@@ -224,7 +224,6 @@ public class NotificationsActivity extends BaseActivity {
         Log.d("djnotify", "url queried- NotificationsActivity: " + url);
         Log.d("djnotify", "response - NotificationsActivity: " + json);
         if (id == notificationReg) {
-
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     notificationsList, this);
             if (success) {
