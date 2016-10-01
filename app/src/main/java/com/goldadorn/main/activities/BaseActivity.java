@@ -241,7 +241,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
                 Log.d(com.goldadorn.main.dj.utils.Constants.TAG_APP_EVENT, "AppEventLog: CREATE_POST_SUCCESS");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_SUCCESS);
-                Toast.makeText(this.getApplicationContext(), "Successfully Posted on Wall", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this.getApplicationContext(), "Successfully Posted on Wall", Toast.LENGTH_SHORT).show();
 
             } else {
                 if (isMainActivity)

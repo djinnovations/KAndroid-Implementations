@@ -73,6 +73,10 @@ public class GetCartResponseObj {
             this.status = status;
         }
 
+        public void setStatusDateTime(String dateTime){
+            statusDateTime = dateTime;
+        }
+
         public String getPurchaseDateTime(){
             return purchaseTime;
         }

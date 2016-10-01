@@ -10,6 +10,7 @@ public class RecommendedProduct {
     private int isLiked;
     private int apptmtCnt;
     private int desgnId;
+    private String prodName;
 
     public RecommendedProduct(int productId, int likeCount, int isLiked, int apptmtCnt, int desgnId) {
         this.productId = productId;

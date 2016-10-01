@@ -21,6 +21,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.model.GetCartResponseObj;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
+import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -167,6 +168,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             public void onClick(View v) {
                 if (mCancelListener != null) {
                     itemToBind.setStatus("cancel");
+                    itemToBind.setStatusDateTime(DateTimeUtils.getCurrentDateTime("dd/MM/yyyy"));
                     mCancelListener.onCancelRequest(itemToBind);
                 }
             }
