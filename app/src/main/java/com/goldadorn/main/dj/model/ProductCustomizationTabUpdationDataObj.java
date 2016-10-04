@@ -13,7 +13,7 @@ public class ProductCustomizationTabUpdationDataObj {
     //private int diamondNos;
     private int totalCost;
     private int stonesTotalCost;
-    private int discount;
+    private double discount;
     private double offAmount;
     //private double finalPrice;
 
@@ -34,10 +34,10 @@ public class ProductCustomizationTabUpdationDataObj {
     }*/
 
     public String getDiscount() {
-        return String.valueOf(discount);
+        return String.valueOf(Math.round(discount));
     }
 
-    public ProductCustomizationTabUpdationDataObj setDiscount(int discount) {
+    public ProductCustomizationTabUpdationDataObj setDiscount(double discount) {
         this.discount = discount;
         return this;
     }

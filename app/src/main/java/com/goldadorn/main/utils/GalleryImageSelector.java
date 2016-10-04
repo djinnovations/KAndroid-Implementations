@@ -53,15 +53,15 @@ public class GalleryImageSelector extends ImageSelector
     private int collId;
     private int desId;
     private int productId;
-    private float discount;
+    private double discount;
     private String range;
 
     public String getRange() {
         return range;
     }
 
-    public int getDiscount() {
-        return Math.round(discount);
+    public double getDiscount() {
+        return discount;
     }
 
     public int getProductId(){
@@ -199,7 +199,7 @@ public class GalleryImageSelector extends ImageSelector
                 collId = data.getIntExtra("COLLID", -1);
                 desId = data.getIntExtra("DESID", -1);
                 productId = data.getIntExtra("PRODID", -1);
-                discount = data.getFloatExtra(KEY_DISCOUNT, 0);
+                discount = data.getDoubleExtra(KEY_DISCOUNT, 0);
                 range = data.getStringExtra(KEY_RANGE);
                 file = null;
                 selectedMethod = PICK_SERVER_GALLERY;
@@ -228,7 +228,7 @@ public class GalleryImageSelector extends ImageSelector
             collId = (Integer) dataMap.get(KEY_COLLID);
             desId = (Integer) dataMap.get(KEY_DESID);
             productId = (Integer) dataMap.get(KEY_PRODID);
-            discount = (float) dataMap.get(KEY_DISCOUNT);
+            discount = (double) dataMap.get(KEY_DISCOUNT);
             range = (String) dataMap.get(KEY_RANGE);
             file=null;
             selectedMethod = PICK_SERVER_GALLERY;

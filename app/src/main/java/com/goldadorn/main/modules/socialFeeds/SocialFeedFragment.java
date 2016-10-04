@@ -770,28 +770,15 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         if (view != null) {
             view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 public void onRefresh() {
-                    /*if (getDataManager().canLoadRefresh()) {
-                        *//*refreshOffset = -2;
+                    if (getDataManager().canLoadRefresh()) {
+                        refreshOffset = -2;
                         postIdMain = ((SocialPost) getDataManager().get(0)).getPostId();
-                        loadRefreshData();*//*
-                        offset = 0;
-                        postIdMain = "0";
-                        getDataManager().getPageData().curruntPage = 1;
-                        getDataManager().getPageData().totalPage = 2;
-                        //loadRefreshData();
-                        getDataManager().reset();
+                        loadRefreshData();
                     } else {
                         getSwipeRefreshLayout().setRefreshing(false);
                     }
 
-                    getSwipeRefreshLayout().setEnabled(getDataManager().hasScopeOfRefresh());*/
-                    offset = 0;
-                    //postIdMain = "0";
-                    getDataManager().getPageData().curruntPage = 1;
-                    getDataManager().getPageData().totalPage = 2;
-                    isRefreshingData = false;
-                    getDataManager().reset();
-                    getSwipeRefreshLayout().setRefreshing(false);
+                    getSwipeRefreshLayout().setEnabled(getDataManager().hasScopeOfRefresh());
                 }
             });
             boolean refreshEnabled = this.getDataManager().getRefreshEnabled();
@@ -819,6 +806,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public static final int VIEW_RATE_US = 20;
         public static final int VIEW_RECO_PROD = 25;
         public static final int VIEW_ATC = 30;
+        public static final int VIEW_RATC = 35;
+        public static final int VIEW_MOST_LIKED = 40;
     }
 
     public static boolean reateItemAdded = false;
@@ -855,6 +844,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 return ViewTypes.VIEW_POLL;
             else if (post.getPostType() == SocialPost.POST_RECOMMENDED_PRODS)
                 return ViewTypes.VIEW_RECO_PROD;
+            else if (post.getPostType() == SocialPost.POST_RATC)
+                return ViewTypes.VIEW_RATC;
+            else if (post.getPostType() == SocialPost.POST_MOST_LIKED)
+                return ViewTypes.VIEW_MOST_LIKED;
             else if (post.getPostType() == SocialPost.POST_ATC)
                 return ViewTypes.VIEW_ATC;
             else
@@ -881,8 +874,16 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return new PollPostItemHolder(view);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
             return new BestOfPostItemHolder(view);
-        else if ((viewType == ViewTypes.VIEW_RECO_PROD))
-            return new RecommendedProductsItemHolder(view);
+        else if ((viewType == ViewTypes.VIEW_RECO_PROD) || (viewType == ViewTypes.VIEW_RATC) || (viewType == ViewTypes.VIEW_MOST_LIKED)) {
+            String title = "Recommended Products For You";
+            /*if (viewType == ViewTypes.VIEW_RECO_PROD)
+            title = "Recommended Products For You";*/
+            if (viewType == ViewTypes.VIEW_RATC)
+                title = "Recently Added To Cart";
+            else if (viewType == ViewTypes.VIEW_MOST_LIKED)
+                title = "Most Liked Products By Users";
+            return new RecommendedProductsItemHolder(view, title);
+        }
         else if ((viewType == ViewTypes.VIEW_ATC))
             return new AddToCartPost(view);
         return new NormalPostItemHolder(view);
@@ -1223,26 +1224,26 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         private void updateSelfDiscount(SocialPost post) {
 
-            float discount1 = -1;
-            float discount2 = -1;
-            float discount3 = -1;
+            double discount1 = -1;
+            double discount2 = -1;
+            double discount3 = -1;
             try {
                 if (!TextUtils.isEmpty(post.getDiscount1()))
-                    discount1 = Float.parseFloat(post.getDiscount1());
+                    discount1 = Double.parseDouble(post.getDiscount1());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount1 = -1;
             }
             try {
                 if (!TextUtils.isEmpty(post.getDiscount2()))
-                discount2 = Float.parseFloat(post.getDiscount2());
+                discount2 = Double.parseDouble(post.getDiscount2());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount2 = -1;
             }
             try {
                 if (!TextUtils.isEmpty(post.getDiscount3()))
-                    discount3 = Float.parseFloat(post.getDiscount3());
+                    discount3 = Double.parseDouble(post.getDiscount3());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount3 = -1;
@@ -1257,19 +1258,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
             if (discount1 > 0) {//for bot1
                 discountHolder1.setVisibility(View.VISIBLE);
-                tvDiscountOnRed1.setText("-"+post.getDiscount1()+"%");
+                tvDiscountOnRed1.setText("-"+String.valueOf(Math.round(discount1))+"%");
             } else {
                 discountHolder1.setVisibility(View.GONE);
             }
             if (discount2 > 0) {//for bot2
                 discountHolder2.setVisibility(View.VISIBLE);
-                tvDiscountOnRed2.setText("-"+post.getDiscount2()+"%");
+                tvDiscountOnRed2.setText("-"+String.valueOf(Math.round(discount2))+"%");
             } else {
                 discountHolder2.setVisibility(View.GONE);
             }
             if (discount3 > 0) {//for bot3
                 discountHolder3.setVisibility(View.VISIBLE);
-                tvDiscountOnRed3.setText("-"+post.getDiscount3()+"%");
+                tvDiscountOnRed3.setText("-"+String.valueOf(Math.round(discount3))+"%");
             } else {
                 discountHolder3.setVisibility(View.GONE);
             }
@@ -1831,7 +1832,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return urlList;
         }*/
 
-        public RecommendedProductsItemHolder(View itemView) {
+        public RecommendedProductsItemHolder(View itemView, String title) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             initRecomendProdRecyclerView();
@@ -1839,6 +1840,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             socialElementsHolder.setVisibility(View.GONE);
             detailsHolder.setVisibility(View.GONE);
             recoItemHolder.setVisibility(View.VISIBLE);
+            recomandationLabel.setText(title);
             //ivNextSetScroll.setOnClickListener(mClick);
             TypefaceHelper.setFont(recomandationLabel);
         }
@@ -2125,23 +2127,23 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 prodPrice.setVisibility(View.GONE);
                 return;
             }
-            float discount = -1;
+            double discount = -1;
             try {
                 if (!TextUtils.isEmpty(post.getDiscount1()))
-                     discount = Float.parseFloat(post.getDiscount1());
+                     discount = Double.parseDouble(post.getDiscount1());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount = -1;
             }
             if (discount >0 ) {//for discount
                 discountHolder.setVisibility(View.VISIBLE);
-                tvDiscountOnRed.setText(post.getDiscount1()+"%\noff");
+                tvDiscountOnRed.setText(String.valueOf(Math.round(discount))+"%\noff");
             } else {
                 discountHolder.setVisibility(View.GONE);
             }
 
 
-            if (!TextUtils.isEmpty(post.getRange1())) {//price check here
+            if (!TextUtils.isEmpty(post.getRange1()) && !post.getRange1().equals("null")) {//price check here
                 prodPrice.setVisibility(View.VISIBLE);
                 prodPrice.setText(post.getRange1());
             } else {

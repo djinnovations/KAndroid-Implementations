@@ -15,12 +15,12 @@ public class ProductTemp {
     private String costUnits;
     //private int isLiked;
     private float aspectRatio;
-    private int discount;
+    private double discount;
     //private String defMetal;
 
     public ProductTemp(int productId, int userId, int collectionId, String productName,
                        String productDescription, int productDefaultPrice, String costUnits,
-                       float aspectRatio, int discount) {
+                       float aspectRatio, double discount) {
         this.productId = productId;
         this.userId = userId;
         this.collectionId = collectionId;
@@ -65,11 +65,11 @@ public class ProductTemp {
         return aspectRatio;
     }
 
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(int discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

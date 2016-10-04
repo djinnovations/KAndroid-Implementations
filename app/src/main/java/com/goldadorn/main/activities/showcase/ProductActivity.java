@@ -329,7 +329,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                             //mProdInfoFragment = (ProductInfoFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_PRODUCT + "");
                             /*if (mProdInfoFragment != null)
                                 mProdInfoFragment.bindProductInfo(mProductInfo);*/
-
+                            mProduct.discount = mProductInfo.discount;
                         }
                     }
                 });
@@ -824,6 +824,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         return null;
     }
 
+
     @Override
     public String getPostMsg() {
         return "Hey, I just added this "+ mProductOptions.prodType + " to my cart. What do you guys think?! :)";
@@ -858,6 +859,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
         intent.putExtra("type", type);
         intent.putExtra("msg", msg);
+        intent.putStringArrayListExtra("hashtags", RandomUtils.getHashTagStrings(msg.trim()));
         //setResult(Activity.RESULT_OK, intent);
         super.onActivityResult(POST_FEED, RESULT_OK, intent);
     }
@@ -1024,7 +1026,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
 
     int defaultDiscountVisibitly;
-    private void updateDiscountUi(int discount) {
+    private void updateDiscountUi(double discount) {
         mProduct.discount = discount;
         if (cartRequestDataObj != null)
             cartRequestDataObj.setDiscount(discount);
@@ -1043,7 +1045,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         //mOverlayVH.discountHolder.setVisibility(View.GONE);
         mOverlayVH.product_price_slash.setVisibility(View.VISIBLE);
         //mOverlayVH.tvDiscountOnRed.setVisibility(View.VISIBLE);
-        mOverlayVH.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(discount)).append("%").append("\n").append("off"));
+        mOverlayVH.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(Math.round(discount))).append("%").append("\n").append("off"));
         mOverlayVH.mProductCost.setText(RandomUtils
                 .getIndianCurrencyFormat(RandomUtils.getOfferPrice(discount, mProduct.getDisplayPrice()), true));
         mOverlayVH.product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));
@@ -1295,6 +1297,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
             } else if (v == buyNoBuyButton) {
                 //Toast.makeText(v.getContext(), "Feature Coming Soon!", Toast.LENGTH_SHORT).show();
                 //startActivity(PostPollActivity.getLaunchIntent(mContext, mProduct));
+                mProduct.princeRange = mProductOptions.range;
                 Intent intent = PostPollActivity.getLaunchIntent(ProductActivity.this, mProduct);
                 postABonb(intent);
             } else if (v == wishlistButton) {
@@ -1917,7 +1920,10 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
             ProductOptions.mCustDefVals.setStoneDescTxt(stoneSwatch.getSwatchDisplayTxt());
             ProductOptions.mCustDefVals.setRawDefStone(mac.getStone());
         }
-        ProductOptions.mCustDefVals.setSizeText(ProductOptions.parseSize(mac.getSize(), mProductOptions.prodType));
+        if (mac.getSize() > 0) {
+            ProductOptions.mCustDefVals.setSizeText(ProductOptions.parseSize(mac.getSize(), mProductOptions.prodType));
+            cartRequestDataObj.setSize(String.valueOf(mac.getSize()));
+        }
 
         updateCustomizationTab(dataObj);
 

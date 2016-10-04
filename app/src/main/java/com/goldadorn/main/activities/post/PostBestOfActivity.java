@@ -146,6 +146,7 @@ public class PostBestOfActivity extends AbstractPostActivity {
         return null;
     }
 
+
     @Bind(R.id.rlPlaceHolder2)
     View rlPlaceHolder2;
     @Bind(R.id.rlPlaceHolder3)

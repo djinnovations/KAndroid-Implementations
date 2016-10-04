@@ -23,6 +23,7 @@ public class IntentKeys {
     public static final String FILTER_OBJ = "goldadorn.filter";
     public static final String PROJECTOR_VIEW_IMAGES_LIST = "goldadorn.url.list";
     public static final String PRODUCT_NAME = "goldadorn.prod.name";
+    public static final String HASHTAG_NAME = "goldadorn.hashtag";
 
 
     /*public static final String COLLECTION_DETAILS_ID = "goldadorn.collection.id";

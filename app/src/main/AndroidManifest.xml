@@ -212,10 +212,10 @@
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.FacebookActivity"
-            tools:replace="android:theme"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:theme" />
         <activity
             android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -314,12 +314,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".activities.cart.MyOrdersActivity"
+        <activity
+            android:name=".activities.cart.MyOrdersActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.HashTagResultActivity"></activity>
     </application>
 
 </manifest>

@@ -29,8 +29,8 @@ public class CustomizationStepResponse {
         this.price = price;
     }
 
-    public int getDiscount() {
-        return Math.round((float) discount);
+    public double getDiscount() {
+        return discount;
     }
 
     public void setDiscount(int discount) {

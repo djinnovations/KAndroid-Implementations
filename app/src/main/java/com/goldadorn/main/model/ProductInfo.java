@@ -27,6 +27,7 @@ public class ProductInfo {
     public float metalrate = -1;
     public float metalWeight = -1;
     public String chainDetail;
+    public double discount;
     public final ArrayList<StoneDetail> stonesDetails = new ArrayList<>();
     public String warrantyTxt, moneyBackTxt, certificateTxt, estimatedDelTime, payModesTxt;
     public HashMap<String, String> new5details;
@@ -76,6 +77,7 @@ public class ProductInfo {
         p.size = (float) obj.getDouble("productSize");
         p.weight = (float) obj.getDouble("productWeight");
         p.sizeUnit = obj.getString("sizeUnits");
+        p.discount = obj.getDouble("discount");
         //p.weightUnits = obj.getString("widthUnits");
         p.weightUnits = obj.getString("weightUnits");
         p.imageCount = obj.getInt("productNumImages");

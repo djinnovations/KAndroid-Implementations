@@ -39,8 +39,12 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.Format;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by User on 13-06-2016.
@@ -200,7 +204,7 @@ public class RandomUtils {
         System.exit(0);
     }
 
-    public static double getOfferPrice(int discountPercent, String totalPrice){
+    public static double getOfferPrice(double discountPercent, String totalPrice){
 
         try {
             double off = Double.parseDouble(totalPrice) * (discountPercent/100.0);
@@ -211,6 +215,19 @@ public class RandomUtils {
         }
     }
 
+    public static final String TAG = "RandomUtils";
+    public static ArrayList<String> getHashTagStrings(String fullText){
+        if (TextUtils.isEmpty(fullText))
+            return null;
+        Pattern MY_PATTERN = Pattern.compile("#(\\S+)");
+        Matcher mat = MY_PATTERN.matcher(fullText);
+        ArrayList<String> strs=new ArrayList<>();
+        while (mat.find()) {
+            Log.d(TAG , "HashTags: "+mat.group(1));
+            strs.add(mat.group(1));
+        }
+        return strs;
+    }
 
     public static void performAppRateTask() {
         Application.getInstance().getPrefManager().setAppRatingDone();

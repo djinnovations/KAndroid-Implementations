@@ -14,6 +14,7 @@ import android.widget.EditText;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.dj.utils.IntentKeys;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.SocialPost;
@@ -197,6 +198,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
             intent.putExtra("type", type);
             intent.putExtra("msg", msg);
+            intent.putStringArrayListExtra("hashtags", RandomUtils.getHashTagStrings(msg.trim()));
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else {

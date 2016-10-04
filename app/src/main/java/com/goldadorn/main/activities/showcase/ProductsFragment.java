@@ -633,7 +633,7 @@ public class ProductsFragment extends Fragment {
     }
 
 
-    private void updateDiscountUi(int discount) {
+    private void updateDiscountUi(double discount) {
         if (discount == 0) {
             if (mSwipeDeckAdapter.holder != null) {
                 mSwipeDeckAdapter.holder.discountHolder.setVisibility(View.GONE);
@@ -648,7 +648,7 @@ public class ProductsFragment extends Fragment {
             mSwipeDeckAdapter.holder.discountHolder.setVisibility(View.VISIBLE);
             product_price_slash.setVisibility(View.VISIBLE);
             //mSwipeDeckAdapter.holder.tvDiscountOnRed.setVisibility(View.VISIBLE);
-            mSwipeDeckAdapter.holder.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(discount)).append("%").append("\n").append("off"));
+            mSwipeDeckAdapter.holder.tvDiscountOnRed.setText(new StringBuilder(String.valueOf(Math.round(discount))).append("%").append("\n").append("off"));
             mPriceText.setText(RandomUtils
                     .getIndianCurrencyFormat(RandomUtils.getOfferPrice(discount, mProduct.getDisplayPrice()), true));
             product_price_slash.setText(RandomUtils.getIndianCurrencyFormat(mProduct.getDisplayPrice(), true));

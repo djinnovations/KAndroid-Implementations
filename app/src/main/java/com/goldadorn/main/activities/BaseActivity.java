@@ -52,6 +52,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -439,6 +440,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 reqEntity.addPart("link" + count, new StringBody(link + ""));
                                 count++;
                             }
+                        }
+                    }
+
+                    ArrayList<String> tags = data.getStringArrayListExtra("hashtags");
+                    if ( tags != null){
+                        if (tags.size() > 0){
+                            for (String tag: tags)
+                                reqEntity.addPart("createpost_tags[]", new StringBody(tag));
                         }
                     }
 

@@ -30,7 +30,7 @@ public class Product implements Serializable {
     public float image_a_r = 1;
     public String defMetal = "";
     public String SKU;
-    public int discount;
+    public double discount;
     public String princeRange;
     public boolean hasCertificate;
     public Map<String, List<String>> selectedParams;
@@ -146,7 +146,7 @@ public class Product implements Serializable {
         t.priceUnit = cursor.getString(cursor.getColumnIndex(Tables.Products.PRICEUNIT));
         t.isLiked = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED)) == 1;
         t.likeStat = cursor.getInt(cursor.getColumnIndex(Tables.Products.IS_LIKED));
-        t.discount = cursor.getInt(cursor.getColumnIndex(Tables.Products.DISCOUNT));
+        t.discount = cursor.getDouble(cursor.getColumnIndex(Tables.Products.DISCOUNT));
         //t.defMetal = cursor.getString(cursor.getColumnIndex(Tables.Products.DEF_METAl));
         t.image_a_r = cursor.getFloat(cursor.getColumnIndex(Tables.Products.IMAGE_ASPECT_RATIO));
         if (t.image_a_r == 0)

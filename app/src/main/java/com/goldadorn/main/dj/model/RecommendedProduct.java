@@ -18,8 +18,17 @@ public class RecommendedProduct {
         this.isLiked = isLiked;
         this.apptmtCnt = apptmtCnt;
         this.desgnId = desgnId;
+        this.prodName = prodName;
     }
 
+
+    public String getProdName() {
+        return prodName;
+    }
+
+    public void setProdName(String prodName) {
+        this.prodName = prodName;
+    }
 
     public int getDesgnId() {
         return desgnId;

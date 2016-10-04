@@ -215,7 +215,7 @@ public class Tables {
                 Products.CUSTOMIZATION_INFO + " TEXT," +
                 Products.COUNT_LIKES + " INTEGER DEFAULT 0," +
                 Products.IS_LIKED + " INTEGER DEFAULT 0," +
-                Products.DISCOUNT + " INTEGER DEFAULT 0," +
+                Products.DISCOUNT + " DOUBLE PRECISION," +
                 Products.COUNT_UNLIKES + " INTEGER DEFAULT 0," +
                 Products.CART_ADDED_TSP + " INTEGER DEFAULT 0," +
                 //Products.DEF_METAl + " TEXT," +

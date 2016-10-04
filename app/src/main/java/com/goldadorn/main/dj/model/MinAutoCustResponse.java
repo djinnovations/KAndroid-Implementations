@@ -6,11 +6,11 @@ package com.goldadorn.main.dj.model;
 public class MinAutoCustResponse {
 
     int productId;
-    double price;
-    int discount;
+    double price = -1;
+    double discount = -1;
     String sellerSku;
     float weight = -1;
-    double size;
+    double size = -1;
     String metalSwatch;
     String stone;
 
@@ -30,7 +30,7 @@ public class MinAutoCustResponse {
         this.price = price;
     }
 
-    public int getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 

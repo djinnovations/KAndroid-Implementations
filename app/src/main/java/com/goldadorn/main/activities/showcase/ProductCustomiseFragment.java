@@ -117,7 +117,7 @@ public class ProductCustomiseFragment extends Fragment {
         mAdapter.addAdapter(sizeTitleIconAdapter = new TitleIconAdapter("Size", true));
         mAdapter.addAdapter(metalTitleIconAdapter = new TitleIconAdapter("Metal", true));
         mAdapter.addAdapter(stoneTitleIconAdapter = new TitleIconAdapter("Diamond Quality", true));
-        mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity(), "Customize to lowest Price", autoCustomizeClick));
+        mAdapter.addAdapter(new CustomizeButtonAdapter(getActivity(), "Customize To Lowest Price", autoCustomizeClick));
         mAdapter.addAdapter( cba = new CustomizeButtonAdapter(getActivity(), "Explore All Customization Option", customizeBtnClick));
         mRecyclerView.setAdapter(mAdapter);
         /***************************************************************************/
@@ -293,7 +293,7 @@ public class ProductCustomiseFragment extends Fragment {
             @Override
             public void onBindView(int id, RecyclerView.ViewHolder holder) {
                 ((TextView) holder.itemView.findViewById(R.id.title)).setText(title);
-                TypefaceHelper.setFont(holder.itemView.findViewById(R.id.title));
+                UiRandomUtils.setTypefaceBold(holder.itemView.findViewById(R.id.title));
             }
         });
     }
@@ -381,7 +381,8 @@ public class ProductCustomiseFragment extends Fragment {
     public void updateTitleIconDefValues() {
         metalTitleIconAdapter.setIconDrawable(rsRdr.getDrawableFromResId(mProductOption.mCustDefVals.getResIdMetal()), false);
         stoneTitleIconAdapter.setIconDrawable(null, false);
-        sizeTitleIconAdapter.setExtraText(mProductOption.mCustDefVals.getSizeText());
+        if (!mProductOption.mCustDefVals.getSizeText().equals("-1"))
+            sizeTitleIconAdapter.setExtraText(mProductOption.mCustDefVals.getSizeText());
     }
 
 
@@ -751,7 +752,7 @@ public class ProductCustomiseFragment extends Fragment {
         PriceValueModel pvm = new PriceValueModel(PBD_total, /*RandomUtils.getIndianCurrencyFormat(totalDisplayPrice, true)*/totalDisplayPrice);
         priceBreakDownList.add(pvm);
 
-        int discount = mProductOptions.discount;
+        double discount = mProductOptions.discount;
         if (discount > 0) {
             String totalForCalc = ((ProductActivity) getActivity()).getProductDisplayPrice();
             double offerPrice = RandomUtils.getOfferPrice(discount, totalForCalc);
@@ -990,8 +991,12 @@ public class ProductCustomiseFragment extends Fragment {
     View.OnClickListener autoCustomizeClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
-            //((ProductActivity) getActivity()).sendMinAutoCustReq();
+            //Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            if (!mProductOption.isCustomizationAvail()){
+                Toast.makeText(getContext(), "Customization is Not Available for this Product", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            ((ProductActivity) getActivity()).sendMinAutoCustReq();
         }
     };
 
@@ -1294,7 +1299,7 @@ public class ProductCustomiseFragment extends Fragment {
         int j = 0;
         for (PriceValueModel pvm : tempList) {
             if (pvm.getTvTitle().equals(PBD_Discount))
-                mProductOption.discount = Integer.parseInt(mapVals.get(PBD_discountVal));
+                mProductOption.discount = Double.parseDouble(mapVals.get(PBD_discountVal));
             pvm.setTvValue(RandomUtils.getIndianCurrencyFormat(mapVals.get(pvm.getTvTitle()), true));
             tempList.set(j, pvm);
             j++;
@@ -1367,7 +1372,7 @@ public class ProductCustomiseFragment extends Fragment {
             }
             holder.tvValue.setText(ourList.get(position).getTvValue());
             if (title.equals(PBD_Discount)){
-                holder.tvTitle.setText(title + " ("+ mProductOption.discount + "%) ");
+                holder.tvTitle.setText(title + " ("+ Math.round(mProductOption.discount) + "%) ");
                 holder.tvValue.setText("- " + ourList.get(position).getTvValue());
             }
 

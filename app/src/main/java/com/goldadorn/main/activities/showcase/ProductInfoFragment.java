@@ -138,6 +138,8 @@ public class ProductInfoFragment extends Fragment {
         public TitleTextImageHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            UiRandomUtils.setTypefaceBold(title);
+            TypefaceHelper.setFont(desc);
         }
 
         public void bindView(TitleDescImageDataObj dataObj){
@@ -160,7 +162,7 @@ public class ProductInfoFragment extends Fragment {
         ((TextView) view.findViewById(R.id.description).findViewById(R.id.title)).setText(
                 "Description");
         setFontTypeface();
-        TypefaceHelper.setFont(view.findViewById(R.id.description), view.findViewById(R.id.product_detail_style)
+        UiRandomUtils.setTypefaceBold(view.findViewById(R.id.description).findViewById(R.id.title)
                 , view.findViewById(R.id.product_detail_style).findViewById(R.id.title));
 
         //followButton.setVisibility(View.GONE);
@@ -344,14 +346,14 @@ public class ProductInfoFragment extends Fragment {
             titles.add("Money Back Policy");
             titles.add("Certificate Type");
             if (summary.chainDetail != null)
-                titles.add("Chain Details");
+                titles.add("Chain Included");
             titles.add("Estimated Delivery Time");
             if (titles.contains("Semi-Precious Stones")) {
                 summary.new5details.put("Semi-Precious Stones", summary.semiPreciousString);
                 summary.new5details.put("Collection Style", mProductActivity.mCollection.category);
             } else summary.new5details.put("Collection Style", mProductActivity.mCollection.category);
-            if (titles.contains("Chain Details")){
-                summary.new5details.put("Chain Details", summary.chainDetail);
+            if (titles.contains("Chain Included")){
+                summary.new5details.put("Chain Included", summary.chainDetail);
             }
             String url = null;
             for (String txt: titles){
@@ -400,7 +402,11 @@ public class ProductInfoFragment extends Fragment {
                 holder.weight.setText(" " + detail.weight + " " + /*detail.metalWeightUnits*/"gm");
             } else {
                 //for gstone
-                holder.component.setText(detail.color + "-" + detail.clarity + " : " + detail.number + " nos.");
+                String num;
+                if (detail.number < 0)
+                    num = "";
+                else num = " : "+String.valueOf(detail.number)+" nos";
+                holder.component.setText(detail.color + "-" + detail.clarity + num);
                 holder.rate.setText(RandomUtils.getIndianCurrencyFormat(detail.price, true) + "/" +/*detail.weightunit*/"ct");//djphy
                 holder.weight.setText(" " + detail.weight + " " + /*detail.weightunit*/"ct");//changed djphy
             }

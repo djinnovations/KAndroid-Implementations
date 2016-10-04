@@ -154,7 +154,7 @@ public class GetCartResponseObj {
         }
 
         public int getDiscount() {
-            return (int) discount;
+            return (int) Math.round(discount);
         }
 
         public double getMakingCharges() {

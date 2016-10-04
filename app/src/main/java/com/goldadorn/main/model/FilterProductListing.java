@@ -111,7 +111,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     }
 
 
-    public float getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
@@ -137,7 +137,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     private String prodName;
     private String image;
     private String likeCount;
-    private float discount;
+    private double discount;
     private String range;
 
     @Override
@@ -157,7 +157,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         dest.writeString(this.price);
         dest.writeString(this.image);
         dest.writeString(this.likeCount);
-        dest.writeFloat(discount);
+        dest.writeDouble(discount);
         dest.writeString(range);
     }
 
@@ -175,7 +175,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         this.price = in.readString();
         this.image = in.readString();
         this.likeCount = in.readString();
-        this.discount = in.readFloat();
+        this.discount = in.readDouble();
         this.range = in.readString();
     }
 

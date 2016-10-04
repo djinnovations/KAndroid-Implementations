@@ -35,7 +35,7 @@ public class ProductOptions {
     //public Double stonePrice = 0.0;
     public double size = -1;
     public String prodType;
-    public int discount;
+    public double discount;
     public final ArrayList<Map.Entry<String, Float>> priceBreakDown = new ArrayList<>();
     //public final ArrayList<Map.Entry<OptionKey, ArrayList<OptionValue>>> customisationOptions = new ArrayList<>();
     public ArrayList<Map.Entry<OptionKey, ArrayList<Swatches.MixedSwatch>>> customisationOptions;
