@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,7 +28,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class HashTagResultActivity extends AppCompatActivity {
+public class HashTagResultActivity extends BaseActivity {
 
     @Bind(R.id.rlChild)
     RelativeLayout childLayout;
@@ -79,6 +78,11 @@ public class HashTagResultActivity extends AppCompatActivity {
 
         @Override
         protected boolean allowPostOptions() {
+            return false;
+        }
+
+        @Override
+        protected boolean isHashTagFunctionAllowed() {
             return false;
         }
 

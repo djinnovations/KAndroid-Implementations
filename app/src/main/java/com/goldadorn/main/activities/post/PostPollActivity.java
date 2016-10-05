@@ -194,8 +194,6 @@ public class PostPollActivity extends AbstractPostActivity {
             return list;
         }
         else if (imageSelector1.isValid()) {
-            if (imageSelector1.getProductId() == -1)
-                return null;
             List<String> list = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             list.add(sb.append(imageSelector1.getProductId()).append(":")
@@ -204,6 +202,23 @@ public class PostPollActivity extends AbstractPostActivity {
                     .append(imageSelector1.getPrice()).append(":")
                     .append(imageSelector1.getRange()).append(":")
                     .append(imageSelector1.getDiscount()).toString());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    protected List<String> getProdTypes() {
+        if (mProduct != null){
+            List<String> list = new ArrayList<>();
+            list.add(mProduct.prodType);
+            return list;
+        }
+        if (imageSelector1.isValid()){
+            if (imageSelector1.getProductId() == -1)
+                return null;
+            List<String> list = new ArrayList<>();
+            list.add(imageSelector1.getProdType());
             return list;
         }
         return null;

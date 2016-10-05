@@ -52,9 +52,18 @@ public class GalleryImageSelector extends ImageSelector
     public int price;
     private int collId;
     private int desId;
-    private int productId;
+    private int productId = -1;
     private double discount;
     private String range;
+    private String prodType;
+
+    public String getProdType() {
+        return prodType;
+    }
+
+    public void setProdType(String prodType) {
+        this.prodType = prodType;
+    }
 
     public String getRange() {
         return range;
@@ -201,6 +210,7 @@ public class GalleryImageSelector extends ImageSelector
                 productId = data.getIntExtra("PRODID", -1);
                 discount = data.getDoubleExtra(KEY_DISCOUNT, 0);
                 range = data.getStringExtra(KEY_RANGE);
+                prodType = data.getStringExtra(KEY_PROD_TYPE);
                 file = null;
                 selectedMethod = PICK_SERVER_GALLERY;
 
@@ -220,6 +230,8 @@ public class GalleryImageSelector extends ImageSelector
     public static final String KEY_PREVIEW = "PREVIEW";
     public static final String KEY_DISCOUNT = "DISCOUNT";
     public static final String KEY_RANGE = "RANGE";
+    public static final String KEY_PROD_TYPE = "PROD_TYPE";
+
 
     public void setDataFromOutside(HashMap<String, Object> dataMap, int requestCode){
         if (requestCode==PICK_SERVER_GALLERY ) {
@@ -230,6 +242,7 @@ public class GalleryImageSelector extends ImageSelector
             productId = (Integer) dataMap.get(KEY_PRODID);
             discount = (double) dataMap.get(KEY_DISCOUNT);
             range = (String) dataMap.get(KEY_RANGE);
+            prodType = (String) dataMap.get(KEY_PROD_TYPE);
             file=null;
             selectedMethod = PICK_SERVER_GALLERY;
             showPreview((String) dataMap.get(KEY_PREVIEW));

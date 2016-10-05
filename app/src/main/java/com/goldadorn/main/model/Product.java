@@ -34,6 +34,7 @@ public class Product implements Serializable {
     public String princeRange;
     public boolean hasCertificate;
     public Map<String, List<String>> selectedParams;
+    public String prodType;
 
     public Map<String, List<String>> getSelectedParams() {
         return selectedParams;

@@ -102,8 +102,6 @@ public class PostNormalActivity extends AbstractPostActivity {
     @Override
     protected List<String> getClubbingData() {
         if (imageSelector1.isValid()) {
-            if (imageSelector1.getProductId() == -1)
-                return null;
             List<String> list = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             list.add(sb.append(imageSelector1.getProductId()).append(":")
@@ -112,6 +110,18 @@ public class PostNormalActivity extends AbstractPostActivity {
                     .append(imageSelector1.getPrice()).append(":")
                     .append(imageSelector1.getRange()).append(":")
                     .append(imageSelector1.getDiscount()).toString());
+            return list;
+        }
+        return null;
+    }
+
+    @Override
+    protected List<String> getProdTypes() {
+        if (imageSelector1.isValid()) {
+            if (imageSelector1.getProductId() == -1)
+                return null;
+            List<String> list = new ArrayList<>();
+            list.add(imageSelector1.getProdType());
             return list;
         }
         return null;

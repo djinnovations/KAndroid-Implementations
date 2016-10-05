@@ -25,6 +25,7 @@ import com.goldadorn.main.views.ColoredSnackbar;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +49,8 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
     abstract protected List<Integer> getDesignerIds();*/
 
     abstract protected List<String> getClubbingData();
+
+    abstract protected List<String> getProdTypes();
 
     abstract protected void viewCreted(People people, int maxImageSize);
 
@@ -198,7 +201,15 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
 
             intent.putExtra("type", type);
             intent.putExtra("msg", msg);
-            intent.putStringArrayListExtra("hashtags", RandomUtils.getHashTagStrings(msg.trim()));
+            ArrayList<String> tags = new ArrayList<>();
+            tags.addAll(RandomUtils.getHashTagStrings(msg.trim()));
+            List<String> prodtypelist = getProdTypes();
+            if (prodtypelist != null) {
+                prodtypelist.removeAll(Collections.singleton(null));
+                for (String str : prodtypelist)
+                    tags.add(str);
+            }
+            intent.putStringArrayListExtra("hashtags", tags);
             setResult(Activity.RESULT_OK, intent);
             finish();
         } else {
@@ -286,6 +297,7 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             eachMap.put(GalleryImageSelector.KEY_PRODID, params.getProdId());
             eachMap.put(GalleryImageSelector.KEY_DISCOUNT, params.getDiscount());
             eachMap.put(GalleryImageSelector.KEY_RANGE, params.getRange());
+            eachMap.put(GalleryImageSelector.KEY_PROD_TYPE, params.getProdType());
             dataMap.add(eachMap);
         }
         return dataMap;

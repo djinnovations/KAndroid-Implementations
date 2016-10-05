@@ -45,6 +45,7 @@ public class PickServerProducts  extends ServerProducts{
                 intent.putExtra("PRODID", data.getProdId());
                 intent.putExtra("DISCOUNT", data.getDiscount());
                 intent.putExtra("RANGE", data.getRange());
+                intent.putExtra("PROD_TYPE", data.getProdType());
 
                 setResult(Activity.RESULT_OK, intent);
                 finish();

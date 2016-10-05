@@ -26,96 +26,86 @@ public class PostBestOfActivity extends AbstractPostActivity {
     private GalleryImageSelector imageSelector1;
     private GalleryImageSelector imageSelector2;
     private GalleryImageSelector imageSelector3;
-    protected String getPageTitle()
-    {
+
+    protected String getPageTitle() {
         return /*"Best of Three"*/"Pick the best";
     }
 
-    protected List<Integer> getPrice()
-    {
-        List<Integer> list= new ArrayList<>();
+    protected List<Integer> getPrice() {
+        List<Integer> list = new ArrayList<>();
         list.add(imageSelector1.price);
         list.add(imageSelector2.price);
         list.add(imageSelector3.price);
         return list;
     }
 
-    protected List<File> getFiles()
-    {
-        boolean isAdded=false;
-        List<File> map= new ArrayList<>();
-        if(imageSelector1.isValid() && imageSelector1.getFile()!=null)
-        {
+    protected List<File> getFiles() {
+        boolean isAdded = false;
+        List<File> map = new ArrayList<>();
+        if (imageSelector1.isValid() && imageSelector1.getFile() != null) {
             map.add(imageSelector1.getFile());
-            isAdded=true;
+            isAdded = true;
         }
 
 
-        if(imageSelector2.isValid() && imageSelector2.getFile()!=null)
-        {
+        if (imageSelector2.isValid() && imageSelector2.getFile() != null) {
             map.add(imageSelector2.getFile());
-            isAdded=true;
+            isAdded = true;
         }
 
 
-        if(imageSelector3.isValid() && imageSelector3.getFile()!=null)
-        {
+        if (imageSelector3.isValid() && imageSelector3.getFile() != null) {
             map.add(imageSelector3.getFile());
-            isAdded=true;
+            isAdded = true;
         }
 
-        if(isAdded)
+        if (isAdded)
             return map;
         return null;
     }
-    protected List<String> getFilesPath()
-    {
 
-        boolean isAdded=false;
-        List<String> map= new ArrayList<>();
-        if(imageSelector1.isValid() && imageSelector1.getFilePath()!=null) {
+    protected List<String> getFilesPath() {
+
+        boolean isAdded = false;
+        List<String> map = new ArrayList<>();
+        if (imageSelector1.isValid() && imageSelector1.getFilePath() != null) {
             map.add(imageSelector1.getFilePath());
-            isAdded=true;
+            isAdded = true;
         }
-        if(imageSelector2.isValid() && imageSelector2.getFilePath()!=null) {
+        if (imageSelector2.isValid() && imageSelector2.getFilePath() != null) {
             map.add(imageSelector2.getFilePath());
-            isAdded=true;
+            isAdded = true;
         }
-        if(imageSelector3.isValid() && imageSelector3.getFilePath()!=null)
-        {
+        if (imageSelector3.isValid() && imageSelector3.getFilePath() != null) {
             map.add(imageSelector3.getFilePath());
-            isAdded=true;
+            isAdded = true;
         }
-         if(isAdded)
+        if (isAdded)
             return map;
         return null;
     }
 
-    protected List<String> getLinks()
-    {
-        boolean isAdded=false;
-        List<String> map= new ArrayList<>();
-        if(imageSelector1.isValid() && imageSelector1.getLink()!=null)
-        {
-            isAdded=true;
+    protected List<String> getLinks() {
+        boolean isAdded = false;
+        List<String> map = new ArrayList<>();
+        if (imageSelector1.isValid() && imageSelector1.getLink() != null) {
+            isAdded = true;
             //map.add(imageSelector1.getLink());
             String url = Product.getImageUrl(imageSelector1.getProductId(), imageSelector1.getDesId(), null, false, -1);
             url = url.substring(url.indexOf("defaults/"), url.length());
             map.add(url);
         }
 
-        if(imageSelector2.isValid() && imageSelector2.getLink()!=null)
-        {
-            isAdded=true;
+        if (imageSelector2.isValid() && imageSelector2.getLink() != null) {
+            isAdded = true;
             //map.add(imageSelector2.getLink());
             String url = Product.getImageUrl(imageSelector2.getProductId(), imageSelector2.getDesId(), null, false, -1);
             url = url.substring(url.indexOf("defaults/"), url.length());
             map.add(url);
         }
 
-        if(imageSelector3.isValid() && imageSelector3.getLink()!=null)
-        {
-            isAdded=true;
+        if (imageSelector3.isValid() && imageSelector3.getLink() != null) {
+            isAdded = true;
             //map.add(imageSelector3.getLink());
             String url = Product.getImageUrl(imageSelector3.getProductId(), imageSelector3.getDesId(), null, false, -1);
             url = url.substring(url.indexOf("defaults/"), url.length());
@@ -123,25 +113,20 @@ public class PostBestOfActivity extends AbstractPostActivity {
         }
 
 
-        if(isAdded)
+        if (isAdded)
             return map;
         return null;
     }
 
 
-
-
-
-    protected int getmainResID()
-    {
+    protected int getmainResID() {
         return R.layout.activity_post_best_of;
     }
 
-    protected String isValid()
-    {
-        if(imageSelector1.isValid()==false || imageSelector2.isValid()==false)
+    protected String isValid() {
+        if (imageSelector1.isValid() == false || imageSelector2.isValid() == false)
             return "Please upload minimum two images";
-        else if(details.getText().toString().equals(""))
+        else if (details.getText().toString().equals(""))
             return "Please enter some details";
         return null;
     }
@@ -202,52 +187,63 @@ public class PostBestOfActivity extends AbstractPostActivity {
         boolean isAdded = false;
         List<String> list = new ArrayList<>();
         if (imageSelector1.isValid()) {
-            if (imageSelector1.getProductId() != -1){
-                isAdded = true;
-                StringBuilder sb = new StringBuilder();
-                list.add(sb.append(imageSelector1.getProductId()).append(":")
-                        .append(imageSelector1.getCollId()).append(":")
-                        .append(imageSelector1.getDesId()).append(":")
-                        .append(imageSelector1.getPrice()).append(":")
-                        .append(imageSelector1.getRange()).append(":")
-                        .append(imageSelector1.getDiscount()).toString());
-            }
+            isAdded = true;
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(imageSelector1.getProductId()).append(":")
+                    .append(imageSelector1.getCollId()).append(":")
+                    .append(imageSelector1.getDesId()).append(":")
+                    .append(imageSelector1.getPrice()).append(":")
+                    .append(imageSelector1.getRange()).append(":")
+                    .append(imageSelector1.getDiscount()).toString());
         }
 
         if (imageSelector2.isValid()) {
-            if (imageSelector2.getProductId() != -1){
-                isAdded = true;
-                StringBuilder sb = new StringBuilder();
-                list.add(sb.append(imageSelector2.getProductId()).append(":")
-                        .append(imageSelector2.getCollId()).append(":")
-                        .append(imageSelector2.getDesId()).append(":")
-                        .append(imageSelector2.getPrice()).append(":")
-                        .append(imageSelector2.getRange()).append(":")
-                        .append(imageSelector2.getDiscount()).toString());
-            }
+            isAdded = true;
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(imageSelector2.getProductId()).append(":")
+                    .append(imageSelector2.getCollId()).append(":")
+                    .append(imageSelector2.getDesId()).append(":")
+                    .append(imageSelector2.getPrice()).append(":")
+                    .append(imageSelector2.getRange()).append(":")
+                    .append(imageSelector2.getDiscount()).toString());
         }
 
         if (imageSelector3.isValid()) {
-            if (imageSelector3.getProductId() != -1){
-                isAdded = true;
-                StringBuilder sb = new StringBuilder();
-                list.add(sb.append(imageSelector3.getProductId()).append(":")
-                        .append(imageSelector3.getCollId()).append(":")
-                        .append(imageSelector3.getDesId()).append(":")
-                        .append(imageSelector3.getPrice()).append(":")
-                        .append(imageSelector3.getRange()).append(":")
-                        .append(imageSelector3.getDiscount()).toString());
-            }
+            isAdded = true;
+            StringBuilder sb = new StringBuilder();
+            list.add(sb.append(imageSelector3.getProductId()).append(":")
+                    .append(imageSelector3.getCollId()).append(":")
+                    .append(imageSelector3.getDesId()).append(":")
+                    .append(imageSelector3.getPrice()).append(":")
+                    .append(imageSelector3.getRange()).append(":")
+                    .append(imageSelector3.getDiscount()).toString());
         }
 
-        if(isAdded)
+        if (isAdded)
             return list;
         else return null;
     }
 
+    @Override
+    protected List<String> getProdTypes() {
+        List<String> list = new ArrayList<>();
+        if (imageSelector1.isValid()) {
+            if (imageSelector1.getProductId() > 0)
+                list.add(imageSelector1.getProdType());
+        }
+        if (imageSelector2.isValid()) {
+            if (imageSelector2.getProductId() > 0)
+                list.add(imageSelector2.getProdType());
+        }
+        if (imageSelector3.isValid()) {
+            if (imageSelector3.getProductId() > 0)
+                list.add(imageSelector3.getProdType());
+        }
+        return list;
+    }
 
-    protected int getPostType()
-    {
+
+    protected int getPostType() {
         return SocialPost.POST_TYPE_BEST_OF;
     }
 
@@ -268,14 +264,13 @@ public class PostBestOfActivity extends AbstractPostActivity {
     ImageButton trigger3;
 
 
-    protected void viewCreted(People people,int maxImageSize)
-    {
+    protected void viewCreted(People people, int maxImageSize) {
         details.setText("Guys, which one is the best of these? #BOT");
-        imageSelector1 =  new GalleryImageSelector(this,this,previewIamge1,trigger1);
+        imageSelector1 = new GalleryImageSelector(this, this, previewIamge1, trigger1);
         imageSelector1.setMaxSize(maxImageSize);
-        imageSelector2 =  new GalleryImageSelector(this,this,previewIamge2,trigger2);
+        imageSelector2 = new GalleryImageSelector(this, this, previewIamge2, trigger2);
         imageSelector2.setMaxSize(maxImageSize);
-        imageSelector3 =  new GalleryImageSelector(this,this,previewIamge3,trigger3);
+        imageSelector3 = new GalleryImageSelector(this, this, previewIamge3, trigger3);
         imageSelector3.setMaxSize(maxImageSize);
         imageSelector1.setIsPtbCall(true);
         imageSelector2.setIsPtbCall(true);

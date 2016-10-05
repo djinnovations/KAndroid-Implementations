@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -221,12 +222,12 @@ public class RandomUtils {
             return null;
         Pattern MY_PATTERN = Pattern.compile("#(\\S+)");
         Matcher mat = MY_PATTERN.matcher(fullText);
-        ArrayList<String> strs=new ArrayList<>();
+        HashSet<String> strs=new HashSet<>();
         while (mat.find()) {
             Log.d(TAG , "HashTags: "+mat.group(1));
-            strs.add(mat.group(1));
+            strs.add(mat.group(1).toLowerCase());
         }
-        return strs;
+        return new ArrayList<>(strs);
     }
 
     public static void performAppRateTask() {

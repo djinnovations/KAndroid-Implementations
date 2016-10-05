@@ -127,6 +127,14 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         this.range = range;
     }
 
+    public String getProdType() {
+        return prodType;
+    }
+
+    public void setProdType(String prodType) {
+        this.prodType = prodType;
+    }
+
     private String price;
     private int productPrice;
     private int aspectRatio;
@@ -139,6 +147,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     private String likeCount;
     private double discount;
     private String range;
+    private String prodType;
 
     @Override
     public int describeContents() {
@@ -159,6 +168,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         dest.writeString(this.likeCount);
         dest.writeDouble(discount);
         dest.writeString(range);
+        dest.writeString(prodType);
     }
 
     public FilterProductListing() {
@@ -177,6 +187,7 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
         this.likeCount = in.readString();
         this.discount = in.readDouble();
         this.range = in.readString();
+        this.prodType = in.readString();
     }
 
     public static final Parcelable.Creator<FilterProductListing> CREATOR = new Parcelable.Creator<FilterProductListing>() {

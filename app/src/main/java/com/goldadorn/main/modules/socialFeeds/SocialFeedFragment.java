@@ -43,6 +43,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.CommentsActivity;
+import com.goldadorn.main.activities.HashTagResultActivity;
 import com.goldadorn.main.activities.ImageZoomActivity;
 import com.goldadorn.main.activities.LikesActivity;
 import com.goldadorn.main.activities.MainActivity;
@@ -99,6 +100,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.nineoldandroids.animation.Animator;
 import com.squareup.picasso.Picasso;
+import com.volokh.danylo.hashtaghelper.HashTagHelper;
 
 import org.apache.http.cookie.Cookie;
 import org.greenrobot.eventbus.EventBus;
@@ -206,6 +208,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
     };
 
+    protected boolean isHashTagFunctionAllowed(){
+        return true;
+    }
+
     private void frameApeopleObj(SocialPost post) {
         People people = new People();
         people.setUserId(post.getUserId());
@@ -299,6 +305,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         params.put(URLHelper.LIKE_A_POST.OFFSET, offset);
         params.put(URLHelper.LIKE_A_POST.POST_ID, 0);
         params.put("reco", 1);
+        params.put("mlp", 1);
         Log.d("djfeed", "socialfeed- req params: " + params);
         return params;
     }
@@ -309,6 +316,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         //SocialPost sp = (SocialPost) getDataManager().get(0);
         params.put(URLHelper.LIKE_A_POST.POST_ID, postIdMain);
         params.put("reco", 1);
+        params.put("mlp", 1);
         Log.d("djfeed", "req params: " + params.toString());
         /*getDataManager().clear();
         Log.d("djfeed", "size of dataManager: "+getDataManager().size());*/
@@ -883,8 +891,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             else if (viewType == ViewTypes.VIEW_MOST_LIKED)
                 title = "Most Liked Products By Users";
             return new RecommendedProductsItemHolder(view, title);
-        }
-        else if ((viewType == ViewTypes.VIEW_ATC))
+        } else if ((viewType == ViewTypes.VIEW_ATC))
             return new AddToCartPost(view);
         return new NormalPostItemHolder(view);
     }
@@ -1236,7 +1243,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
             try {
                 if (!TextUtils.isEmpty(post.getDiscount2()))
-                discount2 = Double.parseDouble(post.getDiscount2());
+                    discount2 = Double.parseDouble(post.getDiscount2());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount2 = -1;
@@ -1258,19 +1265,19 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
             if (discount1 > 0) {//for bot1
                 discountHolder1.setVisibility(View.VISIBLE);
-                tvDiscountOnRed1.setText("-"+String.valueOf(Math.round(discount1))+"%");
+                tvDiscountOnRed1.setText("-" + String.valueOf(Math.round(discount1)) + "%");
             } else {
                 discountHolder1.setVisibility(View.GONE);
             }
             if (discount2 > 0) {//for bot2
                 discountHolder2.setVisibility(View.VISIBLE);
-                tvDiscountOnRed2.setText("-"+String.valueOf(Math.round(discount2))+"%");
+                tvDiscountOnRed2.setText("-" + String.valueOf(Math.round(discount2)) + "%");
             } else {
                 discountHolder2.setVisibility(View.GONE);
             }
             if (discount3 > 0) {//for bot3
                 discountHolder3.setVisibility(View.VISIBLE);
-                tvDiscountOnRed3.setText("-"+String.valueOf(Math.round(discount3))+"%");
+                tvDiscountOnRed3.setText("-" + String.valueOf(Math.round(discount3)) + "%");
             } else {
                 discountHolder3.setVisibility(View.GONE);
             }
@@ -1884,7 +1891,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
-    public class AddToCartPost extends NormalPostItemHolder{
+    public class AddToCartPost extends NormalPostItemHolder {
 
 
         public AddToCartPost(View itemView) {
@@ -2106,7 +2113,24 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             TypefaceHelper.setFont(userName, age, details, recomandationLabel, tvDiscountOnRed, prodPrice);
 
             TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), likesLabel, pollLabel, commentsLabel, shareLabel);
+
+
+            /*HashTagHelper mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.staceColor2),
+                    hashTagClick);
+            mTextHashTagHelper.handle(details);*/
         }
+
+        HashTagHelper.OnHashTagClickListener hashTagClick = new HashTagHelper.OnHashTagClickListener() {
+            @Override
+            public void onHashTagClicked(String hashTag) {
+                //Toast.makeText(Application.getInstance(),"hastag: "+hashTag, Toast.LENGTH_SHORT).show();
+                if (isHashTagFunctionAllowed()) {
+                    Intent intent = new Intent(getActivity(), HashTagResultActivity.class);
+                    intent.putExtra(IntentKeys.HASHTAG_NAME, hashTag);
+                    startActivity(intent);
+                }
+            }
+        };
 
 
         @Bind(R.id.discountHolder)
@@ -2130,14 +2154,14 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             double discount = -1;
             try {
                 if (!TextUtils.isEmpty(post.getDiscount1()))
-                     discount = Double.parseDouble(post.getDiscount1());
+                    discount = Double.parseDouble(post.getDiscount1());
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 discount = -1;
             }
-            if (discount >0 ) {//for discount
+            if (discount > 0) {//for discount
                 discountHolder.setVisibility(View.VISIBLE);
-                tvDiscountOnRed.setText(String.valueOf(Math.round(discount))+"%\noff");
+                tvDiscountOnRed.setText(String.valueOf(Math.round(discount)) + "%\noff");
             } else {
                 discountHolder.setVisibility(View.GONE);
             }

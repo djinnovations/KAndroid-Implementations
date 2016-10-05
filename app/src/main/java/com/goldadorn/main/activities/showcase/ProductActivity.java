@@ -758,7 +758,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                         menuAction(R.id.nav_cart);
                     }
                 });*/
-
+        isLastCallATC = false;
         Dialog dialog = ViewConstructor.getInstance(getApplicationContext()).displayDialog(ProductActivity.this,
                 LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_cart_new, null), "Cart", "This item is added to your Cart!\nHow would you like to proceed?",
                 "Go to Cart\n& Checkout", "Continue\nShopping", new ViewConstructor.DialogButtonClickListener() {
@@ -1346,6 +1346,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
 
     public void postABonb(Intent intent) {
+        mProduct.prodType = mProductOptions.prodType;
         startActivityForResult(intent, POST_FEED);
     }
 
@@ -1580,14 +1581,18 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
     private ArrayList<String> productInfoList;
     private final int PROD_INFO_2nd_API_CALL = IDUtils.generateViewId();
+    private boolean isLastCallATC = false;
 
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
 
         Log.d("djprod", "url queried- ProductActivity: " + url);
         Log.d("djprod", "response- ProductActivity: " + json);
-        if (/*id != postCallToken &&*/ id != ADD_TO_CART_CALL)
+        if (id == ADD_TO_CART_CALL)
+            isLastCallATC = true;
+        if (/*id != postCallToken &&*/ id != ADD_TO_CART_CALL) {
             dismissOverLay();
+        }
         if (id == DESC_CALL) {
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
@@ -1760,7 +1765,8 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         else {
             if (id == postCallToken){
                 //dismissOverLay();
-                confirmedToCart();
+                if (isLastCallATC)
+                    confirmedToCart();
             }
             super.serverCallEnds(id, url, json, status);
         }
@@ -1786,8 +1792,8 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         map.put("size", cartRequestDataObj.getSize());
         map.put("priceUnits", "Rs");
         map.put("productEDTInDays", mProductInfo.estimatedDelTime);
-        map.put("totalPrice", cartRequestDataObj.getTotalAmount());
-        map.put("offPrice", cartRequestDataObj.getOfferReplicaPrice());
+        map.put("totalPrice", Math.round(cartRequestDataObj.getTotalAmount()));
+        map.put("offPrice", Math.round(cartRequestDataObj.getOfferReplicaPrice()));
         map.put("discount", cartRequestDataObj.getDiscount());
         map.put("metalPrice", cartRequestDataObj.getMetalCostPerUnit());
         map.put("stonePrice", cartRequestDataObj.getStonePrice());
