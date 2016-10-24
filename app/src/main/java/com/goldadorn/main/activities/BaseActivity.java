@@ -12,12 +12,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.cart.LikelistActivity;
 import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.dj.model.TemporaryCreatePostObj;
 import com.goldadorn.main.dj.model.UserSession;
@@ -28,7 +28,6 @@ import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.TemporarySocialPostParser;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
-import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
@@ -117,6 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public void onStop() {
         try {
@@ -189,9 +189,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false)
                     .putString(AppSharedPreferences.LoginInfo.USER_NAME, "")
                     .putString(AppSharedPreferences.LoginInfo.PASSWORD, "").commit();
-            SocialLoginUtil.getInstance(getBaseApplication()).performFbLogout();
-            SocialLoginUtil.getInstance(getBaseApplication()).performGoogleLogout();
-            SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
+            SocialLoginUtil.getInstance().performFbLogout();
+            SocialLoginUtil.getInstance().performGoogleLogout();
+            SocialLoginUtil.getInstance().indicateSignedOut();
             stopProgress();
             new Action(this).launchActivity(LandingPageActivity.class, true);
 
@@ -200,7 +200,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             if (success)
                 Log.d("djfcm", "fcm refresh token successfully sent to server");
             else Log.d("djfcm", "fcm refresh token failed to be sent to server");
-        } else if (id == postCallToken) {
+        }
+        else if (id == postCallToken) {
             SocialFeedFragment socialFeedFragment = UserSession.getInstance().getSocialFeedFragment();
             uploadInProgress = false;
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, viewForSnackBar, this);
@@ -604,6 +605,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             if (navigationDataObject.idInt == R.id.nav_my_orders){
                 Intent intent = new Intent(this, MyOrdersActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                return true;
+            }
+
+            if (navigationDataObject.idInt == R.id.nav_my_likes){
+                Intent intent = new Intent(this, LikelistActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 return true;

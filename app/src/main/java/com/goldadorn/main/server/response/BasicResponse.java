@@ -21,6 +21,7 @@ public class BasicResponse implements Serializable {
     public final static int TOKEN_EXPIRED = 412;
     public final static int INTERNAL_SERVER_ERROR = 500;
     public final static int THROTTLED = 503;
+    public int offset = -1;
 
 
     public final static int NO_RESULTS = 1004;

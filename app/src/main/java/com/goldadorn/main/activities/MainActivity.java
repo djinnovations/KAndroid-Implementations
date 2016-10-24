@@ -1,5 +1,6 @@
 package com.goldadorn.main.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -7,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +25,18 @@ import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
+import com.goldadorn.main.dj.support.SocialUtils;
 import com.goldadorn.main.dj.support.gcm.MixPanelHelper;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.eventBusEvents.SocialPost;
+import com.goldadorn.main.model.FilterProductListing;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
+import com.goldadorn.main.modules.socialFeeds.FABScrollBehavior;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
@@ -41,7 +44,6 @@ import com.kimeeo.library.fragments.BaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,13 @@ public class MainActivity extends BaseDrawerActivity {
     public final int INTIMATION_COUNT_FOR_SESSION = 3;
 
 
+    public View getFilterPanel() {
+        if (activePage instanceof HomePage)
+            return ((HomePage) activePage).getFilterPanel();
+        return null;
+    }
+
+
 /*    //    private ResourceReader resRdr;
 //    private DjphyPreferenceManager coachMarkMgr;
 //
@@ -99,16 +108,12 @@ public class MainActivity extends BaseDrawerActivity {
         return rlMain;
     }
 
-    private GestureDetector gd;
+    //private GestureDetector gd;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //gd.onTouchEvent(ev);
         return super.dispatchTouchEvent(ev);
-        /*if (gd.onTouchEvent(ev))
-            return true;
-        else
-            return super.dispatchTouchEvent(ev);*/
     }
 
     public View getDisableApp() {
@@ -127,16 +132,20 @@ public class MainActivity extends BaseDrawerActivity {
 
             Log.d("djgest", "onSwipeLeftToRight");
             //Toast.makeText(TestPayment.this.getApplicationContext(), "swipe right", Toast.LENGTH_SHORT).show();
-            boolean isActive = ((HomePage) activePage).socialFeedFragmentpage.getUserVisibleHint();
+            boolean isActive = ((HomePage) activePage).mActivePage.getUserVisibleHint();
             Log.d("djgest", "isSocialfeedactive?: " + isActive);
             if (isActive) {
-                menuAction(R.id.nav_showcase);
+                ((HomePage) activePage).getFilterPanel().setVisibility(View.GONE);
             }
         }
 
         @Override
         public void onSwipeRightToLeft() {
             Log.d("djgest", "onSwipeRightToLeft");
+            boolean isActive = ((HomePage) activePage).mActivePage.getUserVisibleHint();
+            Log.d("djgest", "isShowcaseTabActive?: " + isActive);
+            if (!isActive)
+                ((HomePage) activePage).getFilterPanel().setVisibility(View.VISIBLE);
             //Toast.makeText(TestPayment.this.getApplicationContext(), "swipe left", Toast.LENGTH_SHORT).show();
         }
 
@@ -172,7 +181,7 @@ public class MainActivity extends BaseDrawerActivity {
         setContentView(R.layout.app_bar_main);
 
         rlMain = (RelativeLayout) findViewById(R.id.rlMain);
-        gd = new GestureDetector(this, myGestureListener);
+        //gd = new GestureDetector(this, myGestureListener);
         MixPanelHelper.getInstance().sendRefreshTokenToMixPanel();
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_home);
         if (navigationDataObject != null)
@@ -256,9 +265,9 @@ public class MainActivity extends BaseDrawerActivity {
                 public void onClick(View v) {
                     snackbar.dismiss();
                     MixPanelHelper.getInstance().flushDataToMixPanel();
-                    SocialLoginUtil.getInstance(getBaseApplication()).performFbLogout();
-                    SocialLoginUtil.getInstance(getBaseApplication()).performGoogleLogout();
-                    SocialLoginUtil.getInstance(getBaseApplication()).indicateSignedOut();
+                    SocialLoginUtil.getInstance().performFbLogout();
+                    SocialLoginUtil.getInstance().performGoogleLogout();
+                    SocialLoginUtil.getInstance().indicateSignedOut();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -281,6 +290,31 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
     //final public static int POST_FEED = 1;
+
+    private final String TAG = "MainActivity";
+
+    @Subscribe
+    public void onEvent(FilterProductListing data) {
+        if (data == null)
+            return;
+        Log.d(TAG, "onevent- filter obj: "+data.toString());
+        SocialFeedFragment tempFeed = ((HomePage) activePage).socialFeedFragmentpage;
+        if (tempFeed != null){
+            com.goldadorn.main.model.SocialPost post = new com.goldadorn.main.model.SocialPost();
+            post.setPostType(com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST);
+            post.setImage1loc(data.getImage());
+            post.setIsLiked(0);
+            int likeCnt = 0;
+            try {
+                likeCnt = Integer.valueOf(data.getLikeCount());
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            post.setLikeCount(likeCnt);
+            tempFeed.zoomImages(post, 0);
+        }
+    }
+
 
     @Subscribe
     public void onEvent(SocialPost data) {
@@ -315,14 +349,42 @@ public class MainActivity extends BaseDrawerActivity {
 
     }
 
+
+
     /*final private int postCallToken = IDUtils.generateViewId();
     private int recentlyPostedPost = -1;
     TemporaryCreatePostObj tempPostObj;*/
 
+    public void onResultCustom(int requestCode, int resultCode, Intent data){
+        onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    public void isShowFilterPanel(boolean show){
+        if (activePage != null){
+            if (activePage instanceof  HomePage){
+                if (!show) {
+                    ((HomePage) activePage).getFilterPanel().setVisibility(View.GONE);
+                    ((HomePage) activePage).setLayoutBehaviour(null);
+                }else {
+                    ((HomePage) activePage).getFilterPanel().setVisibility(View.VISIBLE);
+                    ((HomePage) activePage).setLayoutBehaviour(new FABScrollBehavior(this, null));
+                }
+            }
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        setProgressBar(progressBar);
+//        setProgressBar(progressBar);
         setIsMainActivityBase(true);
+        if (activePage instanceof HomePage) {
+            if (requestCode == HomePage.FILTER_APPLY && resultCode == Activity.RESULT_OK) {
+                ((HomePage) activePage).onFilterResult(data);
+                return;
+            }
+        }
+        SocialUtils.getInstance().handleActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
        /* Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {
@@ -628,8 +690,39 @@ public class MainActivity extends BaseDrawerActivity {
         return super.action(navigationDataObject);
     }
 
+
+    public boolean action(NavigationDataObject navigationDataObject, boolean force) {
+        if (navigationDataObject.isType(NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW)) {
+            Action action = new Action(this);
+            Boolean isAdded = false;
+            if (!force && activePageData != null && activePageData.getIdInt() == navigationDataObject.getIdInt()) {
+                isAdded = true;
+            }
+
+            if (!isAdded) {
+                BaseFragment view = BaseFragment.newInstance(navigationDataObject);
+                if (view != null) {
+                    //setTitle(navigationDataObject.getTitle());
+                    setTitle("");
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, view);
+                    ft.commit();
+                    activePage = view;
+                    activePageData = navigationDataObject;
+                    if (backEntry == false)
+                        history.add(activePageData);
+                    backEntry = false;
+                    return true;
+                }
+            }
+        }
+        return super.action(navigationDataObject);
+    }
+
+
     protected void onResume() {
         super.onResume();
+        setProgressBar(progressBar);
         Log.d("djmain", "onResume-MainActivity");
         setIsMainActivity(true);
         setIsMainActivityBase(true);
@@ -639,7 +732,7 @@ public class MainActivity extends BaseDrawerActivity {
             /*((HomePage) activePage)*/
             if (tempFeed != null) {
                 tempFeed.updateComments();
-                 boolean flag = UserSession.getInstance().getIsBonbRefreshPending();
+                boolean flag = UserSession.getInstance().getIsBonbRefreshPending();
                 if (flag) {
                     tempFeed.refreshSelf();
                     UserSession.getInstance().setIsBonbRefreshPending(false);
@@ -649,7 +742,12 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
 
-    public void setSocialFeedFragment(SocialFeedFragment tempFeed){
+    public void forceRefresh() {
+        action(activePageData, true);
+    }
+
+
+    public void setSocialFeedFragment(SocialFeedFragment tempFeed) {
         UserSession.getInstance().setSocialFeedFragment(tempFeed);
     }
 

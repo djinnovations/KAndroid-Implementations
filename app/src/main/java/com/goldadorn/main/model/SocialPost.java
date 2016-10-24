@@ -28,6 +28,7 @@ public class SocialPost extends ServerError implements IParseableObject {
     public static final Integer POST_ATC = 8;
     public static final Integer POST_RATC = 11;
     public static final Integer POST_MOST_LIKED = 12;
+    public static final Integer POST_TREDING_TAGS = 13;
 
     private Integer isDesigner = 1;
     private Integer bof3Percent1;
@@ -48,6 +49,9 @@ public class SocialPost extends ServerError implements IParseableObject {
     private String image1loc;
     private String image2loc;
     private String image3loc;
+
+    private String tags;
+
 
     public String getRange1() {
         return range1;
@@ -303,6 +307,14 @@ public class SocialPost extends ServerError implements IParseableObject {
         return isDesigner;
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
     public void dataLoaded(BaseDataParser entireData) {
         if (getType().trim().equals("2"))
             setPostType(POST_TYPE_POLL);
@@ -316,9 +328,14 @@ public class SocialPost extends ServerError implements IParseableObject {
             setPostType(POST_RATC);
         else if (getType().trim().equals("12")) {
             setPostType(POST_MOST_LIKED);
-        } else setPostType(POST_TYPE_NORMAL_POST);
+        }
+        else if (getType().trim().equals("13")){
+            setPostType(POST_TREDING_TAGS);
+        }else setPostType(POST_TYPE_NORMAL_POST);
 
-        if (this.postType.equals(POST_RECOMMENDED_PRODS) || this.postType.equals(POST_MOST_LIKED) || this.postType.equals(POST_RATC)) {
+
+        if (this.postType.equals(POST_RECOMMENDED_PRODS) || this.postType.equals(POST_MOST_LIKED)
+                || this.postType.equals(POST_RATC) || this.postType.equals(POST_TREDING_TAGS)) {
             return;
         }
         if (userId == Application.getLoginUser().id)

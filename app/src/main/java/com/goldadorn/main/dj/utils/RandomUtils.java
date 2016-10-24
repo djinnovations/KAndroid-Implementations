@@ -44,6 +44,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,6 +77,12 @@ public class RandomUtils {
         }else return amtToReturn;*/
     }
 
+
+    public static int randInt(int min, int max) {
+        Random rand = new Random();
+        int randomNum = rand.nextInt((max - min) + 1) + min;
+        return randomNum;
+    }
 
     public static String getAddressTxt(Address address){
         StringBuilder sbr = new StringBuilder();

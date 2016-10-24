@@ -65,7 +65,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         setupMenu();
     }
 
-    @OnClick({R.id.nav_home, R.id.nav_shop_by,
+    @OnClick({R.id.nav_home,
             R.id.nav_timeline, R.id.nav_feed,
             R.id.nav_showcase, R.id.nav_collections,
             R.id.nav_cart, R.id.nav_wishlist,
@@ -79,7 +79,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_privacy_policy,
             R.id.nav_terms_conditions,
             R.id.nav_settings,
-            R.id.nav_logout,
+            R.id.nav_logout, R.id.nav_people, R.id.nav_my_likes,
             R.id.nav_size_guide, R.id.nav_buy_back_policy,
             R.id.nav_dia_qual_guide, R.id.nav_my_orders
     })
@@ -89,8 +89,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @OnClick({R.id.labelHome, R.id.labelshopBy, R.id.labelTimeLine,
-            R.id.labelShowcase, R.id.labelCollection, R.id.labelCart, R.id.labelWishlist})
+    @OnClick({R.id.labelHome, R.id.labelTimeLine,
+            R.id.labelShowcase, R.id.labelCollection, R.id.labelCart, R.id.labelWishlist, R.id.labelPeople})
     public void menuLabelClick(View view) {
         int id = view.getId();
         if (id == R.id.labelHome)
@@ -107,6 +107,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             id = R.id.nav_cart;
         else if (id == R.id.labelWishlist)
             id = R.id.nav_wishlist;
+        else if (id == R.id.labelPeople)
+            id = R.id.nav_people;
         menuAction(id);
     }
 
@@ -169,7 +171,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.labelTimeLine, R.id.labelShowcase,
             R.id.labelCollection, R.id.labelCart,
             R.id.labelWishlist,
-            R.id.labelshopBy,
+            R.id.labelPeople,
             R.id.nav_my_profile,
             R.id.nav_order_tracking,
             R.id.nav_about_us,
@@ -177,7 +179,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_shipping_and_return,
             R.id.nav_privacy_policy,
             R.id.nav_terms_conditions,
-            R.id.nav_settings,R.id.nav_size_guide,
+            R.id.nav_settings,R.id.nav_size_guide,R.id.nav_my_likes,
             R.id.nav_buy_back_policy, R.id.nav_dia_qual_guide,
             R.id.nav_logout, R.id.nav_my_orders})
     List<View> views;

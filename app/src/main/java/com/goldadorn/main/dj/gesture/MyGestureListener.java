@@ -39,7 +39,7 @@ public abstract class MyGestureListener extends GestureDetector.SimpleOnGestureL
                             return false;
                         onSwipeLeftToRight();
                     } else {
-                        //onSwipeRightToLeft();
+                        onSwipeRightToLeft();
                     }
                     return true;
                 }

@@ -21,6 +21,7 @@ import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -44,7 +45,7 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
     }
 
     public void addList(List<RecommendedProduct> listOfUrl) {
-        this.listOfRecoProds = listOfUrl;
+        this.listOfRecoProds = new ArrayList<>(listOfUrl);
         notifyDataSetChanged();
     }
 
@@ -101,9 +102,13 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
 
         public ImageViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-            ivProd.setOnClickListener(this);
-            TypefaceHelper.setFont(tvLikeCount);
+            try {
+                ButterKnife.bind(this, itemView);
+                ivProd.setOnClickListener(this);
+                TypefaceHelper.setFont(tvLikeCount);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         @Override

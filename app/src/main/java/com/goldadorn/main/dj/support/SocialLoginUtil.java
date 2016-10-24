@@ -81,16 +81,16 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private static SocialLoginUtil ourInstance;
     private static Context mAppContext;
 
-    public static SocialLoginUtil getInstance(Context appContext) {
+    public static SocialLoginUtil getInstance() {
 
         if (ourInstance == null) {
-            mAppContext = appContext;
+            mAppContext = Application.getInstance();
             ourInstance = new SocialLoginUtil();
         }
         return ourInstance;
     }
 
-    private SocialLoginUtil() {
+    protected SocialLoginUtil() {
 
         //FacebookSdk.sdkInitialize(mAppContext);
         Log.d(Constants.TAG, "Social login new Obj creation");
@@ -104,8 +104,8 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     /*****************
      * Facebook stuffs
      ***********************/
-    private CallbackManager mFbCallbackManager;
-    private final String[] permissionArr = new String[]{"user_location", "user_birthday", "email"};
+    protected CallbackManager mFbCallbackManager;
+    protected String[] permissionArr = new String[]{"user_location", "user_birthday", "email"};
     /*******************************************************/
     //private UserSession mUserSession;
     /*****************

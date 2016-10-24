@@ -6,38 +6,123 @@
   ~ Vestibulum commodo. Ut rhoncus gravida arcu.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".RecyclerFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.design.widget.TabLayout
-        android:background="@color/tabBGColor"
         android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/tabBGColor"
         app:tabGravity="fill"
-        app:tabTextColor="@color/colorPrimaryAlpha"
-        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabIndicatorColor="@color/tabBGColor"
+        app:tabIndicatorHeight="0dp"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabIndicatorHeight="5dp"
-        app:tabMode="fixed"/>
+        app:tabTextColor="@color/colorPrimaryAlpha" />
+
     <View
-        android:layout_width="match_parent"
         android:id="@+id/disableApp"
-        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
         android:background="#00ffffff"
-        android:layout_height="?attr/actionBarSize"/>
+        android:visibility="gone" />
     <!--android:background="@color/darkDisable"-->
 
-    <android.support.v4.view.ViewPager android:id="@+id/viewPager"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/indicator"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_height="match_parent" />
+
+    <RelativeLayout
+        android:id="@+id/filterPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        app:layout_anchor="@+id/viewPager"
+        app:layout_anchorGravity="bottom|end"
+        app:layout_behavior="com.goldadorn.main.modules.socialFeeds.FABScrollBehavior">
+
+        <LinearLayout
+            android:id="@+id/sorting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/sortBestSelling"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Best Selling"
+                android:textSize="10sp" />
+
+            <View
+
+                android:layout_width=".5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#dddddd" />
+
+            <Button
+                android:id="@+id/sortPrice"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textSize="10sp" />
+
+            <View
+                android:layout_width=".5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#dddddd" />
+
+            <Button
+                android:id="@+id/sortNew"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="wrap_content"
+            android:layout_height="130dp"
+            android:layout_below="@+id/sorting"
+            android:visibility="gone" />
 
 
-</RelativeLayout>
+        <Button
+            android:id="@+id/applyFilters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recyclerView"
+            android:layout_margin="10dp"
+            android:text="Add New or Change Current Filters" />
+
+
+        <View
+            android:id="@+id/closeFilter"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/vector_icon_filter_delete" />
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

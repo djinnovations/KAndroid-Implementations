@@ -307,7 +307,7 @@ public class URLHelper {
         public static final String REGISTER_GENDER="register_gender";
 
         public static final String REGISTER_GENDER_MALE="1";
-        public static final String REGISTER_GENDER_FEMALE="2";
+        public static final String REGISTER_GENDER_FEMALE="0";
     }
 
 }

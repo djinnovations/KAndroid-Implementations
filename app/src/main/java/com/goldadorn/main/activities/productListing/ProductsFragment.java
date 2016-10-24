@@ -16,6 +16,7 @@ import com.goldadorn.main.BR;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.bindings.BindingRecycleItemHolder;
 import com.goldadorn.main.databinding.ProductPickGridItemBinding;
 import com.goldadorn.main.model.Designer;
@@ -55,17 +56,9 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
     public void onItemClick(Object baseObject) {
         FilterProductListing file = (FilterProductListing) baseObject;
-        //if (ServerProducts.isCallerPTB) {
-            /*boolean status = previouslySelected.add(file);
-            if (!status)
-                previouslySelected.remove(file);
-            if (canProceed(file)) {*/
-        //// TODO: 13-07-2016  for selection made ui change;
         EventBus.getDefault().post(file);
-        //}
-        //} else EventBus.getDefault().post(file);
-
     }
+
 
 
     public class BindingItemHolder<T extends ProductPickGridItemBinding> extends BindingRecycleItemHolder<T> {
@@ -75,7 +68,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
 
         public void updateItemView(Object data, View view, int position) {
             Log.d("djpost", "updateItemView: ProductFragment");
-            if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
+            if (getActivity() instanceof ServerProducts) {
+                if (((ServerProducts) getActivity()).getIsPTB()/*ServerProducts.isCallerPTB*/) {
                 /*if (((ServerProducts) getActivity()).getCanCheckSelected()) {*/
                     //View singleItemView = getRecyclerView().getLayoutManager().getChildAt(position);//dont use the parent, its null always
                     View ivSelectedSymbol = view.findViewById(R.id.ivSelectedSymbol);
@@ -87,7 +81,8 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
                /* TextView tv = (TextView) view.findViewById(R.id.tvSelectedCount);
                 tv.setVisibility(visiblity);
                 tv.setText(((ServerProducts) getActivity()).getSelectedProdCount());*/
-                //}
+                    //}
+                }
             }
         }
     }
@@ -97,8 +92,10 @@ public class ProductsFragment extends ResponsiveView implements DefaultProjectDa
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         super.onItemClick(parent, view, position, id);
-        if (((ServerProducts) getActivity()).getCanCheckSelected())
-            getAdapter().notifyItemChanged(position);
+        if (getActivity() instanceof  ServerProducts) {
+            if (((ServerProducts) getActivity()).getCanCheckSelected())
+                getAdapter().notifyItemChanged(position);
+        }
     }
 
 

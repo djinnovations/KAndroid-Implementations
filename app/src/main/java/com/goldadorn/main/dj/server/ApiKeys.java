@@ -117,6 +117,21 @@ public class ApiKeys {
         return BuildConfig.END_POINT_COMERCIAL + VERB.CANCEL_REQ_API;
     }
 
+    public static final String getDesignerSocial(String desId){
+        return BuildConfig.END_POINT + VERB.DESIGNGER_SOCIAL_API + "/" + desId;
+    }
+
+    public static final String getSearchAPI(boolean isSocial){
+        if (isSocial)
+        return BuildConfig.END_POINT + VERB.SOCIAL_SEARCH_API;
+        return BuildConfig.END_POINT_COMERCIAL + VERB.ECOM_SEARCH_API;
+    }
+
+    public static final String getLikesAPI(String userId){
+        return BuildConfig.END_POINT + VERB.LIKES_API + "/" + userId;
+    }
+    //http://107.170.48.64/goldadorn_prod/rest/searchcommerce
+
     /*http://107.170.48.64/goldadorn_prod/rest/getproductbasicinfov27/373
 http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
 
@@ -141,5 +156,9 @@ http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
         private static final String SEND_FCM_TOKEN_API = "setCloudMessagingToken";
         private static final String MIN_CUST_API = "getproductminconfigurationv28";
         private static final String CANCEL_REQ_API = "cancelordersv28";
+        private static final String DESIGNGER_SOCIAL_API = "getspecificdesignersocial";
+        private static final String ECOM_SEARCH_API = "searchcommerce";
+        private static final String SOCIAL_SEARCH_API = "searchsocial";
+        private static final String LIKES_API = "mylikes";
     }
 }

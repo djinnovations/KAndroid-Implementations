@@ -19,6 +19,7 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.webView.ApplicationDefaultWebView;
@@ -35,6 +36,7 @@ import butterknife.ButterKnife;
 public class WebActivity extends BaseActivity {
 
     private static final String TAG_CONTACT_US = "goladorn.ContactUs";
+    private static final String TAG_PEOPLE = "goladorn.People";
     @Bind(R.id.mainHolder)
     FrameLayout mainHolder;
 
@@ -72,10 +74,14 @@ public class WebActivity extends BaseActivity {
         if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
                 .getStringFromResource(R.string.contactUs))) {
             fragmentManager.beginTransaction().replace(mainHolder.getId(), new ContactUsFragment(), TAG_CONTACT_US).commit();
+        } else if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
+                .getStringFromResource(R.string.findPeople))) {
+            fragmentManager.beginTransaction().replace(mainHolder.getId(), new FindPeopleFragment(), TAG_PEOPLE).commit();
         } else {
             BaseFragment mActivePage = BaseFragment.newWebViewInstance(navigationObject);
             fragmentManager.beginTransaction().replace(R.id.mainHolder, mActivePage).commit();
         }
+
     }
 
 
@@ -138,10 +144,10 @@ public class WebActivity extends BaseActivity {
                 }
                 showDialogInfo("Your message has been sent", true);
                 //Toast.makeText(getApplicationContext(), "Your message has been sent", Toast.LENGTH_SHORT).show();
-            } else{
+            } else {
                 showDialogInfo("Your message could not be delivered", false);
             }
-                //Toast.makeText(getApplicationContext(), "Sending failed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Sending failed", Toast.LENGTH_SHORT).show();
         } else super.serverCallEnds(id, url, json, status);
     }
 

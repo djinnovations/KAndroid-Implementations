@@ -228,20 +228,20 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:visibility="invisible"
+                android:visibility="visible"
                 tools:background="#66ffcc">
 
                 <ImageButton
-                    android:id="@+id/nav_shop_by"
+                    android:id="@+id/nav_people"
                     style="@style/menuButton"
                     android:layout_width="@dimen/circle_button_small1_height"
                     android:layout_height="@dimen/circle_button_small1_height"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/vector_icon_shop_by" />
+                    android:src="@drawable/vector_icon_people" />
 
                 <TextView
-                    android:id="@+id/labelshopBy"
+                    android:id="@+id/labelPeople"
                     style="@style/menuButtonLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,7 +250,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginBottom="15dp"
                     android:gravity="center_horizontal"
-                    android:text="@string/shopBy"
+                    android:text="@string/findPeople"
                     android:textSize="16sp" />
             </RelativeLayout>
 
@@ -304,6 +304,16 @@
             android:textSize="16sp" />
 
         <Button
+            android:id="@+id/nav_my_likes"
+            style="@style/linkButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="left|center_vertical"
+            android:text="@string/myLikes"
+            android:textSize="16sp" />
+
+        <Button
             android:id="@+id/nav_my_orders"
             style="@style/linkButton"
             android:layout_width="match_parent"
@@ -325,8 +335,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
+            android:layout_height=".5dp"
+            android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
             android:id="@+id/nav_size_guide"
@@ -350,9 +360,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
-
+            android:layout_height=".5dp"
+            android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
             android:id="@+id/nav_faqs"
@@ -376,9 +385,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
-
+            android:layout_height=".5dp"
+            android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
             android:id="@+id/nav_buy_back_policy"
@@ -423,10 +431,8 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/black" />
-
-
+            android:layout_height=".5dp"
+            android:background="@color/socialLoginButtonNormalStart" />
 
         <Button
             android:id="@+id/nav_about_us"

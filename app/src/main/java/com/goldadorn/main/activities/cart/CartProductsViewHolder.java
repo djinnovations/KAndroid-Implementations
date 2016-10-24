@@ -97,7 +97,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
 
     public interface IQuantityChangeListener {
-        void onQuantityChanged(int previousQty, int newQty/*Product product*/);
+        //void onQuantityChanged(int previousQty, int newQty/*Product product*/);
+        void onQuantityChanged(GetCartResponseObj.ProductItem product);
     }
 
 
@@ -111,7 +112,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         List<View> views;
         TextView name, price, strikeThroughPrice, discount, metal, stone, size, tvNegative, tvPositive;
         @Bind(R.id.product_quantity)
-        EditText quantityText;
+        TextView quantityText;
         @Bind(R.id.product_quantity_change)
         View quantityChange;
         @Bind(R.id.bottomBtnHolder)
@@ -155,7 +156,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             //price = (TextView) itemView.findViewById(R.id.product_price);
             //quantityText = (EditText) itemView.findViewById(R.id.product_quantity);
             //quantityChange = itemView.findViewById(R.id.product_quantity_change);
-            quantityText.addTextChangedListener(this);
+            //quantityText.addTextChangedListener(this);
             //ivRemoveFromCart = (ImageView) itemView.findViewById(R.id.ivRemoveFromCart);
             quantityChange.setOnClickListener(this);
             tvPositive.setOnClickListener(this);
@@ -180,10 +181,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             this.itemToBind = itemToBind;
             //name.setText(product.name);
             name.setText(itemToBind.getProductName());
-            quantityText.removeTextChangedListener(this);
+            //quantityText.removeTextChangedListener(this);
             //quantityText.setText(String.valueOf(product.orderQty));
             quantityText.setText(String.valueOf(itemToBind.getOrderQty()));
-            quantityText.addTextChangedListener(this);
+            //quantityText.addTextChangedListener(this);
 
             Picasso.with(image.getContext()).
                     load(itemToBind.getProdImageUrl()).memoryPolicy(MemoryPolicy.NO_STORE, MemoryPolicy.NO_CACHE)
@@ -271,6 +272,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
             }
         }
 
+
+        private void editCart(GetCartResponseObj.ProductItem product){
+
+        }
 
         private void updateComponentBasedStatus(GetCartResponseObj.ProductItem itemToBind){
             StringBuilder sb = new StringBuilder();
@@ -371,8 +376,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
                 popupMenu.dismiss();
                 popupMenu = null;
             }
-            quantityChange.setOnClickListener(null);
-            quantityText.removeTextChangedListener(this);
+            //quantityChange.setOnClickListener(null);
+            //quantityText.removeTextChangedListener(this);
             ((LinearLayout) itemView.getParent()).removeView(itemView);
         }
 
@@ -387,10 +392,10 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
                 changeQuantity(itemToBind.getOrderQty(), 0);
             }
             else if (quantityChange.getId() == v.getId()){
-                if (true){
+                /*if (true){
                     Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
                     return; //// TODO: 04-09-2016  
-                }
+                }*/
                 if (popupMenu != null) popupMenu.dismiss();
                 popupMenu = new PopupMenu(quantityChange.getContext(), quantityChange);
                 Menu menu = popupMenu.getMenu();
@@ -415,18 +420,24 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (TextUtils.isEmpty(s))
+                return;
             changeQuantity(itemToBind.getOrderQty(), TextUtils.isEmpty(s) ? 0 : Integer.parseInt(s.toString()));
         }
 
         private void changeQuantity(int previousQty, int newQuantity) {
-            if (newQuantity != 0){
+            /*if (newQuantity != 0){
                 Toast.makeText(quantityText.getContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            }*/
             itemToBind.setPreviousQty(previousQty);
             itemToBind.setOrderQty(newQuantity);
+            /*if (itemToBind.getOrderQty() > itemToBind.getPreviousQty())
+                editCart(itemToBind);*/
+            if (itemToBind.getOrderQty() == itemToBind.getPreviousQty())
+                return;
             //bindUI(itemToBind, showBtns, showQty);
-            quatityChangeListener.onQuantityChanged(previousQty, newQuantity);
+            quatityChangeListener.onQuantityChanged(itemToBind);
         }
 
         @Override
@@ -434,4 +445,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
 
         }
     }
+
+
+
 }

@@ -32,6 +32,7 @@ import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.db.Tables.Products;
 import com.goldadorn.main.dj.model.BookAppointmentDataObj;
@@ -1034,6 +1035,15 @@ public class ProductsFragment extends Fragment {
             Log.d("djlike", "product like stat: startPoint: " + product.likeStat);
             Log.d("djlike", "product id: startPoint: " + product.id);
             Log.d("djlike", "product name: startPoint: " + product.name);
+            User mUser = UserInfoCache.getInstance(getContext()).getUserInfoDB(product.userId, true);
+            if (mUser != null)
+                product.desName = mUser.name;
+            try {
+                product.displayPrice = mPriceText.getText().toString().trim();
+            } catch (Exception e) {
+                e.printStackTrace();
+                product.displayPrice = "";
+            }
             if (product.likeStat == 0) {
                 Log.d("djlike", "product like stat=0");
                 if (isLikeAction) {
@@ -1049,7 +1059,7 @@ public class ProductsFragment extends Fragment {
                                         product.likecount++;
                                     }
                                     if (mToast != null) mToast.cancel();
-                                    mToast = Toast.makeText(getActivity(),
+                                    mToast = Toast.makeText(Application.getInstance(),
                                             result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
                                     mToast.show();
                                 }
@@ -1066,7 +1076,7 @@ public class ProductsFragment extends Fragment {
                                 product.likecount--;
                             }
                             if (mToast != null) mToast.cancel();
-                            mToast = Toast.makeText(getActivity(),
+                            mToast = Toast.makeText(Application.getInstance(),
                                     result.success ? product.name + " dis-liked" : "failed to update", Toast.LENGTH_LONG);
                             mToast.show();
                         }
@@ -1077,7 +1087,7 @@ public class ProductsFragment extends Fragment {
                 if (isLikeAction) {
                     Log.d("djlike", "product like stat=1; likedAction " + isLikeAction);
                     if (mToast != null) mToast.cancel();
-                    mToast = Toast.makeText(getActivity(), "You have already liked this product!", Toast.LENGTH_LONG);
+                    mToast = Toast.makeText(Application.getInstance(), "You have already liked this product!", Toast.LENGTH_LONG);
                     mToast.show();
                     isLikedHover(false);
                 } else {
@@ -1092,7 +1102,7 @@ public class ProductsFragment extends Fragment {
                                 product.likecount = product.likecount - 2;
                             }
                             if (mToast != null) mToast.cancel();
-                            mToast = Toast.makeText(getActivity(),
+                            mToast = Toast.makeText(Application.getInstance(),
                                     result.success ? product.name + " dis-liked" : "failed to update", Toast.LENGTH_LONG);
                             mToast.show();
                         }
@@ -1103,7 +1113,7 @@ public class ProductsFragment extends Fragment {
                 if (!isLikeAction) {
                     Log.d("djlike", "product like stat=-1; likedAction " + isLikeAction);
                     if (mToast != null) mToast.cancel();
-                    mToast = Toast.makeText(getActivity(), "You have already disliked this product!", Toast.LENGTH_LONG);
+                    mToast = Toast.makeText(Application.getInstance(), "You have already disliked this product!", Toast.LENGTH_LONG);
                     mToast.show();
                     isDislikedHover(false);
                 } else {
@@ -1118,7 +1128,7 @@ public class ProductsFragment extends Fragment {
                                 product.likecount = product.likecount + 2;
                             }
                             if (mToast != null) mToast.cancel();
-                            mToast = Toast.makeText(getActivity(),
+                            mToast = Toast.makeText(Application.getInstance(),
                                     result.success ? product.name + " liked" : "failed to update", Toast.LENGTH_LONG);
                             mToast.show();
                         }

@@ -175,6 +175,39 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
             }.start();
     }
 
+    private static final int ADD_TO_CART_CALL = IDUtils.generateViewId();
+
+    public void addToCartV27(GetCartResponseObj.ProductItem product){
+        //showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(ADD_TO_CART_CALL);
+        Map<String, Object> map = new HashMap<>();
+        map.put("prodId", product.getProductId());
+        map.put("prodName", product.getProductName());
+        map.put("prodType", product.getProdType());
+        map.put("desgnId", product.getDesgnId());
+        map.put("primaryMetal", product.getMetalType());
+        map.put("primaryMetalPurity", product.getMetalPurity());
+        map.put("primaryMetalColor", product.getMetalColor());
+        map.put("size", product.getProdSize());
+        map.put("priceUnits", "Rs");
+        map.put("productEDTInDays", product.getTimeSLA());
+        map.put("totalPrice", Math.round(product.getPricePaid()));
+        map.put("offPrice", Math.round(product.getOffPrice()));
+        map.put("discount", product.getDiscount());
+        map.put("metalPrice", product.getMetalPrice());
+        map.put("stonePrice", product.getStonePrice());
+        map.put("makingCharges", product.getMakingCharges());
+        map.put("metalWeight", product.getMetalWeight());
+        int curentQty = product.getOrderQty() - product.getPreviousQty();
+        map.put("orderQty", curentQty);
+        map.put("VAT", product.getVAT());
+        map.put("metalSel", product.getMetalSel());
+        map.put("stoneSel", product.getStoneSel());
+        map.put("sessionid", Application.getInstance().getCookies().get(0).getValue());
+        Log.d("djprod", "reqParams- addToCartv27: " + map.toString());
+        getAQueryCustom().ajax(ApiKeys.getAddtoCartV27(), map,String.class, ajaxCallback);
+    }
+
 
     protected JSONObject exceuteGetRequest(String queryUrl){
 
@@ -343,9 +376,16 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                 }
             }
         }
-        /*else if (id == PINCDOE_ADD_CALL){
-
-        }*/
+        else if (id == ADD_TO_CART_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mContinueButton, this);
+            if (success){
+                if (myCartFragment != null) {
+                    Toast.makeText(Application.getInstance(), "Item updated", Toast.LENGTH_SHORT).show();
+                    myCartFragment.onCartChanged();
+                }
+            }
+        }
         else if (id == SET_CART_ADDRESS_CALL) {
             if (mProgressDialog.isShowing()) {
                 showLoading(false);
@@ -478,6 +518,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
     }
 
     private AddAddressFragment addressFragment;
+    private MyCartFragment myCartFragment;
 
     public void configureUI(int uistate) {
         mUIState = uistate;
@@ -486,7 +527,7 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         displayStaticBar();
         //paymentModeUI.setVisibility(View.GONE);
         if (uistate == UISTATE_CART) {
-            f = new MyCartFragment();
+            f = myCartFragment = new MyCartFragment();
             //mContinueButton.setText("Select address ->");
             mContinueButton.setVisibility(View.VISIBLE);
         } else if (uistate == UISTATE_ADDRESS) {

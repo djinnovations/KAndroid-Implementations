@@ -25,8 +25,11 @@ import com.goldadorn.main.server.response.TimelineResponse;
  */
 public class UIController {
 
-    public static void getShowCase(final Context context, final IResultListener<TimelineResponse> listener) {
-        final TimelineResponse response= new TimelineResponse();
+    public static void getShowCase(TimelineResponse response1,final Context context, final IResultListener<TimelineResponse> listener) {
+        final TimelineResponse response;
+        if (response1 == null)
+        response = new TimelineResponse();
+        else response = response1;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();
@@ -208,11 +211,15 @@ public class UIController {
     public static void like(final Context context, Object model, final boolean like, final IResultListener<LikeResponse> listener) {
         final LikeResponse response = new LikeResponse();
         if (model instanceof Product) {
-            Product p = (Product) model;
-            response.productId = p.id;
-            response.collectionId = p.collectionId;
-            response.userId = p.userId;
-            response.currentLikeCountToWrite = p.toWriteLikeCount;
+            Product prod = (Product) model;
+            response.data = new StringBuilder().append(prod.name).append(":")
+                    .append(prod.desName).append(":")
+                    .append(prod.userId).append(":")
+                    .append(prod.displayPrice).toString();
+            response.productId = prod.id;
+            response.collectionId = prod.collectionId;
+            response.userId = prod.userId;
+            response.currentLikeCountToWrite = prod.toWriteLikeCount;
         } else if (model instanceof Collection) {
             Collection p = (Collection) model;
             response.collectionId = p.id;

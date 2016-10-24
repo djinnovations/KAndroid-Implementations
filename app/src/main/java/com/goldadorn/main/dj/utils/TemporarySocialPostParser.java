@@ -12,6 +12,8 @@ import com.google.gson.Gson;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.IParseableObject;
 
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -84,7 +86,8 @@ public class TemporarySocialPostParser {
         socialPost.setPostId(String.valueOf(tempPostObj.getPostId()));
         socialPost.setUserName(user.getName());
         Log.d("djpost"," profile image url: "+user.getImageUrl());
-        socialPost.setUserPic(getUnalteredUrl(user.getImageUrl().trim()));
+        if (!TextUtils.isEmpty(user.getImageUrl()))
+            socialPost.setUserPic(getUnalteredUrl(user.getImageUrl()));
         socialPost.setIsFollowing(1);
         socialPost.setDescription(tempPostObj.getMsg());
         socialPost.setTimestamp(System.currentTimeMillis());

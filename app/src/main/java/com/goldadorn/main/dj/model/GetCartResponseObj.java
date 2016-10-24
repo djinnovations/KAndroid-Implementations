@@ -57,6 +57,31 @@ public class GetCartResponseObj {
         private String estimatedDeliveyDateTime;
         private boolean isDisplayOrderId = false;
 
+
+        public long getTimeSLA() {
+            return timeSLA;
+        }
+
+        public void setTimeSLA(long timeSLA) {
+            this.timeSLA = timeSLA;
+        }
+
+        public String getMetalSel() {
+            return metalSel;
+        }
+
+        public void setMetalSel(String metalSel) {
+            this.metalSel = metalSel;
+        }
+
+        public String getStoneSel() {
+            return stoneSel;
+        }
+
+        public void setStoneSel(String stoneSel) {
+            this.stoneSel = stoneSel;
+        }
+
         public boolean isDisplayOrderId() {
             return isDisplayOrderId;
         }
@@ -131,6 +156,22 @@ public class GetCartResponseObj {
         public String getProdImageUrl() {
             return  /*UiRandomUtils.getVariousProductLooks(desgnId, productId,
                     UiRandomUtils.getFactor(metalSwatch), 1, true).get(0);*/prodImageUrl;
+        }
+
+        public int getDesgnId() {
+            return desgnId;
+        }
+
+        public void setDesgnId(int desgnId) {
+            this.desgnId = desgnId;
+        }
+
+        public String getProdType() {
+            return prodType;
+        }
+
+        public void setProdType(String prodType) {
+            this.prodType = prodType;
         }
 
         public int getTransId() {

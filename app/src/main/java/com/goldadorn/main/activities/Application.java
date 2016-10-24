@@ -1,8 +1,6 @@
 package com.goldadorn.main.activities;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
@@ -11,10 +9,13 @@ import android.util.Log;
 import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
+import com.goldadorn.main.activities.cart.LikelistActivity;
 import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.activities.cart.WishListManagerActivity;
 import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.fragments.FilterResultsFragment;
+import com.goldadorn.main.dj.fragments.FilterSelectorFragment;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.DjphyPreferenceManager;
 import com.goldadorn.main.dj.support.GAFacebookAnalytics;
@@ -26,7 +27,6 @@ import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.home.HomePage;
-import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.sample.UnderDevelopment;
 import com.goldadorn.main.modules.search.HashTagFragment;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
@@ -47,7 +47,6 @@ import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.splunk.mint.Mint;
 
 import org.apache.http.cookie.Cookie;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -138,8 +137,11 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_home, R.string.home, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, HomePage.class);
 
         addItem(menu, R.id.nav_feed, R.string.socialFeeds, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, SocialFeedFragment.class);
-        addItem(menu, R.id.nav_people, R.string.findPeople, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FindPeopleFragment.class);
+        //addItem(menu, R.id.nav_people, R.string.findPeople, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FindPeopleFragment.class);
+        addItem(menu, R.id.nav_filter_result, R.string.selecFilter, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FilterResultsFragment.class);
+        addItem(menu, R.id.nav_filter_selector, R.string.selecFilter, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, FilterSelectorFragment.class);
         addItem(menu, R.id.nav_showcase, R.string.showcase, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, ShowcaseActivity.class);
+        addItem(menu, R.id.nav_my_likes, R.string.myLikes, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, LikelistActivity.class);
         addItem(menu, R.id.nav_collections, R.string.collections, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, TestActivity.class);
         addItem(menu, R.id.nav_cart, R.string.cart, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, CartManagerActivity.class);
         addItem(menu, R.id.nav_wishlist, R.string.wishlist, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, WishListManagerActivity.class);
@@ -184,6 +186,7 @@ public class Application extends BaseApplication {
         String urlForDiamondQual = "http://goldadorn.tuxer5qf9ekl44m.netdna-cdn.com/o/idsg.jpg";
 
         addItem(menu, R.id.nav_contact_us, R.string.contactUs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.contactUsURL), WebActivity.class);
+        addItem(menu, R.id.nav_people, R.string.findPeople, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint, WebActivity.class);
         addItem(menu, R.id.nav_about_us, R.string.aboutUS, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.aboutUsURL), WebActivity.class);
         addItem(menu, R.id.nav_faqs, R.string.faqs, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, htmlEndPoint + getString(R.string.faqsURL), WebActivity.class);
         addItem(menu, R.id.nav_size_guide, R.string.sizeGuide, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, urlForSizeGuide, WebActivity.class);

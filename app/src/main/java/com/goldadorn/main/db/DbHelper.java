@@ -8,7 +8,9 @@ import android.util.Log;
 import android.util.SparseArray;
 
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.constants.Constants;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.model.ProductInfo;
 import com.goldadorn.main.model.ProductOptions;
@@ -59,6 +61,12 @@ public class DbHelper {
                             p.unitPrice = productObj.optLong(Constants.JsonConstants.PRODUCTPRICE);
                             p.priceUnit = productObj.optString(Constants.JsonConstants.PRODUCTPRICEUNITS);
                             p.discount = productObj.optDouble("discount");
+                            p.userId = productObj.optInt("userId");
+                            p.displayPrice = RandomUtils.getIndianCurrencyFormat(p.unitPrice, true);
+                            User mUser = UserInfoCache.getInstance(context).getUserInfoDB(p.userId, true);
+                            if (mUser != null)
+                                p.desName = mUser.name;
+
                             //p.defMetal = productObj.optString("defaultMetal");
                         }
                     }
@@ -81,7 +89,6 @@ public class DbHelper {
                         context.getContentResolver().delete(Tables.Products.CONTENT_URI_NO_NOTIFICATION, null, null);
                     productCountPerCall = productsArray.length();
                     for (int i = 0; i < productsArray.length(); i++) {
-
                         JSONObject productObj = productsArray.getJSONObject(i);
                         ContentValues cv = new ContentValues();
                         cv.put(Tables.Products._ID, productObj.optInt(Constants.JsonConstants.PRODUCT_ID, 0));
@@ -120,7 +127,9 @@ public class DbHelper {
         response.options = ProductOptions.extractCustomization(productObj);
     }
 
-    public static SparseArray<Integer> mapOfUserIds;;
+    public static SparseArray<Integer> mapOfUserIds;
+    public static SparseArray<Integer> mapOfUserIdsMain = new SparseArray<>();
+    public static int indexMain = 0;
 
     public static void writeDesignersSocial(Context context, TimelineResponse response) throws JSONException {
         if (response.responseContent != null) {
@@ -131,6 +140,8 @@ public class DbHelper {
                 for (int i= 0; i<userlist.length(); i++){
                     try {
                         mapOfUserIds.put(userlist.getJSONObject(i).getInt(Constants.JsonConstants.USERID), i);
+                        mapOfUserIdsMain.put(userlist.getJSONObject(i).getInt(Constants.JsonConstants.USERID), indexMain);
+                        indexMain++;
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -258,6 +269,7 @@ public class DbHelper {
                             collcv.put(Tables.Collections.CATEGORY, collObj.optString(Constants.JsonConstants.COLLECTIONCATEGORY, null));
                             collcv.put(Tables.Collections.COUNT_PRODUCTS, collObj.optInt(Constants.JsonConstants.COLLECTIONPRODUCTCOUNT, 0));
                             int updatecollcnt = context.getContentResolver().update(Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv, Tables.Collections._ID + " = ? ", new String[]{collObj.optLong(Constants.JsonConstants.COLLECTION_ID) + ""});
+                            updateInsert(context, Tables.Collections.CONTENT_URI_NO_NOTIFICATION, collcv);
                         }
                     }
                 }

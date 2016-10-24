@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDiskIOException;
 import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.db.DbHelper;
 import com.goldadorn.main.model.ProfileData;
 import com.goldadorn.main.server.response.BasicResponse;
@@ -121,6 +122,36 @@ public class Api {
             extractException(context, response, e);
             e.printStackTrace();
         }
+    }
+
+
+    public static void getDesignerEcom(final Context context, final TimelineResponse response, final IResultListener<TimelineResponse> listener){
+        Runnable runnable = new Runnable() {
+            public void run() {
+                if (response.success && response.responseContent != null) {
+                    try {
+                        DbHelper.writeDesignersSocial(context, response);
+                        response.responseContent = null;
+                        response.success = false;
+                        response.responseCode = -1;
+                        ApiFactory.getDesigners(context, response);
+                        if (response.success && response.responseContent != null) {
+                            DbHelper.writeProductShowcaseData(context, response);
+                        }
+                        Application.getInstance().getUIHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (listener != null)
+                                    listener.onResult(response);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     public static void getProducts(Context context, ProductResponse response, int retryCount) {

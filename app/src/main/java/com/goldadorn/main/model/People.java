@@ -1,5 +1,7 @@
 package com.goldadorn.main.model;
 
+import android.text.TextUtils;
+
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.utils.URLHelper;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
@@ -34,7 +36,9 @@ public class People extends ServerError implements IParseableObject {
 
     public void dataLoaded(BaseDataParser entireData)
     {
-        profilePic= URLHelper.parseImageURL(profilePic);
+        if (!TextUtils.isEmpty(profilePic)) {
+            profilePic = URLHelper.parseImageURL(profilePic);
+        }
         backgroundPic= URLHelper.parseImageURL(backgroundPic);
         //backgroundPic  = "http://store.messness.com/wp-content/uploads/sites/2/2013/04/pocket-square-floral-pattern2-1.jpg";
         if(userId== Application.getLoginUser().id)

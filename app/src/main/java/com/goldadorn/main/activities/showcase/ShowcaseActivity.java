@@ -534,8 +534,18 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isStopPagination) {
+                    if (mCurrentPosition == mShowCaseAdapter.getItemCount() - 1) {
+                        //mCurrentPosition = 0;
+                        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_TOP);
+                        queryForDes();
+                        return;
+                    }
+                }
                 mCurrentPosition++;
-                if (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1) mCurrentPosition = 0;
+                if (isStopPagination && (mCurrentPosition > mShowCaseAdapter.getItemCount() - 1))
+                    mCurrentPosition = 0;
+
                 mRecyclerView.smoothScrollToPosition(mCurrentPosition);
                 mHandler.removeCallbacks(mUserChangeRunnable);
                 mHandler.postDelayed(mUserChangeRunnable, 100);
@@ -543,6 +553,8 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
                 mTabViewHolder.setSelected(0);
             }
         });
+        DbHelper.mapOfUserIdsMain = new SparseArray<>();
+        DbHelper.indexMain = 0;
 
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(Color.TRANSPARENT);
         mCollapsingToolbarLayout.setExpandedTitleColor(Color.TRANSPARENT);
@@ -550,11 +562,13 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
         //        mOverlayVH.itemView.setVisibility(View.INVISIBLE);
         configureUI(mUIState);
-        UIController.getShowCase(mContext,
+        queryForDes();
+       /* UIController.getShowCase(mContext,
                 new IResultListener<TimelineResponse>() {
                     @Override
                     public void onResult(TimelineResponse result) {
                         //mProgressFrame.setVisibility(View.GONE);
+                        ShowcaseActivity.this.result = result;
                         dismissOverLay();
                         Intent data = getIntent();
                         if (data != null) {
@@ -572,11 +586,44 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
                         getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
                     }
-                });
+                });*/
         getSupportLoaderManager().initLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
-
         tourThisScreen();
     }
+
+    private boolean isStopPagination = false;
+    private void queryForDes(){
+        if (isStopPagination)
+            return;
+        UIController.getShowCase(result, mContext,
+                new IResultListener<TimelineResponse>() {
+                    @Override
+                    public void onResult(TimelineResponse result) {
+                        //mProgressFrame.setVisibility(View.GONE);
+                        dismissOverLay();
+                        if (result.success) {
+                            ShowcaseActivity.this.result = result;
+                            Intent data = getIntent();
+                            if (data != null) {
+                                int userId = data.getIntExtra(IntentKeys.DESIGNER_ID, -1);
+                                if (userId != -1) {
+                                    if (DbHelper.mapOfUserIdsMain == null || DbHelper.mapOfUserIdsMain.size() == 0) {
+                                        int position = offlinemapOfUser.get(userId);
+                                        if (position != -1) smoothScrollToPosition(position);
+                                    } else {
+                                        int position = DbHelper.mapOfUserIdsMain.get(userId);
+                                        if (position != -1) smoothScrollToPosition(position);
+                                    }
+                                }
+                            }
+
+                            getSupportLoaderManager().restartLoader(mShowCaseCallback.hashCode(), null, mShowCaseCallback);
+                        }else isStopPagination = true;
+                    }
+                });
+    }
+
+    private TimelineResponse result;
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -584,7 +631,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         if (intent != null) {
             int userId = intent.getIntExtra(IntentKeys.DESIGNER_ID, -1);
             if (userId != -1) {
-                int position = DbHelper.mapOfUserIds.get(userId);
+                int position = DbHelper.mapOfUserIdsMain.get(userId);
                 if (position != -1) smoothScrollToPosition(position);
             }
         }
@@ -848,7 +895,6 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
         mOverlayVH.setBadges(user.trending, user.featured);
         //mOverlayVH.btnBookAppoint.setSelected(user.isLiked);
         mOverlayVH.followButton.setSelected(user.isFollowed);
-
     }
 
     private SparseArray<Integer> offlinemapOfUser;
@@ -863,16 +909,17 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
 
         public ShowcasePagerAdapter(Context context, int width, int height) {
             this.context = context;
+            userList = new ArrayList<>();
             this.width = width;
             this.height = height;
         }
 
 
         private void setResponseState() {
-            boolean temp1 = DbHelper.mapOfUserIds == null ? false : true;
+            boolean temp1 = DbHelper.mapOfUserIdsMain == null ? false : true;
             boolean temp2 = false;
             if (temp1)
-                temp2 = DbHelper.mapOfUserIds.size() == 0 ? false : true;
+                temp2 = DbHelper.mapOfUserIdsMain.size() == 0 ? false : true;
 
             isOrderedSetAvailable = temp1 && temp2 ? true : false;
         }
@@ -893,7 +940,7 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             setResponseState();
             //this.cursor = cursor;
             if (isOrderedSetAvailable)
-                userList = getOrdereduser(cursor);
+                /*userList =*/ getOrdereduser(cursor);
             else {
                 this.cursor = cursor;
                 setOfflinedataMap(cursor);
@@ -917,29 +964,38 @@ public class ShowcaseActivity extends BaseDrawerActivity implements CollectionsF
             }
         }
 
-        private List<User> getOrdereduser(Cursor randomOrderedUser/*, int position*/) {
+        private /*List<User>*/void getOrdereduser(Cursor randomOrderedUser/*, int position*/) {
             if (randomOrderedUser != null) {
                 if (randomOrderedUser.getCount() == 0)
-                    return null;
-                List<User> userListTemp = new ArrayList<>();
+                    //return null;
+                    return;
+                ///*List<User> userListTemp*/userList = new ArrayList<>();
                 for (int i = 0; i < randomOrderedUser.getCount(); i++) {
-                    userListTemp.add(null);
+                    //userListTemp.add(null);
+                    randomOrderedUser.moveToFirst();
+                    User temp = User.extractFromCursor(randomOrderedUser);
+                    if (userList.contains(temp))
+                        return;
+                    userList.add(null);
                 }
                 //userListTemp.clear();
-                Log.d("dj", "size of userListTemp: " + userListTemp.size());
+                //Log.d("dj", "size of userListTemp: " + userListTemp.size());
+                Log.d("dj", "size of userListTemp: " + userList.size());
                 if (randomOrderedUser.moveToFirst()) {
                     do {
                         //int desId = DbHelper.mapOfUserIds.keyAt(position);
                         int cursorDesId = User.getUserId(randomOrderedUser);
-                        int positionToAllot = DbHelper.mapOfUserIds.get(cursorDesId);
-                        userListTemp.set(positionToAllot, User.extractFromCursor(randomOrderedUser));
+                        int positionToAllot = DbHelper.mapOfUserIdsMain.get(cursorDesId);
+                        //userListTemp.set(positionToAllot, User.extractFromCursor(randomOrderedUser));
+                        userList.set(positionToAllot, User.extractFromCursor(randomOrderedUser));
                         /*if (desId == cursorDesId)
                             return User.extractFromCursor(cursor);*/
                     } while (randomOrderedUser.moveToNext());
                 }
-                return userListTemp;
+                //return userListTemp;
+                //return userList;
             }
-            return null;
+            //return null;
         }
 
 

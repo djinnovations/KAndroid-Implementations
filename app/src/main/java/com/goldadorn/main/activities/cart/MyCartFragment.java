@@ -207,16 +207,14 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     private void bindCostUi() {
         mCostTotal = 0;
         int totalUnits = 0;
-        String currency = null;
         for (final GetCartResponseObj.ProductItem p : mCart) {
             mCostTotal = mCostTotal + (long) p.getPricePaid();
             totalUnits = totalUnits + p.getOrderQty();
-            currency = p.getPriceUnits();
             Log.e("iii---", p.getTransId() + "--" + mCostTotal + "--" + p.getOrderQty());
 
-            if (p.getOrderQty() == 0) {
-                int reduceqty = p.getPreviousQty() - p.getOrderQty();
-                UIController.removeFromCart(getContext(), p.getTransId(), /*p.getOrderQty()*/ reduceqty, getOrderQtyToRemove(p.getTransId(), p.getOrderQty()),
+            /*int reduceqty = p.getPreviousQty() - p.getOrderQty();
+            if (reduceqty > 0) {
+                UIController.removeFromCart(getContext(), p.getTransId(), *//*p.getOrderQty()*//* reduceqty, getOrderQtyToRemove(p.getTransId(), p.getOrderQty()),
                         new IResultListener<ProductResponse>() {
                             @Override
                             public void onResult(ProductResponse result) {
@@ -225,16 +223,17 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                                 else if (getActivity() instanceof MyOrdersActivity)
                                     ((MyOrdersActivity) getActivity()).dismissOverLay();
                                 if (result.success) {
-                                    mCart.remove(p);
+                                    if (p.getOrderQty() <= 0)
+                                        mCart.remove(p);
                                     //   notifyDataSetChanged();
                                     Log.e("REMOVED ITEM---", "REMOVED " + mCart.size());
                                     onCartChanged();
                                     //result.productArray.remove(mCart);
-                                    Toast.makeText(getContext(), "Item removed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Item updated", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }); //// TODO: 01-09-2016  remove cart implementation
-            }
+            }*/
 
         }
         //((CartManagerActivity) getActivity()).dismissOverLay();
@@ -289,7 +288,7 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
     }
 
     @Override
-    public void onQuantityChanged(int prevQty, int newQty/*Product product*/) {
+    public void onQuantityChanged(final GetCartResponseObj.ProductItem product) {
         if (!isFirst) {
             WindowUtils.marginForProgressViewInGrid = 25;
             if (getActivity() instanceof CartManagerActivity)
@@ -297,7 +296,38 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
                     WindowUtils.PROGRESS_FRAME_GRAVITY_BOTTOM);
         }
         Log.d("djcart", "onQuantityChanged");
-        bindCostUi();
+        if (getActivity() instanceof CartManagerActivity){
+            if (product.getOrderQty() > product.getPreviousQty()) {
+                ((CartManagerActivity) getActivity()).addToCartV27(product);
+            }
+            else{
+                int reduceqty = product.getPreviousQty() - product.getOrderQty();
+                if (reduceqty > 0) {
+                    UIController.removeFromCart(getContext(), product.getTransId(), /*p.getOrderQty()*/ reduceqty,
+                            getOrderQtyToRemove(product.getTransId(), product.getOrderQty()),
+                            new IResultListener<ProductResponse>() {
+                                @Override
+                                public void onResult(ProductResponse result) {
+                                    if (getActivity() instanceof CartManagerActivity)
+                                        ((CartManagerActivity) getActivity()).dismissOverLay();
+                                    else if (getActivity() instanceof MyOrdersActivity)
+                                        ((MyOrdersActivity) getActivity()).dismissOverLay();
+                                    if (result.success) {
+                                        if (product.getOrderQty() <= 0)
+                                            mCart.remove(product);
+                                        //   notifyDataSetChanged();
+                                        Log.e("REMOVED ITEM---", "REMOVED " + mCart.size());
+                                        onCartChanged();
+                                        //result.productArray.remove(mCart);
+                                        Toast.makeText(getContext(), "Item updated", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }); //// TODO: 01-09-2016  remove cart implementation
+                }
+
+            }
+        }
+        //bindCostUi();
     }
 
     /*private Product find(int id) {

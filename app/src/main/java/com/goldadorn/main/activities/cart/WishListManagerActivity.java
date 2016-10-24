@@ -12,23 +12,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.assist.ILoadingProgress;
 import com.goldadorn.main.assist.IResultListener;
-import com.goldadorn.main.assist.ViewHolder;
+import com.goldadorn.main.dj.adapter.WishlistAdapter;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
-import com.squareup.picasso.Picasso;
+import com.goldadorn.main.utils.TypefaceHelper;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -38,11 +38,11 @@ import butterknife.ButterKnife;
 /**
  * Created by Kiran BH on 08/03/16.
  */
-public class WishListManagerActivity extends FragmentActivity implements ILoadingProgress {
+public class WishListManagerActivity extends BaseActivity implements ILoadingProgress {
     ProgressDialog mProgressDialog;
     private Context mContext;
-    private RecyclerView mRecyclerView;
-    private Adapter mAdapter;
+    protected RecyclerView mRecyclerView;
+    protected WishlistAdapter mAdapter;
    /* private View.OnClickListener mAddToCartClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -57,7 +57,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
             }
         }
     };*/
-    private View.OnClickListener mDeleteClick = new View.OnClickListener() {
+    /*private View.OnClickListener mDeleteClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
             if (v.getTag() != null && v.getTag() instanceof Product) {
@@ -73,7 +73,7 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
                 });
             }
         }
-    };
+    };*/
 
     public static Intent getLaunchIntent(Context context) {
         Intent in = new Intent(context, WishListManagerActivity.class);
@@ -81,27 +81,29 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
     }
 
 
-    private void logEventsAnalytics(String eventName) {
+    /*private void logEventsAnalytics(String eventName) {
         ((Application) getApplication()).getFbAnalyticsInstance().logCustomEvent(this, eventName);
-    }
+    }*/
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wishlist);
-
+        ButterKnife.bind(this);
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: WISHLIST_VIEWED");
         logEventsAnalytics(GAAnalyticsEventNames.WISHLIST);
 
+        TypefaceHelper.setFont(tvNone);
         mContext = this;
         mProgressDialog = new ProgressDialog(mContext);
         mProgressDialog.setMessage("Loading");
         mProgressDialog.setCancelable(false);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        mRecyclerView.setAdapter(mAdapter = new Adapter());
+        mRecyclerView.setAdapter(mAdapter = getAdapter());
+        queryServer();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Wish list");
+        toolbar.setTitle(getTitleTxt());
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         toolbar.setTitleTextColor(Color.WHITE);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -111,10 +113,26 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
             }
         });
         showLoading(true);
+    }
+
+    protected String getTitleTxt(){
+        return "Wish List";
+    }
+
+    @Bind(R.id.tvNone)
+    TextView tvNone;
+
+    protected boolean isFirstTime = true;
+
+    protected void queryServer(){
         UIController.getWishlist(mContext, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
                 if (result.success && result.productArray != null) {
+                    if (isFirstTime){
+                        isFirstTime = false;
+                        updateEmptyStatus(result.productArray);
+                    }
                     mAdapter.changeData(result.productArray);
                     if (!result.success) {
                         Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
@@ -123,6 +141,26 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
                 showLoading(false);
             }
         });
+    }
+
+    protected void updateEmptyStatus(ArrayList jsonArray){
+        if (jsonArray == null){
+            mRecyclerView.setVisibility(View.GONE);
+            tvNone.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (jsonArray.size() <= 0) {
+            tvNone.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
+        else {
+            tvNone.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected WishlistAdapter getAdapter(){
+        return new WishlistAdapter();
     }
 
     @Override
@@ -138,80 +176,9 @@ public class WishListManagerActivity extends FragmentActivity implements ILoadin
         else mProgressDialog.dismiss();
     }
 
-    private class Adapter extends RecyclerView.Adapter<WishlistViewHolder> {
+    /*private class Adapter extends RecyclerView.Adapter<Adapter.WishlistViewHolder> {
 
-        private final ArrayList<Product> products = new ArrayList<>();
 
-        @Override
-        public WishlistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            WishlistViewHolder vh = new WishlistViewHolder(getLayoutInflater().inflate(R.layout.layout_wishlist_item, parent, false)) {
-            };
-            vh.addToCart.setVisibility(View.INVISIBLE);
-            //vh.addToCart.setOnClickListener(mAddToCartClick);
-            vh.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    if (v.getTag() != null && v.getTag() instanceof Product) {
-                        Product p = (Product) v.getTag();
-                        //TODO kiran delete click
-                        UIController.deleteFromWhishlist(mContext, p, new IResultListener<ProductResponse>() {
-                            @Override
-                            public void onResult(ProductResponse result) {
-                                if (result.success) {
-                                    products.remove(v.getTag());
-                                    notifyDataSetChanged();
-                                    Toast.makeText(mContext, "Product successfully deleted from Wishlist.", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    }
-                }
-            });
+    }*/
 
-            return vh;
-        }
-
-        @Override
-        public void onBindViewHolder(WishlistViewHolder holder, int position) {
-            Product p = products.get(position);
-
-            holder.name.setText(p.name);
-            holder.description.setText(p.description);
-            Picasso.with(WishListManagerActivity.this).load(p.getImageUrl(p.userId, p.defMetal, false, 200)).into(holder.image);
-
-            holder.addToCart.setTag(p);
-            holder.delete.setTag(p);
-        }
-
-        @Override
-        public int getItemCount() {
-            return products.size();
-        }
-
-        public void changeData(ArrayList<Product> products) {
-            this.products.clear();
-            this.products.addAll(products);
-            notifyDataSetChanged();
-        }
-    }
-
-    class WishlistViewHolder extends ViewHolder {
-
-        @Bind(R.id.name)
-        TextView name;
-        @Bind(R.id.description)
-        TextView description;
-        @Bind(R.id.image)
-        ImageView image;
-
-        @Bind(R.id.addToCart)
-        ImageButton addToCart;
-        @Bind(R.id.delete)
-        ImageButton delete;
-
-        public WishlistViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-    }
 }

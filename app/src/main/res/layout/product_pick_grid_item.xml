@@ -43,6 +43,8 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@{product.prodName}"
                     app:fontName="@{@string/font_name_text_normal}"

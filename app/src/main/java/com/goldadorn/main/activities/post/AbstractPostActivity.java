@@ -206,8 +206,11 @@ abstract public class AbstractPostActivity extends BaseActivity implements Image
             List<String> prodtypelist = getProdTypes();
             if (prodtypelist != null) {
                 prodtypelist.removeAll(Collections.singleton(null));
-                for (String str : prodtypelist)
-                    tags.add(str);
+                for (String str : prodtypelist) {
+                    String toadd = str.toLowerCase();
+                    if (!tags.contains(toadd))
+                        tags.add(str);
+                }
             }
             intent.putStringArrayListExtra("hashtags", tags);
             setResult(Activity.RESULT_OK, intent);

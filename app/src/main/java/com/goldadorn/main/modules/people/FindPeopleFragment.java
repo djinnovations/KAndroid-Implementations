@@ -1,20 +1,30 @@
 package com.goldadorn.main.modules.people;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.goldadorn.main.R;
+import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
+import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.People;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
 import com.goldadorn.main.modules.modulesCore.DefaultVerticalListView;
@@ -27,6 +37,9 @@ import com.squareup.picasso.Picasso;
 
 import org.apache.http.cookie.Cookie;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -62,7 +75,7 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                 int followercount;
                 //int followingcount = 0;
                 Log.d("djpeople", "onSuccess - pre-followercount: " + post.getFollowerCount());
-               // Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
+                // Log.d("djpeople", "onSuccess - pre-followingcount: " + mySelf.getFollowingCount());
                 int isFollowing = post.getIsFollowing();
                 if (isFollowing == 0) {//if the user was already following then isFollowing 0 else 1
                     followercount = post.getFollowerCount() - 1;
@@ -74,7 +87,7 @@ public class FindPeopleFragment extends DefaultVerticalListView {
                     //followingcount = mySelf.getFollowingCount() + 1;
                 }
                 //mySelf.setFollowingCount(followingcount);
-               // getDataManager().add((pos + 1), mySelf);
+                // getDataManager().add((pos + 1), mySelf);
                 //getDataManager().
                 post.setFollowerCount(followercount);
                 Log.d("djpeople", "onSuccess - post-followercount: " + post.getFollowerCount());
@@ -85,10 +98,10 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         }
     };
 
-    public void updatePeopleObjIfPresent(People peopleObj){
+    public void updatePeopleObjIfPresent(People peopleObj) {
         People existingPeopleObj = getPeopleObjFromList(peopleObj);
-        Log.d("djpeople", "contains that people? - updatePeopleObjIfPresent: "+existingPeopleObj == null? "false" : "true");
-        if (existingPeopleObj != null){
+        Log.d("djpeople", "contains that people? - updatePeopleObjIfPresent: " + existingPeopleObj == null ? "false" : "true");
+        if (existingPeopleObj != null) {
             int position = getDataManager().indexOf(existingPeopleObj);
             //getting already available people data and filling up
             if (peopleObj.getIsFollowing() == 0)
@@ -98,13 +111,13 @@ public class FindPeopleFragment extends DefaultVerticalListView {
             existingPeopleObj.setIsFollowing(peopleObj.getIsFollowing());
             getDataManager().set(position, existingPeopleObj);
             getAdapter().notifyItemChanged(position);
-            Log.d("djpeople", "people obj updated - updatePeopleObjIfPresent - position: "+position);
+            Log.d("djpeople", "people obj updated - updatePeopleObjIfPresent - position: " + position);
         }
     }
 
 
-    private People getPeopleObjFromList(People newPeople){
-        for (Object obj: getDataManager()){
+    private People getPeopleObjFromList(People newPeople) {
+        for (Object obj : getDataManager()) {
             if (((People) obj).getUserId() == newPeople.getUserId())
                 return (People) obj;
         }
@@ -148,11 +161,22 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         getApp().getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
     }
 
+    List<Integer> colorList;
+
     public void onViewCreated(View view) {
 
         Log.d(Constants.TAG_APP_EVENT, "AppEventLog: People");
         logEventsAnalytics(GAAnalyticsEventNames.PEOPLE);
-
+        colorList = new ArrayList<>();
+        int[] colors = Application.getInstance().getResources().getIntArray(R.array.colorsBank);
+        Integer[] temp = new Integer[colors.length];
+        int i = 0;
+        for (int col : colors) {
+            temp[i] = col;
+            i++;
+        }
+        colorList.addAll(Arrays.asList(temp));
+        Collections.shuffle(colorList);
         followPeopleHelper = new FollowPeopleHelper(getActivity(), getApp().getCookies(), postUpdateResult);
     }
 
@@ -254,6 +278,11 @@ public class FindPeopleFragment extends DefaultVerticalListView {
         @Bind(R.id.followButton)
         Button followButton;
 
+        @Bind(R.id.llNameHolder)
+        LinearLayout llNameHolder;
+        @Bind(R.id.tvName)
+        TextView tvName;
+
         private View.OnClickListener itemClick = new View.OnClickListener() {
             public void onClick(View v) {
                 if (v == userImage) {
@@ -284,9 +313,12 @@ public class FindPeopleFragment extends DefaultVerticalListView {
             userImage.setOnClickListener(itemClick);
             userName.setOnClickListener(itemClick);
             followButton.setOnClickListener(itemClick);
+            llNameHolder.setVisibility(View.INVISIBLE);
+            userImage.setVisibility(View.INVISIBLE);
 
             TypefaceHelper.setFont(getResources().getString(R.string.font_name_text_secondary), designer, countFollowing, countFollowers);
             TypefaceHelper.setFont(userName, countFollowingLabel, countFollowersTitle);
+            UiRandomUtils.setTypefaceBold(tvName);
         }
 
         public void updateItemView(Object item, View view, int position) {
@@ -300,12 +332,51 @@ public class FindPeopleFragment extends DefaultVerticalListView {
             countFollowing.setText(people.getFollowingCount() + "");
             countFollowers.setText(people.getFollowerCount() + "");
 
-            Picasso.with(getContext())
-                    .load(people.getProfilePic())
-                    .placeholder(R.drawable.vector_image_place_holder_profile)
-                    .tag(getContext())
-                    .resize(100, 100)
-                    .into(userImage);
+            if (!TextUtils.isEmpty(people.getProfilePic())) {
+                userImage.setVisibility(View.VISIBLE);
+                llNameHolder.setVisibility(View.INVISIBLE);
+                Picasso.with(getContext())
+                        .load(people.getProfilePic())
+                        .placeholder(R.drawable.vector_image_place_holder_profile)
+                        .tag(getContext())
+                        .resize(100, 100)
+                        .into(userImage);
+            } else {
+                userImage.setVisibility(View.INVISIBLE);
+                llNameHolder.setVisibility(View.VISIBLE);
+                try {
+            /*Glide.with(holder.itemView.getContext())
+                    .load(ImageFilePath.getImageUrlForProduct(listOfItems.get(position).getDesgnId(),
+                            listOfItems.get(position).getProductId(), null, false))
+                    .placeholder(R.drawable.vector_image_logo_square_100dp)
+                    .into(holder.ivProd);*/
+                    Drawable mDrawable = ResourceReader.getInstance(Application.getInstance())
+                            .getDrawableFromResId(R.drawable.circle_bg_for_price);
+                    int rand = RandomUtils.randInt(0, 9);
+                    mDrawable.setColorFilter(new PorterDuffColorFilter(colorList.get(rand), PorterDuff.Mode.SRC));
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        llNameHolder.setBackground(mDrawable);
+                    } else llNameHolder.setBackgroundDrawable(mDrawable);
+                    String name = people.getUserName();
+                    if (!TextUtils.isEmpty(name)) {
+                        String[] initial = people.getUserName().trim().split(" ");
+                        if (initial.length > 0) {
+                            if (!TextUtils.isEmpty(initial[0])) {
+                                name = String.valueOf(initial[0].trim().charAt(0));
+                            }
+                            if (initial.length > 1) {
+                                if (!TextUtils.isEmpty(initial[1])) {
+                                    name = name + String.valueOf(initial[1].trim().charAt(0));
+                                }
+                            }
+                        }
+                        tvName.setText(name);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (people.isSelf()) {
                 //mySelfPeople = people;

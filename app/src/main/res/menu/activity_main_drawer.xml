@@ -9,6 +9,11 @@
             android:title="@string/home"/>
 
         <item
+            android:id="@+id/nav_filter_selector"
+            android:icon="@drawable/vector_icon_home"
+            android:title="@string/filter"/>
+
+        <item
             android:id="@+id/nav_feed"
             android:icon="@drawable/vector_icon_feeds"
             android:title="@string/socialFeeds"
@@ -29,7 +34,7 @@
             android:title="@string/cart"/>
 
         <item
-            android:id="@+id/nav_people"
+            android:id="@+id/nav_filter_result"
             android:icon="@drawable/vector_icon_people"
             android:title="@string/findPeople"
             android:visible="false"/>

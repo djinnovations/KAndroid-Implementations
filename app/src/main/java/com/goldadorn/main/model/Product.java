@@ -35,6 +35,8 @@ public class Product implements Serializable {
     public boolean hasCertificate;
     public Map<String, List<String>> selectedParams;
     public String prodType;
+    public String desName;
+    public String displayPrice;
 
     public Map<String, List<String>> getSelectedParams() {
         return selectedParams;

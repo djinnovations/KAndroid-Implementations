@@ -7,4 +7,5 @@ import org.json.JSONArray;
  */
 public class TimelineResponse extends BasicResponse {
     public JSONArray idsForProducts = new JSONArray();
+    public int offset = 0;
 }

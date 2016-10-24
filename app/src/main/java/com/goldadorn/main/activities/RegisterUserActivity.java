@@ -269,7 +269,7 @@ import butterknife.OnClick;
             params.put(URLHelper.REGISTER_PARAM.REGISTER_PASSWORD, password);
             params.put(URLHelper.REGISTER_PARAM.REGISTER_CONFIRM_PASSWORD, password);
 
-            if(femaleRadioButton.isSelected())
+            if(femaleRadioButton.isChecked())
                 params.put(URLHelper.REGISTER_PARAM.REGISTER_GENDER, URLHelper.REGISTER_PARAM.REGISTER_GENDER_FEMALE);
             else
                 params.put(URLHelper.REGISTER_PARAM.REGISTER_GENDER, URLHelper.REGISTER_PARAM.REGISTER_GENDER_MALE);

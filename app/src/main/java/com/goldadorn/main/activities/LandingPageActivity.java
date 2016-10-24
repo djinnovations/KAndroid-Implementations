@@ -1,13 +1,8 @@
 package com.goldadorn.main.activities;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.Base64;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -20,11 +15,7 @@ import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
-import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -101,7 +92,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
         ButterKnife.bind(this);
         TypefaceHelper.setFont(loginAccount, createAccount, orLabel);
 
-        mSocialLoginInstance = SocialLoginUtil.getInstance(getApplicationContext());
+        mSocialLoginInstance = SocialLoginUtil.getInstance();
     }
 
 

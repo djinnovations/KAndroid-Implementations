@@ -141,7 +141,7 @@ public class FilterSelector extends BaseActivity {
             }
         }
 
-        intent.putParcelableArrayListExtra("filters",parcelableList);
+        intent.putParcelableArrayListExtra("filters", parcelableList);
         setResult(Activity.RESULT_OK, intent);
         finish();
     }

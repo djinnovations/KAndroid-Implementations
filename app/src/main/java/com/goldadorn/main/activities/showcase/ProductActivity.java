@@ -204,9 +204,6 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
 
 
-
-
-
     public boolean hasCertificate(){
         return hasCert;
     }

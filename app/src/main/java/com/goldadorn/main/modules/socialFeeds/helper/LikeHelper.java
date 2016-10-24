@@ -23,6 +23,12 @@ public class LikeHelper extends PostUpdateHelper
     protected void fillParams(SocialPost item,Map params)
     {
         params.put(URLHelper.LIKE_A_POST.LIKE, item.getPostId());
+        //params.put("prodName", item.getprodName());
+        //params.put("designerName", item.getDesName());
+        //params.put("metal", item.getMetal());
+        //params.put("diamond", item.getDiaQual());
+        //params.put("size", item.getSize());
+
     }
     protected boolean isSucess(Object json, AjaxStatus status)
     {

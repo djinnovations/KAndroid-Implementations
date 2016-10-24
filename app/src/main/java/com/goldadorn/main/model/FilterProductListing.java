@@ -149,6 +149,26 @@ public class FilterProductListing extends BaseObservable implements Parcelable,I
     private String range;
     private String prodType;
 
+
+    @Override
+    public String toString() {
+        return "FilterProductListing{" +
+                "price='" + price + '\'' +
+                ", productPrice=" + productPrice +
+                ", aspectRatio=" + aspectRatio +
+                ", productPriceUnits='" + productPriceUnits + '\'' +
+                ", prodId=" + prodId +
+                ", collId=" + collId +
+                ", desgnId=" + desgnId +
+                ", prodName='" + prodName + '\'' +
+                ", image='" + image + '\'' +
+                ", likeCount='" + likeCount + '\'' +
+                ", discount=" + discount +
+                ", range='" + range + '\'' +
+                ", prodType='" + prodType + '\'' +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;

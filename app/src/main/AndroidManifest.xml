@@ -39,6 +39,12 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <provider
+            android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider406364016222124"
+            android:exported="true" />
+
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="key_live_kog4ARrlvcjSwC1cFa7vRjojCCeIzpeb" />
@@ -49,22 +55,25 @@
         <activity
             android:name=".activities.AppStartActivity"
             android:label="@string/app_name"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <data
-                    android:host="open"
-                    android:scheme="goldadorn://" />
-
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.goldadorn.com"
+                    android:scheme="http" />
+                <data
+                    android:host="goldadorn.com"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
@@ -319,7 +328,15 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.HashTagResultActivity"></activity>
+
+        <activity
+            android:name=".activities.HashTagResultActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.cart.LikelistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

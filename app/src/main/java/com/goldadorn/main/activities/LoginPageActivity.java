@@ -36,10 +36,8 @@ import com.goldadorn.main.utils.URLHelper;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.google.gson.Gson;
 import com.kimeeo.library.actions.Action;
-import com.kimeeo.library.actions.Toast;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.rey.material.widget.ProgressView;
 
 import org.apache.http.cookie.Cookie;
@@ -306,7 +304,7 @@ public class LoginPageActivity extends BaseActivity {
 //        startActivity(in);
 
         //Author DJphy
-        mSocialLoginInstance = SocialLoginUtil.getInstance(getApplicationContext());
+        mSocialLoginInstance = SocialLoginUtil.getInstance();
     }
 
     private boolean checkNetwork(){
