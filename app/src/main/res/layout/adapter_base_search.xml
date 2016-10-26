@@ -7,8 +7,8 @@
 
     <LinearLayout
         android:id="@+id/llNameHolder"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginTop="@dimen/padding_default"
@@ -32,8 +32,8 @@
 
     <org.github.images.CircularImageView
         android:id="@+id/userImage"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="@dimen/padding_default"
         android:layout_marginLeft="@dimen/padding_default"
@@ -49,13 +49,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignTop="@+id/userImage"
         android:layout_marginLeft="@dimen/padding_default"
         android:layout_marginRight="@dimen/padding_default"
+        android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/userImage"
         android:layout_toRightOf="@+id/userImage"
-        android:orientation="vertical"
-        tools:background="#cccccc">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/userName"
@@ -63,16 +63,17 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="User Name"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/designer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:paddingTop="6dp"
+            android:text="Designer"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textSize="10sp"
-            tools:text="Desginer" />
+            android:textColor="@color/colorAccent"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

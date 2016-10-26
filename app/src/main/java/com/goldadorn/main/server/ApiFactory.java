@@ -223,7 +223,7 @@ public class ApiFactory extends ExtractResponse {
             case GETDESIGNERS_SOCIAL_TYPE: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
-                builder.appendPath("getdesignerssocial");
+                builder.appendPath("getdesignerssocialv29");
                 builder.appendPath(String.valueOf(((TimelineResponse) urlBuilder.mResponse).offset));
                 break;
             }

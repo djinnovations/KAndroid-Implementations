@@ -285,7 +285,6 @@ public class ServerProducts extends BaseActivity {
     }
 
     private void startAnim(View view, int animResID) throws Exception {
-
         Animation anim = AnimationUtils.loadAnimation(getBaseContext(), animResID);
         view.startAnimation(anim);
     }

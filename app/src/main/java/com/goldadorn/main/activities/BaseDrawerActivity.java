@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.modules.search.SearchActivity;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.NavigationDataObject;
@@ -431,7 +432,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_my_search) {
-            Toast.makeText(getApplicationContext(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            //startActivity(new Intent(this, SearchActivity.class));
+            Toast.makeText(getApplication(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
             return true;
         }
 

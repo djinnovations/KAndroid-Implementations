@@ -47,6 +47,11 @@ public class Collection implements Serializable {
     public String getImageUrl(int desId) {
         return ImageFilePath.getImageUrlForCollection(desId, id);
     }
+
+    public static String getImageUrl(int desId, int collId){
+        return ImageFilePath.getImageUrlForCollection(desId, collId);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o != null && o instanceof User)

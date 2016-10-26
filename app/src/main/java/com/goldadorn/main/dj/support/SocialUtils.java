@@ -93,6 +93,7 @@ public class SocialUtils extends SocialLoginUtil {
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         //super.handleActivityResult(requestCode, resultCode, data);
         Log.d(Constants.TAG, "onActivity result - SocialUtils");
+        if (callbackManager != null)
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
