@@ -189,9 +189,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             sharedPreferences.edit().putBoolean(AppSharedPreferences.LoginInfo.IS_LOGIN_DONE, false)
                     .putString(AppSharedPreferences.LoginInfo.USER_NAME, "")
                     .putString(AppSharedPreferences.LoginInfo.PASSWORD, "").commit();
-            SocialLoginUtil.getInstance().performFbLogout();
-            SocialLoginUtil.getInstance().performGoogleLogout();
-            SocialLoginUtil.getInstance().indicateSignedOut();
+            SocialLoginUtil.getInstance(getBaseContext()).performFbLogout();
+            SocialLoginUtil.getInstance(getBaseContext()).performGoogleLogout();
+            SocialLoginUtil.getInstance(getBaseContext()).indicateSignedOut();
             stopProgress();
             new Action(this).launchActivity(LandingPageActivity.class, true);
 

@@ -436,7 +436,6 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             Toast.makeText(getApplication(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
             return true;
         }
-
         boolean returnVal = false;
         NavigationDataObject navigationDataObject = (NavigationDataObject) getApp().getMainMenu().get(id);
         if (navigationDataObject != null)

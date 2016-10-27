@@ -81,20 +81,21 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private static SocialLoginUtil ourInstance;
     private static Context mAppContext;
 
-    public static SocialLoginUtil getInstance() {
+    public static SocialLoginUtil getInstance(Context appContext) {
 
+        mAppContext = appContext;
         if (ourInstance == null) {
-            mAppContext = Application.getInstance();
-            ourInstance = new SocialLoginUtil();
+            ourInstance = new SocialLoginUtil(appContext);
         }
         return ourInstance;
     }
 
-    protected SocialLoginUtil() {
+    protected SocialLoginUtil(Context context) {
 
         //FacebookSdk.sdkInitialize(mAppContext);
+        mAppContext = context;
         Log.d(Constants.TAG, "Social login new Obj creation");
-        initializeFbAndGlTw();
+        initializeFbAndGlTw(context);
         setFbCallBacks();
     }
 
@@ -124,13 +125,13 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
     private TwitterAuthClient twitAuthClient;
 
 
-    private void initializeFbAndGlTw() {
+    private void initializeFbAndGlTw(Context context) {
 
         TwitterAuthConfig authConfig =
                 new TwitterAuthConfig(Constants.API_KEY_TW,
                         Constants.API_SECRET_TW);
 
-        Fabric.with(mAppContext, new Twitter(authConfig));
+        Fabric.with(context, new Twitter(authConfig));
         twitCore = Twitter.getInstance().core;
         twitAuthClient = new TwitterAuthClient();
 
@@ -147,7 +148,7 @@ public class SocialLoginUtil implements GoogleApiClient.ConnectionCallbacks,
 
 
         // Initializing google plus api client
-        mGoogleApiClient = new GoogleApiClient.Builder(mAppContext)
+        mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, mGoogleSignInOpt)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this).build();

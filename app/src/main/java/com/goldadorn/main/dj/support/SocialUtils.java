@@ -1,6 +1,7 @@
 package com.goldadorn.main.dj.support;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -25,8 +26,8 @@ public class SocialUtils extends SocialLoginUtil {
 
     private static SocialUtils socialUtils;
 
-    private SocialUtils() {
-        super();
+    private SocialUtils(Context context) {
+        super(context);
         shareResults = new
                 FacebookCallback<Sharer.Result>() {
                     @Override
@@ -46,9 +47,9 @@ public class SocialUtils extends SocialLoginUtil {
                 };
     }
 
-    public static SocialUtils getInstance() {
+    public static SocialUtils getInstance(Context context) {
         if (socialUtils == null)
-            socialUtils = new SocialUtils();
+            socialUtils = new SocialUtils(context);
         return socialUtils;
     }
 

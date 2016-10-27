@@ -92,7 +92,7 @@ public class LandingPageActivity extends BaseActivity /*implements GoogleApiClie
         ButterKnife.bind(this);
         TypefaceHelper.setFont(loginAccount, createAccount, orLabel);
 
-        mSocialLoginInstance = SocialLoginUtil.getInstance();
+        mSocialLoginInstance = SocialLoginUtil.getInstance(getBaseContext());
     }
 
 

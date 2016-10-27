@@ -265,9 +265,9 @@ public class MainActivity extends BaseDrawerActivity {
                 public void onClick(View v) {
                     snackbar.dismiss();
                     MixPanelHelper.getInstance().flushDataToMixPanel();
-                    SocialLoginUtil.getInstance().performFbLogout();
-                    SocialLoginUtil.getInstance().performGoogleLogout();
-                    SocialLoginUtil.getInstance().indicateSignedOut();
+                    SocialLoginUtil.getInstance(getBaseContext()).performFbLogout();
+                    SocialLoginUtil.getInstance(getBaseContext()).performGoogleLogout();
+                    SocialLoginUtil.getInstance(getBaseContext()).indicateSignedOut();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -384,7 +384,7 @@ public class MainActivity extends BaseDrawerActivity {
                 return;
             }
         }
-        SocialUtils.getInstance().handleActivityResult(requestCode, resultCode, data);
+        SocialUtils.getInstance(getBaseContext()).handleActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
        /* Log.d("djpost", "onActResult");
         if (requestCode == POST_FEED && resultCode == Activity.RESULT_OK) {

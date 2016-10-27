@@ -304,7 +304,7 @@ public class LoginPageActivity extends BaseActivity {
 //        startActivity(in);
 
         //Author DJphy
-        mSocialLoginInstance = SocialLoginUtil.getInstance();
+        mSocialLoginInstance = SocialLoginUtil.getInstance(getBaseContext());
     }
 
     private boolean checkNetwork(){

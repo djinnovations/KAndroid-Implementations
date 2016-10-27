@@ -530,7 +530,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
         }
 
-        socialUtils = SocialUtils.getInstance();
+        socialUtils = SocialUtils.getInstance(getActivity().getBaseContext());
         int iconSize = 4;
         Drawable icon = IconsUtils.getFontIconDrawable(getActivity(), GoldadornIconFont.Icon.gol_post, R.color.white, iconSize);
         post.setIconDrawable(icon);
