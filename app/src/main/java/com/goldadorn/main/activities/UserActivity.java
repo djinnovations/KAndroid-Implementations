@@ -64,7 +64,7 @@ public class UserActivity extends BaseActivity implements AppBarLayout.OnOffsetC
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        Drawable upArrow = getResources().getDrawable(R.drawable.ic_action_back);
         upArrow.setColorFilter(getResources().getColor(R.color.toolbarIconColor), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 

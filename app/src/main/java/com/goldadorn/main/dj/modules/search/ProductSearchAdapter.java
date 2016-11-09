@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.model.UserSession;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.squareup.picasso.Picasso;
 
@@ -84,13 +86,29 @@ public class ProductSearchAdapter extends RecyclerView.Adapter<ProductSearchAdap
         public BaseHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
             TypefaceHelper.setFont(tvName, userName, designer);
         }
 
 
         @Override
         public void onClick(View v) {
-
+            SocialFeedFragment tempFeed = UserSession.getInstance().getSocialFeedFragment();
+            if (tempFeed != null) {
+                com.goldadorn.main.model.SocialPost post = new com.goldadorn.main.model.SocialPost();
+                post.setPostType(com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST);
+                SearchDataObject.ProductSearchData prod = dataList.get(getAdapterPosition());
+                post.setImage1loc(prod.getImageUrl());
+                post.setIsLiked(0);
+                int likeCnt = 0;
+                try {
+                    likeCnt = 0;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                post.setLikeCount(likeCnt);
+                tempFeed.zoomImages(post, 0);
+            }
         }
     }
 }

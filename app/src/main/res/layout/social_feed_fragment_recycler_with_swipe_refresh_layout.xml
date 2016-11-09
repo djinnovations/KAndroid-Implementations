@@ -4,6 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/rlNewPostHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:elevation="10dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/primary_filling_square_more_curve">
+
+            <TextView
+                android:id="@+id/tvNumOfPost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:text="New Posts"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"

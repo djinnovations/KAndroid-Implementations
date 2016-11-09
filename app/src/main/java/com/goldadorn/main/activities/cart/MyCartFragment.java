@@ -172,9 +172,9 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
             mapOfProdsToQuantity.put(prod.id, prod.quantity);
     }
 
-    private void logEventsAnalytics(String eventName) {
+   /* private void logEventsAnalytics(String eventName) {
         ((Application) getActivity().getApplication()).getFbAnalyticsInstance().logCustomEvent(getActivity(), eventName);
-    }
+    }*/
 
     HashMap<Integer, Integer> mapTransIdQty = new HashMap<>();
 

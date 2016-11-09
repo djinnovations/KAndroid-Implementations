@@ -1,6 +1,8 @@
 package com.goldadorn.main.utils;
 
 
+import android.text.TextUtils;
+
 import com.goldadorn.main.BuildConfig;
 
 import org.apache.http.cookie.Cookie;
@@ -93,6 +95,10 @@ public class URLHelper {
 
     public static String parseImageURL(String url)
     {
+        if (!TextUtils.isEmpty(url)){
+            if (url.contains("http") || url.contains("https"))
+                return url;
+        }
         if(url!=null && url.trim().startsWith("../")) {
             url = url.trim().replace("../", "");
         }

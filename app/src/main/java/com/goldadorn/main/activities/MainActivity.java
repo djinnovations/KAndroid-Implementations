@@ -14,14 +14,17 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
+import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.facebook.appevents.AppEventsConstants;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.post.PostBestOfActivity;
 import com.goldadorn.main.activities.post.PostNormalActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
+import com.goldadorn.main.activities.post.RecommendedNewPostActivity;
 import com.goldadorn.main.dj.gesture.MyGestureListener;
 import com.goldadorn.main.dj.model.UserSession;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.AppTourGuideHelper;
 import com.goldadorn.main.dj.support.GARaterUpdateHelper;
 import com.goldadorn.main.dj.support.SocialLoginUtil;
@@ -38,11 +41,16 @@ import com.goldadorn.main.modules.home.HomePage;
 import com.goldadorn.main.modules.people.FindPeopleFragment;
 import com.goldadorn.main.modules.socialFeeds.FABScrollBehavior;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.views.ColoredSnackbar;
 import com.kimeeo.library.actions.Action;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.kimeeo.library.fragments.BaseFragment;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -327,6 +335,8 @@ public class MainActivity extends BaseDrawerActivity {
                 intent = new Intent(MainActivity.this, PostPollActivity.class);
             else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_BEST_OF)
                 intent = new Intent(MainActivity.this, PostBestOfActivity.class);
+            else if (data.type == com.goldadorn.main.model.SocialPost.POST_TYPE_RECO_NEW)
+                intent = new Intent(MainActivity.this, RecommendedNewPostActivity.class);
             if (intent != null) {
                 Log.d(Constants.TAG_APP_EVENT, "AppEventLog: Create_post_initiation");
                 logEventsAnalytics(GAAnalyticsEventNames.CREATE_POST_INITIATION);
@@ -349,6 +359,13 @@ public class MainActivity extends BaseDrawerActivity {
 
     }
 
+
+    public final int CHECK_FOR_NEW_POST_CALL = IDUtils.generateViewId();
+    public void newPostQuery(String postId){
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(CHECK_FOR_NEW_POST_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQuery().ajax((ApiKeys.isNewPostAvailable(postId)), String.class, ajaxCallback);
+    }
 
 
     /*final private int postCallToken = IDUtils.generateViewId();
@@ -570,6 +587,20 @@ public class MainActivity extends BaseDrawerActivity {
     }
 
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        if (id == CHECK_FOR_NEW_POST_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null, layoutParent, this);
+            if (success){
+                int num;
+                try {
+                    JSONObject jsonObject = new JSONObject(json.toString());
+                    num = jsonObject.getInt("num");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    num = 0;
+                }
+                ((HomePage) activePage).socialFeedFragmentpage.updateUiForNewPost(String.valueOf(num));
+            }
+        }else
        /* Log.d("djmain", "url queried- MainActivity: " + url);
         Log.d("djmain", "response- MainActivity: " + json);
         if (id == postCallToken) {

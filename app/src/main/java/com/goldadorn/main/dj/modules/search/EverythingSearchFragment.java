@@ -30,12 +30,8 @@ public class EverythingSearchFragment extends Fragment{
     }
 
 
-
-    static
     View desHolder;
-    static
     View collHolder;
-    static
     View prodHolder;
 
     @Bind(R.id.rvDesigner)
@@ -57,6 +53,29 @@ public class EverythingSearchFragment extends Fragment{
     @Bind(R.id.tvProdViewAll)
     TextView tvProdViewAll;
 
+    View.OnClickListener viewAllColl = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((SearchActivity) getActivity()).onPageChange(2);
+        }
+    };
+
+    View.OnClickListener viewAllDes = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((SearchActivity) getActivity()).onPageChange(1);
+        }
+    };
+
+
+    View.OnClickListener viewAllProd = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((SearchActivity) getActivity()).onPageChange(3);
+        }
+    };
+
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -67,11 +86,14 @@ public class EverythingSearchFragment extends Fragment{
         UiRandomUtils.setTypefaceBold(tvTitleColl, tvTitleDes, tvTitleProd);
         TypefaceHelper.setFont(tvCollViewAll, tvDesViewAll, tvProdViewAll);
         setUpRecyclerViews();
+        tvCollViewAll.setOnClickListener(viewAllColl);
+        tvDesViewAll.setOnClickListener(viewAllDes);
+        tvProdViewAll.setOnClickListener(viewAllProd);
     }
 
-    static DesignerSearchAdapter designerAdapter;
-    static CollectionSearchAdapter collAdapter;
-    static ProductSearchAdapter prodAdapter;
+     DesignerSearchAdapter designerAdapter;
+     CollectionSearchAdapter collAdapter;
+     ProductSearchAdapter prodAdapter;
 
     private void setUpRecyclerViews(){
 
@@ -101,7 +123,7 @@ public class EverythingSearchFragment extends Fragment{
         rvProduct.setAdapter(prodAdapter);
     }
 
-    public static void updateEComm(SearchDataObject dataObject){
+    public void updateEComm(SearchDataObject dataObject){
         if (dataObject.getCollList() != null) {
             if (dataObject.getCollList().size() == 0)
                 collHolder.setVisibility(View.GONE);
@@ -121,7 +143,7 @@ public class EverythingSearchFragment extends Fragment{
         }else prodHolder.setVisibility(View.GONE);
     }
 
-    public static void updateSocial(SearchDataObject dataObject){
+    public void updateSocial(SearchDataObject dataObject){
         if (dataObject.getDesigners() != null) {
             if (dataObject.getDesigners().size() == 0)
                 desHolder.setVisibility(View.GONE);

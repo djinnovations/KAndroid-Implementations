@@ -9,6 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/socialElementsHolder"
+        android:layout_below="@+id/div"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -148,7 +149,7 @@
         android:id="@+id/div"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/socialElementsHolder"
+        android:layout_below="@+id/recoItemHolder"
         android:layout_marginBottom="@dimen/padding_default_half"
         android:layout_marginTop="@dimen/padding_default_half"
         android:background="@color/feedFotterDivColor"
@@ -158,10 +159,8 @@
         android:id="@+id/recoItemHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/div"
         android:orientation="vertical"
         android:paddingBottom="16dp"
-
         android:visibility="gone">
 
         <TextView

@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:stl_clickable="false"
+        app:stl_clickable="true"
         app:stl_customTabTextLayoutId="@layout/search_tab_item"
         app:stl_dividerColor="@color/colorPrimary"
         app:stl_dividerThickness="2dp"

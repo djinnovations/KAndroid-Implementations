@@ -4,8 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
+import com.clevertap.android.sdk.ActivityLifecycleCallback;
+import com.clevertap.android.sdk.CleverTapAPI;
+import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
+import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.facebook.FacebookSdk;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.CartManagerActivity;
@@ -68,6 +73,12 @@ public class Application extends BaseApplication {
         return people;
     }
 
+    @Override
+    public void onCreate(Fragment fragment) {
+        ActivityLifecycleCallback.register(this);
+        super.onCreate(fragment);
+    }
+
     private People people;
 
     public User getUser() {
@@ -104,6 +115,21 @@ public class Application extends BaseApplication {
             mPrefInstance = DjphyPreferenceManager.getInstance(this);
         }
         return mPrefInstance;
+    }
+
+    private CleverTapAPI cleverTap;
+
+    public CleverTapAPI getCleverTapInstance(){
+        try {
+            if (cleverTap == null)
+            cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+            return cleverTap;
+        } catch (CleverTapMetaDataNotFoundException e) {
+            // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
+        } catch (CleverTapPermissionsNotSatisfied e) {
+            // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
+        }
+        return cleverTap;
     }
 
     @Override

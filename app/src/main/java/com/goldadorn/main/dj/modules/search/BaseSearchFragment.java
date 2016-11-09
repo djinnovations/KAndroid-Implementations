@@ -60,6 +60,11 @@ public abstract class BaseSearchFragment extends DefaultVerticalListView{
     }
 
     @Override
+    public void onItemClick(Object baseObject) {
+        super.onItemClick(baseObject);
+    }
+
+    @Override
     public void onViewCreated(View view) {
         //super.onViewCreated(view);
         colorList = new ArrayList<>();
@@ -76,7 +81,7 @@ public abstract class BaseSearchFragment extends DefaultVerticalListView{
 
     protected void configDataManager(DataManager dataManager) {
         super.configDataManager(dataManager);
-        dataManager.setRefreshEnabled(false);
+        dataManager.setRefreshEnabled(true);
     }
 
     protected RecyclerView.ItemDecoration createItemDecoration() {

@@ -575,8 +575,12 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                 mFrameScrollDummy.setVisibility(View.INVISIBLE);
                 mFrameNoScrollDummy.setVisibility(View.VISIBLE);
             }
-            else if (f instanceof ProductsFragment)
+            else if (f instanceof ProductsFragment) {
+                /*id = R.id.frame_scroll_dummy;
+                mFrameScrollDummy.setVisibility(View.VISIBLE);
+                mFrame.setVisibility(View.INVISIBLE);*/
                 id = R.id.frame;
+            }
             FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(id, f);

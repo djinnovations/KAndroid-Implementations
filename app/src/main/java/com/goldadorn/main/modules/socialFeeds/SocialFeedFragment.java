@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -100,6 +101,7 @@ import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
+import com.mikepenz.entypo_typeface_library.Entypo;
 import com.nineoldandroids.animation.Animator;
 import com.squareup.picasso.Picasso;
 import com.volokh.danylo.hashtaghelper.HashTagHelper;
@@ -215,6 +217,43 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         }
     };
 
+    public void checkForNewPosts() {
+        if (getAppMainActivity() != null) {
+
+        }
+    }
+
+    View.OnClickListener newPostUpdaterClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (getActivity() instanceof MainActivity) {
+                MainActivity mainView = (MainActivity) getActivity();
+                mainView.forceRefresh();
+            }
+        }
+    };
+
+
+    @Nullable
+    @Bind(R.id.rlNewPostHolder)
+    View rlNewPostHolder;
+    @Nullable
+    @Bind(R.id.tvNumOfPost)
+    TextView tvNumOfPost;
+
+    public void updateUiForNewPost(String numOfNewPost) {
+        if (rlNewPostHolder != null) {
+            if (numOfNewPost.equals("0"))
+                rlNewPostHolder.setVisibility(View.GONE);
+            else {
+                rlNewPostHolder.setVisibility(View.VISIBLE);
+                tvNumOfPost.setText(numOfNewPost + " New Posts");
+            }
+        }
+        //rlNewPostHolder.performClick();
+    }
+
+
     protected boolean isHashTagFunctionAllowed() {
         return true;
     }
@@ -259,9 +298,10 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         ft.detach(this).attach(this).commit();*/
         //askToRefresh();
         if (socialPost == null) {
-            Log.d("djfeed", "normal postAdded: postid: " + postId);
-            postIdMain = postId;
-            refreshPosts(-1);
+            Log.d("djfeed", "reco new post type postAdded: postid: " + postId);
+            /*postIdMain = postId;
+            refreshPosts(-1);*/
+            newPostUpdaterClick.onClick(null);
         } else {
             Log.d("djfeed", "postAdded- custom");
             postIdMain = postId;
@@ -315,6 +355,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         params.put("reco", 1);
         params.put("mlp", 1);
         params.put("trend", 1);
+        params.put("style", 1);
         Log.d("djfeed", "socialfeed- req params: " + params);
         return params;
     }
@@ -379,12 +420,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
     @Bind(R.id.post)
     FloatingActionButton post;
-
     @Bind(R.id.poll)
     FloatingActionButton poll;
-
     @Bind(R.id.bestof)
     FloatingActionButton bestof;
+    @Bind(R.id.recoNew)
+    FloatingActionButton recoNew;
 
     @Bind(R.id.refreshTriger)
     Button refreshTriger;
@@ -439,6 +480,12 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     @OnClick(R.id.bestof)
     void onBestofClick() {
         EventBus.getDefault().post(new com.goldadorn.main.eventBusEvents.SocialPost(SocialPost.POST_TYPE_BEST_OF, this));
+        closeMenu();
+    }
+
+    @OnClick(R.id.recoNew)
+    void onRecoNewClick() {
+        EventBus.getDefault().post(new com.goldadorn.main.eventBusEvents.SocialPost(SocialPost.POST_TYPE_RECO_NEW, this));
         closeMenu();
     }
 
@@ -510,6 +557,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
     SocialUtils socialUtils;
+
     public void onViewCreated(View view) {
         if (getActivity() instanceof MainActivity)
             setUserInfoCache();
@@ -530,6 +578,11 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             }
         }
 
+        if (rlNewPostHolder != null) {
+            rlNewPostHolder.setVisibility(View.GONE);
+            rlNewPostHolder.setOnClickListener(newPostUpdaterClick);
+        }
+
         socialUtils = SocialUtils.getInstance(getActivity().getBaseContext());
         int iconSize = 4;
         Drawable icon = IconsUtils.getFontIconDrawable(getActivity(), GoldadornIconFont.Icon.gol_post, R.color.white, iconSize);
@@ -541,6 +594,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
         icon = IconsUtils.getFontIconDrawable(getActivity(), GoldadornIconFont.Icon.gol_best_of, R.color.white, iconSize);
         bestof.setIconDrawable(icon);
+
+        icon = IconsUtils.getFontIconDrawable(getActivity(), Entypo.Icon.ent_thumbs_up, R.color.white, iconSize);
+        recoNew.setIconDrawable(icon);
 
         mFloatingActionsMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
             public void onMenuExpanded() {
@@ -879,6 +935,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public static final int VIEW_RATC = 35;
         public static final int VIEW_MOST_LIKED = 40;
         public static final int VIEW_TRENDING_HASHTAG = 45;
+        public static final int VIEW_RECO_NEW = 50;
     }
 
     public static boolean reateItemAdded = false;
@@ -923,8 +980,9 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 return ViewTypes.VIEW_ATC;
             else if (post.getPostType() == SocialPost.POST_TREDING_TAGS)
                 return ViewTypes.VIEW_TRENDING_HASHTAG;
-            else
-                return ViewTypes.VIEW_NORMAL;
+            else if (post.getPostType() == SocialPost.POST_TYPE_RECO_NEW)
+                return ViewTypes.VIEW_RECO_NEW;
+            else return ViewTypes.VIEW_NORMAL;
         }
 
     }
@@ -948,13 +1006,15 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         else if (viewType == ViewTypes.VIEW_BEST_OF)
             return new BestOfPostItemHolder(view);
         else if ((viewType == ViewTypes.VIEW_RECO_PROD) || (viewType == ViewTypes.VIEW_RATC) ||
-                (viewType == ViewTypes.VIEW_MOST_LIKED)) {
-            String title = "Recommended Products For You";
+                (viewType == ViewTypes.VIEW_MOST_LIKED) || (viewType == ViewTypes.VIEW_RECO_NEW)) {
+            String title = "Recommended Products";
             /*if (viewType == ViewTypes.VIEW_RECO_PROD)
             title = "Recommended Products For You";*/
             if (viewType == ViewTypes.VIEW_RATC)
                 title = "Recently Added To Cart";
-            else if (viewType == ViewTypes.VIEW_MOST_LIKED)
+            else if (viewType == ViewTypes.VIEW_RECO_NEW) {
+                return new RecommendedNewPostItemHolder(view, title);
+            } else if (viewType == ViewTypes.VIEW_MOST_LIKED)
                 title = "Most Liked Products By Users";
             return new RecommendedProductsItemHolder(view, title);
         } else if ((viewType == ViewTypes.VIEW_TRENDING_HASHTAG))
@@ -1561,7 +1621,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 logEventsAnalytics(GAAnalyticsEventNames.POST_BOT);
             }
 
-            String selection = Tables.Products._ID + "=?";
+            /*String selection = Tables.Products._ID + "=?";
             String[] selArgs = new String[]{id.trim()};
 
             Cursor prodCursor = getContext().getContentResolver().query(Tables.Products.CONTENT_URI, null, selection, selArgs, null);
@@ -1574,7 +1634,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     return;
                 }
             }
-            productInfoFromServer(socialPost, id.trim());
+            productInfoFromServer(socialPost, id.trim());*/
+            checkProdInDb(id, socialPost);
 
             /*
             String profuctLink=URLHelper.getInstance().getWebSiteProductEndPoint()+isProductLink(imageURL)+".html";
@@ -1619,7 +1680,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 logEventsAnalytics(GAAnalyticsEventNames.POST_RECO);
             }
 
-
+            checkProdInDb(id, socialPost);
 
 
             /*
@@ -1740,7 +1801,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                             }
                         });
                     }
-                }else{
+                } else {
                     dialog.dismiss();
                     Toast.makeText(getContext(), "No Product Details Available", Toast.LENGTH_SHORT).show();
                 }
@@ -1980,6 +2041,83 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             };
             adapter = new TrendingHashTagAdapter(new ArrayList<String>(), itemClickChild);
             mRecyclerView.setAdapter(adapter);
+        }
+    }
+
+
+    public class RecommendedNewPostItemHolder extends NormalPostItemHolder {
+
+
+        @Bind(R.id.headerHolder)
+        View headerHolder;
+        @Bind(R.id.socialElementsHolder)
+        View socialElementsHolder;
+        @Bind(R.id.detailsHolder)
+        View detailsHolder;
+        @Bind(R.id.recoItemHolder)
+        View recoItemHolder;
+        @Bind(R.id.recomandationLabel)
+        TextView recomandationLabel;
+        @Bind(R.id.recyclerView)
+        RecyclerView mRecyclerView;
+        /*@Bind(R.id.fabNext)
+        android.support.design.widget.FloatingActionButton ivNextSetScroll;*/
+
+        SocialPost socialPost;
+        RecommendedProductsAdapter mRecoProdAdapter;
+
+        RecommendedProductsAdapter.RecommendedPostClick itemClick = new RecommendedProductsAdapter.RecommendedPostClick() {
+            @Override
+            public void onRecommendedPostClick(String url, int isLiked, int likeCounts) {
+                socialPost.setIsLiked(isLiked);
+                socialPost.setLikeCount(likeCounts);
+                gotoRecomendedProd(socialPost, url);
+            }
+        };
+
+        @Override
+        public void updatePostView(final SocialPost item, View view, int position) {
+            try {
+                super.updatePostView(item, view, position);
+                socialPost = item;
+                mRecoProdAdapter.addList(/*getUrlList(*/socialPost.getRecoProducts()/*)*/);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public RecommendedNewPostItemHolder(View itemView, String title) {
+            super(itemView);
+            try {
+                ButterKnife.bind(this, itemView);
+                initRecomendProdRecyclerView();
+                //headerHolder.setVisibility(View.GONE);
+                //socialElementsHolder.setVisibility(View.GONE);
+                //detailsHolder.setVisibility(View.GONE);
+                recoItemHolder.setVisibility(View.VISIBLE);
+                recomandationLabel.setText(title);
+                //ivNextSetScroll.setOnClickListener(mClick);
+                TypefaceHelper.setFont(recomandationLabel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        LinearLayoutManager mLayoutManager;
+
+        protected void initRecomendProdRecyclerView() {
+            mRecyclerView.setHasFixedSize(false);
+            mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+            mRecyclerView.setLayoutManager(mLayoutManager);
+            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            mRecoProdAdapter = new RecommendedProductsAdapter(new ArrayList<RecommendedProduct>(), itemClick);
+            mRecyclerView.setAdapter(mRecoProdAdapter);
+            /*int color = ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.colorBlackDimText);
+            ivNextSetScroll.setImageDrawable(new IconicsDrawable(Application.getInstance())
+                    .icon(GoogleMaterial.Icon.gmd_keyboard_arrow_right)
+                    .color(color)
+                    .sizeDp(20));*/
+            //setScrollUpdates();
         }
     }
 
@@ -2302,16 +2440,21 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     shareActionData.setParam(map);
                     if (getAppMainActivity() != null)
                         getAppMainActivity().action(shareActionData);*/
-                    String discnt = socialPost.getDiscount1();
-                    if (TextUtils.isEmpty(discnt))
+                    double discount = -1;
+                    try {
+                        if (!TextUtils.isEmpty(socialPost.getDiscount1()))
+                            discount = Double.parseDouble(socialPost.getDiscount1());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    String discnt = "";
+                    if (discount <= 0)
                         discnt = "";
-                    else if (discnt.equalsIgnoreCase("0.0"))
-                        discnt = "";
-                    else discnt = discnt + " off";
-                    socialUtils.publishLinkPost(getActivity(), "http://www.goldadorn.com", "GoldAdorn Jewelry",
-                            socialPost.getRange1() + discnt, socialPost.getImage1loc());
-                }
+                    else discnt = "("+String.valueOf(Math.round(discount)) + "%" + " off"+")";
 
+                    socialUtils.publishLinkPost(getActivity(), "http://www.goldadorn.com", "GoldAdorn Jewelry",
+                            socialPost.getRange1() + "\t" + discnt, socialPost.getImage1loc());
+                }
 
             }
         };
@@ -2458,7 +2601,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     .resize(100, 100)
                     .into(userImage);
 
-            if (getAppMainActivity() != null){
+            if (getAppMainActivity() != null) {
                 getAppMainActivity().isShowFilterPanel(false);
             }
             updatePostView(socialPost, view, position);
@@ -2537,7 +2680,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     @Override
     protected void onDataScroll(RecyclerView recyclerView, int dx, int dy) {
         super.onDataScroll(recyclerView, dx, dy);
-        if (getAppMainActivity() != null){
+        if (getAppMainActivity() != null) {
             getAppMainActivity().isShowFilterPanel(false);
         }
     }

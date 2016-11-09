@@ -1,7 +1,6 @@
 package com.goldadorn.main.model;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.model.RecommendedProduct;
@@ -29,6 +28,7 @@ public class SocialPost extends ServerError implements IParseableObject {
     public static final Integer POST_RATC = 11;
     public static final Integer POST_MOST_LIKED = 12;
     public static final Integer POST_TREDING_TAGS = 13;
+    public static final Integer POST_TYPE_RECO_NEW = 15;
 
     private Integer isDesigner = 1;
     private Integer bof3Percent1;
@@ -331,7 +331,11 @@ public class SocialPost extends ServerError implements IParseableObject {
         }
         else if (getType().trim().equals("13")){
             setPostType(POST_TREDING_TAGS);
-        }else setPostType(POST_TYPE_NORMAL_POST);
+        }else if (getType().trim().equals("15")){
+            setPostType(POST_TYPE_RECO_NEW);
+        }
+
+        else setPostType(POST_TYPE_NORMAL_POST);
 
 
         if (this.postType.equals(POST_RECOMMENDED_PRODS) || this.postType.equals(POST_MOST_LIKED)

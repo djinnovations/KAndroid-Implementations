@@ -59,16 +59,26 @@ public class LikelistActivity extends WishListManagerActivity{
         if (id == LIKE_LIST_CALL){
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mRecyclerView, this);
+            loading = false;
             if (success){
                 try {
                     ArrayList temp;
                     JSONObject jsonObject = new JSONObject(json.toString());
                     JSONArray jsonArray = jsonObject.getJSONArray("likes");
-                    mAdapter.changeData(temp = extractData(jsonArray));
+                    offset = jsonObject.getInt("offset");
+                    if (jsonArray.length() == 0) {
+                        //seenAllNotification = true;
+                        stopPagination();
+                        return;
+                    }
                     if (isFirstTime){
                         isFirstTime = false;
+                        setUpPaginate();
+                        mAdapter.changeData(temp = extractData(jsonArray));
                         updateEmptyStatus(temp);
                     }
+                    else
+                        mAdapter.addNewData(extractData(jsonArray));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

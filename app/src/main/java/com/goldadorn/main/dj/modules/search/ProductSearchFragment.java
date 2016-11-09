@@ -6,8 +6,11 @@ import android.util.Log;
 import android.view.View;
 
 import com.goldadorn.main.R;
+import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.server.ApiKeys;
+import com.goldadorn.main.model.Product;
 import com.goldadorn.main.modules.modulesCore.CodeDataParser;
+import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.kimeeo.library.listDataView.dataManagers.BaseDataParser;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
 import com.kimeeo.library.listDataView.dataManagers.PageData;
@@ -44,6 +47,40 @@ public class ProductSearchFragment extends BaseSearchFragment {
         return params;
     }
 
+    @Override
+    public void onItemClick(Object baseObject) {
+        //super.onItemClick(baseObject);
+
+        SocialFeedFragment tempFeed = UserSession.getInstance().getSocialFeedFragment();
+        if (tempFeed != null) {
+            com.goldadorn.main.model.SocialPost post = new com.goldadorn.main.model.SocialPost();
+            post.setPostType(com.goldadorn.main.model.SocialPost.POST_TYPE_NORMAL_POST);
+            SearchDataObject.ProductSearchData prod = (SearchDataObject.ProductSearchData) baseObject;
+            post.setImage1loc(prod.getImageUrl());
+            post.setIsLiked(0);
+            int likeCnt = 0;
+            try {
+                likeCnt = 0;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            post.setLikeCount(likeCnt);
+            tempFeed.zoomImages(post, 0);
+        }
+    }
+
+        @Override
+        public String getRefreshDataURL (PageData pageData){
+            return getNextDataURL(null);
+        }
+
+
+    public void callLoad() {
+        getDataManager().removeAll(getDataManager());
+        loadRefreshData();
+    }
+
+
     public Class getLoadedDataParsingAwareClass() {
         return ProductResult.class;
     }
@@ -60,6 +97,14 @@ public class ProductSearchFragment extends BaseSearchFragment {
         }
 
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
+            return getNextDataParams(data);
+        }
+
+        @Override
+        public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
+            offset = 0;
+            data.curruntPage = 1;
+            data.totalPage = 2;
             return getNextDataParams(data);
         }
 

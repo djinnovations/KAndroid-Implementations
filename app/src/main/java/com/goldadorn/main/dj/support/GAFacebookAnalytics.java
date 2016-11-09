@@ -8,6 +8,8 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.dj.utils.Constants;
 
+import java.util.HashMap;
+
 
 /**
  * Created by User on 21-05-2016.
@@ -16,15 +18,19 @@ public class GAFacebookAnalytics {
 
 
     public void logCustomEvent(Activity activity, String eventName){
-
         AppEventsLogger logger = AppEventsLogger.newLogger(activity);
         logger.logEvent(eventName);
+        Application.getInstance().getCleverTapInstance().event.push(eventName);
     }
 
     public void logCustomEvent(Activity activity, String eventName, Bundle bundle){
-
         AppEventsLogger logger = AppEventsLogger.newLogger(activity);
         logger.logEvent(eventName, bundle);
+        HashMap<String, Object> map = new HashMap<>();
+        for (String key: bundle.keySet()){
+            map.put(key, bundle.get(key));
+        }
+        Application.getInstance().getCleverTapInstance().event.push(eventName, map);
     }
 
 

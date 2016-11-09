@@ -28,6 +28,7 @@ import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
 import com.goldadorn.main.dj.utils.TemporarySocialPostParser;
 import com.goldadorn.main.eventBusEvents.AppActions;
 import com.goldadorn.main.model.NavigationDataObject;
+import com.goldadorn.main.model.SocialPost;
 import com.goldadorn.main.modules.socialFeeds.SocialFeedFragment;
 import com.goldadorn.main.sharedPreferences.AppSharedPreferences;
 import com.goldadorn.main.utils.IDUtils;
@@ -150,6 +151,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         Map<String, String> params = new HashMap<>();
         params.put("token", token);
         getAQuery().ajax(ApiKeys.getSendFcmTokenAAPI(), params, String.class, getAjaxCallback(SEND_FCM_TOKEN_CALL));
+        setCleverTapUserProfile();
+    }
+
+    private void setCleverTapUserProfile(){
+        HashMap<String, Object> profileUpdate = new HashMap<>();
+        profileUpdate.put("Name", Application.getInstance().getUser().name);                // String
+        profileUpdate.put("Identity", Application.getInstance().getUser().id);                    // String or number
+        //profileUpdate.put("Email", "jack@gmail.com");             // Email address of the user
+        //profileUpdate.put("Phone", 4155551234);                     // Phone (without the country code)
+        profileUpdate.put("MSG-email", false);                      // Disable email notifications
+        profileUpdate.put("MSG-push", false);                        // Enable push notifications
+        profileUpdate.put("MSG-sms", false);
+        Application.getInstance().getCleverTapInstance().profile.push(profileUpdate);
     }
 
     protected void gotoApp() {
@@ -227,7 +241,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 tempPostObj.setPostId(postId);
                 if (isUploaded)
                     tempPostObj.setUploadedImages(uploadedUrls);
-                com.goldadorn.main.model.SocialPost socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
+                com.goldadorn.main.model.SocialPost socialPost = null;
+                if (recentlyPostedPost != SocialPost.POST_TYPE_RECO_NEW)
+                    socialPost = TemporarySocialPostParser.getSocialPostObj(tempPostObj);
                 if (isMainActivity) {
                         /*if (activePage instanceof HomePage) {
                             ((HomePage) activePage).socialFeedFragmentpage.postAdded(socialPost);
@@ -333,7 +349,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
     private void postLog(String paramName) {
-
         Bundle bundle = new Bundle();
         bundle.putString(AppEventsConstants.EVENT_PARAM_LEVEL, paramName);
         Log.d(com.goldadorn.main.dj.utils.Constants.TAG_APP_EVENT, "AppEventLog: Nav_Slidemenu and itemSelected: " + paramName);
@@ -656,6 +671,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void logEventsAnalytics(String eventName) {
         getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName);
+        //Application.getInstance().getCleverTapInstance().event.push(eventName);
     }
 
     protected void logEventsAnalytics(String eventName, Bundle bundle) {
@@ -669,4 +685,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void logEventsAnalytics(String eventName, double valueToSum, Bundle bundle) {
         getApp().getFbAnalyticsInstance().logCustomEvent(this, eventName, valueToSum, bundle);
     }
+
+
 }

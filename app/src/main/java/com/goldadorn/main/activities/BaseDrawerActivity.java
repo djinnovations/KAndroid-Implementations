@@ -82,7 +82,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_settings,
             R.id.nav_logout, R.id.nav_people, R.id.nav_my_likes,
             R.id.nav_size_guide, R.id.nav_buy_back_policy,
-            R.id.nav_dia_qual_guide, R.id.nav_my_orders
+            R.id.nav_dia_qual_guide, R.id.nav_my_orders,
+            R.id.rlGoldHolder, R.id.rlDiamondHolder
     })
     public void menuButtonClick(View view) {
         int id = view.getId();
@@ -115,7 +116,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
 
 
-    protected void menuAction(int id) {
+    public void menuAction(int id) {
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -166,7 +167,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
-    @Bind({R.id.nav_share, R.id.nav_share_facebook,
+    @Bind({R.id.tvGoldCoinCnt, R.id.tvDiamondCnt, R.id.nav_share, R.id.nav_share_facebook,
             R.id.nav_rate_us, R.id.nav_contact_us, R.id.nav_rate_us_new,
             R.id.labelHome, R.id.labelFeed,
             R.id.labelTimeLine, R.id.labelShowcase,
@@ -432,8 +433,8 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_my_search) {
-            //startActivity(new Intent(this, SearchActivity.class));
-            Toast.makeText(getApplication(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, SearchActivity.class));
+            //Toast.makeText(getApplication(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
             return true;
         }
         boolean returnVal = false;
@@ -471,7 +472,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         View headerLayout = vNavigation.getHeaderView(0);
 
         TextView userName = (TextView) headerLayout.findViewById(R.id.userName);
-        Button editProfile = (Button) headerLayout.findViewById(R.id.editProfile);
+        /*Button editProfile = (Button) headerLayout.findViewById(R.id.editProfile);
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -483,7 +484,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                     drawerLayout.closeDrawer(GravityCompat.START);
                 }
             }
-        });
+        });*/
         TypefaceHelper.setFont(userName);
         User user = getApp().getUser();
         if (user != null) {

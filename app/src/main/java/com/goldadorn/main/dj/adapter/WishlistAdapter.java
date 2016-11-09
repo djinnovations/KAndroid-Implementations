@@ -121,6 +121,12 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.Wishli
         notifyDataSetChanged();
     }
 
+
+    public void addNewData(ArrayList<Product> products){
+        this.products.addAll(products);
+        notifyDataSetChanged();
+    }
+
     View.OnClickListener removeFrmWishlistClick = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {

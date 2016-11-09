@@ -31,6 +31,17 @@ public class DesignerSearchFragment extends BaseSearchFragment {
         return ApiKeys.getSearchAPI(true);
     }
 
+    @Override
+    public String getRefreshDataURL(PageData pageData) {
+        return getNextDataURL(null);
+    }
+
+
+    public void callLoad() {
+        getDataManager().removeAll(getDataManager());
+        loadRefreshData();
+    }
+
     //"designer":"1","tag":"go","designerOffset":"0"
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();
@@ -58,6 +69,22 @@ public class DesignerSearchFragment extends BaseSearchFragment {
 
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
+        }
+
+        @Override
+        public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
+            offset = 0;
+            data.curruntPage = 1;
+            data.totalPage = 2;
+            return getNextDataParams(data);
+        }
+
+        protected boolean isRefreshPage(PageData pageData, String url) {
+            try {
+                return false;
+            } catch (Exception var4) {
+                return false;
+            }
         }
 
         @Override

@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * Created by User on 25-10-2016.
  */
-public class CollectionSearchFragment extends BaseSearchFragment{
+public class CollectionSearchFragment extends BaseSearchFragment {
 
     private static final String TAG = "CollSearchFragment";
     private int offset;
@@ -50,6 +50,17 @@ public class CollectionSearchFragment extends BaseSearchFragment{
         return params;
     }
 
+    @Override
+    public String getRefreshDataURL(PageData pageData) {
+        return getNextDataURL(null);
+    }
+
+
+    public void callLoad() {
+        getDataManager().removeAll(getDataManager());
+        loadRefreshData();
+    }
+
     public Class getLoadedDataParsingAwareClass() {
         return CollectionResults.class;
     }
@@ -67,6 +78,23 @@ public class CollectionSearchFragment extends BaseSearchFragment{
 
         public Map<String, Object> getNextDataServerCallParams(PageData data) {
             return getNextDataParams(data);
+        }
+
+
+        @Override
+        public Map<String, Object> getRefreshDataServerCallParams(PageData data) {
+            offset = 0;
+            data.curruntPage = 1;
+            data.totalPage = 2;
+            return getNextDataParams(data);
+        }
+
+        protected boolean isRefreshPage(PageData pageData, String url) {
+            try {
+                return false;
+            } catch (Exception var4) {
+                return false;
+            }
         }
 
         @Override
@@ -97,9 +125,10 @@ public class CollectionSearchFragment extends BaseSearchFragment{
         return new CollectionViewHolder(view);
     }
 
-    class CollectionViewHolder extends BaseSearchViewHolder{
+    class CollectionViewHolder extends BaseSearchViewHolder {
 
         SearchDataObject.CollectionSearchData searchDataObject;
+
         public CollectionViewHolder(View itemView) {
             super(itemView);
         }
@@ -109,7 +138,7 @@ public class CollectionSearchFragment extends BaseSearchFragment{
             //super.updateItemView(obj, view, i);
             searchDataObject = (SearchDataObject.CollectionSearchData) obj;
             userName.setText(searchDataObject.getCollectionTitle());
-            designer.setText("By "+searchDataObject.getDesgnName());
+            designer.setText("By " + searchDataObject.getDesgnName());
             if (!TextUtils.isEmpty(searchDataObject.getImageUrl())) {
                 userImage.setVisibility(View.VISIBLE);
                 llNameHolder.setVisibility(View.INVISIBLE);

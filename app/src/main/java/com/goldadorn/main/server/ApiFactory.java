@@ -174,7 +174,8 @@ public class ApiFactory extends ExtractResponse {
             case GET_WISHLIST: {
                 builder.appendPath("goldadorn_dev");
                 builder.appendPath("rest");
-                builder.appendPath("fetchwishes");
+                builder.appendPath("fetchwishesv211");
+                builder.appendPath(String.valueOf(((ProductResponse) urlBuilder.mResponse).offset));
                 break;
             }
             case DELETE_WISHLIST: {
@@ -343,8 +344,21 @@ public class ApiFactory extends ExtractResponse {
             Response httpResponse = ServerRequest.doGetRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder));
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
+            //if (response.responseContent != null){
+                try {
+                    JSONObject jsonObject = new JSONObject(response.responseContent);
+                    response.offset = jsonObject.getInt("offset");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.offset = -1;
+                }
+            //}
             L.d("getWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
+            if (response.offset < 0){
+                response.success = false;
+                response.responseCode = BasicResponse.IO_EXE;
+            }
         } else {
             response.success = false;
             response.responseCode = BasicResponse.IO_EXE;

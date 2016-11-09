@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,12 +12,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-       <FrameLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="260dp">
+            android:layout_height="268dp">
 
         </FrameLayout>
-
 
 
         <TextView
@@ -26,36 +24,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"
             android:layout_marginTop="16dp"
-            tools:text="Product Name"/>
+            android:gravity="center"
+            tools:text="Product Name" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:padding="8dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                tools:text="Product Price"/>
+                tools:text="Product Price" />
+
             <TextView
                 android:id="@+id/product_price_slash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:paddingTop="8dp"
                 android:textSize="14sp"
                 tools:text="Product Price" />
 
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/ivMyLikes"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/social_button_bg"
+                android:padding="8dp" />
 
+        </LinearLayout>
 
         <Button
             android:id="@+id/buyButton"
@@ -65,27 +69,25 @@
             android:layout_marginBottom="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginRight="24dp"
-            android:layout_marginTop="16dp"
-            android:text="About Product / Buy"/>
-
+            android:layout_marginTop="6dp"
+            android:text="About Product / Buy" />
 
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/cards_data"
         android:layout_width="match_parent"
-        android:layout_gravity="top"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="top">
 
-        <com.lorentzos.flingswipe.SwipeFlingAdapterView
-            android:id="@+id/swipe_deck"
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <com.lorentzos.flingswipe.SwipeFlingAdapterView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/swipe_deck"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
-            android:layout_height="match_parent"
-            app:SwipeFlingStyle="@style/SwipeFling"/>
+            app:SwipeFlingStyle="@style/SwipeFling" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,24 +101,22 @@
                 android:layout_height="46dp"
                 android:layout_marginLeft="12dp"
                 android:layout_marginRight="@dimen/padding_default_half"
-                android:elevation="5dp"
-                >
+                android:elevation="5dp">
 
                 <ImageView
                     android:id="@+id/dislike_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/bg_dislike"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
 
                 <com.mikepenz.iconics.view.IconicsButton
                     android:id="@+id/dislikeButton"
                     style="@style/ShowcaseButton"
-                    android:layout_gravity="center"
                     android:layout_width="@dimen/circle_button_small_height"
                     android:layout_height="@dimen/circle_button_small_height"
-                    android:text="@string/icon_heart_dislike"/>
+                    android:layout_gravity="center"
+                    android:text="@string/icon_heart_dislike" />
             </FrameLayout>
 
             <View
@@ -126,30 +126,31 @@
                 android:paddingBottom="24dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingTop="24dp"/>
+                android:paddingTop="24dp" />
 
             <FrameLayout
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_marginLeft="@dimen/padding_default_half"
                 android:layout_marginRight="12dp"
-                android:elevation="5dp"
-                >
+                android:elevation="5dp">
+
                 <ImageView
                     android:id="@+id/like_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/bg_like"
-                    android:visibility="gone"
-                    />
+                    android:visibility="gone" />
+
 
                 <com.mikepenz.iconics.view.IconicsButton
                     android:id="@+id/likeButton"
                     style="@style/ShowcaseButton"
-                    android:layout_gravity="center"
                     android:layout_width="@dimen/circle_button_small_height"
                     android:layout_height="@dimen/circle_button_small_height"
-                    android:text="@string/icon_heart_like"/>
+                    android:layout_gravity="center"
+                    android:text="@string/icon_heart_like" />
+
             </FrameLayout>
 
         </LinearLayout>
@@ -174,8 +175,7 @@
             android:text="That's all folks!"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp"
-            android:textStyle="italic"
-            />
+            android:textStyle="italic" />
     </FrameLayout>
 
 </FrameLayout>

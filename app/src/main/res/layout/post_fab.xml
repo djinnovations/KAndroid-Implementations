@@ -38,8 +38,6 @@
         app:fab_colorNormal="@color/fabButtonNormal"
         app:fab_colorPressed="@color/fabButtonPressed"/>
 
-
-
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/poll"
         android:layout_width="wrap_content"
@@ -50,10 +48,19 @@
         app:fab_colorPressed="@color/fabButtonPressed"/>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/bestof"
+    android:id="@+id/bestof"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:fab_title="Pick the best"
+    app:fab_size="mini"
+    app:fab_colorNormal="@color/fabButtonNormal"
+    app:fab_colorPressed="@color/fabButtonPressed"/>
+
+    <com.getbase.floatingactionbutton.FloatingActionButton
+        android:id="@+id/recoNew"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fab_title="Pick the best"
+        app:fab_title="Adorn Me"
         app:fab_size="mini"
         app:fab_colorNormal="@color/fabButtonNormal"
         app:fab_colorPressed="@color/fabButtonPressed"/>

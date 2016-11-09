@@ -130,6 +130,11 @@ public class ApiKeys {
     public static final String getLikesAPI(String userId){
         return BuildConfig.END_POINT + VERB.LIKES_API + "/" + userId;
     }
+
+    public static final String isNewPostAvailable(String postId){
+        return BuildConfig.END_POINT + VERB.NEW_POST_AVAIL+"/"+postId;
+    }
+
     //http://107.170.48.64/goldadorn_prod/rest/searchcommerce
 
     /*http://107.170.48.64/goldadorn_prod/rest/getproductbasicinfov27/373
@@ -160,5 +165,6 @@ http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
         private static final String ECOM_SEARCH_API = "searchcommerce";
         private static final String SOCIAL_SEARCH_API = "searchsocial";
         private static final String LIKES_API = "mylikes";
+        private static final String NEW_POST_AVAIL = "isnewpostavailable";
     }
 }

@@ -2,6 +2,7 @@ package com.goldadorn.main.dj.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.goldadorn.main.activities.Application;
 import com.goldadorn.main.dj.model.RecommendedProduct;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.model.Image;
+import com.goldadorn.main.server.ApiFactory;
 import com.goldadorn.main.utils.ImageFilePath;
 import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
@@ -31,6 +33,8 @@ import butterknife.ButterKnife;
  * Created by User on 29-07-2016.
  */
 public class RecommendedProductsAdapter extends RecyclerView.Adapter<RecommendedProductsAdapter.ImageViewHolder> {
+
+    private static final String TAG = "RecoProductsAdapter";
 
     public interface RecommendedPostClick {
         void onRecommendedPostClick(String url, int isLiked, int likeCounts);
@@ -67,14 +71,10 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
 
     @Override
     public void onBindViewHolder(ImageViewHolder holder, int position) {
-        /*Glide.with(holder.itemView.getContext()).load(listOfUrl.get(position))
-                .into(holder.ivProd);*/
         try {
-            /*Glide.with(holder.itemView.getContext())
-                    .load(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
-                            listOfRecoProds.get(position).getProductId(), null, false))
-                    .placeholder(R.drawable.vector_image_logo_square_100dp)
-                    .into(holder.ivProd);*/
+            /*ImageLoaderUtils.loadImage(Application.getInstance()
+                    , new Image(standAloneUrlForReco(String.valueOf(listOfRecoProds.get(position).getProductId()))),
+                    holder.ivProd, R.drawable.vector_image_logo_square_100dp, true);*/
             ImageLoaderUtils.loadImage(Application.getInstance()
                     , new Image(ImageFilePath.getImageUrlForProduct(listOfRecoProds.get(position).getDesgnId(),
                             listOfRecoProds.get(position).getProductId(), null, false, 200)),
@@ -121,6 +121,15 @@ public class RecommendedProductsAdapter extends RecyclerView.Adapter<Recommended
                         listOfRecoProds.get(getAdapterPosition()).getLikeCount());
             }
         }
+    }
+
+
+    private String standAloneUrlForReco(String prodid) {
+        StringBuilder baseUrl = new StringBuilder(ApiFactory.IMAGE_URL_COLLECTIONS_HOST);
+        baseUrl.append("products/").append(prodid).append("/")
+                .append(prodid).append("-1").append(".jpg");
+        Log.d(TAG, "reco image url: "+baseUrl.toString());
+        return baseUrl.toString();
     }
 
 }

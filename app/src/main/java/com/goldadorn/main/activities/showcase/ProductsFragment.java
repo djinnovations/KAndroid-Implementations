@@ -30,6 +30,7 @@ import com.androidquery.AQuery;
 import com.bumptech.glide.Glide;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.BaseDrawerActivity;
 import com.goldadorn.main.activities.post.PostPollActivity;
 import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.assist.UserInfoCache;
@@ -54,6 +55,9 @@ import com.goldadorn.main.utils.ImageLoaderUtils;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.mikepenz.entypo_typeface_library.Entypo;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsButton;
 
 import org.apache.http.HttpEntity;
@@ -185,6 +189,9 @@ public class ProductsFragment extends Fragment {
     }
 
 
+    @Bind(R.id.ivMyLikes)
+    ImageView ivMyLikes;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -203,11 +210,15 @@ public class ProductsFragment extends Fragment {
             if (mMode == MODE_COLLECTION) mCollection = (Collection) b.getSerializable(EXTRA_DATA);
             else mUser = (User) b.getSerializable(EXTRA_DATA);
         }
-        recyclerDrawable = ResourceReader.getInstance(Application.getInstance()).getDrawableFromResId(R.drawable.ic_action_autorenew);
-        defaultBounds = tvEndView.getCompoundDrawables()[1].getBounds();
-        defaultPadding = tvEndView.getCompoundDrawablePadding();
         return view;
     }
+
+    View.OnClickListener myLikesClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            ((BaseDrawerActivity) getActivity()).menuAction(R.id.nav_my_likes);
+        }
+    };
 
     View.OnClickListener mRefreshClick = new View.OnClickListener() {
         @Override
@@ -246,6 +257,15 @@ public class ProductsFragment extends Fragment {
         mCardStack.setAdapter(mSwipeDeckAdapter);
         mCardStack.setFlingListener(mSwipeDeckAdapter);
         mCardStack.setOnItemClickListener(mSwipeDeckAdapter);
+        recyclerDrawable = ResourceReader.getInstance(Application.getInstance()).getDrawableFromResId(R.drawable.ic_action_autorenew);
+        int color =  ResourceReader.getInstance(Application.getInstance()).getColorFromResource(R.color.White);
+        ivMyLikes.setImageDrawable(new IconicsDrawable(getActivity())
+                .icon(Entypo.Icon.ent_thumbs_up)
+                .color(color)
+                .sizeDp(30));
+        ivMyLikes.setOnClickListener(myLikesClick);
+        defaultBounds = tvEndView.getCompoundDrawables()[1].getBounds();
+        defaultPadding = tvEndView.getCompoundDrawablePadding();
       /*  if (mMode == MODE_USER) {
             ((ShowcaseActivity) getActivity()).registerUserChangeListener(mUserChangeListener);
         } else {

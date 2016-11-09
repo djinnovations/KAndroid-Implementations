@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.goldadorn.main.model.Product;
 import com.goldadorn.main.server.UIController;
 import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.paginate.Paginate;
 
 import org.json.JSONArray;
 
@@ -123,24 +125,84 @@ public class WishListManagerActivity extends BaseActivity implements ILoadingPro
     TextView tvNone;
 
     protected boolean isFirstTime = true;
+    private int offset;
 
     protected void queryServer(){
-        UIController.getWishlist(mContext, new IResultListener<ProductResponse>() {
+        UIController.getWishlist(mContext, offset, new IResultListener<ProductResponse>() {
             @Override
             public void onResult(ProductResponse result) {
+                offset = result.offset;
+                loading = false;
                 if (result.success && result.productArray != null) {
                     if (isFirstTime){
                         isFirstTime = false;
+                        setUpPaginate();
                         updateEmptyStatus(result.productArray);
-                    }
-                    mAdapter.changeData(result.productArray);
-                    if (!result.success) {
+                        mAdapter.changeData(result.productArray);
+                    }else
+                    mAdapter.addNewData(result.productArray);
+                    /*if (!result.success) {
                         Toast.makeText(mContext, "Something went wrong", Toast.LENGTH_SHORT).show();
-                    }
-                }
+                    }*/
+                }else {
+                    seenAllNotification = true;
+                    stopPagination();}
                 showLoading(false);
             }
         });
+    }
+
+    protected void setUpPaginate() {
+        paginate = Paginate.with(mRecyclerView, callbacks)
+                //.setOnScrollListener(scrollListener)
+                .setLoadingTriggerThreshold(1)
+                .addLoadingListItem(true)
+                .setLoadingListItemCreator(null)
+                .build();
+    }
+
+    protected boolean loading;
+    protected Paginate.Callbacks callbacks = new Paginate.Callbacks() {
+        @Override
+        public void onLoadMore() {
+            // Load next page of data (e.g. network or database)
+            Log.d("djpg", "onLoadMore- offestMain val= " + offset);
+            //if (canContinueToPaginate()) {
+                Log.d("djpg", "onLoadMore - canContinueToPaginate?: true");
+                loading = true;
+                queryServer();
+            //} else {
+                /*loading = false;
+                paginate.setHasMoreDataToLoad(false);*/
+                //stopPagination();
+            //}
+        }
+
+        @Override
+        public boolean isLoading() {
+            // Indicate whether new page loading is in progress or not
+            Log.d("djpg", "isLoading: " + loading);
+            return loading;
+        }
+
+        @Override
+        public boolean hasLoadedAllItems() {
+            // Indicate whether all data (pages) are loaded or not
+            Log.d("djpg", "hasLoadedAllItems: " + seenAllNotification);
+            return seenAllNotification;
+        }
+    };
+
+    //private int offsetMain;
+    protected Paginate paginate;
+    protected boolean seenAllNotification = false;
+
+    protected void stopPagination() {
+        Log.d("djpg", "stopPagination requested");
+        seenAllNotification = true;
+        loading = false;
+        if (paginate != null)
+            paginate.setHasMoreDataToLoad(false);
     }
 
     protected void updateEmptyStatus(ArrayList jsonArray){

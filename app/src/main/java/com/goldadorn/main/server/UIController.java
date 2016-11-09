@@ -323,8 +323,9 @@ public class UIController {
         new Thread(runnable).start();
     }
 
-    public static void getWishlist(final Context context,final IResultListener<ProductResponse> listener) {
+    public static void getWishlist(final Context context, int offset, final IResultListener<ProductResponse> listener) {
         final ProductResponse response = ProductResponse.getListResponse();
+        response.offset = offset;
         Runnable runnable = new Runnable() {
             public void run() {
                 Handler handler = ((Application) context.getApplicationContext()).getUIHandler();

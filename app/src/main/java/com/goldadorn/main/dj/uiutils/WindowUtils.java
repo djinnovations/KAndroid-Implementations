@@ -29,7 +29,6 @@ public class WindowUtils {
     //private final String networkInfoMsg = "Please turn on your mobile DATA or WIFI";
 
     private WindowUtils(Context appContext) {
-
         this.appContext = appContext;
         mViewConstructor = ViewConstructor.getInstance(appContext);
         mDispProp = DisplayProperties.getInstance(appContext, DisplayProperties.ORIENTATION_PORTRAIT);
@@ -44,9 +43,7 @@ public class WindowUtils {
     }
 
     public void genericPermissionInfoDialog(Activity activity, String message) {
-
         mViewConstructor.displayInfo(activity, "Permission info", message, "OKAY", "",
-
                 false, new ViewConstructor.InfoDisplayListener() {
                     @Override
                     public void onPositiveSelection(DialogInterface alertDialog) {
@@ -54,7 +51,6 @@ public class WindowUtils {
                         alertDialog.dismiss();
                     }
                 });
-
     }
 
 
@@ -188,7 +184,7 @@ public class WindowUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else (overLay.findViewById(R.id.ivLogo)).setVisibility(View.GONE);
+        }else (overLay.findViewById(R.id.rlImageHolder)).setVisibility(View.GONE);
         dialog.setContentView(overLay);
         dialog.setCancelable(false);
 
