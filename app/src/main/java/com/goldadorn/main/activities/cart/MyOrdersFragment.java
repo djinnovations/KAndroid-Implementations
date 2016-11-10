@@ -14,6 +14,10 @@ public class MyOrdersFragment extends MyCartFragment{
         }
     };
 
+    @Override
+    protected boolean showCouponCode() {
+        return false;
+    }
 
     @Override
     protected boolean displayBottomBtns() {

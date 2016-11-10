@@ -154,7 +154,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setCleverTapUserProfile();
     }
 
-    private void setCleverTapUserProfile(){
+    protected void setCleverTapUserProfile(){
         HashMap<String, Object> profileUpdate = new HashMap<>();
         profileUpdate.put("Name", Application.getInstance().getUser().name);                // String
         profileUpdate.put("Identity", Application.getInstance().getUser().id);                    // String or number

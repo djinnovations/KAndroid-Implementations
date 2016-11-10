@@ -197,6 +197,7 @@ public class MainActivity extends BaseDrawerActivity {
 
         logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
 
+
         sendFcmToken();
         tourThisScreen();
 

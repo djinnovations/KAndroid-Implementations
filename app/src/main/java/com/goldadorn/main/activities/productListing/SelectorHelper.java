@@ -7,25 +7,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.goldadorn.main.BR;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.BaseActivity;
 import com.goldadorn.main.bindings.BindingRecycleItemHolder;
-import com.goldadorn.main.databinding.FilterPriceItemBinding;
 import com.goldadorn.main.model.Designer;
 import com.goldadorn.main.model.FilterCollection;
 import com.goldadorn.main.model.FilterPrice;
 import com.goldadorn.main.model.FilterType;
 import com.goldadorn.main.model.IIDInterface;
 import com.kimeeo.library.listDataView.dataManagers.DataManager;
-import com.kimeeo.library.listDataView.dataManagers.IListProvider;
-import com.kimeeo.library.listDataView.dataManagers.OnCallService;
-import com.kimeeo.library.listDataView.dataManagers.PageData;
 import com.kimeeo.library.listDataView.dataManagers.StaticDataManger;
-import com.kimeeo.library.listDataView.dataManagers.simpleList.ListDataManager;
 import com.kimeeo.library.listDataView.recyclerView.BaseItemHolder;
 import com.kimeeo.library.listDataView.recyclerView.DefaultRecyclerViewAdapter;
 import com.kimeeo.library.listDataView.recyclerView.IViewProvider;
@@ -33,7 +27,6 @@ import com.kimeeo.library.listDataView.viewHelper.RecyclerViewHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by bpa001 on 4/21/16.

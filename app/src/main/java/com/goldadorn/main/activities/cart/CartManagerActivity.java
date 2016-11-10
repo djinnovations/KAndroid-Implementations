@@ -345,6 +345,14 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
         getAQueryCustom().ajax(ApiKeys.getSetCartAddressAPI(), params, String.class, ajaxCallback);
     }
 
+    private final int COUPON_CALL = IDUtils.generateViewId();
+    public void validateCoupon(String coupon){
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(COUPON_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQueryCustom().ajax(ApiKeys.getCouponCodeAPI(coupon), String.class, ajaxCallback);
+    }
+
     private final int NOTIFY_PAYMENT_CALL = IDUtils.generateViewId();
 
     private void updatePaymentStatToServer(Map<String, Object> params) {
@@ -376,6 +384,23 @@ public class CartManagerActivity extends BaseActivity implements ICartData, ILoa
                 }
             }
         }
+        else if (id == COUPON_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    mContinueButton, this);
+            int discount = 0;
+            if (success){
+                try {
+                    JSONObject jsonObject = new JSONObject(json.toString());
+                    discount = jsonObject.getInt("discount");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    discount = 0;
+                }
+            }
+            if (myCartFragment != null)
+                myCartFragment.applyCoupon(discount, success);
+        }
+
         else if (id == ADD_TO_CART_CALL){
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mContinueButton, this);

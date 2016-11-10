@@ -24,6 +24,10 @@ public class MyCartFragmentReplica extends MyCartFragment{
         return false;
     }
 
+    @Override
+    protected boolean showCouponCode() {
+        return false;
+    }
 
     @Override
     protected boolean displayQtyHolder() {

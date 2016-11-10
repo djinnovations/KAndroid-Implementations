@@ -135,6 +135,10 @@ public class ApiKeys {
         return BuildConfig.END_POINT + VERB.NEW_POST_AVAIL+"/"+postId;
     }
 
+    public static final String getCouponCodeAPI(String coupon){
+        return BuildConfig.END_POINT_COMERCIAL + VERB.COUPON_CODE_API + "/" + coupon;
+    }
+
     //http://107.170.48.64/goldadorn_prod/rest/searchcommerce
 
     /*http://107.170.48.64/goldadorn_prod/rest/getproductbasicinfov27/373
@@ -166,5 +170,6 @@ http://107.170.48.64/goldadorn_prod/rest/getproductmetalstoneinfov27/373*/
         private static final String SOCIAL_SEARCH_API = "searchsocial";
         private static final String LIKES_API = "mylikes";
         private static final String NEW_POST_AVAIL = "isnewpostavailable";
+        private static final String COUPON_CODE_API = "validatecoupon";
     }
 }
