@@ -2453,7 +2453,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     else discnt = "("+String.valueOf(Math.round(discount)) + "%" + " off"+")";
 
                     socialUtils.publishLinkPost(getActivity(), "http://www.goldadorn.com", "GoldAdorn Jewelry",
-                            socialPost.getRange1() + "\t" + discnt, socialPost.getImage1loc());
+                            socialPost.getRange1() + discnt, socialPost.getImage1loc(), socialPost.getPostId());
                 }
 
             }
@@ -2490,7 +2490,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
             HashTagHelper mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.staceColor2),
                     hashTagClick);
-            mTextHashTagHelper.handle(details);
+            //mTextHashTagHelper.handle(details);
         }
 
         HashTagHelper.OnHashTagClickListener hashTagClick = new HashTagHelper.OnHashTagClickListener() {

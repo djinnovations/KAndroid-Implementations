@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.activities.MainActivity;
 import com.goldadorn.main.dj.utils.Constants;
 
 /**
@@ -32,6 +34,9 @@ public class SocialUtils extends SocialLoginUtil {
                 FacebookCallback<Sharer.Result>() {
                     @Override
                     public void onSuccess(Sharer.Result result) {
+                        if (activity instanceof MainActivity){
+                            ((MainActivity) activity).notifyShare(recentPostId);
+                        }
                         Toast.makeText(Application.getInstance(), "Shared on Facebook", android.widget.Toast.LENGTH_SHORT).show();
                     }
 
@@ -74,15 +79,23 @@ public class SocialUtils extends SocialLoginUtil {
 
 
     private CallbackManager callbackManager;
-    public void publishLinkPost(Activity activity, String contentUrl, String title, String descrip, String imageUrl) {
+    private Activity activity;
+    private String recentPostId;
+    public void publishLinkPost(Activity activity, String contentUrl, String title, String descrip, String imageUrl, String postId) {
+        this.activity = activity;
+        recentPostId = postId;
         shareDialog = new ShareDialog(activity);
         callbackManager = CallbackManager.Factory.create();
         shareDialog.registerCallback(callbackManager, shareResults);
+        String tile = "";
+        if (TextUtils.isEmpty(descrip) || descrip.contains("null"))
+            tile = "";
+        else tile = descrip;
 
         if (ShareDialog.canShow(ShareLinkContent.class)) {
             ShareLinkContent linkContent = new ShareLinkContent.Builder()
                     .setContentTitle(title)
-                    .setContentDescription(descrip).setImageUrl(Uri.parse(imageUrl))
+                    .setContentDescription(tile).setImageUrl(Uri.parse(imageUrl))
                     .setContentUrl(Uri.parse(contentUrl))
                     .build();
 

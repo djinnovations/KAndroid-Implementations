@@ -22,17 +22,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.modules.search.SearchActivity;
+import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.RandomUtils;
 import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.model.User;
 import com.goldadorn.main.modules.modulesCore.DefaultProjectDataManager;
+import com.goldadorn.main.utils.IDUtils;
+import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
+import com.kimeeo.library.ajax.ExtendedAjaxCallback;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -115,6 +124,13 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     }
 
 
+    private final int SHARE_NOTIFY_CALL = IDUtils.generateViewId();
+    protected void notifyShareOnfb(String postId){
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(SHARE_NOTIFY_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQuery().ajax(ApiKeys.getShareNotifierAPI(postId), String.class, ajaxCallback);
+    }
+
 
     public void menuAction(int id) {
 
@@ -166,8 +182,13 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         this.isMainActivity = isMainActivity;
     }
 
+    @Bind(R.id.tvGoldCoinCnt)
+    TextView tvGoldCoinCnt;
+    @Bind(R.id.tvDiamondCnt)
+    TextView tvDiamondCnt;
 
-    @Bind({R.id.tvGoldCoinCnt, R.id.tvDiamondCnt, R.id.nav_share, R.id.nav_share_facebook,
+    @Bind({R.id.tvGoldCoinCnt, R.id.tvDiamondCnt, R.id.labelGold, R.id.labelDiamond,
+            R.id.nav_share, R.id.nav_share_facebook,
             R.id.nav_rate_us, R.id.nav_contact_us, R.id.nav_rate_us_new,
             R.id.labelHome, R.id.labelFeed,
             R.id.labelTimeLine, R.id.labelShowcase,
@@ -194,6 +215,42 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         TypefaceHelper.setFont(viewList);
     }
 
+
+    private final int GET_POINTS_CALL = IDUtils.generateViewId();
+    protected void setPoints(){
+        ExtendedAjaxCallback ajaxCallback = getAjaxCallback(GET_POINTS_CALL);
+        ajaxCallback.method(AQuery.METHOD_GET);
+        getAQuery().ajax(ApiKeys.getRedemptionCntAPI(), String.class, ajaxCallback);
+    }
+
+    private final String TAG = "BaseDrawerActivity";
+
+    @Override
+    public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
+        Log.d(TAG, "url queried- "+TAG+": " + url);
+        Log.d(TAG, "response- "+TAG+": " + json);
+        dismissOverLay();
+        if (id == GET_POINTS_CALL){
+            boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
+                    drawerLayout, this);
+            int gcnt = 0;
+            int dcnt = 0;
+            if (success){
+                try {
+                    JSONObject jsonObject = new JSONObject(json.toString());
+                    JSONObject jsonObject1 = jsonObject.getJSONObject("points");
+                    gcnt = jsonObject1.getInt("gold");
+                    dcnt = jsonObject1.getInt("diamond");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                tvGoldCoinCnt.setText(String.valueOf(gcnt));
+                tvDiamondCnt.setText(String.valueOf(dcnt));
+            }
+
+        }
+        else super.serverCallEnds(id, url, json, status);
+    }
 
     static LayerDrawable icon;
 

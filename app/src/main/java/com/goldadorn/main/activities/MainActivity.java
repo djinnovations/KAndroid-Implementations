@@ -133,6 +133,10 @@ public class MainActivity extends BaseDrawerActivity {
         return ((HomePage) activePage).findPeopleFragment;
     }
 
+    public void notifyShare(String postId){
+        notifyShareOnfb(postId);
+    }
+
 
     private MyGestureListener myGestureListener = new MyGestureListener() {
         @Override
@@ -197,6 +201,7 @@ public class MainActivity extends BaseDrawerActivity {
 
         logEventsAnalytics(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL);
 
+        setPoints();
 
         sendFcmToken();
         tourThisScreen();
