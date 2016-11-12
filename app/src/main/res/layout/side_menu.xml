@@ -52,6 +52,20 @@
                     android:text="0"
                     android:textSize="16sp" />
 
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/pBarGold"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
+                    android:visibility="gone"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle" />
+
                 <TextView
                     android:id="@+id/labelGold"
                     style="@style/menuButtonLabel"
@@ -97,6 +111,20 @@
                     android:gravity="center_horizontal"
                     android:text="0"
                     android:textSize="16sp" />
+
+                <com.rey.material.widget.ProgressView
+                    android:id="@+id/pBarDiamond"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center_horizontal"
+                    android:visibility="gone"
+                    app:pv_autostart="true"
+                    app:pv_circular="true"
+                    app:pv_progressMode="indeterminate"
+                    app:pv_progressStyle="@style/inOutColorsCircularProgressDrawableStyle" />
 
                 <TextView
                     android:id="@+id/labelDiamond"

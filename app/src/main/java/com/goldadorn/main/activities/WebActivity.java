@@ -13,6 +13,7 @@ import com.androidquery.AQuery;
 import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.dj.fragments.ContactUsFragment;
+import com.goldadorn.main.dj.fragments.RedemptionFragment;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
@@ -75,6 +76,10 @@ public class WebActivity extends BaseActivity {
                 .getStringFromResource(R.string.contactUs))) {
             fragmentManager.beginTransaction().replace(mainHolder.getId(), new ContactUsFragment(), TAG_CONTACT_US).commit();
         } else if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
+                .getStringFromResource(R.string.redemDetails))){
+            fragmentManager.beginTransaction().replace(mainHolder.getId(), new RedemptionFragment()).commit();
+        }
+        else if (title.equalsIgnoreCase(ResourceReader.getInstance(getApplicationContext())
                 .getStringFromResource(R.string.findPeople))) {
             fragmentManager.beginTransaction().replace(mainHolder.getId(), new FindPeopleFragment(), TAG_PEOPLE).commit();
         } else {

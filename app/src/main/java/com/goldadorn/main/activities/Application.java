@@ -21,6 +21,7 @@ import com.goldadorn.main.activities.showcase.ShowcaseActivity;
 import com.goldadorn.main.assist.UserInfoCache;
 import com.goldadorn.main.dj.fragments.FilterResultsFragment;
 import com.goldadorn.main.dj.fragments.FilterSelectorFragment;
+import com.goldadorn.main.dj.fragments.RedemptionFragment;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.support.DjphyPreferenceManager;
 import com.goldadorn.main.dj.support.GAFacebookAnalytics;
@@ -121,8 +122,10 @@ public class Application extends BaseApplication {
 
     public CleverTapAPI getCleverTapInstance(){
         try {
-            if (cleverTap == null)
-            cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+            if (cleverTap == null) {
+                cleverTap = CleverTapAPI.getInstance(getApplicationContext());
+                CleverTapAPI.setDebugLevel(1277182231);
+            }
             return cleverTap;
         } catch (CleverTapMetaDataNotFoundException e) {
             // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
@@ -191,6 +194,7 @@ public class Application extends BaseApplication {
         addItem(menu, R.id.nav_my_notifications, R.string.notifications, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, NotificationsActivity.class);
         addItem(menu, R.id.nav_my_search, R.string.search, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_ACTIVITY, UnderDevelopmentActivity.class);
         addItem(menu, R.id.nav_id_hashtag, R.string.hashtag, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_FRAGMENT_VIEW, HashTagFragment.class);
+        addItem(menu, R.id.nav_my_redemption, R.string.redemDetails, NavigationDataObject.ACTION_TYPE.ACTION_TYPE_WEB_ACTIVITY, "dummy", WebActivity.class);
 
 
         String appPlayStoreURL = getString(R.string.palyStoreBasicURL) + getPackageName();

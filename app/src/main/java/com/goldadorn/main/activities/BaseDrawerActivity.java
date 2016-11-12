@@ -27,6 +27,7 @@ import com.androidquery.callback.AjaxStatus;
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.cart.MyOrdersActivity;
 import com.goldadorn.main.assist.UserInfoCache;
+import com.goldadorn.main.dj.model.UserSession;
 import com.goldadorn.main.dj.modules.search.SearchActivity;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.utils.Constants;
@@ -38,6 +39,7 @@ import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.kimeeo.library.ajax.ExtendedAjaxCallback;
+import com.rey.material.widget.ProgressView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -92,7 +94,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_logout, R.id.nav_people, R.id.nav_my_likes,
             R.id.nav_size_guide, R.id.nav_buy_back_policy,
             R.id.nav_dia_qual_guide, R.id.nav_my_orders,
-            R.id.rlGoldHolder, R.id.rlDiamondHolder
+            R.id.rlGoldHolder, R.id.rlDiamondHolder, R.id.nav_my_redemption
     })
     public void menuButtonClick(View view) {
         int id = view.getId();
@@ -204,7 +206,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
             R.id.nav_terms_conditions,
             R.id.nav_settings,R.id.nav_size_guide,R.id.nav_my_likes,
             R.id.nav_buy_back_policy, R.id.nav_dia_qual_guide,
-            R.id.nav_logout, R.id.nav_my_orders})
+            R.id.nav_logout, R.id.nav_my_orders, R.id.nav_my_redemption})
     List<View> views;
 
     public void setupMenu() {
@@ -215,9 +217,15 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         TypefaceHelper.setFont(viewList);
     }
 
+    @Bind(R.id.pBarGold)
+    ProgressView pBarGold;
+    @Bind(R.id.pBarDiamond)
+    ProgressView pBarDiamond;
 
     private final int GET_POINTS_CALL = IDUtils.generateViewId();
     protected void setPoints(){
+        isPointsUpdateInprogress = true;
+        updatePointsUi(false);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallback(GET_POINTS_CALL);
         ajaxCallback.method(AQuery.METHOD_GET);
         getAQuery().ajax(ApiKeys.getRedemptionCntAPI(), String.class, ajaxCallback);
@@ -225,20 +233,37 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
 
     private final String TAG = "BaseDrawerActivity";
 
+    protected void updatePointsUi(boolean isDone){
+        if (isDone) {
+            pBarGold.setVisibility(View.GONE);
+            pBarDiamond.setVisibility(View.GONE);
+            tvGoldCoinCnt.setVisibility(View.VISIBLE);
+            tvDiamondCnt.setVisibility(View.VISIBLE);
+            return;
+        }
+        pBarGold.setVisibility(View.VISIBLE);
+        pBarDiamond.setVisibility(View.VISIBLE);
+        tvGoldCoinCnt.setVisibility(View.GONE);
+        tvDiamondCnt.setVisibility(View.GONE);
+    }
+
     @Override
     public void serverCallEnds(int id, String url, Object json, AjaxStatus status) {
         Log.d(TAG, "url queried- "+TAG+": " + url);
         Log.d(TAG, "response- "+TAG+": " + json);
         dismissOverLay();
         if (id == GET_POINTS_CALL){
+            isPointsUpdateInprogress = false;
+            updatePointsUi(true);
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     drawerLayout, this);
             int gcnt = 0;
             int dcnt = 0;
+            JSONObject jsonObject1 = null;
             if (success){
                 try {
                     JSONObject jsonObject = new JSONObject(json.toString());
-                    JSONObject jsonObject1 = jsonObject.getJSONObject("points");
+                    jsonObject1 = jsonObject.getJSONObject("points");
                     gcnt = jsonObject1.getInt("gold");
                     dcnt = jsonObject1.getInt("diamond");
                 } catch (JSONException e) {
@@ -246,6 +271,15 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                 }
                 tvGoldCoinCnt.setText(String.valueOf(gcnt));
                 tvDiamondCnt.setText(String.valueOf(dcnt));
+
+                if (isMainActivity){
+                    UserSession.getInstance().setCounts(gcnt, dcnt);
+                    try {
+                        UserSession.getInstance().setVoucherData(jsonObject1.getJSONArray("coupons"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
         }
@@ -257,6 +291,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        setPoints();
         Log.d(Constants.TAG, "onCreateOptionsMenu: BaseDrawerActivity");
         /*getMenuInflater().inflate(R.menu.main, menu);
 
@@ -518,9 +553,18 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
         return returnVal;
     }
 
+    protected boolean isPointsUpdateInprogress = false;
+
     private void setupHeader() {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if (!isPointsUpdateInprogress)
+                    setPoints();
+            }
+        };
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 

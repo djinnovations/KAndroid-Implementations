@@ -208,12 +208,21 @@ public class HeaderItemHolder{
             Picasso.with(context).load(people.getBackgroundPic()).into(coverImage);
 
         //people.setProfilePic("http://whatatimeline.com/covers/1330597507de0/balloons-sunset-view-facebook-cover.jpg");
-        Picasso.with(context)
-                .load(people.getProfilePic())
-                .placeholder(R.drawable.vector_image_place_holder_profile_dark)
-                .tag(context)
-                .resize(100, 100)
-                .into(userImage);
+        try {
+            Picasso.with(context)
+                    .load(people.getProfilePic())
+                    .placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                    .tag(context)
+                    .resize(100, 100)
+                    .into(userImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Picasso.with(context)
+                    .load(R.drawable.vector_image_place_holder_profile_dark)
+                    .tag(context)
+                    .resize(100, 100)
+                    .into(userImage);
+        }
     }
 
 }
