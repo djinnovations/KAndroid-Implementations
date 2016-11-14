@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Date"
-        android:textColor="#cccccc"
+        android:textColor="@color/colorBlackDimText"
         android:id="@+id/time"
         android:textSize="10sp"
         android:layout_below="@+id/userName"

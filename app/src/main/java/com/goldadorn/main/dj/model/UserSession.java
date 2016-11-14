@@ -76,8 +76,9 @@ public class UserSession {
                 String[] split = string.split("-\\$\\$-");
                 TitlesData data = new TitlesData(split[0], split[1]);
                 voucherData.add(data);
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+                setVoucherDataAvail(false);
             }
         }
     }
@@ -89,6 +90,36 @@ public class UserSession {
 
     public List<TitlesData> getVoucherData(){
         return voucherData;
+    }
+
+    private boolean isAvailVoucherPresent;
+    private List<VoucherData> availVoucher = new ArrayList<>();
+    public List<VoucherData> getAvailVoucher(){
+        return availVoucher;
+    }
+
+    public boolean isAvailVoucherPresent() {
+        return isAvailVoucherPresent;
+    }
+
+    public void setAvailVoucherPresent(boolean availVoucherPresent) {
+        isAvailVoucherPresent = availVoucherPresent;
+    }
+
+    public void setAvailVoucher(JSONArray jsonArray){
+        availVoucher.clear();
+        setAvailVoucherPresent(true);
+        for (int i = 0; i< jsonArray.length(); i++){
+            try {
+                String string = jsonArray.getString(i);
+                String[] stringArr = string.split(":");
+                VoucherData voucherData = new VoucherData(stringArr[0], stringArr[1], stringArr[2]);
+                availVoucher.add(voucherData);
+            } catch (Exception e) {
+                e.printStackTrace();
+                setAvailVoucherPresent(false);
+            }
+        }
     }
 
     public String getGoldCoinCount(){

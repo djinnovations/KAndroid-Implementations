@@ -419,7 +419,7 @@ public class ApiFactory extends ExtractResponse {
             Response httpResponse = ServerRequest.doPostRequest(context, getUrlFromSocialAPI(context, urlBuilder), getHeaders(context, paramsBuilder), body);
             response.responseCode = httpResponse.code();
             response.responseContent = httpResponse.body().string();
-            if (response.responseContent != null){
+            /*if (response.responseContent != null){
                 try {
                     JSONObject jsonObject = new JSONObject(response.responseContent);
                     response.offset = jsonObject.getInt("offset");
@@ -427,13 +427,13 @@ public class ApiFactory extends ExtractResponse {
                     e.printStackTrace();
                     response.offset = -1;
                 }
-            }
+            }*/
             L.d("getDesignersSocial " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
-            if (response.offset < 0){
+           /* if (response.offset < 0){
                 response.success = false;
                 response.responseCode = BasicResponse.IO_EXE;
-            }
+            }*/
             L.d("addToWishlist " + "Code :" + response.responseCode + " content", response.responseContent.toString());
             extractBasicResponse(context, response);
         } else {

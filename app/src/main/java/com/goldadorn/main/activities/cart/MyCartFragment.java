@@ -340,11 +340,13 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         if (getActivity() instanceof CartManagerActivity) {
             if (getTotalQty(mCart) <= 0) {
                 card_view.setVisibility(View.GONE);
+                card_view_coupon.setVisibility(View.GONE);
                 ((CartManagerActivity) getActivity()).removeStaticBottomBar();
                 return;
             }
         } else if (getActivity() instanceof MyOrdersActivity) {
             card_view.setVisibility(View.GONE);
+            card_view_coupon.setVisibility(View.GONE);
             return;
         }
         ((TextView) mPriceItems.findViewById(R.id.title)).setText("Price" + " (" + getTotalQty(mCart) + " items)");
@@ -425,6 +427,25 @@ public class MyCartFragment extends Fragment implements CartProductsViewHolder.I
         int index = mCart.indexOf(t);
         return mCart.get(index);
     }*/
+
+    @Override
+    public void onRequestWishList(final GetCartResponseObj.ProductItem itemToBind) {
+        ((CartManagerActivity) getActivity()).showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
+        Product product = new Product(itemToBind.getProductId());
+        product.productId = itemToBind.getProductId();
+        UIController.addToWhishlist(getContext(), product, new IResultListener<ProductResponse>() {
+            @Override
+            public void onResult(ProductResponse result) {
+                ((CartManagerActivity) getActivity()).dismissOverLay();
+                if (result.success) {
+                    Toast.makeText(getContext(), "Moved to Wish list", Toast.LENGTH_SHORT).show();
+                    mCart.remove(itemToBind);
+                    onCartChanged();
+                }
+                else Toast.makeText(getContext(), "Failed to move to Wish list", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     public ArrayList<Product> getUniqueProdList(ArrayList<Product> fullList) {
         ArrayList<Product> templist = new ArrayList<>();

@@ -29,6 +29,10 @@ public class EverythingSearchFragment extends Fragment{
         return inflater.inflate(R.layout.fragment_search_everything, container, false);
     }
 
+    public interface ItemSelectListener{
+        void onItemClick(Object dataObj);
+    }
+
 
     View desHolder;
     View collHolder;
@@ -95,7 +99,22 @@ public class EverythingSearchFragment extends Fragment{
      CollectionSearchAdapter collAdapter;
      ProductSearchAdapter prodAdapter;
 
+    private ItemSelectListener listener;
+
     private void setUpRecyclerViews(){
+
+        listener = new ItemSelectListener() {
+            @Override
+            public void onItemClick(Object dataObj) {
+                if (dataObj instanceof SearchDataObject.CollectionSearchData){
+                    SearchDataObject.CollectionSearchData data = (SearchDataObject.CollectionSearchData) dataObj;
+                    ((SearchActivity) getActivity()).gotoCollection(data.getDesgnId(), data.getCollectionId());
+                }
+                else if ( dataObj instanceof SearchDataObject.UserSearchData){
+                    ((SearchActivity) getActivity()).gotoDesigner();
+                }
+            }
+        };
 
         collHolder.setVisibility(View.GONE);
         prodHolder.setVisibility(View.GONE);
@@ -105,14 +124,14 @@ public class EverythingSearchFragment extends Fragment{
         rvDesigner.setHasFixedSize(false);
         rvDesigner.setLayoutManager(mLayoutManager1);
         rvDesigner.setItemAnimator(new DefaultItemAnimator());
-        designerAdapter = new DesignerSearchAdapter();
+        designerAdapter = new DesignerSearchAdapter(listener);
         rvDesigner.setAdapter(designerAdapter);
 
         LinearLayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvCollection.setHasFixedSize(false);
         rvCollection.setLayoutManager(mLayoutManager2);
         rvCollection.setItemAnimator(new DefaultItemAnimator());
-        collAdapter = new CollectionSearchAdapter();
+        collAdapter = new CollectionSearchAdapter(listener);
         rvCollection.setAdapter(collAdapter);
 
         LinearLayoutManager mLayoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);

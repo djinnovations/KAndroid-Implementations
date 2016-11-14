@@ -3,7 +3,6 @@ package com.goldadorn.main.dj.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.goldadorn.main.R;
-import com.goldadorn.main.dj.adapter.TableAdapter;
+import com.goldadorn.main.dj.adapter.AvailedVoucherAdapter;
 import com.goldadorn.main.dj.adapter.VoucherAdapter;
 import com.goldadorn.main.dj.model.TitlesData;
 import com.goldadorn.main.dj.model.UserSession;
@@ -58,19 +57,36 @@ public class RedemptionFragment extends BaseFragment{
     TextView labelYourVoucher;
     @Bind(R.id.tvVoucherStat)
     TextView tvVoucherStat;
+    @Bind(R.id.rvTableAvailed)
+    RecyclerView rvTableAvailed;
+
+    @Bind(R.id.labelGoldCoin)
+    TextView labelGoldCoin;
+    @Bind(R.id.labelDiamond)
+    TextView labelDiamond;
+    @Bind(R.id.labelDiscount)
+    TextView labelDiscount;
+
+    @Bind(R.id.labelYourRedemptions)
+    TextView labelYourRedemptions;
+    @Bind(R.id.labelYourRewards)
+    TextView labelYourRewards;
+    //@Bind(R.id.)
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         TypefaceHelper.setFont(tvGoldCoinCnt, tvDiamondCnt, labelYourDiamond, labelYourGold, tvVoucherStat);
-        UiRandomUtils.setTypefaceBold(labelYourVoucher);
+        UiRandomUtils.setTypefaceBold(labelYourVoucher, labelDiamond, labelGoldCoin,
+                labelDiscount, labelYourRedemptions, labelYourRewards);
         tvGoldCoinCnt.setText(UserSession.getInstance().getGoldCoinCount());
         tvDiamondCnt.setText(UserSession.getInstance().getDiamondCnt());
         setUpRecycleView();
     }
 
 
+    private AvailedVoucherAdapter availedVoucherAdapter;
     private void setUpRecycleView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         rvTable.setHasFixedSize(false);
@@ -80,8 +96,25 @@ public class RedemptionFragment extends BaseFragment{
         adapter = new VoucherAdapter();
         rvTable.setAdapter(adapter);
         if (UserSession.getInstance().isVoucherDataAvail()) {
+            tvVoucherStat.setVisibility(View.GONE);
+            rvTable.setVisibility(View.VISIBLE);
             adapter.changeData(UserSession.getInstance().getVoucherData());
+        }else {
+            tvVoucherStat.setVisibility(View.VISIBLE);
+            rvTable.setVisibility(View.GONE);
         }
+
+        LinearLayoutManager mLayoutManager1 = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        rvTableAvailed.setHasFixedSize(false);
+        rvTableAvailed.setLayoutManager(mLayoutManager1);
+        rvTableAvailed.addItemDecoration(new DividerDecoration(getActivity()));
+        rvTableAvailed.setItemAnimator(new DefaultItemAnimator());
+        availedVoucherAdapter = new AvailedVoucherAdapter();
+        rvTableAvailed.setAdapter(availedVoucherAdapter);
+        if (UserSession.getInstance().isAvailVoucherPresent()){
+            rvTableAvailed.setVisibility(View.VISIBLE);
+            availedVoucherAdapter.changeData(UserSession.getInstance().getAvailVoucher());
+        }else rvTableAvailed.setVisibility(View.GONE);
     }
 
 

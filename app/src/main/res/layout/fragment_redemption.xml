@@ -8,99 +8,208 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_gold_coin" />
-
-        <TextView
-            android:id="@+id/labelYourGold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Your Gold Coins"
-            android:textColor="@color/colorBlackDimText"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvGoldCoinCnt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:padding="8dp"
-            android:text="9999"
-            android:textColor="@color/colorBlackDimText"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:src="@drawable/ic_diamond_small" />
-
-        <TextView
-            android:id="@+id/labelYourDiamond"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Your Diamonds"
-            android:textColor="@color/colorBlackDimText"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/tvDiamondCnt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:padding="8dp"
-            android:text="9999"
-            android:textColor="@color/colorBlackDimText"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/labelYourVoucher"
+            android:id="@+id/labelYourRewards"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="Your Have the following Vouchers"
+            android:text="Your Rewards"
             android:textColor="@color/Black"
             android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/tvVoucherStat"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:text="No Vouchers Yet"
-            android:textColor="@color/colorBlackDimText"
-            android:textSize="14sp" />
+            android:layout_marginTop="4dp"
+            android:background="@drawable/brown_square_border_sharp"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="2dp"
+            android:paddingTop="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_gold_coin" />
+
+                <TextView
+                    android:id="@+id/labelYourGold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Your Gold Coins"
+                    android:textColor="@color/colorBlackDimText"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvGoldCoinCnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:padding="8dp"
+                    android:text="9999"
+                    android:textColor="@color/colorBlackDimText"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_diamond_small" />
+
+                <TextView
+                    android:id="@+id/labelYourDiamond"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Your Diamonds"
+                    android:textColor="@color/colorBlackDimText"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvDiamondCnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="35dp"
+                    android:padding="8dp"
+                    android:text="9999"
+                    android:textColor="@color/colorBlackDimText"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvTable"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="25dp"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/labelYourRedemptions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Current Redemption Offers"
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/brown_square_border_sharp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <TextView
+                        android:id="@+id/labelGoldCoin"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Gold Coins"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:id="@+id/labelDiamond"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.75"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Diamonds"
+                        android:textColor="@color/Black" />
+
+                    <TextView
+                        android:id="@+id/labelDiscount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="Available Offers"
+                        android:textColor="@color/Black" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvTableAvailed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp">
+
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/labelYourVoucher"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Your have the following Vouchers"
+                    android:textColor="@color/Black"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvVoucherStat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
+                    android:text="No Vouchers Available Yet"
+                    android:textColor="@color/colorBlackDimText"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/brown_square_border_sharp"
+                android:padding="2dp">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

@@ -405,6 +405,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
 
     public void query2ndAPIprodInfo(){
+        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(PROD_INFO_2nd_API_CALL);
         ajaxCallback.method(AQuery.METHOD_GET);
         getAQueryCustom().ajax(ApiKeys.getProdInfoMetalStoneAPI(mProduct.id), String.class, ajaxCallback);

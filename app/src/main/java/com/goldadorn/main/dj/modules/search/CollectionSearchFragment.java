@@ -50,6 +50,14 @@ public class CollectionSearchFragment extends BaseSearchFragment {
         return params;
     }
 
+
+    @Override
+    public void onItemClick(Object baseObject) {
+        //super.onItemClick(baseObject);
+        SearchDataObject.CollectionSearchData data = (SearchDataObject.CollectionSearchData) baseObject;
+        ((SearchActivity) getActivity()).gotoCollection(data.getDesgnId(), data.getCollectionId());
+    }
+
     @Override
     public String getRefreshDataURL(PageData pageData) {
         return getNextDataURL(null);

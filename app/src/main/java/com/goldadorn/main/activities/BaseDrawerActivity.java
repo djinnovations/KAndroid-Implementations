@@ -276,6 +276,7 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
                     UserSession.getInstance().setCounts(gcnt, dcnt);
                     try {
                         UserSession.getInstance().setVoucherData(jsonObject1.getJSONArray("coupons"));
+                        UserSession.getInstance().setAvailVoucher(jsonObject1.getJSONArray("need"));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

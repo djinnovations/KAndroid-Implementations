@@ -511,6 +511,9 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                 int color = mOverlayViewHolder.ownerName.getCurrentTextColor();*/
                 UiRandomUtils.underLineTv(mOverlayViewHolder.ownerName, 3, mOverlayViewHolder.ownerName.length());
                 mOverlayViewHolder.followButton.setTag(user);
+            }else{
+                mOverlayViewHolder.ownerName.setText("");
+                mOverlayViewHolder.followButton.setEnabled(false);
             }
             mOverlayViewHolder.followButton.setVisibility(
                     TextUtils.isEmpty(desName) ? View.GONE : View.VISIBLE);
@@ -703,8 +706,11 @@ public class CollectionsActivity extends BaseDrawerActivity implements Collectio
                     mRecyclerView.smoothScrollToPosition(mCollection.selectedPos);
                     mCurrentPosition = mCollection.selectedPos;
                     setMapofCollection(cursor);
-                    if (collectionId != -1)
+                    if (collectionId != -1) {
+                        mNext.setEnabled(false);
+                        mPrevious.setEnabled(false);
                         scrollToPosition(collectionId);
+                    }
                 }
                 mOverlayViewHolder.itemView.setVisibility(View.VISIBLE);
             }

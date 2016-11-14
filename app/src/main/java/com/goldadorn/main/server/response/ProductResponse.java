@@ -51,8 +51,8 @@ public class ProductResponse extends BasicResponse {
 
     public static ProductResponse getAddToListResponse(Product product) {
         ProductResponse response = new ProductResponse();
-        response.userId=product.userId;
-        response.collectionId=product.collectionId;
+        //response.userId=product.userId;
+        //response.collectionId=product.collectionId;
         response.productId=product.productId;
         return response;
     }

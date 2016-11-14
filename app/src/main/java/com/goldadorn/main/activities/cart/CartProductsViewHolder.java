@@ -18,11 +18,15 @@ import android.widget.Toast;
 
 import com.goldadorn.main.R;
 import com.goldadorn.main.activities.Application;
+import com.goldadorn.main.assist.IResultListener;
 import com.goldadorn.main.dj.model.GetCartResponseObj;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.utils.DateTimeUtils;
 import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.model.Product;
+import com.goldadorn.main.server.UIController;
+import com.goldadorn.main.server.response.ProductResponse;
 import com.goldadorn.main.utils.TypefaceHelper;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -99,6 +103,7 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
     public interface IQuantityChangeListener {
         //void onQuantityChanged(int previousQty, int newQty/*Product product*/);
         void onQuantityChanged(GetCartResponseObj.ProductItem product);
+        void onRequestWishList(GetCartResponseObj.ProductItem itemToBind);
     }
 
 
@@ -386,7 +391,8 @@ class CartProductsViewHolder extends RecyclerView.ViewHolder {
         @Override
         public void onClick(View v) {
             if (v.getId() == R.id.tvNegative){
-                Toast.makeText(Application.getInstance(), "Feature Coming Soon", Toast.LENGTH_SHORT).show();
+                //Product product = new Product(itemToBind.getProductId())
+                quatityChangeListener.onRequestWishList(itemToBind);
             }
             else if (v.getId() == R.id.tvPositive){
                 changeQuantity(itemToBind.getOrderQty(), 0);

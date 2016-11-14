@@ -263,15 +263,13 @@ public class RandomUtils {
         if (colObj != null) {
             proceedToCollectionScreen(activity, colObj);
         } else {
-            Collection colObj2 = queryServerForCollObj(desId, collId);
-            if (colObj2 == null) {
+            /*Collection colObj2 = */queryServerForCollObj(activity, desId, collId);
+            /*if (colObj2 == null) {
                 showDialogInfo(activity, "Link couldn't be Established! Please visit our Showcase section", false);
                 return;
             }
-            proceedToCollectionScreen(activity, colObj2);
+            proceedToCollectionScreen(activity, colObj2);*/
         }
-
-
     }
 
     private static void showDialogInfo(Activity activity, String msg, boolean isPositive) {
@@ -280,24 +278,35 @@ public class RandomUtils {
         WindowUtils.getInstance(Application.getInstance()).genericInfoMsgWithOK(activity, null, msg, color);
     }
 
-    private static Collection queryServerForCollObj(int desId, int collId) {
+    private static void queryServerForCollObj(final Activity activity, final int desId, final int collId) {
 
-        TimelineResponse response = new TimelineResponse();
-        try {
-            Log.d("djrandom", "before server call");
-            response.idsForProducts.put(new JSONObject().put("desgnId", desId).put("collIds", new JSONArray().put(collId)));
-            ApiFactory.getDesigners(Application.getInstance(), response);
-            Log.d("djrandom", "after server call");
-            if (response.success && response.responseContent != null) {
-                DbHelper.writeProductShowcaseData(Application.getInstance(), response);
-                return getCollectionObjFromDb(collId);
+        Runnable runnable = new Runnable() {
+            public void run() {
+                TimelineResponse response = new TimelineResponse();
+                try {
+                    Log.d("djrandom", "before server call");
+                    response.idsForProducts.put(new JSONObject().put("desgnId", desId).put("collIds", new JSONArray().put(collId)));
+                    ApiFactory.getDesigners(Application.getInstance(), response);
+                    Log.d("djrandom", "after server call");
+                    if (response.success && response.responseContent != null) {
+                        DbHelper.writeProductShowcaseData(Application.getInstance(), response);
+                        Collection colObj2 = getCollectionObjFromDb(collId);
+                        if (colObj2 == null) {
+                            showDialogInfo(activity, "Link couldn't be Established! Please visit our Showcase section", false);
+                            return;
+                        }
+                        proceedToCollectionScreen(activity, colObj2);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        };
+
+        new Thread(runnable).start();
+        //return null;
     }
 
     private static String unreadCount = "0";

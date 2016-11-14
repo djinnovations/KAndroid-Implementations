@@ -24,6 +24,8 @@ import com.goldadorn.main.dj.model.CustomizationStepResponse;
 import com.goldadorn.main.dj.server.ApiKeys;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
+import com.goldadorn.main.dj.utils.RandomUtils;
+import com.goldadorn.main.model.NavigationDataObject;
 import com.goldadorn.main.utils.IDUtils;
 import com.goldadorn.main.utils.NetworkResultValidator;
 import com.google.gson.Gson;
@@ -108,6 +110,16 @@ public class SearchActivity extends BaseActivity{
         });
     }
 
+
+    public void gotoDesigner(){
+        NavigationDataObject dataObject = (NavigationDataObject) getApp().getMainMenu().get(R.id.nav_showcase);
+        action(dataObject);
+    }
+
+
+    public void gotoCollection(int desId, int collId){
+        RandomUtils.launchCollectionScreen(this, desId, collId);
+    }
 
 
     public void onPageChange(int page){

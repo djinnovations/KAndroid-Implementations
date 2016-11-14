@@ -42,6 +42,12 @@ public class DesignerSearchFragment extends BaseSearchFragment {
         loadRefreshData();
     }
 
+
+    @Override
+    public void onItemClick(Object baseObject) {
+        ((SearchActivity) getActivity()).gotoDesigner();
+    }
+
     //"designer":"1","tag":"go","designerOffset":"0"
     public Map<String, Object> getNextDataParams(PageData data) {
         Map<String, Object> params = new HashMap<>();

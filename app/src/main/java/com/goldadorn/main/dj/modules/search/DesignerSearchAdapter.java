@@ -33,8 +33,10 @@ import butterknife.ButterKnife;
 public class DesignerSearchAdapter extends RecyclerView.Adapter<DesignerSearchAdapter.BaseHolder>{
 
     protected List<SearchDataObject.UserSearchData> dataList = new ArrayList<>();
+    EverythingSearchFragment.ItemSelectListener listener;
     List<Integer> colorList;
-    public DesignerSearchAdapter(){
+    public DesignerSearchAdapter(EverythingSearchFragment.ItemSelectListener listener){
+        this.listener = listener;
         colorList = new ArrayList<>();
         int[] colors = Application.getInstance().getResources().getIntArray(R.array.colorsBank);
         Integer[] temp = new Integer[colors.length];
@@ -51,6 +53,8 @@ public class DesignerSearchAdapter extends RecyclerView.Adapter<DesignerSearchAd
         this.dataList = new ArrayList<>(dataList);
         notifyDataSetChanged();
     }
+
+
 
     @Override
     public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -133,13 +137,14 @@ public class DesignerSearchAdapter extends RecyclerView.Adapter<DesignerSearchAd
         public BaseHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
             TypefaceHelper.setFont(tvName, userName, designer);
         }
 
 
         @Override
         public void onClick(View v) {
-
+            listener.onItemClick(dataList.get(getAdapterPosition()));
         }
     }
 }

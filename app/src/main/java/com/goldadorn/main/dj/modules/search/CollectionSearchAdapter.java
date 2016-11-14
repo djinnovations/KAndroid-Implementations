@@ -30,6 +30,11 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         this.notifyDataSetChanged();
     }
 
+    EverythingSearchFragment.ItemSelectListener listener;
+    public CollectionSearchAdapter(EverythingSearchFragment.ItemSelectListener listener){
+        this.listener = listener;
+    }
+
     @Override
     public BaseHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_base_search, parent, false);
@@ -81,13 +86,14 @@ public class CollectionSearchAdapter extends RecyclerView.Adapter<CollectionSear
         public BaseHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
             TypefaceHelper.setFont(tvName, userName, designer);
         }
 
 
         @Override
         public void onClick(View v) {
-
+            listener.onItemClick(dataList.get(getAdapterPosition()));
         }
     }
 }

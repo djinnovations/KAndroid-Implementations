@@ -27,7 +27,7 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.TitlesVi
 
     private MenuSelectionListener listener;*/
 
-    List<TitlesData> titles = new ArrayList<>();
+    private List<TitlesData> titles = new ArrayList<>();
 
     public void changeData(List<TitlesData> titles){
         this.titles = new ArrayList<>(titles);
