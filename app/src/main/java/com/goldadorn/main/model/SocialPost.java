@@ -29,6 +29,89 @@ public class SocialPost extends ServerError implements IParseableObject {
     public static final Integer POST_MOST_LIKED = 12;
     public static final Integer POST_TREDING_TAGS = 13;
     public static final Integer POST_TYPE_RECO_NEW = 15;
+    public static final Integer POST_TYPE_REDEMPTION = 16;
+
+    private int gold;
+    private int diamond;
+    private String pHdr1;
+    private String pHdr2;
+    private String pReward1;
+    private String pReward2;
+    private String pText1;
+    private String pText2;
+    private String pNote;
+
+    public int getGold() {
+        return gold;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public int getDiamond() {
+        return diamond;
+    }
+
+    public void setDiamond(int diamond) {
+        this.diamond = diamond;
+    }
+
+    public String getpHdr1() {
+        return pHdr1;
+    }
+
+    public void setpHdr1(String pHdr1) {
+        this.pHdr1 = pHdr1;
+    }
+
+    public String getpHdr2() {
+        return pHdr2;
+    }
+
+    public void setpHdr2(String pHdr2) {
+        this.pHdr2 = pHdr2;
+    }
+
+    public String getpReward1() {
+        return pReward1;
+    }
+
+    public void setpReward1(String pReward1) {
+        this.pReward1 = pReward1;
+    }
+
+    public String getpReward2() {
+        return pReward2;
+    }
+
+    public void setpReward2(String pReward2) {
+        this.pReward2 = pReward2;
+    }
+
+    public String getpText1() {
+        return pText1;
+    }
+
+    public void setpText1(String pText1) {
+        this.pText1 = pText1;
+    }
+
+    public String getpText2() {
+        return pText2;
+    }
+
+    public void setpText2(String pText2) {
+        this.pText2 = pText2;
+    }
+
+    public String getpNote() {
+        return pNote;
+    }
+
+    public void setpNote(String pNote) {
+        this.pNote = pNote;
+    }
 
     private Integer isDesigner = 1;
     private Integer bof3Percent1;
@@ -333,13 +416,15 @@ public class SocialPost extends ServerError implements IParseableObject {
             setPostType(POST_TREDING_TAGS);
         }else if (getType().trim().equals("15")){
             setPostType(POST_TYPE_RECO_NEW);
+        }else if (getType().trim().equals("16")) {
+            setPostType(POST_TYPE_REDEMPTION);
         }
-
         else setPostType(POST_TYPE_NORMAL_POST);
 
 
         if (this.postType.equals(POST_RECOMMENDED_PRODS) || this.postType.equals(POST_MOST_LIKED)
-                || this.postType.equals(POST_RATC) || this.postType.equals(POST_TREDING_TAGS)) {
+                || this.postType.equals(POST_RATC) || this.postType.equals(POST_TREDING_TAGS)
+                || this.postType.equals(POST_TYPE_REDEMPTION)) {
             return;
         }
         if (userId == Application.getLoginUser().id)

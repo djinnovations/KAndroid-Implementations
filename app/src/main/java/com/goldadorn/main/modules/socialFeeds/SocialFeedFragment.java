@@ -64,6 +64,7 @@ import com.goldadorn.main.dj.server.RequestJson;
 import com.goldadorn.main.dj.support.EmojisHelper;
 import com.goldadorn.main.dj.support.SocialUtils;
 import com.goldadorn.main.dj.uiutils.ResourceReader;
+import com.goldadorn.main.dj.uiutils.UiRandomUtils;
 import com.goldadorn.main.dj.uiutils.WindowUtils;
 import com.goldadorn.main.dj.utils.Constants;
 import com.goldadorn.main.dj.utils.GAAnalyticsEventNames;
@@ -356,6 +357,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         params.put("mlp", 1);
         params.put("trend", 1);
         params.put("style", 1);
+        params.put("reward", 1);
         Log.d("djfeed", "socialfeed- req params: " + params);
         return params;
     }
@@ -936,6 +938,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
         public static final int VIEW_MOST_LIKED = 40;
         public static final int VIEW_TRENDING_HASHTAG = 45;
         public static final int VIEW_RECO_NEW = 50;
+        public static final int VIEW_REDEMPTION = 55;
+
     }
 
     public static boolean reateItemAdded = false;
@@ -982,6 +986,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                 return ViewTypes.VIEW_TRENDING_HASHTAG;
             else if (post.getPostType() == SocialPost.POST_TYPE_RECO_NEW)
                 return ViewTypes.VIEW_RECO_NEW;
+            else if (post.getPostType() == SocialPost.POST_TYPE_REDEMPTION)
+                return ViewTypes.VIEW_REDEMPTION;
             else return ViewTypes.VIEW_NORMAL;
         }
 
@@ -995,6 +1001,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return inflater.inflate(R.layout.social_post_poll_item, null);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
             return inflater.inflate(R.layout.social_post_best_of_item, null);
+        else if (viewType == ViewTypes.VIEW_REDEMPTION)
+            return inflater.inflate(R.layout.social_post_voucher_desc, null);
         return inflater.inflate(R.layout.social_post_item, null);
     }
 
@@ -1005,6 +1013,8 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             return new PollPostItemHolder(view);
         else if (viewType == ViewTypes.VIEW_BEST_OF)
             return new BestOfPostItemHolder(view);
+        else if (viewType == ViewTypes.VIEW_REDEMPTION)
+            return new RedemptionExplanationHolder(view);
         else if ((viewType == ViewTypes.VIEW_RECO_PROD) || (viewType == ViewTypes.VIEW_RATC) ||
                 (viewType == ViewTypes.VIEW_MOST_LIKED) || (viewType == ViewTypes.VIEW_RECO_NEW)) {
             String title = "Recommended Products";
@@ -1987,6 +1997,111 @@ public class SocialFeedFragment extends DefaultVerticalListView {
     }
 
 
+    public class RedemptionExplanationHolder extends BaseItemHolder {
+
+        @Bind(R.id.labelRewards)
+        TextView labelYourRewards;
+        @Bind(R.id.tvGoldCnt)
+        TextView tvGoldCnt;
+        @Bind(R.id.tvDiamondCnt)
+        TextView tvDiamondCnt;
+        @Bind(R.id.labelpNote)
+        TextView labelpNote;
+        @Bind(R.id.labelpHdr1)
+        TextView labelpHdr1;
+        @Bind(R.id.labelpHdr2)
+        TextView labelpHdr2;
+        @Bind(R.id.labelpReward1)
+        TextView labelpReward1;
+        @Bind(R.id.labelpTxt1)
+        TextView labelpTxt1;
+        @Bind(R.id.labelpReward2)
+        TextView labelpReward2;
+        @Bind(R.id.labelpTxt2)
+        TextView labelpTxt2;
+        @Bind(R.id.labelYourGold)
+        TextView labelYourGold;
+        @Bind(R.id.labelYourDiamond)
+        TextView labelYourDiamond;
+        @Bind(R.id.userImage)
+        ImageView userImage;
+
+        public RedemptionExplanationHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            TypefaceHelper.setFont(tvGoldCnt, tvDiamondCnt, labelpNote, labelpHdr1, labelpHdr2,
+                    labelpReward1, labelpReward2, labelpTxt1, labelpTxt2, labelYourGold, labelYourDiamond);
+            UiRandomUtils.setTypefaceBold(labelYourRewards);
+        }
+
+        SocialPost post;
+
+        @Override
+        public void updateItemView(Object o, View view, int i) {
+            post = (SocialPost) o;
+            String imageUrl = Application.getInstance().getUser().getImageUrl();
+            if (!TextUtils.isEmpty(imageUrl))
+                Picasso.with(getContext())
+                        .load(imageUrl)
+                        .tag(getContext())
+                        .placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                        .resize(100, 100)
+                        .into(userImage);
+            else
+                Picasso.with(getContext())
+                        .load(R.drawable.vector_image_place_holder_profile_dark)
+                        .tag(getContext())
+                        .placeholder(R.drawable.vector_image_place_holder_profile_dark)
+                        .resize(100, 100)
+                        .into(userImage);
+            tvGoldCnt.setText(String.valueOf(post.getGold()));
+            tvDiamondCnt.setText(String.valueOf(post.getDiamond()));
+            if (TextUtils.isEmpty(post.getpNote()))
+                labelpNote.setVisibility(View.GONE);
+            else {
+                labelpNote.setVisibility(View.VISIBLE);
+                labelpNote.setText(post.getpNote());
+            }
+            if (TextUtils.isEmpty(post.getpHdr1()))
+                labelpHdr1.setVisibility(View.GONE);
+            else {
+                labelpHdr1.setVisibility(View.VISIBLE);
+                labelpHdr1.setText(post.getpHdr1());
+            }
+            if (TextUtils.isEmpty(post.getpHdr2()))
+                labelpHdr2.setVisibility(View.GONE);
+            else {
+                labelpHdr2.setVisibility(View.VISIBLE);
+                labelpHdr2.setText(post.getpHdr2());
+            }
+            if (TextUtils.isEmpty(post.getpReward1()))
+                labelpReward1.setVisibility(View.GONE);
+            else {
+                labelpReward1.setVisibility(View.VISIBLE);
+                labelpReward1.setText(post.getpReward1());
+            }
+            if (TextUtils.isEmpty(post.getpReward2()))
+                labelpReward2.setVisibility(View.GONE);
+            else {
+                labelpReward2.setVisibility(View.VISIBLE);
+                labelpReward2.setText(post.getpReward2());
+            }
+            if (TextUtils.isEmpty(post.getpText1()))
+                labelpTxt1.setVisibility(View.GONE);
+            else {
+                labelpTxt1.setVisibility(View.VISIBLE);
+                labelpTxt1.setText(post.getpText1());
+            }
+            if (TextUtils.isEmpty(post.getpText2()))
+                labelpTxt2.setVisibility(View.GONE);
+            else {
+                labelpTxt2.setVisibility(View.VISIBLE);
+                labelpTxt2.setText(post.getpText2());
+            }
+        }
+    }
+
+
     public class TrendingHashtagItemHolder extends RecommendedProductsItemHolder {
 
         SocialPost post;
@@ -2450,7 +2565,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
                     String discnt = "";
                     if (discount <= 0)
                         discnt = "";
-                    else discnt = "("+String.valueOf(Math.round(discount)) + "%" + " off"+")";
+                    else discnt = "(" + String.valueOf(Math.round(discount)) + "%" + " off" + ")";
 
                     socialUtils.publishLinkPost(getActivity(), "http://www.goldadorn.com", "GoldAdorn Jewelry",
                             socialPost.getRange1() + discnt, socialPost.getImage1loc(), socialPost.getPostId());
@@ -2490,7 +2605,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
 
             HashTagHelper mTextHashTagHelper = HashTagHelper.Creator.create(getResources().getColor(R.color.staceColor2),
                     hashTagClick);
-            //mTextHashTagHelper.handle(details);
+            mTextHashTagHelper.handle(details);
         }
 
         HashTagHelper.OnHashTagClickListener hashTagClick = new HashTagHelper.OnHashTagClickListener() {
@@ -2586,7 +2701,7 @@ public class SocialFeedFragment extends DefaultVerticalListView {
             age.setText(socialPost.getAge());
 
             pollLabel.setVisibility(View.GONE);
-            details.setText(/*socialPost.getDescription()*/ EmojisHelper.getSpannedText(getContext(), socialPost.getDescription()));
+            details.setText(socialPost.getDescription() /*EmojisHelper.getSpannedText(getContext(), socialPost.getDescription())*/);
             Log.d("djemoticon", "post Title: " + socialPost.getDescription());
 
             commentsLabel.setText(socialPost.getCommentCount() + " ");
