@@ -308,13 +308,34 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
         //get5NewProductDescFromServer();
 
-        ProductResponse response = new ProductResponse();
+        final ProductResponse response = new ProductResponse();
         response.productId = mProduct.id;
         response.product = mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
+                        //dismissOverLay();
+                        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
+                            @Override
+                            public void onResult(ProductResponse result) {
+                                if (result.success) {
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {*/
+                                    query2ndAPIprodInfo();
+                     /*   }
+                    }, 2000);*/
+                                    mProductOptions = result.options;
+                                    mProductOptions.discount = mProduct.discount;
+                                    mProduct.addDefaultCustomisation(mProductOptions);
+                                    //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
+                                    if (mProdCustFrag != null)
+                                        mProdCustFrag.bindProductOptions(mProductOptions);
+                                }
+                                //dismissOverLay();
+                            }
+                        });
                         if (result.success) {
                             mProductInfo = result.info;
                             //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
@@ -330,26 +351,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                         }
                     }
                 });
-        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
-            @Override
-            public void onResult(ProductResponse result) {
-                if (result.success) {
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {*/
-                            query2ndAPIprodInfo();
-                     /*   }
-                    }, 2000);*/
-                    mProductOptions = result.options;
-                    mProductOptions.discount = mProduct.discount;
-                    mProduct.addDefaultCustomisation(mProductOptions);
-                    //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
-                    if (mProdCustFrag != null)
-                        mProdCustFrag.bindProductOptions(mProductOptions);
-                }
-                //dismissOverLay();
-            }
-        });
+
         configureUI(UISTATE_CUSTOMIZE);
         /*new Handler().postDelayed(new Runnable() {
             @Override
@@ -1663,7 +1665,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                 //confirmedToCart();
             }
         }
-        
+
         else if (id == MIN_AUTO_CUST_CALL){
             boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                     mTabLayout, this);
@@ -1741,13 +1743,13 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
             try {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         mTabLayout, this);
+                dismissOverLay();
                 if (success) {
                     if (isToWait) {
                         synchronized (holyString) {
                             holyString.wait();
                         }
                     }
-                    dismissOverLay();
                     ProductInfo.parseStoneMetal(mProductInfo, new JSONObject(json.toString()));
                     if (mProdInfoFragment != null)
                         mProdInfoFragment.bindProductInfo(mProductInfo);

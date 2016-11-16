@@ -44,16 +44,16 @@
                     android:id="@+id/labelRewards"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="4dp"
                     android:gravity="center_vertical"
                     android:padding="6dp"
-                    android:layout_marginLeft="4dp"
                     android:text="Your Reward Summary"
                     android:textColor="@color/Black"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-                    <!--android:layout_marginTop="4dp"
-                    android:layout_marginLeft="4dp" !-->
+                <!--android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp" !-->
 
             </LinearLayout>
 
@@ -193,26 +193,27 @@
                 android:textColor="@color/Black"
                 android:textSize="14sp" />
 
+            <View
+                android:id="@+id/divTopNew1"
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="@dimen/padding_default_half"
+                android:layout_marginRight="@dimen/padding_default_half"
+                android:layout_marginTop="2dp"
+                android:background="@color/feedFotterDivColor" />
+
 
             <TextView
                 android:id="@+id/labelpHdr1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:padding="6dp"
                 android:text="How you get Rewarded?"
                 android:textColor="@color/Black"
                 android:textSize="14sp" />
-
-            <View
-                android:id="@+id/divTopNew1"
-                android:layout_width="match_parent"
-                android:layout_height=".5dp"
-                android:layout_marginBottom="@dimen/padding_default_half"
-                android:layout_marginLeft="@dimen/padding_default_half"
-                android:layout_marginRight="@dimen/padding_default_half"
-                android:layout_marginTop="5dp"
-                android:background="@color/feedFotterDivColor" />
 
             <TextView
                 android:id="@+id/labelpHdr2"
@@ -266,6 +267,16 @@
                 android:text="Gold Coins"
                 android:textColor="@color/colorBlackDimText"
                 android:textSize="14sp" />
+
+            <View
+                android:id="@+id/divTopNew2"
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="@dimen/padding_default_half"
+                android:layout_marginRight="@dimen/padding_default_half"
+                android:layout_marginTop="5dp"
+                android:background="@color/feedFotterDivColor" />
 
         </LinearLayout>
 
