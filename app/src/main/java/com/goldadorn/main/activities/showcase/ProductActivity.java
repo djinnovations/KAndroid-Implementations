@@ -1,7 +1,6 @@
 package com.goldadorn.main.activities.showcase;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -308,34 +307,13 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
         //get5NewProductDescFromServer();
 
-        final ProductResponse response = new ProductResponse();
+        ProductResponse response = new ProductResponse();
         response.productId = mProduct.id;
         response.product = mProduct;
         UIController.getProductBasicInfo(mContext, response,
                 new IResultListener<ProductResponse>() {
                     @Override
                     public void onResult(ProductResponse result) {
-                        //dismissOverLay();
-                        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
-                            @Override
-                            public void onResult(ProductResponse result) {
-                                if (result.success) {
-                    /*new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {*/
-                                    query2ndAPIprodInfo();
-                     /*   }
-                    }, 2000);*/
-                                    mProductOptions = result.options;
-                                    mProductOptions.discount = mProduct.discount;
-                                    mProduct.addDefaultCustomisation(mProductOptions);
-                                    //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
-                                    if (mProdCustFrag != null)
-                                        mProdCustFrag.bindProductOptions(mProductOptions);
-                                }
-                                //dismissOverLay();
-                            }
-                        });
                         if (result.success) {
                             mProductInfo = result.info;
                             //mProductAdapter.changeData(/*mProductInfo.images*/getVariousProductLooks(mProductInfo.imageCount));
@@ -351,7 +329,26 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
                         }
                     }
                 });
-
+        UIController.getProductOptions(mContext, response, new IResultListener<ProductResponse>() {
+            @Override
+            public void onResult(ProductResponse result) {
+                if (result.success) {
+                    /*new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {*/
+                    query2ndAPIprodInfo();
+                     /*   }
+                    }, 2000);*/
+                    mProductOptions = result.options;
+                    mProductOptions.discount = mProduct.discount;
+                    mProduct.addDefaultCustomisation(mProductOptions);
+                    //mProdCustFrag = (ProductCustomiseFragment) getSupportFragmentManager().findFragmentByTag(UISTATE_CUSTOMIZE + "");
+                    if (mProdCustFrag != null)
+                        mProdCustFrag.bindProductOptions(mProductOptions);
+                }
+                //dismissOverLay();
+            }
+        });
         configureUI(UISTATE_CUSTOMIZE);
         /*new Handler().postDelayed(new Runnable() {
             @Override
@@ -407,7 +404,6 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
 
     public void query2ndAPIprodInfo(){
-        showOverLay(null, 0, WindowUtils.PROGRESS_FRAME_GRAVITY_CENTER);
         ExtendedAjaxCallback ajaxCallback = getAjaxCallBackCustom(PROD_INFO_2nd_API_CALL);
         ajaxCallback.method(AQuery.METHOD_GET);
         getAQueryCustom().ajax(ApiKeys.getProdInfoMetalStoneAPI(mProduct.id), String.class, ajaxCallback);
@@ -467,7 +463,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
 
     public String getGrandTotalForProdInfoFrag(){
         /*if (mProduct.discount > 0)*/
-            return mOverlayVH.mProductCost.getText().toString();
+        return mOverlayVH.mProductCost.getText().toString();
     }
 
 
@@ -932,7 +928,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         @Override
         public int getItemPosition(Object object) {
             /*if(getSupportFragmentManager().getFragments().contains(object))*/
-                return POSITION_NONE;
+            return POSITION_NONE;
             /*else
                 return POSITION_UNCHANGED;*/
         }
@@ -1142,7 +1138,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         private void setFontTypeface(){
             //UiRandomUtils.setTypefaceBold(mNameText);
             TypefaceHelper.setFont(likesCount, product_price_slash, mProductName, mProductOwner
-            , mProductCollection, mProductCost, mProductName2, mProductCost2, tvDiscountOnRed);
+                    , mProductCollection, mProductCost, mProductName2, mProductCost2, tvDiscountOnRed);
         }
 
         public OverlayViewHolder(View itemView, AppBarLayout appBarLayout) {
@@ -1743,13 +1739,13 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
             try {
                 boolean success = NetworkResultValidator.getInstance().isResultOK(url, (String) json, status, null,
                         mTabLayout, this);
-                dismissOverLay();
                 if (success) {
                     if (isToWait) {
                         synchronized (holyString) {
                             holyString.wait();
                         }
                     }
+                    dismissOverLay();
                     ProductInfo.parseStoneMetal(mProductInfo, new JSONObject(json.toString()));
                     if (mProdInfoFragment != null)
                         mProdInfoFragment.bindProductInfo(mProductInfo);
@@ -1883,7 +1879,7 @@ public class ProductActivity extends BaseDrawerActivity implements IPostCreation
         Swatches.MixedSwatch metalSwatch = null;
         Swatches.MixedSwatch stoneSwatch = null;
         if (!TextUtils.isEmpty(mac.getMetalSwatch()))
-        metalSwatch = Swatches.getMixedSwatch(mac.getMetalSwatch(), Swatches.TYPE_METAL);
+            metalSwatch = Swatches.getMixedSwatch(mac.getMetalSwatch(), Swatches.TYPE_METAL);
         if (metalSwatch != null)
             updateMetalInProdInfoTab(metalSwatch, mac.getWeight());
         if (!TextUtils.isEmpty(mac.getStone())) {

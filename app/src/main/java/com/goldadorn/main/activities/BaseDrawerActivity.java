@@ -292,7 +292,12 @@ public class BaseDrawerActivity extends BaseActivity implements NavigationView.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        setPoints();
+        //setPoints();
+        if (!isMainActivity){
+            UserSession session = UserSession.getInstance();
+            tvGoldCoinCnt.setText(session.getGoldCoinCount());
+            tvDiamondCnt.setText(session.getDiamondCnt());
+        }
         Log.d(Constants.TAG, "onCreateOptionsMenu: BaseDrawerActivity");
         /*getMenuInflater().inflate(R.menu.main, menu);
 

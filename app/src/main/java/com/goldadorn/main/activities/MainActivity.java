@@ -176,10 +176,10 @@ public class MainActivity extends BaseDrawerActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
-        Log.d("djmain", "onPause-MainActivity");
         setIsMainActivity(false);
         setIsMainActivityBase(false);
+        super.onPause();
+        Log.d("djmain", "onPause-MainActivity");
     }
 
 
@@ -758,11 +758,11 @@ public class MainActivity extends BaseDrawerActivity {
 
 
     protected void onResume() {
+        setIsMainActivity(true);
+        setIsMainActivityBase(true);
         super.onResume();
         setProgressBar(progressBar);
         Log.d("djmain", "onResume-MainActivity");
-        setIsMainActivity(true);
-        setIsMainActivityBase(true);
 
         if (activePage instanceof HomePage) {
             SocialFeedFragment tempFeed = ((HomePage) activePage).socialFeedFragmentpage;

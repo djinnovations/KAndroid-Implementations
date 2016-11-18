@@ -11,4 +11,9 @@ public class RecommendedNewPostActivity extends PostNormalActivity{
     protected int getPostType() {
         return SocialPost.POST_TYPE_RECO_NEW;
     }
+
+    @Override
+    protected String getPageTitle() {
+        return "Adorn Me";
+    }
 }
